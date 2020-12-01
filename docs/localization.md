@@ -1,0 +1,170 @@
+# Localization
+
+- [Introduction](#introduction)
+    - [Configuring The Locale](#configuring-the-locale)
+- [Defining Translation Strings](#defining-translation-strings)
+    - [Using Short Keys](#using-short-keys)
+    - [Using Translation Strings As Keys](#using-translation-strings-as-keys)
+- [Retrieving Translation Strings](#retrieving-translation-strings)
+    - [Replacing Parameters In Translation Strings](#replacing-parameters-in-translation-strings)
+    - [Pluralization](#pluralization)
+- [Overriding Package Language Files](#overriding-package-language-files)
+
+<a name="introduction"></a>
+## Introduction
+
+Laravel's localization features provide a convenient way to retrieve strings in various languages, allowing you to easily support multiple languages within your application. Language strings are stored in files within the `resources/lang` directory. Within this directory there should be a subdirectory for each language supported by the application:
+
+    /resources
+        /lang
+            /en
+                messages.php
+            /es
+                messages.php
+
+All language files return an array of keyed strings. For example:
+
+    <?php
+
+    return [
+        'welcome' => 'Welcome to our application',
+    ];
+
+> {note} For languages that differ by territory, you should name the language directories according to the ISO 15897. For example, "en_GB" should be used for British English rather than "en-gb".
+
+<a name="configuring-the-locale"></a>
+### Configuring The Locale
+
+The default language for your application is stored in the `config/app.php` configuration file. You may modify this value to suit the needs of your application. You may also change the active language at runtime using the `setLocale` method on the `App` facade:
+
+    Route::get('welcome/{locale}', function ($locale) {
+        if (! in_array($locale, ['en', 'es', 'fr'])) {
+            abort(400);
+        }
+
+        App::setLocale($locale);
+
+        //
+    });
+
+You may configure a "fallback language", which will be used when the active language does not contain a given translation string. Like the default language, the fallback language is also configured in the `config/app.php` configuration file:
+
+    'fallback_locale' => 'en',
+
+<a name="determining-the-current-locale"></a>
+#### Determining The Current Locale
+
+You may use the `getLocale` and `isLocale` methods on the `App` facade to determine the current locale or check if the locale is a given value:
+
+    $locale = App::getLocale();
+
+    if (App::isLocale('en')) {
+        //
+    }
+
+<a name="defining-translation-strings"></a>
+## Defining Translation Strings
+
+<a name="using-short-keys"></a>
+### Using Short Keys
+
+Typically, translation strings are stored in files within the `resources/lang` directory. Within this directory there should be a subdirectory for each language supported by the application:
+
+    /resources
+        /lang
+            /en
+                messages.php
+            /es
+                messages.php
+
+All language files return an array of keyed strings. For example:
+
+    <?php
+
+    // resources/lang/en/messages.php
+
+    return [
+        'welcome' => 'Welcome to our application',
+    ];
+
+<a name="using-translation-strings-as-keys"></a>
+### Using Translation Strings As Keys
+
+For applications with heavy translation requirements, defining every string with a "short key" can become confusing when referencing the keys in your views. For this reason, Laravel also provides support for defining translation strings using the "default" translation of the string as the key.
+
+Translation files that use translation strings as keys are stored as JSON files in the `resources/lang` directory. For example, if your application has a Spanish translation, you should create a `resources/lang/es.json` file:
+
+    {
+        "I love programming.": "Me encanta programar."
+    }
+
+#### Key / File Conflicts
+
+You should not define translation string keys that conflict with other translation file names. For example, translating `__('Action')` for the "NL" locale while a `nl/action.php` file exists but a `nl.json` file does not exist will result in the translator returning the contents of `nl/action.php`.
+
+<a name="retrieving-translation-strings"></a>
+## Retrieving Translation Strings
+
+You may retrieve lines from language files using the `__` helper function. The `__` method accepts the file and key of the translation string as its first argument. For example, let's retrieve the `welcome` translation string from the `resources/lang/messages.php` language file:
+
+    echo __('messages.welcome');
+
+    echo __('I love programming.');
+
+If you are using the [Blade templating engine](/docs/{{version}}/blade), you may use the `{{ }}` syntax to echo the translation string or use the `@lang` directive:
+
+    {{ __('messages.welcome') }}
+
+    @lang('messages.welcome')
+
+If the specified translation string does not exist, the `__` function will return the translation string key. So, using the example above, the `__` function would return `messages.welcome` if the translation string does not exist.
+
+> {note} The `@lang` directive does not escape any output. You are **fully responsible** for escaping your own output when using this directive.
+
+<a name="replacing-parameters-in-translation-strings"></a>
+### Replacing Parameters In Translation Strings
+
+If you wish, you may define placeholders in your translation strings. All placeholders are prefixed with a `:`. For example, you may define a welcome message with a placeholder name:
+
+    'welcome' => 'Welcome, :name',
+
+To replace the placeholders when retrieving a translation string, pass an array of replacements as the second argument to the `__` function:
+
+    echo __('messages.welcome', ['name' => 'dayle']);
+
+If your placeholder contains all capital letters, or only has its first letter capitalized, the translated value will be capitalized accordingly:
+
+    'welcome' => 'Welcome, :NAME', // Welcome, DAYLE
+    'goodbye' => 'Goodbye, :Name', // Goodbye, Dayle
+
+<a name="pluralization"></a>
+### Pluralization
+
+Pluralization is a complex problem, as different languages have a variety of complex rules for pluralization. By using a "pipe" character, you may distinguish singular and plural forms of a string:
+
+    'apples' => 'There is one apple|There are many apples',
+
+You may even create more complex pluralization rules which specify translation strings for multiple number ranges:
+
+    'apples' => '{0} There are none|[1,19] There are some|[20,*] There are many',
+
+After defining a translation string that has pluralization options, you may use the `trans_choice` function to retrieve the line for a given "count". In this example, since the count is greater than one, the plural form of the translation string is returned:
+
+    echo trans_choice('messages.apples', 10);
+
+You may also define placeholder attributes in pluralization strings. These placeholders may be replaced by passing an array as the third argument to the `trans_choice` function:
+
+    'minutes_ago' => '{1} :value minute ago|[2,*] :value minutes ago',
+
+    echo trans_choice('time.minutes_ago', 5, ['value' => 5]);
+
+If you would like to display the integer value that was passed to the `trans_choice` function, you may use the `:count` placeholder:
+
+    'apples' => '{0} There are none|{1} There is one|[2,*] There are :count',
+
+<a name="overriding-package-language-files"></a>
+## Overriding Package Language Files
+
+Some packages may ship with their own language files. Instead of changing the package's core files to tweak these lines, you may override them by placing files in the `resources/lang/vendor/{package}/{locale}` directory.
+
+So, for example, if you need to override the English translation strings in `messages.php` for a package named `skyrim/hearthfire`, you should place a language file at: `resources/lang/vendor/hearthfire/en/messages.php`. Within this file, you should only define the translation strings you wish to override. Any translation strings you don't override will still be loaded from the package's original language files.
