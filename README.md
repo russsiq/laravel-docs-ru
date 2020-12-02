@@ -79,7 +79,7 @@
     - [Мутаторы](/docs/eloquent-mutators.md)
     - [Ресурсы API](/docs/eloquent-resources.md)
     - [Сериализация](/docs/eloquent-serialization.md)
-- ## Тестировнаие
+- ## Тестирование
     - [Начало](/docs/testing.md)
     - [Тесты HTTP](/docs/http-tests.md)
     - [Консольные тесты](/docs/console-tests.md)
