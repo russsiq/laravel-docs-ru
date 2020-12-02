@@ -15,7 +15,7 @@
     - [Руководство по обновлению](/docs/upgrade.md)
     - [Рекомендации по участию](/docs/contributions.md)
 - ## Начало
-    - [Устанока](/docs/installation.md)
+    - [Установка](/docs/installation.md)
     - [Конфигурирование](/docs/configuration.md)
     - [Структура каталогов](/docs/structure.md)
     - [Homestead](/docs/homestead.md)
