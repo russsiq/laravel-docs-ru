@@ -172,6 +172,7 @@ customizing  |  корректировка  |
 defining  |  определение  |  
 deployment  |  развертывание  |  
 detaching  |  отсоединение  |  
+dispatch  |  выполнение, исполнение  |  
 dump  |  вывод, отображение  |  
 <a name="dictionary-e">**E**</a>
 eager  |  нетерпеливый  |  
