@@ -1,17 +1,17 @@
-# Console Tests
+# Консольные тесты
 
-- [Introduction](#introduction)
-- [Expecting Input / Output](#expecting-input-and-output)
+- [Введение](#introduction)
+- [Ожидание ввода / вывода](#expecting-input-and-output)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
-In addition to simplifying HTTP testing, Laravel provides a simple API for testing console applications that ask for user input.
+Помимо упрощения HTTP-тестирования, Laravel предоставляет простой API для тестирования консольных приложений, которые запрашивают ввод данных пользователем.
 
 <a name="expecting-input-and-output"></a>
-## Expecting Input / Output
+## Ожидание ввода / вывода
 
-Laravel allows you to easily "mock" user input for your console commands using the `expectsQuestion` method. In addition, you may specify the exit code and text that you expect to be output by the console command using the `assertExitCode` and `expectsOutput` methods. For example, consider the following console command:
+Laravel позволяет вам легко «имитировать» ввод пользователем в консольных командах, используя метод `expectsQuestion`. Кроме того, вы можете указать код выхода / возврата и текст, который вы ожидаете получить от консольной команды, используя методы `assertExitCode` и `expectsOutput`. Например, рассмотрим следующую консольную команду:
 
     Artisan::command('question', function () {
         $name = $this->ask('What is your name?');
@@ -25,10 +25,10 @@ Laravel allows you to easily "mock" user input for your console commands using t
         $this->line('Your name is '.$name.' and you program in '.$language.'.');
     });
 
-You may test this command with the following test which utilizes the `expectsQuestion`, `expectsOutput`, and `assertExitCode` methods:
+Вы можете протестировать эту команду с помощью следующего теста, который использует методы `expectsQuestion`,` expectsOutput` и `assertExitCode`:
 
     /**
-     * Test a console command.
+     * Тестирование консольной команды.
      *
      * @return void
      */
@@ -41,7 +41,7 @@ You may test this command with the following test which utilizes the `expectsQue
              ->assertExitCode(0);
     }
 
-When writing a command which expects a confirmation in the form of a "yes" or "no" answer, you may utilize the `expectsConfirmation` method:
+При написании команды, которая ожидает подтверждения в виде ответа «да» или «нет», вы можете использовать метод `expectsConfirmation`:
 
     $this->artisan('module:import')
         ->expectsConfirmation('Do you really wish to run this command?', 'no')
