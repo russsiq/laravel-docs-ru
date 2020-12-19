@@ -1,102 +1,102 @@
-# Artisan Console
+# Консоль Artisan
 
-- [Introduction](#introduction)
+- [Введение](#introduction)
     - [Tinker (REPL)](#tinker)
-- [Writing Commands](#writing-commands)
-    - [Generating Commands](#generating-commands)
-    - [Command Structure](#command-structure)
-    - [Closure Commands](#closure-commands)
-- [Defining Input Expectations](#defining-input-expectations)
-    - [Arguments](#arguments)
-    - [Options](#options)
-    - [Input Arrays](#input-arrays)
-    - [Input Descriptions](#input-descriptions)
-- [Command I/O](#command-io)
-    - [Retrieving Input](#retrieving-input)
-    - [Prompting For Input](#prompting-for-input)
-    - [Writing Output](#writing-output)
-- [Registering Commands](#registering-commands)
-- [Programmatically Executing Commands](#programmatically-executing-commands)
-    - [Calling Commands From Other Commands](#calling-commands-from-other-commands)
-- [Stub Customization](#stub-customization)
-- [Events](#events)
+- [Написание команд](#writing-commands)
+    - [Создание команд](#generating-commands)
+    - [Структура команды](#command-structure)
+    - [Анонимные команды](#closure-commands)
+- [Определение вводимых данных](#defining-input-expectations)
+    - [Аргументы](#arguments)
+    - [Параметры](#options)
+    - [Массивы данных](#input-arrays)
+    - [Описания вводимых данных](#input-descriptions)
+- [Ввод/вывод команды](#command-io)
+    - [Получение входных данных](#retrieving-input)
+    - [Запрос для ввода данных](#prompting-for-input)
+    - [Вывод данных](#writing-output)
+- [Регистрация команд](#registering-commands)
+- [Программное выполнение команд](#programmatically-executing-commands)
+    - [Вызов команд из других команд](#calling-commands-from-other-commands)
+- [Настройка заглушек](#stub-customization)
+- [События](#events)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
-Artisan is the command-line interface included with Laravel. It provides a number of helpful commands that can assist you while you build your application. To view a list of all available Artisan commands, you may use the `list` command:
+Artisan — это интерфейс командной строки, входящий в состав Laravel. Он предоставляет ряд полезных команд, которые помогут при создании приложения. Для просмотра списка всех доступных команд Artisan можно использовать команду `list`:
 
     php artisan list
 
-Every command also includes a "help" screen which displays and describes the command's available arguments and options. To view a help screen, precede the name of the command with `help`:
+Каждая команда также включает в себя экран «справки», который отображает и описывает доступные аргументы и параметры команды. Чтобы просмотреть экран справки, используйте `help` перед именем команды:
 
     php artisan help migrate
 
 <a name="tinker"></a>
 ### Tinker (REPL)
 
-Laravel Tinker is a powerful REPL for the Laravel framework, powered by the [PsySH](https://github.com/bobthecow/psysh) package.
+Laravel Tinker — это мощный REPL для фреймворка Laravel, основанный на пакете [PsySH](https://github.com/bobthecow/psysh).
 
 <a name="installation"></a>
-#### Installation
+#### Установка
 
-All Laravel applications include Tinker by default. However, you may install it manually if needed using Composer:
+Все приложения Laravel по умолчанию включают Tinker. Однако, при необходимости вы можете установить его вручную, используя Composer:
 
     composer require laravel/tinker
 
-> {tip} Looking for a graphical UI for interacting with your Laravel application? Check out [Tinkerwell](https://tinkerwell.app)!
+> {tip} Ищете графический интерфейс для взаимодействия с приложением Laravel? Зацените [Tinkerwell](https://tinkerwell.app)!
 
 <a name="usage"></a>
-#### Usage
+#### Использование
 
-Tinker allows you to interact with your entire Laravel application on the command line, including the Eloquent ORM, jobs, events, and more. To enter the Tinker environment, run the `tinker` Artisan command:
+Tinker позволяет взаимодействовать полностью со всем приложением Laravel из командной строки, включая Eloquent ORM, задачи, события и многое другое. Чтобы войти в среду Tinker, выполните команду Artisan `tinker`:
 
     php artisan tinker
 
-You can publish Tinker's configuration file using the `vendor:publish` command:
+Вы можете опубликовать файл конфигурации Tinker с помощью команды `vendor:publish`:
 
     php artisan vendor:publish --provider="Laravel\Tinker\TinkerServiceProvider"
 
-> {note} The `dispatch` helper function and `dispatch` method on the `Dispatchable` class depends on garbage collection to place the job on the queue. Therefore, when using tinker, you should use `Bus::dispatch` or `Queue::push` to dispatch jobs.
+> {note} Глобальный помощник `dispatch` и метод `dispatch` в классе `Dispatchable` зависят от "garbage collection" для помещения задания в очередь. Следовательно, при использовании Tinker вы должны использовать `Bus::dispatch` или `Queue::push` для отправки заданий.
 
 <a name="command-whitelist"></a>
-#### Command Whitelist
+#### Белый список команд
 
-Tinker utilizes a white-list to determine which Artisan commands are allowed to be run within its shell. By default, you may run the `clear-compiled`, `down`, `env`, `inspire`, `migrate`, `optimize`, and `up` commands. If you would like to white-list more commands you may add them to the `commands` array in your `tinker.php` configuration file:
+Tinker использует белый список, чтобы определить, какие команды Artisan разрешено запускать в её среде. По умолчанию вы можете запускать команды `clear-compiled`, `down`, `env`, `inspire`, `migrate`, `optimize` и `up`. Для добавления в белый список больше команд, добавьте их в массив `commands` в файле конфигурации `tinker.php`:
 
     'commands' => [
         // App\Console\Commands\ExampleCommand::class,
     ],
 
 <a name="classes-that-should-not-be-aliased"></a>
-#### Classes That Should Not Be Aliased
+#### Черный список псевдонимов
 
-Typically, Tinker automatically aliases classes as you require them in Tinker. However, you may wish to never alias some classes. You may accomplish this by listing the classes in the `dont_alias` array of your `tinker.php` configuration file:
+Как правило, Tinker автоматически создает псевдонимы классов. Тем не менее, вы можете запретить такое поведение для некоторых классов, перечислив их в массиве `dont_alias` файла конфигурации `tinker.php`:
 
     'dont_alias' => [
         App\Models\User::class,
     ],
 
 <a name="writing-commands"></a>
-## Writing Commands
+## Написание команд
 
-In addition to the commands provided with Artisan, you may also build your own custom commands. Commands are typically stored in the `app/Console/Commands` directory; however, you are free to choose your own storage location as long as your commands can be loaded by Composer.
+В дополнение к командам Artisan, вы можете создавать пользовательские команды. Команды обычно хранятся в каталоге `app/Console/Commands`; однако, вы можете выбрать другое месторасположение, если эти команды могут быть загружены менеджером Composer.
 
 <a name="generating-commands"></a>
-### Generating Commands
+### Создание команд
 
-To create a new command, use the `make:command` Artisan command. This command will create a new command class in the `app/Console/Commands` directory. Don't worry if this directory does not exist in your application, since it will be created the first time you run the `make:command` Artisan command. The generated command will include the default set of properties and methods that are present on all commands:
+Для создания новой команды используйте Artisan команду `make:command`. Эта команда создаст новый класс команды в каталоге `app/Console/Commands`. Не волнуйтесь, если этот каталог не существует в вашем приложении, так как он будет создан при первом запуске Artisan команды `make:command`. Сгенерированная команда будет включать набор свойств и методов по умолчанию, присутствующих во всех командах:
 
     php artisan make:command SendEmails
 
 <a name="command-structure"></a>
-### Command Structure
+### Структура команды
 
-After generating your command, you should fill in the `signature` and `description` properties of the class, which will be used when displaying your command on the `list` screen. The `handle` method will be called when your command is executed. You may place your command logic in this method.
+После создания команды следует заполнить свойства класса `signature` и `description`, которые будут отображаться на экране при использовании команды `list`. Метод `handle` будет вызываться при выполнении команды. Вы можете разместить логику команды в этом методе.
 
-> {tip} For greater code reuse, it is good practice to keep your console commands light and let them defer to application services to accomplish their tasks. In the example below, note that we inject a service class to do the "heavy lifting" of sending the e-mails.
+> {tip} Хорошей практикой повторного использования кода считается создание «простых» консольных команд с делегированием своих задач службам приложения. В приведенном ниже примере мы внедряем класс службы для выполнения «затратной» отправки электронных писем.
 
-Let's take a look at an example command. Note that we are able to inject any dependencies we need into the command's `handle` method. The Laravel [service container](/docs/{{version}}/container) will automatically inject all dependencies that are type-hinted in this method's signature:
+Давайте рассмотрим пример команды. Обратите внимание, что мы можем внедрять любые необходимые зависимости в методе `handle` команды. [Контейнер служб](container.md) Laravel автоматически внедрит все зависимости, типы которых объявлены в этом методе:
 
     <?php
 
@@ -109,21 +109,21 @@ Let's take a look at an example command. Note that we are able to inject any dep
     class SendEmails extends Command
     {
         /**
-         * The name and signature of the console command.
+         * Имя и сигнатура консольной команды.
          *
          * @var string
          */
         protected $signature = 'email:send {user}';
 
         /**
-         * The console command description.
+         * Описание консольной команды.
          *
          * @var string
          */
         protected $description = 'Send drip e-mails to a user';
 
         /**
-         * Create a new command instance.
+         * Создать новый экземпляр команды.
          *
          * @return void
          */
@@ -133,7 +133,7 @@ Let's take a look at an example command. Note that we are able to inject any dep
         }
 
         /**
-         * Execute the console command.
+         * Выполнить консольную команду.
          *
          * @param  \App\Support\DripEmailer  $drip
          * @return mixed
@@ -145,12 +145,12 @@ Let's take a look at an example command. Note that we are able to inject any dep
     }
 
 <a name="closure-commands"></a>
-### Closure Commands
+### Анонимные команды
 
-Closure based commands provide an alternative to defining console commands as classes. In the same way that route Closures are an alternative to controllers, think of command Closures as an alternative to command classes. Within the `commands` method of your `app/Console/Kernel.php` file, Laravel loads the `routes/console.php` file:
+Команды на основе замыкания обеспечивают альтернативу определению консольных команд в виде классов. Точно так же, как замыкания маршрутов являются альтернативой контроллерам. В рамках метода `commands` файла `app/Console/Kernel.php` Laravel загружает файл `routes/console.php`:
 
     /**
-     * Register the Closure based commands for the application.
+     * Зарегистрировать команды, основанные на анонимных функциях.
      *
      * @return void
      */
@@ -159,18 +159,18 @@ Closure based commands provide an alternative to defining console commands as cl
         require base_path('routes/console.php');
     }
 
-Even though this file does not define HTTP routes, it defines console based entry points (routes) into your application. Within this file, you may define all of your Closure based routes using the `Artisan::command` method. The `command` method accepts two arguments: the [command signature](#defining-input-expectations) and a Closure which receives the commands arguments and options:
+Хотя этот файл не определяет маршруты HTTP, он определяет точки входа (маршруты) для консольных команд в приложении. В этом файле с помощью метода `Artisan::command` можно определить все маршруты на основе замыканий. Метод `command` принимает два аргумента: [сигнатуру команды](#defining-input-expectations) и замыкание, которое получает аргументы и параметры команды:
 
     Artisan::command('build {project}', function ($project) {
         $this->info("Building {$project}!");
     });
 
-The Closure is bound to the underlying command instance, so you have full access to all of the helper methods you would typically be able to access on a full command class.
+Замыкание привязано к базовому экземпляру команды, поэтому у вас есть полный доступ ко всем вспомогательным методам, к которым вы обычно можете обращаться в команде, созданной с помощью класса.
 
 <a name="type-hinting-dependencies"></a>
-#### Type-Hinting Dependencies
+#### Типизация зависимостей
 
-In addition to receiving your command's arguments and options, command Closures may also type-hint additional dependencies that you would like resolved out of the [service container](/docs/{{version}}/container):
+Помимо получения аргументов и параметров, замыкание анонимной команды также принимает дополнительные зависимости из [контейнера служб](container.md), необходимые для внедрения:
 
     use App\Models\User;
     use App\Support\DripEmailer;
@@ -180,106 +180,106 @@ In addition to receiving your command's arguments and options, command Closures 
     });
 
 <a name="closure-command-descriptions"></a>
-#### Closure Command Descriptions
+#### Описания анонимных команд
 
-When defining a Closure based command, you may use the `describe` method to add a description to the command. This description will be displayed when you run the `php artisan list` or `php artisan help` commands:
+При определении анонимных команд, можно использовать метод `describe` для добавления описания команды. Это описание будет отображаться при запуске команд `php artisan list`, `php artisan help`:
 
     Artisan::command('build {project}', function ($project) {
         $this->info("Building {$project}!");
     })->describe('Build the project');
 
 <a name="defining-input-expectations"></a>
-## Defining Input Expectations
+## Определение вводимых данных
 
-When writing console commands, it is common to gather input from the user through arguments or options. Laravel makes it very convenient to define the input you expect from the user using the `signature` property on your commands. The `signature` property allows you to define the name, arguments, and options for the command in a single, expressive, route-like syntax.
+При написании консольных команд обычно происходит сбор данных, получаемых от пользователя, с помощью аргументов или параметров. Laravel позволяет очень удобно определять входные данные, которые вы ожидаете от пользователя, используя свойство `signature` команд. Свойство `signature` позволяет определить имя, аргументы и параметры команды в едином выразительном синтаксисе, схожим на синтаксис маршрутов.
 
 <a name="arguments"></a>
-### Arguments
+### Аргументы
 
-All user supplied arguments and options are wrapped in curly braces. In the following example, the command defines one **required** argument: `user`:
+Все предоставленные пользователем аргументы и параметры заключаются в фигурные скобки. В следующем примере команда определяет один **обязательный** аргумент `user`:
 
     /**
-     * The name and signature of the console command.
+     * Имя и сигнатура консольной команды.
      *
      * @var string
      */
     protected $signature = 'email:send {user}';
 
-You may also make arguments optional and define default values for arguments:
+По желанию можно сделать аргументы необязательными или определить значения по умолчанию:
 
-    // Optional argument...
+    // Необязательный аргумент ...
     email:send {user?}
 
-    // Optional argument with default value...
+    // Необязательный аргумент с заданным по умолчанию значением ...
     email:send {user=foo}
 
 <a name="options"></a>
-### Options
+### Параметры
 
-Options, like arguments, are another form of user input. Options are prefixed by two hyphens (`--`) when they are specified on the command line. There are two types of options: those that receive a value and those that don't. Options that don't receive a value serve as a boolean "switch". Let's take a look at an example of this type of option:
+Параметры, как и аргументы, являются разновидностью пользовательского ввода. Параметры должны иметь префикс в виде двух дефисов (`--`), когда они указаны в командной строке. Существует два типа параметров: те, которые получают значение, и те, которые его не получают. Параметры, которые не получают значение, служат логическим «переключателем». Давайте рассмотрим пример такого варианта:
 
     /**
-     * The name and signature of the console command.
+     * Имя и сигнатура консольной команды.
      *
      * @var string
      */
     protected $signature = 'email:send {user} {--queue}';
 
-In this example, the `--queue` switch may be specified when calling the Artisan command. If the `--queue` switch is passed, the value of the option will be `true`. Otherwise, the value will be `false`:
+В этом примере при вызове команды Artisan может быть указан переключатель `--queue`. Если переключатель `--queue` передан, значение этого параметра будет `true`. В противном случае значение будет `false`:
 
     php artisan email:send 1 --queue
 
 <a name="options-with-values"></a>
-#### Options With Values
+#### Параметры со значениями
 
-Next, let's take a look at an option that expects a value. If the user must specify a value for an option, suffix the option name with a `=` sign:
+Давайте рассмотрим параметр, который ожидает значение. Если пользователь должен указать значение для параметра, добавьте суффикс `=` к имени параметра:
 
     /**
-     * The name and signature of the console command.
+     * Имя и сигнатура консольной команды.
      *
      * @var string
      */
     protected $signature = 'email:send {user} {--queue=}';
 
-In this example, the user may pass a value for the option like so:
+В этом примере пользователь может передать значение для параметра:
 
     php artisan email:send 1 --queue=default
 
-You may assign default values to options by specifying the default value after the option name. If no option value is passed by the user, the default value will be used:
+Параметру можно присвоить значение по умолчанию, указав его после имени. Если значение параметра не передано пользователем, будет использовано значение по умолчанию:
 
     email:send {user} {--queue=default}
 
 <a name="option-shortcuts"></a>
-#### Option Shortcuts
+#### Псевдонимы параметров
 
-To assign a shortcut when defining an option, you may specify it before the option name and use a | delimiter to separate the shortcut from the full option name:
+Чтобы назначить псевдоним при определении параметра, вы можете указать его перед именем параметра и использовать разделитель `|` для отделения псевдонима от полного имени параметра:
 
     email:send {user} {--Q|queue}
 
 <a name="input-arrays"></a>
-### Input Arrays
+### Массивы данных
 
-If you would like to define arguments or options to expect array inputs, you may use the `*` character. First, let's take a look at an example that specifies an array argument:
+По желанию можно определить, что аргументы или параметры ожидают массив данных, вы можете использовать метасимвол `*`. Во-первых, давайте рассмотрим пример, в котором описывается аргумент как массив данных:
 
     email:send {user*}
 
-When calling this method, the `user` arguments may be passed in order to the command line. For example, the following command will set the value of `user` to `['foo', 'bar']`:
+При вызове этого метода аргументы `user` могут передаваться по порядку в командную строку. Например, следующая команда установит значение `user` как `['foo', 'bar']`:
 
     php artisan email:send foo bar
 
-When defining an option that expects an array input, each option value passed to the command should be prefixed with the option name:
+При определении параметра, ожидающего массив, каждое значение параметра, передаваемое команде, должно иметь префикс с именем параметра:
 
     email:send {user} {--id=*}
 
     php artisan email:send --id=1 --id=2
 
 <a name="input-descriptions"></a>
-### Input Descriptions
+### Описания вводимых данных
 
-You may assign descriptions to input arguments and options by separating the parameter from the description using a colon. If you need a little extra room to define your command, feel free to spread the definition across multiple lines:
+Вы можете назначить описания входным аргументам и параметрам, отделив параметр от описания с помощью двоеточия. Если вам нужно немного больше места для определения вашей команды, не стесняйтесь распределить определение на несколько строк:ы
 
     /**
-     * The name and signature of the console command.
+     * Имя и сигнатура консольной команды.
      *
      * @var string
      */
@@ -288,15 +288,15 @@ You may assign descriptions to input arguments and options by separating the par
                             {--queue= : Whether the job should be queued}';
 
 <a name="command-io"></a>
-## Command I/O
+## Ввод/вывод команды
 
 <a name="retrieving-input"></a>
-### Retrieving Input
+### Получение входных данных
 
-While your command is executing, you will obviously need to access the values for the arguments and options accepted by your command. To do so, you may use the `argument` and `option` methods:
+Во время выполнения команды вам, очевидно, потребуется получить доступ к значениям аргументов и параметров, принятых командой. Для этого вы можете использовать методы `argument` и `option`:
 
     /**
-     * Execute the console command.
+     * Выполнить консольную команду.
      *
      * @return mixed
      */
@@ -307,27 +307,27 @@ While your command is executing, you will obviously need to access the values fo
         //
     }
 
-If you need to retrieve all of the arguments as an `array`, call the `arguments` method:
+Если вам нужно получить все аргументы в виде массива, вызовите метод `arguments`:
 
     $arguments = $this->arguments();
 
-Options may be retrieved just as easily as arguments using the `option` method. To retrieve all of the options as an array, call the `options` method:
+Параметры могут быть получены так же легко, как и аргументы, используя метод `option`. Чтобы получить все параметры в виде массива, вызовите метод `options`:
 
-    // Retrieve a specific option...
+    // Получение определенного параметра ...
     $queueName = $this->option('queue');
 
-    // Retrieve all options...
+    // Получение всех параметров ...
     $options = $this->options();
 
-If the argument or option does not exist, `null` will be returned.
+Если аргумент или параметр не существует, то будет возвращено значение `null`.
 
 <a name="prompting-for-input"></a>
-### Prompting For Input
+### Запрос для ввода данных
 
-In addition to displaying output, you may also ask the user to provide input during the execution of your command. The `ask` method will prompt the user with the given question, accept their input, and then return the user's input back to your command:
+Помимо отображения вывода, вы можете попросить пользователя предоставить данные во время выполнения вашей команды. Метод `ask` отобразит пользователю указанный вопрос, примет его ввод, а затем вернет эти данные, полученные от пользователя, обратно в команду:
 
     /**
-     * Execute the console command.
+     * Выполнить консольную команду.
      *
      * @return mixed
      */
@@ -336,40 +336,40 @@ In addition to displaying output, you may also ask the user to provide input dur
         $name = $this->ask('What is your name?');
     }
 
-The `secret` method is similar to `ask`, but the user's input will not be visible to them as they type in the console. This method is useful when asking for sensitive information such as a password:
+Метод `secret` похож на `ask`, но ввод пользователя не будет виден ему в консоли при вводе. Этот метод полезен при запросе конфиденциальной информации, такой как пароль:
 
     $password = $this->secret('What is the password?');
 
 <a name="asking-for-confirmation"></a>
-#### Asking For Confirmation
+#### Запрос подтверждения
 
-If you need to ask the user for a simple confirmation, you may use the `confirm` method. By default, this method will return `false`. However, if the user enters `y` or `yes` in response to the prompt, the method will return `true`.
+Если вам нужно получить от пользователя простое подтверждение, то вы можете использовать метод `confirm`. По умолчанию этот метод возвращает значение `false`. Однако, если пользователь вводит `y` или `yes` в ответ на запрос, то метод возвращает `true`.
 
     if ($this->confirm('Do you wish to continue?')) {
         //
     }
 
 <a name="auto-completion"></a>
-#### Auto-Completion
+#### Автозавершение
 
-The `anticipate` method can be used to provide auto-completion for possible choices. The user can still choose any answer, regardless of the auto-completion hints:
+Метод `anticipate` может использоваться для автоматического завершения возможных вариантов. Пользователь по-прежнему может выбрать любой ответ, независимо от подсказок автозаполнения:
 
     $name = $this->anticipate('What is your name?', ['Taylor', 'Dayle']);
 
-Alternatively, you may pass a Closure as the second argument to the `anticipate` method. The Closure will be called each time the user types an input character. The Closure should accept a string parameter containing the user's input so far, and return an array of options for auto-completion:
+В качестве альтернативы, вы можете передать замыкание в качестве второго аргумента метода `anticipate`. Замыкание будет вызываться каждый раз, когда пользователь вводит символ. Замыкание должно принимать строковый параметр, содержащий введенные пользователем данные, и возвращать массив опций для автозаполнения:
 
     $name = $this->anticipate('What is your name?', function ($input) {
-        // Return auto-completion options...
+        // Вернуть варианты для автоматического завершения ...
     });
 
 <a name="multiple-choice-questions"></a>
-#### Multiple Choice Questions
+#### Вопросы с множественным выбором
 
-If you need to give the user a predefined set of choices, you may use the `choice` method. You may set the array index of the default value to be returned if no option is chosen:
+Если нужно предоставить пользователю предопределенный набор вариантов для выбора, то используйте метод `choice`. Вы можете установить индекс массива для возвращаемого значения по умолчанию, если не выбран ни один из вариантов:
 
     $name = $this->choice('What is your name?', ['Taylor', 'Dayle'], $defaultIndex);
 
-In addition, the `choice` method accepts optional fourth and fifth arguments for determining the maximum number of attempts to select a valid response and whether multiple selections are permitted:
+Кроме того, метод `choice` принимает необязательные четвертый и пятый аргументы для определения максимального количества попыток выбора действительного ответа и того, разрешен ли множественный выбор:
 
     $name = $this->choice(
         'What is your name?',
@@ -380,12 +380,12 @@ In addition, the `choice` method accepts optional fourth and fifth arguments for
     );
 
 <a name="writing-output"></a>
-### Writing Output
+### Вывод данных
 
-To send output to the console, use the `line`, `info`, `comment`, `question` and `error` methods. Each of these methods will use appropriate ANSI colors for their purpose. For example, let's display some general information to the user. Typically, the `info` method will display in the console as green text:
+Чтобы вывести в консоль, используйте методы `line`, `info`, `comment`, `question` and `error`. Каждый из этих методов будет использовать соответствующие ANSI-цвета. Например, давайте покажем пользователю некоторую общую информацию. Обычно метод `info` отображается в консоли в виде зеленого текста:
 
     /**
-     * Execute the console command.
+     * Выполнить консольную команду.
      *
      * @return mixed
      */
@@ -394,25 +394,25 @@ To send output to the console, use the `line`, `info`, `comment`, `question` and
         $this->info('Display this on the screen');
     }
 
-To display an error message, use the `error` method. Error message text is typically displayed in red:
+Для отображения сообщения об ошибке используйте метод `error`. Текст сообщения об ошибке обычно отображается красным цветом:
 
     $this->error('Something went wrong!');
 
-If you would like to display plain, uncolored console output, use the `line` method:
+Если вы хотите вывести простое, неокрашенное сообщение, используйте метод `line`:
 
     $this->line('Display this on the screen');
 
-You may use the `newLine` method to display a blank line:
+Вы можете использовать метод `newLine` для отображения пустой строки:
 
     $this->newLine();
 
-    // Write three blank lines...
+    // Вывести три пустые строки ...
     $this->newLine(3);
 
 <a name="table-layouts"></a>
-#### Table Layouts
+#### Таблицы
 
-The `table` method makes it easy to correctly format multiple rows / columns of data. Just pass in the headers and rows to the method. The width and height will be dynamically calculated based on the given data:
+Метод `table` позволяет легко форматировать несколько строк / столбцов данных. Просто передайте заголовки и строки в метод. Ширина и высота будут динамически рассчитаны на основе данных:
 
     $headers = ['Name', 'Email'];
 
@@ -421,9 +421,9 @@ The `table` method makes it easy to correctly format multiple rows / columns of 
     $this->table($headers, $users);
 
 <a name="progress-bars"></a>
-#### Progress Bars
+#### Индикаторы выполнения
 
-For long running tasks, it could be helpful to show a progress indicator. Using the output object, we can start, advance and stop the Progress Bar. First, define the total number of steps the process will iterate through. Then, advance the Progress Bar after processing each item:
+Для длительно выполняемых задач было бы полезно показать индикатор выполнения. Используя объект вывода, мы можем запустить, продвинуть и остановить индикатор выполнения. Во-первых, определите общее количество шагов процесса. Затем продвигайте индикатор выполнения после обработки каждого из них:
 
     $users = App\Models\User::all();
 
@@ -439,15 +439,15 @@ For long running tasks, it could be helpful to show a progress indicator. Using 
 
     $bar->finish();
 
-For more advanced options, check out the [Symfony Progress Bar component documentation](https://symfony.com/doc/current/components/console/helpers/progressbar.html).
+Для получения дополнительной информации ознакомьтесь с [разделом документации компонента Symfony Progress Bar](https://symfony.com/doc/current/components/console/helpers/progressbar.html).
 
 <a name="registering-commands"></a>
-## Registering Commands
+## Регистрация команд
 
-Because of the `load` method call in your console kernel's `commands` method, all commands within the `app/Console/Commands` directory will automatically be registered with Artisan. In fact, you are free to make additional calls to the `load` method to scan other directories for Artisan commands:
+Благодаря вызову метода `load` в методе `commands` ядра консоли все команды в каталоге `app/Console/Commands` будут автоматически зарегистрированы в Artisan. Фактически, вы можете делать дополнительные вызовы метода `load` для сканирования других каталогов на наличие команд Artisan:
 
     /**
-     * Register the commands for the application.
+     * Зарегистрировать команды приложения.
      *
      * @return void
      */
@@ -459,16 +459,16 @@ Because of the `load` method call in your console kernel's `commands` method, al
         // ...
     }
 
-You may also manually register commands by adding its class name to the `$commands` property of your `app/Console/Kernel.php` file. When Artisan boots, all the commands listed in this property will be resolved by the [service container](/docs/{{version}}/container) and registered with Artisan:
+Вы можете самостоятельно зарегистрировать команды, добавив название класса в свойство `$commands` файла `app/Console/Kernel.php`. При загрузке Artisan, все команды, перечисленные в этом свойстве будут доступны в [контейнере служб](container.md) и зарегистрированы в Artisan:
 
     protected $commands = [
         Commands\SendEmails::class
     ];
 
 <a name="programmatically-executing-commands"></a>
-## Programmatically Executing Commands
+## Программное выполнение команд
 
-Sometimes you may wish to execute an Artisan command outside of the CLI. For example, you may wish to fire an Artisan command from a route or controller. You may use the `call` method on the `Artisan` facade to accomplish this. The `call` method accepts either the command's name or class as the first argument, and an array of command parameters as the second argument. The exit code will be returned:
+По желанию можно выполнить команду Artisan за пределами CLI. Например, вы можете запустить команду Artisan в маршруте или контроллере. Для этого можно использовать метод `call` фасада `Artisan`. Метод `call` принимает в качестве первого аргумента имя или класс команды, а в качестве второго — массив параметров команды. Будет возвращен код выхода (код возврата):
 
     Route::get('/foo', function () {
         $exitCode = Artisan::call('email:send', [
@@ -478,11 +478,11 @@ Sometimes you may wish to execute an Artisan command outside of the CLI. For exa
         //
     });
 
-Alternatively, you may pass the entire Artisan command to the `call` method as a string:
+Кроме того, вы можете передать всю команду методу `call` в виде строки:
 
     Artisan::call('email:send 1 --queue=default');
 
-Using the `queue` method on the `Artisan` facade, you may even queue Artisan commands so they are processed in the background by your [queue workers](/docs/{{version}}/queues). Before using this method, make sure you have configured your queue and are running a queue listener:
+Используя метод `queue` фасада `Artisan`, вы можете даже поставить команды Artisan в очередь, чтобы они обрабатывались в фоновом режиме [обработчиком очереди](queues.md). Перед использованием этого метода убедитесь, что вы настроили очереди и запущен слушатель очереди:
 
     Route::get('/foo', function () {
         Artisan::queue('email:send', [
@@ -492,6 +492,8 @@ Using the `queue` method on the `Artisan` facade, you may even queue Artisan com
         //
     });
 
+Вы также можете указать соединение или очередь, в которую должна быть отправлена команда Artisan:
+
 You may also specify the connection or queue the Artisan command should be dispatched to:
 
     Artisan::queue('email:send', [
@@ -499,9 +501,9 @@ You may also specify the connection or queue the Artisan command should be dispa
     ])->onConnection('redis')->onQueue('commands');
 
 <a name="passing-array-values"></a>
-#### Passing Array Values
+#### Передача массива значений
 
-If your command defines an option that accepts an array, you may pass an array of values to that option:
+Если ваша команда определяет параметр, который принимает массив, вы можете передать массив значений этому параметру:
 
     Route::get('/foo', function () {
         $exitCode = Artisan::call('email:send', [
@@ -510,21 +512,21 @@ If your command defines an option that accepts an array, you may pass an array o
     });
 
 <a name="passing-boolean-values"></a>
-#### Passing Boolean Values
+#### Передача значений логического типа
 
-If you need to specify the value of an option that does not accept string values, such as the `--force` flag on the `migrate:refresh` command, you should pass `true` or `false`:
+Если необходимо указать значение параметра, который не принимает строковые значения, например флаг `--force` в команде `migrate:refresh`, то вы должны передать `true` или `false`:
 
     $exitCode = Artisan::call('migrate:refresh', [
         '--force' => true,
     ]);
 
 <a name="calling-commands-from-other-commands"></a>
-### Calling Commands From Other Commands
+### Вызов команд из других команд
 
-Sometimes you may wish to call other commands from an existing Artisan command. You may do so using the `call` method. This `call` method accepts the command name and an array of command parameters:
+По желанию можно вызвать другие команды из существующей команды Artisan. Вы можете сделать это с помощью метода `call`. Метод `call` принимает имя команды и массив параметров команды:
 
     /**
-     * Execute the console command.
+     * Выполнить консольную команду.
      *
      * @return mixed
      */
@@ -537,22 +539,22 @@ Sometimes you may wish to call other commands from an existing Artisan command. 
         //
     }
 
-If you would like to call another console command and suppress all of its output, you may use the `callSilent` method. The `callSilent` method has the same signature as the `call` method:
+Если вы хотите вызвать другую консольную команду в тихом режиме, то используйте метод `callSilent`. Метод `callSilent` имеет ту же сигнатуру, что и метод `call`:
 
     $this->callSilent('email:send', [
         'user' => 1, '--queue' => 'default'
     ]);
 
 <a name="stub-customization"></a>
-## Stub Customization
+## Настройка заглушек
 
-The Artisan console's `make` commands are used to create a variety of classes, such as controllers, jobs, migrations, and tests. These classes are generated using "stub" files that are populated with values based on your input. However, you may sometimes wish to make small changes to files generated by Artisan. To accomplish this, you may use the `stub:publish` command to publish the most common stubs for customization:
+Команды `make` консоли Artisan используются для создания различных классов, таких как контроллеры, задания, миграции и тесты. Эти классы создаются с помощью файлов «заглушек», которые заполняются значениями на основе ваших входных данных. Однако, иногда может потребоваться внести небольшие изменения в файлы, созданные Artisan. Для этого можно использовать команду `stub:publish`, чтобы опубликовать наиболее распространенные заглушки для настройки:
 
     php artisan stub:publish
 
-The published stubs will be located within a `stubs` directory in the root of your application. Any changes you make to these stubs will be reflected when you generate their corresponding classes using Artisan `make` commands.
+Опубликованные заглушки будут расположены в каталоге `stubs` корня вашего приложения. Любые изменения, внесенные вами в эти заглушки, будут отражены при создании соответствующих классов с помощью команд Artisan `make`.
 
 <a name="events"></a>
-## Events
+## События
 
-Artisan dispatches three events when running commands: `Illuminate\Console\Events\ArtisanStarting`, `Illuminate\Console\Events\CommandStarting`, and `Illuminate\Console\Events\CommandFinished`. The `ArtisanStarting` event is dispatched immediately when Artisan starts running. Next, the `CommandStarting` event is dispatched immediately before a command runs. Finally, the `CommandFinished` event is dispatched once a command finishes executing.
+Artisan запускает три события при выполнении команд: `Illuminate\Console\Events\ArtisanStarting`, `Illuminate\Console\Events\CommandStarting`, and `Illuminate\Console\Events\CommandFinished`. Событие `ArtisanStarting` выполняется сразу после запуска Artisan. Затем событие `CommandStarting` выполняется непосредственно перед запуском команды. Наконец, событие `CommandFinished` выполняется после завершения команды.
