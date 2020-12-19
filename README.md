@@ -174,6 +174,7 @@ customizing  |  корректировка  |
 defining  |  определение  |  
 deployment  |  развертывание  |  
 detaching  |  отсоединение  |  
+directory  |  каталог, директория  |  
 dispatch  |  выполнение, исполнение, направление  |  
 dump  |  вывод, отображение  |  
 <a name="dictionary-e">**E**</a>
@@ -187,13 +188,15 @@ event  |  событие  |
 facade  |  фасад  |  
 factory callbacks  |  хуки фабрики  |  
 fake  |  фальсификация, фальшивка  |  
-foreign key constraints  |  ограничения внешнего ключа  |  
+feature  |  функционал, особенность  |  
+fired  |  инициировано, сработано  |  
 flash data  |  флеш-данные  |  Данные, имеющие непродолжительный срок существования
 flashed to the session  |  записаны (краткосрочно) в сессию  |  
 flexibility  |  гибкость  |  
-feature  |  функционал, особенности  |  
+force  |  принудительно  |  
+foreign key constraints  |  ограничения внешнего ключа  |  
 <a name="dictionary-g">**G**</a>
-given  |  переданный, указанный  |  
+given  |  переданный, указанный, конкретный  |  
 guard  |  охранник (аутентификатора)  |  
 guarding  |  защита  |  
 <a name="dictionary-h">**H**</a>
@@ -228,6 +231,7 @@ options  |  параметры  |
 overriding  |  переопределение  |  
 <a name="dictionary-p">**P**</a>
 pagination  |  постраничная навигация  |  
+permanently  |  окончательно  |  
 placeholder  |  заполнитель, метка-заполнитель, символ-заполнитель, заменитель  |  
 policy  |  политика  |  
 power  |  возможность  |  В контексте о функциональности
@@ -236,6 +240,7 @@ production  |  эксплуатация  |
 query builder  |  построитель запросов  |  
 query constraints  |  ограничения запроса  |  
 queue  |  очередь  |  
+queueable  |  последовательный  |  
 <a name="dictionary-r">**R**</a>
 rate limiting  |  ограничение количества запросов  |  
 redirect  |  перенаправление  |  
@@ -262,6 +267,7 @@ service container  |  контейнер служб  |
 service providers  |  поставщики служб  |  
 session  |  сессия  |  
 soft deleting  |  программное удаление  |  
+Sometimes you may need, Sometimes you may wish  |  По желанию можно (может)  |  
 spy on an object  |  наблюдать за объектом  |  
 specific  |  конкретный, определенный  |  
 statement  |  оператор  |  
