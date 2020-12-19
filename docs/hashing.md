@@ -1,27 +1,27 @@
-# Hashing
+# Хеширование
 
-- [Introduction](#introduction)
-- [Configuration](#configuration)
-- [Basic Usage](#basic-usage)
+- [Введение](#introduction)
+- [Конфигурирование](#configuration)
+- [Основы использования](#basic-usage)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
-The Laravel `Hash` [facade](/docs/{{version}}/facades) provides secure Bcrypt and Argon2 hashing for storing user passwords. If you are using the [Laravel Jetstream](https://jetstream.laravel.com) authentication scaffolding, Bcrypt will be used for registration and authentication by default.
+[Фасад](facades.md) `Hash` Laravel обеспечивает безопасное хеширование Bcrypt и Argon2 для хранения паролей пользователей. Если вы используете каркас аутентификации [Laravel Jetstream](https://jetstream.laravel.com), то по умолчанию для регистрации и аутентификации будет использоваться Bcrypt.
 
-> {tip} Bcrypt is a great choice for hashing passwords because its "work factor" is adjustable, which means that the time it takes to generate a hash can be increased as hardware power increases.
+> {tip} Bcrypt – отличный выбор для хеширования паролей, потому что его «коэффициент работы» регулируется, а это означает, что время, необходимое для генерации хеш-кода, может быть увеличено по мере увеличения мощности оборудования.
 
 <a name="configuration"></a>
-## Configuration
+## Конфигурирование
 
-The default hashing driver for your application is configured in the `config/hashing.php` configuration file. There are currently three supported drivers: [Bcrypt](https://en.wikipedia.org/wiki/Bcrypt) and [Argon2](https://en.wikipedia.org/wiki/Argon2) (Argon2i and Argon2id variants).
+Драйвер хеширования по умолчанию для вашего приложения настраивается в файле конфигурации `config/hashing.php`. В настоящее время существует три поддерживаемых драйвера: [Bcrypt](https://en.wikipedia.org/wiki/Bcrypt) и [Argon2](https://en.wikipedia.org/wiki/Argon2) (вариации Argon2i и Argon2id).
 
-> {note} The Argon2i driver requires PHP 7.2.0 or greater and the Argon2id driver requires PHP 7.3.0 or greater.
+> {note} Для драйвера Argon2i требуется PHP 7.2.0 или выше, а для драйвера Argon2id требуется PHP 7.3.0 или выше.
 
 <a name="basic-usage"></a>
-## Basic Usage
+## Основы использования
 
-You may hash a password by calling the `make` method on the `Hash` facade:
+Вы можете хэшировать пароль, вызвав метод `make` фасада `Hash`:
 
     <?php
 
@@ -34,14 +34,14 @@ You may hash a password by calling the `make` method on the `Hash` facade:
     class UpdatePasswordController extends Controller
     {
         /**
-         * Update the password for the user.
+         * Обновить пароль пользователя.
          *
          * @param  Request  $request
          * @return Response
          */
         public function update(Request $request)
         {
-            // Validate the new password length...
+            // Проверить длину нового пароля ...
 
             $request->user()->fill([
                 'password' => Hash::make($request->newPassword)
@@ -50,18 +50,18 @@ You may hash a password by calling the `make` method on the `Hash` facade:
     }
 
 <a name="adjusting-the-bcrypt-work-factor"></a>
-#### Adjusting The Bcrypt Work Factor
+#### Регулировка коэффициента работы Bcrypt
 
-If you are using the Bcrypt algorithm, the `make` method allows you to manage the work factor of the algorithm using the `rounds` option; however, the default is acceptable for most applications:
+Если вы используете алгоритм Bcrypt, метод `make` позволяет вам управлять коэффициентом работы алгоритма с помощью параметра `rounds`; однако значение по умолчанию приемлемо для большинства приложений:
 
     $hashed = Hash::make('password', [
         'rounds' => 12,
     ]);
 
 <a name="adjusting-the-argon2-work-factor"></a>
-#### Adjusting The Argon2 Work Factor
+#### Регулировка коэффициента работы Argon2
 
-If you are using the Argon2 algorithm, the `make` method allows you to manage the work factor of the algorithm using the `memory`, `time`, and `threads` options; however, the defaults are acceptable for most applications:
+Если вы используете алгоритм Argon2, метод `make` позволяет вам управлять коэффициентом работы алгоритма с помощью параметров `memory`, `time` и `threads`; однако значения по умолчанию приемлемы для большинства приложений:
 
     $hashed = Hash::make('password', [
         'memory' => 1024,
@@ -69,21 +69,21 @@ If you are using the Argon2 algorithm, the `make` method allows you to manage th
         'threads' => 2,
     ]);
 
-> {tip} For more information on these options, check out the [official PHP documentation](https://secure.php.net/manual/en/function.password-hash.php).
+> {tip} Дополнительную информацию об этих параметрах можно найти в [официальной документации PHP](https://secure.php.net/manual/en/function.password-hash.php).
 
 <a name="verifying-a-password-against-a-hash"></a>
-#### Verifying A Password Against A Hash
+#### Проверка пароля по хешу
 
-The `check` method allows you to verify that a given plain-text string corresponds to a given hash:
+Метод `check` позволяет проверить, что указанная текстовая строка соответствует заданному хешу:
 
     if (Hash::check('plain-text', $hashedPassword)) {
-        // The passwords match...
+        // Пароли совпадают ...
     }
 
 <a name="checking-if-a-password-needs-to-be-rehashed"></a>
-#### Checking If A Password Needs To Be Rehashed
+#### Проверка необходимости повторного хеширования пароля
 
-The `needsRehash` function allows you to determine if the work factor used by the hasher has changed since the password was hashed:
+Метод `needsRehash` позволяет определить, изменился ли коэффициентом работы, используемый хешером, с момента хеширования пароля:
 
     if (Hash::needsRehash($hashed)) {
         $hashed = Hash::make('plain-text');
