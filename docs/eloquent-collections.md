@@ -1,13 +1,13 @@
-# Eloquent: Collections
+# Eloquent: коллекции
 
-- [Introduction](#introduction)
-- [Available Methods](#available-methods)
-- [Custom Collections](#custom-collections)
+- [Введение](#introduction)
+- [Доступные методы](#available-methods)
+- [Пользовательские коллекции](#custom-collections)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
-All Eloquent methods that return more than one model result will return instances of the `Illuminate\Database\Eloquent\Collection` class, including results retrieved via the `get` method or accessed via a relationship. The Eloquent collection object extends Laravel's [base collection](/docs/{{version}}/collections), so it naturally inherits dozens of methods used to fluently work with the underlying array of Eloquent models. Be sure to review the Laravel collection documentation to learn all about these helpful methods!
+All Eloquent methods that return more than one model result will return instances of the `Illuminate\Database\Eloquent\Collection` class, including results retrieved via the `get` method or accessed via a relationship. The Eloquent collection object extends Laravel's [base collection](collections.md), so it naturally inherits dozens of methods used to fluently work with the underlying array of Eloquent models. Be sure to review the Laravel collection documentation to learn all about these helpful methods!
 
 All collections also serve as iterators, allowing you to loop over them as if they were simple PHP arrays:
 
@@ -30,16 +30,16 @@ However, as previously mentioned, collections are much more powerful than arrays
 <a name="eloquent-collection-conversion"></a>
 #### Eloquent Collection Conversion
 
-While most Eloquent collection methods return a new instance of an Eloquent collection, the `collapse`, `flatten`, `flip`, `keys`, `pluck`, and `zip` methods return a [base collection](/docs/{{version}}/collections) instance. Likewise, if a `map` operation returns a collection that does not contain any Eloquent models, it will be converted to a base collection instance.
+While most Eloquent collection methods return a new instance of an Eloquent collection, the `collapse`, `flatten`, `flip`, `keys`, `pluck`, and `zip` methods return a [base collection](collections.md) instance. Likewise, if a `map` operation returns a collection that does not contain any Eloquent models, it will be converted to a base collection instance.
 
 <a name="available-methods"></a>
-## Available Methods
+## Доступные методы
 
-All Eloquent collections extend the base [Laravel collection](/docs/{{version}}/collections#available-methods) object; therefore, they inherit all of the powerful methods provided by the base collection class.
+All Eloquent collections extend the base [Laravel collection](collections.md#available-methods) object; therefore, they inherit all of the powerful methods provided by the base collection class.
 
 In addition, the `Illuminate\Database\Eloquent\Collection` class provides a superset of methods to aid with managing your model collections. Most methods return `Illuminate\Database\Eloquent\Collection` instances; however, some methods, like `modelKeys`, return an `Illuminate\Support\Collection` instance.
 
-<style>
+<!-- <style>
     #collection-method-list > p {
         column-count: 1; -moz-column-count: 1; -webkit-column-count: 1;
         column-gap: 2em; -moz-column-gap: 2em; -webkit-column-gap: 2em;
@@ -50,7 +50,7 @@ In addition, the `Illuminate\Database\Eloquent\Collection` class provides a supe
     }
 </style>
 
-<div id="collection-method-list" markdown="1">
+<div id="collection-method-list" markdown="1"> -->
 
 [contains](#method-contains)
 [diff](#method-diff)
@@ -67,7 +67,7 @@ In addition, the `Illuminate\Database\Eloquent\Collection` class provides a supe
 [toQuery](#method-toquery)
 [unique](#method-unique)
 
-</div>
+<!-- </div> -->
 
 <a name="method-contains"></a>
 #### `contains($key, $operator = null, $value = null)`
@@ -151,14 +151,14 @@ The `modelKeys` method returns the primary keys for all models in the collection
 <a name="method-makeVisible"></a>
 #### `makeVisible($attributes)`
 
-The `makeVisible` method [makes attributes visible](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json) that are typically "hidden" on each model in the collection:
+The `makeVisible` method [makes attributes visible](eloquent-serialization.md#hiding-attributes-from-json) that are typically "hidden" on each model in the collection:
 
     $users = $users->makeVisible(['address', 'phone_number']);
 
 <a name="method-makeHidden"></a>
 #### `makeHidden($attributes)`
 
-The `makeHidden` method [hides attributes](/docs/{{version}}/eloquent-serialization#hiding-attributes-from-json) that are typically "visible" on each model in the collection:
+The `makeHidden` method [hides attributes](eloquent-serialization.md#hiding-attributes-from-json) that are typically "visible" on each model in the collection:
 
     $users = $users->makeHidden(['address', 'phone_number']);
 
@@ -190,7 +190,7 @@ The `unique` method returns all of the unique models in the collection. Any mode
     $users = $users->unique();
 
 <a name="custom-collections"></a>
-## Custom Collections
+## Пользовательские коллекции
 
 If you would like to use a custom `Collection` object when interacting with a given model, you may define a `newCollection` method on your model:
 
