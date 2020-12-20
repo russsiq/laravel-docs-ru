@@ -110,7 +110,7 @@
 **Оглавление**
 0-9
 [A](#dictionary-a)
-B
+[B](#dictionary-b)
 [C](#dictionary-c)
 [D](#dictionary-d)
 [E](#dictionary-e)
