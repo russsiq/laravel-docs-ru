@@ -18,15 +18,13 @@
     - [Установка](/docs/installation.md)
     - [Конфигурирование](/docs/configuration.md)
     - [Структура каталогов](/docs/structure.md)
-    - [Homestead](/docs/homestead.md)
-    - [Valet](/docs/valet.md)
+    - [Starter Kits](/docs/starter-kits.md)
     - [Развертывание](/docs/deployment.md)
 - ## Архитектурные концепции
     - [Жизненный цикл запроса](/docs/lifecycle.md)
     - [Контейнер служб](/docs/container.md)
     - [Поставщики служб](/docs/providers.md)
     - [Фасады](/docs/facades.md)
-    - [Контракты](/docs/contracts.md)
 - ## Основы
     - [Маршрутизация](/docs/routing.md)
     - [Посредник](/docs/middleware.md)
@@ -35,15 +33,29 @@
     - [HTTP-запросы](/docs/requests.md)
     - [HTTP-ответы](/docs/responses.md)
     - [Шаблоны HTML](/docs/views.md)
+    - [Шаблонизатор Blade](/docs/blade.md)
     - [Генерация URL-адресов](/docs/urls.md)
     - [Сессия](/docs/session.md)
     - [Валидация](/docs/validation.md)
     - [Обработка ошибок](/docs/errors.md)
     - [Логирование](/docs/logging.md)
-- ## Клиентская часть
-    - [Шаблонизатор Blade](/docs/blade.md)
-    - [Локализация](/docs/localization.md)
+- ## Углубленное изучение
+    - [Консоль Artisan](/docs/artisan.md)
+    - [Широковещание](/docs/broadcasting.md)
+    - [Кэш](/docs/cache.md)
+    - [Коллекции](/docs/collections.md)
     - [Компиляция исходников](/docs/mix.md)
+    - [Контракты](/docs/contracts.md)
+    - [События](/docs/events.md)
+    - [Файловое хранилище](/docs/filesystem.md)
+    - [Помощники](/docs/helpers.md)
+    - [HTTP-клиент](/docs/http-client.md)
+    - [Локализация](/docs/localization.md)
+    - [Почта](/docs/mail.md)
+    - [Уведомления](/docs/notifications.md)
+    - [Разработка пакетов](/docs/packages.md)
+    - [Очереди](/docs/queues.md)
+    - [Планирование задач](/docs/scheduling.md)
 - ## Безопасность
     - [Аутентификация](/docs/authentication.md)
     - [Авторизация](/docs/authorization.md)
@@ -51,20 +63,6 @@
     - [Шифрование](/docs/encryption.md)
     - [Хеширование](/docs/hashing.md)
     - [Сброс пароля](/docs/passwords.md)
-- ## Углубленное изучение
-    - [Консоль Artisan](/docs/artisan.md)
-    - [Широковещание](/docs/broadcasting.md)
-    - [Кэш](/docs/cache.md)
-    - [Коллекции](/docs/collections.md)
-    - [События](/docs/events.md)
-    - [Файловое хранилище](/docs/filesystem.md)
-    - [Помощники](/docs/helpers.md)
-    - [HTTP-клиент](/docs/http-client.md)
-    - [Почта](/docs/mail.md)
-    - [Уведомления](/docs/notifications.md)
-    - [Разработка пакетов](/docs/packages.md)
-    - [Очереди](/docs/queues.md)
-    - [Планирование задач](/docs/scheduling.md)
 - ## База данных
     - [Начало](/docs/database.md)
     - [Построитель запросов](/docs/queries.md)
@@ -89,16 +87,19 @@
 - ## Пакеты
     - [Cashier (Stripe)](/docs/billing.md)
     - [Cashier (Paddle)](/docs/cashier-paddle.md)
-    - [Cashier (Mollie)](https://github.com/laravel/cashier-mollie)
     - [Dusk](/docs/dusk.md)
     - [Envoy](/docs/envoy.md)
+    - [Fortify](/docs/fortify.md)
+    - [Homestead](/docs/homestead.md)
     - [Horizon](/docs/horizon.md)
     - [Jetstream](https://jetstream.laravel.com)
     - [Passport](/docs/passport.md)
+    - [Sail](/docs/sail.md)
     - [Sanctum](/docs/sanctum.md)
     - [Scout](/docs/scout.md)
     - [Socialite](/docs/socialite.md)
     - [Telescope](/docs/telescope.md)
+    - [Valet](/docs/valet.md)
 - [Документация API](https://laravel.com/api/8.x/)
 
 <a name="dictionary"></a>
@@ -175,7 +176,7 @@ defining  |  определение  |
 deployment  |  развертывание  |  
 detaching  |  отсоединение  |  
 directory  |  каталог, директория  |  
-dispatch  |  выполнение, исполнение, направление  |  
+dispatch  |  выполнение, исполнение, запуск, направление  |  
 dump  |  вывод, отображение  |  
 <a name="dictionary-e">**E**</a>
 eager  |  нетерпеливый  |  
@@ -184,6 +185,8 @@ encryption  |  шифрование  |
 environment  |  среда, окружение  |  
 evaluated  |  проанализированы  |  
 event  |  событие  |  
+examining  |  изучение, исследование, интерпретация  |  
+exit code  |  код выхода / возврата  |  
 <a name="dictionary-f">**F**</a>
 facade  |  фасад  |  
 factory callbacks  |  хуки фабрики  |  
@@ -201,7 +204,9 @@ guard  |  охранник (аутентификатора)  |
 guarding  |  защита  |  
 <a name="dictionary-h">**H**</a>
 hashing  |  хеширование  |  
+helpful  |  полезный  |  
 helpers  |  помощники, глобальные вспомогательные функции  |  
+hydrated  |  присоединены (включены в результирующий набор)  |  Например, в коллекцию при использовании генераторов на основе курсоров
 <a name="dictionary-j">**J**</a>
 job  |  задание  |  
 job batching  |  пакетная обработка заданий  |  
@@ -215,6 +220,7 @@ logging  |  логирование  |
 localization  |  локализация  |  
 <a name="dictionary-m">**M**</a>
 making  |  инициализация  |  Например, метод фабрики `make` инициализирует, но не создает запись о модели в БД.
+manually  |  самостоятельно, вручную  |  
 mass assignment  |  массовое присвоение  |  
 middleware  |  посредник  |  
 migration  |  миграция  |  
@@ -227,6 +233,7 @@ mutator  |  мутатор  |
 named error bag  |  массив именованных ошибок  |  
 <a name="dictionary-o">**O**</a>
 observers  |  наблюдатели  |  
+optional  |  необязательный  |  
 options  |  параметры  |  
 overriding  |  переопределение  |  
 <a name="dictionary-p">**P**</a>
@@ -235,6 +242,7 @@ permanently  |  окончательно  |
 placeholder  |  заполнитель, метка-заполнитель, символ-заполнитель, заменитель  |  
 policy  |  политика  |  
 power  |  возможность  |  В контексте о функциональности
+progress bar  |  индикатор выполнения  |  
 production  |  эксплуатация  |  
 <a name="dictionary-q">**Q**</a>
 query builder  |  построитель запросов  |  
@@ -266,6 +274,7 @@ serialization  |  сериализация  |
 service container  |  контейнер служб  |  
 service providers  |  поставщики служб  |  
 session  |  сессия  |  
+shortcut  |  ярлык, псевдоним  |  
 soft deleting  |  программное удаление  |  
 Sometimes you may need, Sometimes you may wish  |  По желанию можно (может)  |  
 spy on an object  |  наблюдать за объектом  |  
@@ -275,6 +284,7 @@ stub  |  заглушка  |
 <a name="dictionary-t">**T**</a>
 terms of service  |  условия использования  |  
 timestamp  |  временная метка  |  
+type-hinting  |  типизация  |  
 toggling  |  переключение  |  
 <a name="dictionary-v">**V**</a>
 validation  |  валидация, проверка  |  
@@ -285,3 +295,4 @@ verification  |  подтверждение  |
 view  |  шаблон, представление  |  
 <a name="dictionary-w">**W**</a>
 wildcard  |  метасимвол подстановки  |  
+work factor  |  коэффициент работы  |  
