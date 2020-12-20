@@ -1,22 +1,22 @@
-# CSRF Protection
+# Предотвращение атак CSRF
 
-- [Introduction](#csrf-introduction)
-- [Preventing CSRF Requests](#preventing-csrf-requests)
-    - [Excluding URIs](#csrf-excluding-uris)
-- [X-CSRF-Token](#csrf-x-csrf-token)
-- [X-XSRF-Token](#csrf-x-xsrf-token)
+- [Введение](#csrf-introduction)
+- [Предотвращение запросов от CSRF](#preventing-csrf-requests)
+    - [Исключение URI из защиты от CSRF](#csrf-excluding-uris)
+- [Токен X-CSRF](#csrf-x-csrf-token)
+- [Токен X-XSRF](#csrf-x-xsrf-token)
 
 <a name="csrf-introduction"></a>
-## Introduction
+## Введение
 
-Cross-site request forgeries are a type of malicious exploit whereby unauthorized commands are performed on behalf of an authenticated user. Thankfully, Laravel makes it easy to protect your application from [cross-site request forgery](https://en.wikipedia.org/wiki/Cross-site_request_forgery) (CSRF) attacks.
+Подделки межсайтовых запросов – это разновидность вредоносного эксплойта, при котором неавторизованные команды выполняются от имени аутентифицированного пользователя. К счастью, Laravel позволяет легко защитить ваше приложение от атак [подделки межсайтовых запросов](https://en.wikipedia.org/wiki/Cross-site_request_forgery) (CSRF).
 
 <a name="csrf-explanation"></a>
-#### An Explanation Of The Vulnerability
+#### Объяснение уязвимости
 
-In case you're not familiar with cross-site request forgeries, let's discuss an example of how this vulnerability can be exploited. Imagine your application has a `/user/email` route that accepts a `POST` request to change the authenticated user's email address. Most likely, this route expects an `email` input field to contain the email address the user would like to begin using.
+Если вы не знакомы с подделками межсайтовых запросов, давайте обсудим пример того, как можно использовать эту уязвимость. Представьте, что ваше приложение имеет маршрут `/user/email`, который принимает `POST` запрос для изменения адреса электронной почты аутентифицированного пользователя. Скорее всего, этот маршрут ожидает, что поле ввода `email` будет содержать адрес электронной почты, который пользователь хотел бы начать использовать.
 
-Without CSRF protection, a malicious website could create an HTML form that points to your application's `/user/email` route and submits the malicious user's own email address:
+Без защиты CSRF вредоносный веб-сайт может создать HTML-форму, которая указывает на маршрут вашего приложения `/user/email` и отправляет собственный адрес электронной почты злоумышленника:
 
     <form action="https://your-application.com/user/email" method="POST">
         <input type="email" value="malicious-email@example.com">
@@ -26,16 +26,16 @@ Without CSRF protection, a malicious website could create an HTML form that poin
         document.forms[0].submit();
     </script>
 
- If the malicious website automatically submits the form when the page is loaded, the malicious user only needs to lure an unsuspecting user of your application to visit their website and their email address will be changed in your application.
+Если вредоносный веб-сайт автоматически отправляет форму при загрузке страницы, злоумышленнику нужно только подтолкнуть ничего не подозревающего пользователя вашего приложения посетить свой веб-сайт, и его адрес электронной почты будет изменен в вашем приложении.
 
- To prevent this vulnerability, we need to inspect every incoming `POST`, `PUT`, `PATCH`, or `DELETE` request for a secret session value that the malicious application is unable to access.
+Чтобы предотвратить эту уязвимость, нам необходимо проверять каждый входящий запрос `POST`, `PUT`, `PATCH`, или `DELETE` на секретное значение сеанса, к которому вредоносное приложение не может получить доступ.
 
 <a name="preventing-csrf-requests"></a>
-## Preventing CSRF Requests
+## Предотвращение запросов от CSRF
 
-Laravel automatically generates a CSRF "token" for each active [user session](/docs/{{version}}/session) managed by the application. This token is used to verify that the authenticated user is the person actually making the requests to the application. Since this token is stored in the user's session and changes each time the session is regenerated, a malicious application is unable to access it.
+Laravel автоматически генерирует «токен» CSRF для каждого активного [пользовательского сеанса](session.md), управляемого приложением. Этот токен используется для проверки того, что аутентифицированный пользователь является лицом, действительно выполняющим запросы к приложению. Поскольку этот токен хранится в сеансе пользователя и изменяется каждый раз при повторном создании сеанса, вредоносное приложение не может получить к нему доступ.
 
-The current session's CSRF token can be accessed via the request's session or via the `csrf_token` helper function:
+К токену CSRF текущего сеанса можно получить доступ через сеанс запроса или с помощью вспомогательной функции `csrf_token`:
 
     use Illuminate\Http\Request;
 
@@ -47,28 +47,28 @@ The current session's CSRF token can be accessed via the request's session or vi
         // ...
     });
 
-Anytime you define an HTML form in your application, you should include a hidden CSRF `_token` field in the form so that the CSRF protection middleware can validate the request. For convenience, you may use the `@csrf` Blade directive to generate the hidden token input field:
+Каждый раз, когда вы создаете HTML-форму в своем приложении, вы должны включать в форму скрытое поле CSRF `_token`, чтобы посредник CSRF мог проверить запрос. Для удобства вы можете использовать директиву Blade `@csrf` для создания скрытого поля ввода токена:
 
     <form method="POST" action="/profile">
         @csrf
 
-        <!-- Equivalent to... -->
+        <!-- Эквивалентно ... -->
         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
     </form>
 
-The `App\Http\Middleware\VerifyCsrfToken` [middleware](/docs/{{version}}/middleware), which is included in the `web` middleware group by default, will automatically verify that the token in the request input matches the token stored in the session. When these two tokens match, we know that the authenticated user is the one initiating the request.
+[Посредник](middleware.md) `App\Http\Middleware\VerifyCsrfToken`, который по умолчанию состоит в группе посредников `web`, автоматически проверяет соответствие токена во входном запросе и токен, хранящийся в сеансе. Когда эти два токена совпадают, мы знаем, что аутентифицированный пользователь инициирует запрос.
 
 <a name="csrf-tokens-and-spas"></a>
-### CSRF Tokens & SPAs
+### CSRF токены и SPA приложения
 
-If you are building an SPA that is utilizing Laravel as an API backend, you should consult the [Laravel Sanctum documentation](/docs/{{version}}/sanctum) for information on authenticating with your API and protecting against CSRF vulnerabilities.
+Если вы создаете SPA, который использует Laravel в качестве серверной части API, вам следует обратиться к [документации Laravel Sanctum](sanctum.md) для получения информации об аутентификации с помощью вашего API и защите от уязвимостей CSRF.
 
 <a name="csrf-excluding-uris"></a>
-### Excluding URIs From CSRF Protection
+### Исключение URI из защиты от CSRF
 
-Sometimes you may wish to exclude a set of URIs from CSRF protection. For example, if you are using [Stripe](https://stripe.com) to process payments and are utilizing their webhook system, you will need to exclude your Stripe webhook handler route from CSRF protection since Stripe will not know what CSRF token to send to your routes.
+По желанию можно исключить набор URI из защиты CSRF. Например, если вы используете [Stripe](https://stripe.com) для обработки платежей и используете их систему веб-хуков, вам нужно будет исключить маршрут обработчика веб-хуков Stripe из защиты CSRF, поскольку Stripe не будет знать, какой токен CSRF отправить по вашим маршрутам.
 
-Typically, you should place these kinds of routes outside of the `web` middleware group that the `App\Providers\RouteServiceProvider` applies to all routes in the `routes/web.php` file. However, you may also exclude the routes by adding their URIs to the `$except` property of the `VerifyCsrfToken` middleware:
+Как правило, вы должны размещать эти виды маршрутов вне группы посредников `web`, которую `App\Providers\RouteServiceProvider` применяет ко всем маршрутам в файле `routes/web.php`. Однако вы также можете исключить маршруты, добавив их URI в свойство `$except` посредника `VerifyCsrfToken`:
 
     <?php
 
@@ -79,7 +79,7 @@ Typically, you should place these kinds of routes outside of the `web` middlewar
     class VerifyCsrfToken extends Middleware
     {
         /**
-         * The URIs that should be excluded from CSRF verification.
+         * URI, которые следует исключить из проверки CSRF.
          *
          * @var array
          */
@@ -90,16 +90,16 @@ Typically, you should place these kinds of routes outside of the `web` middlewar
         ];
     }
 
-> {tip} For convenience, the CSRF middleware is automatically disabled for all routes when [running tests](/docs/{{version}}/testing).
+> {tip} Для удобства посредник CSRF автоматически отключается для всех маршрутов при [выполнение тестов](testing.md).
 
 <a name="csrf-x-csrf-token"></a>
-## X-CSRF-TOKEN
+## Токен X-CSRF
 
-In addition to checking for the CSRF token as a POST parameter, the `App\Http\Middleware\VerifyCsrfToken` middleware will also check for the `X-CSRF-TOKEN` request header. You could, for example, store the token in an HTML `meta` tag:
+В дополнение к проверке токена CSRF в качестве параметра POST-запроса посредник `App\Http\Middleware\VerifyCsrfToken` также проверяет заголовок запроса `X-CSRF-TOKEN`. Вы можете, например, сохранить токен в HTML-теге `meta`:
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-Then, you can instruct a library like jQuery to automatically add the token to all request headers. This provides simple, convenient CSRF protection for your AJAX based applications using legacy JavaScript technology:
+Затем, вы можете указать библиотеке, такой как jQuery, автоматически добавлять токен во все заголовки запросов. Это обеспечивает простую и удобную защиту CSRF для ваших приложений на основе AJAX с использованием устаревшей технологии JavaScript:
 
     $.ajaxSetup({
         headers: {
@@ -108,10 +108,10 @@ Then, you can instruct a library like jQuery to automatically add the token to a
     });
 
 <a name="csrf-x-xsrf-token"></a>
-## X-XSRF-TOKEN
+## Токен X-XSRF
 
-Laravel stores the current CSRF token in an encrypted `XSRF-TOKEN` cookie that is included with each response generated by the framework. You can use the cookie value to set the `X-XSRF-TOKEN` request header.
+Laravel хранит текущий токен CSRF в зашифрованном файле cookie `XSRF-TOKEN`, который содержится в каждом ответе, генерируемым фреймворком. Вы можете использовать значение cookie для установки заголовка запроса `X-XSRF-TOKEN`.
 
-This cookie is primarily sent as a developer convenience since some JavaScript frameworks and libraries, like Angular and Axios, automatically place its value in the `X-XSRF-TOKEN` header on same-origin requests.
+Этот файл cookie в первую очередь отправляется для удобства разработчика, поскольку некоторые фреймворки и библиотеки JavaScript, такие как Angular и Axios, автоматически помещают его значение в заголовок `X-XSRF-TOKEN` в запросах с одним и тем же источником.
 
-> {tip} By default, the `resources/js/bootstrap.js` file includes the Axios HTTP library which will automatically send the `X-XSRF-TOKEN` header for you.
+> {tip} По умолчанию файл `resources/js/bootstrap.js` включает HTTP-библиотеку Axios, которая автоматически отправляет заголовок `X-XSRF-TOKEN`.
