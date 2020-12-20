@@ -52,20 +52,20 @@
 
 <div id="collection-method-list" markdown="1"> -->
 
-[contains](#method-contains)
-[diff](#method-diff)
-[except](#method-except)
-[find](#method-find)
-[fresh](#method-fresh)
-[intersect](#method-intersect)
-[load](#method-load)
-[loadMissing](#method-loadMissing)
-[modelKeys](#method-modelKeys)
-[makeVisible](#method-makeVisible)
-[makeHidden](#method-makeHidden)
-[only](#method-only)
-[toQuery](#method-toquery)
-[unique](#method-unique)
+- [contains](#method-contains)
+- [diff](#method-diff)
+- [except](#method-except)
+- [find](#method-find)
+- [fresh](#method-fresh)
+- [intersect](#method-intersect)
+- [load](#method-load)
+- [loadMissing](#method-loadMissing)
+- [modelKeys](#method-modelKeys)
+- [makeVisible](#method-makeVisible)
+- [makeHidden](#method-makeHidden)
+- [only](#method-only)
+- [toQuery](#method-toquery)
+- [unique](#method-unique)
 
 <!-- </div> -->
 
