@@ -18,7 +18,7 @@
     - [ ] [Рекомендации по участию](/docs/contributions.md)
 - ## Начало
     - [ ] [Установка](/docs/installation.md)
-    - [ ] [Конфигурирование](/docs/configuration.md)
+    - [x] [Конфигурирование](/docs/configuration.md)
     - [ ] [Структура каталогов](/docs/structure.md)
     - [ ] [Стартовые комплекты](/docs/starter-kits.md)
     - [ ] [Развертывание](/docs/deployment.md)
