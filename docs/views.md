@@ -1,18 +1,18 @@
-# Views
+# Шаблоны HTML
 
-- [Introduction](#introduction)
-- [Creating & Rendering Views](#creating-and-rendering-views)
-    - [Nested View Directories](#nested-view-directories)
-    - [Creating The First Available View](#creating-the-first-available-view)
-    - [Determining If A View Exists](#determining-if-a-view-exists)
-- [Passing Data To Views](#passing-data-to-views)
-    - [Sharing Data With All Views](#sharing-data-with-all-views)
-- [View Composers](#view-composers)
-    - [View Creators](#view-creators)
-- [Optimizing Views](#optimizing-views)
+- [Введение](#introduction)
+- [Создание и отрисовка шаблонов](#creating-and-rendering-views)
+    - [Вложенные каталоги шаблонов](#nested-view-directories)
+    - [Создание первого доступного шаблона](#creating-the-first-available-view)
+    - [Определение наличия шаблона](#determining-if-a-view-exists)
+- [Передача данных шаблону](#passing-data-to-views)
+    - [Общедоступные данные для всех шаблонов](#sharing-data-with-all-views)
+- [Компоновщики шаблонов](#view-composers)
+    - [Создатели шаблонов](#view-creators)
+- [Оптимизация шаблонов](#optimizing-views)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
 Of course, it's not practical to return entire HTML documents strings directly from your routes and controllers. Thankfully, views provide a convenient way to place all of our HTML in separate files. Views separate your controller / application logic from your presentation logic and are stored in the `resources/views` directory. A simple view might look something like this:
 
@@ -32,12 +32,12 @@ Since this view is stored at `resources/views/greeting.blade.php`, we may return
         return view('greeting', ['name' => 'James']);
     });
 
-> {tip} Looking for more information on how to write Blade templates? Check out the full [Blade documentation](/docs/{{version}}/blade) to get started.
+> {tip} Looking for more information on how to write Blade templates? Check out the full [Blade documentation](blade.md) to get started.
 
 <a name="creating-and-rendering-views"></a>
-## Creating & Rendering Views
+## Создание и отрисовка шаблонов
 
-You may create a view by placing a file with the `.blade.php` extension in your application's `resources/views` directory. The `.blade.php` extension informs the framework that the file contains a [Blade template](/docs/{{version}}/blade). Blade templates contain HTML as well as Blade directives that allow you to easily echo values, create "if" statements, iterate over data, and more.
+You may create a view by placing a file with the `.blade.php` extension in your application's `resources/views` directory. The `.blade.php` extension informs the framework that the file contains a [Blade template](blade.md). Blade templates contain HTML as well as Blade directives that allow you to easily echo values, create "if" statements, iterate over data, and more.
 
 Once you have created a view, you may return it from one of your application's routes or controllers using the global `view` helper:
 
@@ -51,10 +51,10 @@ Views may also be returned using the `View` facade:
 
     return View::make('greeting', ['name' => 'James']);
 
-As you can see, the first argument passed to the `view` helper corresponds to the name of the view file in the `resources/views` directory. The second argument is an array of data that should be made available to the view. In this case, we are passing the `name` variable, which is displayed in the view using [Blade syntax](/docs/{{version}}/blade).
+As you can see, the first argument passed to the `view` helper corresponds to the name of the view file in the `resources/views` directory. The second argument is an array of data that should be made available to the view. In this case, we are passing the `name` variable, which is displayed in the view using [Blade syntax](blade.md).
 
 <a name="nested-view-directories"></a>
-### Nested View Directories
+### Вложенные каталоги шаблонов
 
 Views may also be nested within subdirectories of the `resources/views` directory. "Dot" notation may be used to reference nested views. For example, if your view is stored at `resources/views/admin/profile.blade.php`, you may return it from one of your application's routes / controllers like so:
 
@@ -63,7 +63,7 @@ Views may also be nested within subdirectories of the `resources/views` director
 > {note} View directory names should not contain the `.` character.
 
 <a name="creating-the-first-available-view"></a>
-### Creating The First Available View
+### Создание первого доступного шаблона
 
 Using the `View` facade's `first` method, you may create the first view that exists in a given array of views. This may be useful if your application or package allows views to be customized or overwritten:
 
@@ -72,7 +72,7 @@ Using the `View` facade's `first` method, you may create the first view that exi
     return View::first(['custom.admin', 'admin'], $data);
 
 <a name="determining-if-a-view-exists"></a>
-### Determining If A View Exists
+### Определение наличия шаблона
 
 If you need to determine if a view exists, you may use the `View` facade. The `exists` method will return `true` if the view exists:
 
@@ -83,7 +83,7 @@ If you need to determine if a view exists, you may use the `View` facade. The `e
     }
 
 <a name="passing-data-to-views"></a>
-## Passing Data To Views
+## Передача данных шаблону
 
 As you saw in the previous examples, you may pass an array of data to views to make that data available to the view:
 
@@ -98,7 +98,7 @@ As an alternative to passing a complete array of data to the `view` helper funct
                 ->with('occupation', 'Astronaut');
 
 <a name="sharing-data-with-all-views"></a>
-### Sharing Data With All Views
+### Общедоступные данные для всех шаблонов
 
 Occasionally, you may need to share data with all views that are rendered by your application. You may do so using the `View` facade's `share` method. Typically, you should place calls to the `share` method within a service provider's `boot` method. You are free to add them to the `App\Providers\AppServiceProvider` class or generate a separate service provider to house them:
 
@@ -132,11 +132,11 @@ Occasionally, you may need to share data with all views that are rendered by you
     }
 
 <a name="view-composers"></a>
-## View Composers
+## Компоновщики шаблонов
 
 View composers are callbacks or class methods that are called when a view is rendered. If you have data that you want to be bound to a view each time that view is rendered, a view composer can help you organize that logic into a single location. View composers may prove particularly useful if the same view is returned by multiple routes or controllers within your application and always needs a particular piece of data.
 
-Typically, view composers will be registered within one of your application's [service providers](/docs/{{version}}/providers). In this example, we'll assume that we have created a new `App\Providers\ViewServiceProvider` to house this logic.
+Typically, view composers will be registered within one of your application's [service providers](providers.md). In this example, we'll assume that we have created a new `App\Providers\ViewServiceProvider` to house this logic.
 
 We'll use the `View` facade's `composer` method to register the view composer. Laravel does not include a default directory for class based view composers, so you are free to organize them however you wish. For example, you could create an `app/Http/View/Composers` directory to house all of your application's view composers:
 
@@ -221,7 +221,7 @@ Now that we have registered the composer, the `compose` method of the `App\Http\
         }
     }
 
-As you can see, all view composers are resolved via the [service container](/docs/{{version}}/container), so you may type-hint any dependencies you need within a composer's constructor.
+As you can see, all view composers are resolved via the [service container](container.md), so you may type-hint any dependencies you need within a composer's constructor.
 
 <a name="attaching-a-composer-to-multiple-views"></a>
 #### Attaching A Composer To Multiple Views
@@ -242,7 +242,7 @@ The `composer` method also accepts the `*` character as a wildcard, allowing you
     });
 
 <a name="view-creators"></a>
-### View Creators
+### Создатели шаблонов
 
 View "creators" are very similar to view composers; however, they are executed immediately after the view is instantiated instead of waiting until the view is about to render. To register a view creator, use the `creator` method:
 
@@ -252,7 +252,7 @@ View "creators" are very similar to view composers; however, they are executed i
     View::creator('profile', ProfileCreator::class);
 
 <a name="optimizing-views"></a>
-## Optimizing Views
+## Оптимизация шаблонов
 
 By default, Blade template views are compiled on demand. When a request is executed that renders a view, Laravel will determine if a compiled version of the view exists. If the file exists, Laravel will then determine if the uncompiled view has been modified more recently than the compiled view. If the compiled view either does not exist, or the uncompiled view has been modified, Laravel will recompile the view.
 
