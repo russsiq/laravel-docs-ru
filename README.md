@@ -221,6 +221,7 @@ logger  |  регистратор  |
 logging  |  логирование  |  
 localization  |  локализация  |  
 <a name="dictionary-m">**M**</a>
+maintenance mode  |  режим обслуживания  |  
 making  |  инициализация  |  Например, метод фабрики `make` инициализирует, но не создает запись о модели в БД.
 manually  |  самостоятельно, вручную  |  
 mass assignment  |  массовое присвоение  |  
@@ -282,6 +283,7 @@ soft deleting  |  программное удаление  |
 Sometimes you may need, Sometimes you may wish  |  По желанию можно (может)  |  
 spy on an object  |  наблюдать за объектом  |  
 specific  |  конкретный, определенный  |  
+staging  |  промежуточная (стадия разработки)  |  
 statement  |  оператор  |  
 starter kit  |  стартовый комплект  |  
 stub  |  заглушка  |  
