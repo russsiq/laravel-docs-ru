@@ -47,7 +47,7 @@
     - [ ] [Кэш](/docs/cache.md)
     - [ ] [Коллекции](/docs/collections.md)
     - [ ] [Компиляция исходников](/docs/mix.md)
-    - [ ] [Контракты](/docs/contracts.md)
+    - [x] [Контракты](/docs/contracts.md)
     - [ ] [События](/docs/events.md)
     - [ ] [Файловое хранилище](/docs/filesystem.md)
     - [ ] [Помощники](/docs/helpers.md)
