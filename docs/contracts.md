@@ -1,13 +1,13 @@
-# Contracts
+# Контракты
 
-- [Introduction](#introduction)
-    - [Contracts Vs. Facades](#contracts-vs-facades)
-- [When To Use Contracts](#when-to-use-contracts)
-- [How To Use Contracts](#how-to-use-contracts)
-- [Contract Reference](#contract-reference)
+- [Введение](#introduction)
+    - [Контракты против Фасадов](#contracts-vs-facades)
+- [Когда использовать контракты](#when-to-use-contracts)
+- [Как использовать контракты](#how-to-use-contracts)
+- [Справочник контрактов](#contract-reference)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
 Laravel's "contracts" are a set of interfaces that define the core services provided by the framework. For example, an `Illuminate\Contracts\Queue\Queue` contract defines the methods needed for queueing jobs, while the `Illuminate\Contracts\Mail\Mailer` contract defines the methods needed for sending e-mail.
 
@@ -16,9 +16,9 @@ Each contract has a corresponding implementation provided by the framework. For 
 All of the Laravel contracts live in [their own GitHub repository](https://github.com/illuminate/contracts). This provides a quick reference point for all available contracts, as well as a single, decoupled package that may be utilized when building packages that interact with Laravel services.
 
 <a name="contracts-vs-facades"></a>
-### Contracts Vs. Facades
+### Контракты против Фасадов
 
-Laravel's [facades](/docs/{{version}}/facades) and helper functions provide a simple way of utilizing Laravel's services without needing to type-hint and resolve contracts out of the service container. In most cases, each facade has an equivalent contract.
+Laravel's [facades](facades.md) and helper functions provide a simple way of utilizing Laravel's services without needing to type-hint and resolve contracts out of the service container. In most cases, each facade has an equivalent contract.
 
 Unlike facades, which do not require you to require them in your class' constructor, contracts allow you to define explicit dependencies for your classes. Some developers prefer to explicitly define their dependencies in this way and therefore prefer to use contracts, while other developers enjoy the convenience of facades. **In general, most applications can use facades without issue during development.**
 
@@ -30,11 +30,11 @@ The decision to use contracts or facades will come down to personal taste and th
 In general, most applications can use facades without issue during development. If you are building a package that integrates with multiple PHP frameworks you may wish to use the `illuminate/contracts` package to define your integration with Laravel's services without the need to require Laravel's concrete implementations in your package's `composer.json` file.
 
 <a name="how-to-use-contracts"></a>
-## How To Use Contracts
+## Как использовать контракты
 
 So, how do you get an implementation of a contract? It's actually quite simple.
 
-Many types of classes in Laravel are resolved through the [service container](/docs/{{version}}/container), including controllers, event listeners, middleware, queued jobs, and even route closures. So, to get an implementation of a contract, you can just "type-hint" the interface in the constructor of the class being resolved.
+Many types of classes in Laravel are resolved through the [service container](container.md), including controllers, event listeners, middleware, queued jobs, and even route closures. So, to get an implementation of a contract, you can just "type-hint" the interface in the constructor of the class being resolved.
 
 For example, take a look at this event listener:
 
@@ -78,10 +78,10 @@ For example, take a look at this event listener:
         }
     }
 
-When the event listener is resolved, the service container will read the type-hints on the constructor of the class, and inject the appropriate value. To learn more about registering things in the service container, check out [its documentation](/docs/{{version}}/container).
+When the event listener is resolved, the service container will read the type-hints on the constructor of the class, and inject the appropriate value. To learn more about registering things in the service container, check out [its documentation](container.md).
 
 <a name="contract-reference"></a>
-## Contract Reference
+## Справочник контрактов
 
 This table provides a quick reference to all of the Laravel contracts and their equivalent facades:
 
