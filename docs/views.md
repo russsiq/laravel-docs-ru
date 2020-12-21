@@ -3,7 +3,7 @@
 - [Введение](#introduction)
 - [Создание и отрисовка шаблонов](#creating-and-rendering-views)
     - [Вложенные каталоги шаблонов](#nested-view-directories)
-    - [Создание первого доступного шаблона](#creating-the-first-available-view)
+    - [Использование первого доступного шаблона](#creating-the-first-available-view)
     - [Определение наличия шаблона](#determining-if-a-view-exists)
 - [Передача данных шаблону](#passing-data-to-views)
     - [Общедоступные данные для всех шаблонов](#sharing-data-with-all-views)
@@ -14,58 +14,58 @@
 <a name="introduction"></a>
 ## Введение
 
-Of course, it's not practical to return entire HTML documents strings directly from your routes and controllers. Thankfully, views provide a convenient way to place all of our HTML in separate files. Views separate your controller / application logic from your presentation logic and are stored in the `resources/views` directory. A simple view might look something like this:
+Конечно, нецелесообразно возвращать целые строки HTML-документов непосредственно из ваших маршрутов и контроллеров. К счастью, шаблоны предоставляют удобный способ разместить весь наш HTML в отдельных файлах. Шаблоны отделяют логику контроллера / приложения от логики представления и хранятся в каталоге `resources/views`. Простой шаблон может выглядеть примерно так:
 
 ```html
-<!-- View stored in resources/views/greeting.blade.php -->
+<!-- Шаблон сохранен в `resources/views/greeting.blade.php` -->
 
 <html>
     <body>
-        <h1>Hello, {{ $name }}</h1>
+        <h1>Привет, {{ $name }}</h1>
     </body>
 </html>
 ```
 
-Since this view is stored at `resources/views/greeting.blade.php`, we may return it using the global `view` helper like so:
+Поскольку этот шаблон сохранен в `resources/views/greeting.blade.php`, мы можем вернуть его, используя глобальный помощник `view`, например:
 
     Route::get('/', function () {
         return view('greeting', ['name' => 'James']);
     });
 
-> {tip} Looking for more information on how to write Blade templates? Check out the full [Blade documentation](blade.md) to get started.
+> {tip} Ищете дополнительную информацию о том, как писать шаблоны Blade? Ознакомьтесь с полной [документацией по Blade](blade.md), чтобы начать работу.
 
 <a name="creating-and-rendering-views"></a>
 ## Создание и отрисовка шаблонов
 
-You may create a view by placing a file with the `.blade.php` extension in your application's `resources/views` directory. The `.blade.php` extension informs the framework that the file contains a [Blade template](blade.md). Blade templates contain HTML as well as Blade directives that allow you to easily echo values, create "if" statements, iterate over data, and more.
+Вы можете создать шаблон, поместив файл с расширением `.blade.php` в каталог `resources/views` вашего приложения. Расширение `.blade.php` сообщает фреймворку, что файл содержит [шаблон Blade](blade.md). Шаблоны Blade содержат HTML, а также директивы Blade, которые позволяют легко выводить значения, создавать операторы «если», выполнять итерацию данных и многое другое.
 
-Once you have created a view, you may return it from one of your application's routes or controllers using the global `view` helper:
+После того, как вы создали шаблон, вы можете вернуть его из маршрута или контроллера вашего приложения, используя глобальный помощник `view`:
 
     Route::get('/', function () {
         return view('greeting', ['name' => 'James']);
     });
 
-Views may also be returned using the `View` facade:
+Шаблон также могут быть возвращены с помощью фасада `View`:
 
     use Illuminate\Support\Facades\View;
 
     return View::make('greeting', ['name' => 'James']);
 
-As you can see, the first argument passed to the `view` helper corresponds to the name of the view file in the `resources/views` directory. The second argument is an array of data that should be made available to the view. In this case, we are passing the `name` variable, which is displayed in the view using [Blade syntax](blade.md).
+Как видно, первый аргумент, переданный помощнику `view`, соответствует имени файла шаблона в каталоге `resources/views`. Второй аргумент – это массив данных, которые должны быть доступны в шаблоне. В этом случае, мы передаем переменную `name`, которая будет выведена в шаблоне с использованием [синтаксиса Blade](blade.md).
 
 <a name="nested-view-directories"></a>
 ### Вложенные каталоги шаблонов
 
-Views may also be nested within subdirectories of the `resources/views` directory. "Dot" notation may be used to reference nested views. For example, if your view is stored at `resources/views/admin/profile.blade.php`, you may return it from one of your application's routes / controllers like so:
+Шаблоны также могут быть вложены в подкаталоги каталога `resources/views`. «Точечная нотация» используется для указания вложенности шаблона. Например, если ваш шаблон хранится в `resources/views/admin/profile.blade.php`, то вы можете вернуть его из маршрута / контроллера вашего приложения следующим образом:
 
     return view('admin.profile', $data);
 
-> {note} View directory names should not contain the `.` character.
+> {note} Имена каталогов шаблонов не должны содержать символа `.`.
 
 <a name="creating-the-first-available-view"></a>
-### Создание первого доступного шаблона
+### Использование первого доступного шаблона
 
-Using the `View` facade's `first` method, you may create the first view that exists in a given array of views. This may be useful if your application or package allows views to be customized or overwritten:
+Используя метод `first` фасада `View`, вы можете отобразить первый шаблон, который существует в переданном массиве шаблонов. Это может быть полезно, если ваше приложение или пакет позволяют настраивать или перезаписывать шаблоны:
 
     use Illuminate\Support\Facades\View;
 
@@ -74,7 +74,7 @@ Using the `View` facade's `first` method, you may create the first view that exi
 <a name="determining-if-a-view-exists"></a>
 ### Определение наличия шаблона
 
-If you need to determine if a view exists, you may use the `View` facade. The `exists` method will return `true` if the view exists:
+Если вам нужно определить, существует ли шаблон, вы можете использовать фасад `View`. Метод `exists` вернет `true`, если он существует:
 
     use Illuminate\Support\Facades\View;
 
@@ -85,13 +85,13 @@ If you need to determine if a view exists, you may use the `View` facade. The `e
 <a name="passing-data-to-views"></a>
 ## Передача данных шаблону
 
-As you saw in the previous examples, you may pass an array of data to views to make that data available to the view:
+Как вы видели в предыдущих примерах, вы можете передать массив данных шаблонам, чтобы сделать эти данные доступными для них:
 
     return view('greetings', ['name' => 'Victoria']);
 
-When passing information in this manner, the data should be an array with key / value pairs. After providing data to a view, you can then access each value within your view using the data's keys, such as `<?php echo $name; ?>`.
+При передаче информации таким образом данные должны быть массивом с парами ключ / значение. После предоставления данных в шаблон вы можете получить доступ к каждому значению, используя ключи данных, схожее с `<?php echo $name; ?>`.
 
-As an alternative to passing a complete array of data to the `view` helper function, you may use the `with` method to add individual pieces of data to the view. The `with` method returns an instance of the view object so that you can continue chaining methods before returning the view:
+В качестве альтернативы передаче полного массива данных вспомогательной функции `view` вы можете использовать метод `with` для добавления некоторых данных в шаблон. Метод `with` возвращает экземпляр объекта представления, так что вы можете продолжить связывание методов перед возвратом шаблона:
 
     return view('greeting')
                 ->with('name', 'Victoria')
@@ -100,7 +100,7 @@ As an alternative to passing a complete array of data to the `view` helper funct
 <a name="sharing-data-with-all-views"></a>
 ### Общедоступные данные для всех шаблонов
 
-Occasionally, you may need to share data with all views that are rendered by your application. You may do so using the `View` facade's `share` method. Typically, you should place calls to the `share` method within a service provider's `boot` method. You are free to add them to the `App\Providers\AppServiceProvider` class or generate a separate service provider to house them:
+Иногда вам может потребоваться сделать данные общедоступными для всех шаблонов, отображаемыми вашим приложением. Вы можете сделать это, используя метод `share` фасада `View`. Как правило, вы должны вызывать метод `share` в методе `boot` поставщика служб. Вы можете добавить их в класс `App\Providers\AppServiceProvider` или создать отдельного поставщика для их размещения:
 
     <?php
 
@@ -111,7 +111,7 @@ Occasionally, you may need to share data with all views that are rendered by you
     class AppServiceProvider extends ServiceProvider
     {
         /**
-         * Register any application services.
+         * Регистрация любых служб приложения.
          *
          * @return void
          */
@@ -121,7 +121,7 @@ Occasionally, you may need to share data with all views that are rendered by you
         }
 
         /**
-         * Bootstrap any application services.
+         * Загрузка любых служб приложения.
          *
          * @return void
          */
@@ -134,11 +134,11 @@ Occasionally, you may need to share data with all views that are rendered by you
 <a name="view-composers"></a>
 ## Компоновщики шаблонов
 
-View composers are callbacks or class methods that are called when a view is rendered. If you have data that you want to be bound to a view each time that view is rendered, a view composer can help you organize that logic into a single location. View composers may prove particularly useful if the same view is returned by multiple routes or controllers within your application and always needs a particular piece of data.
+Компоновщики шаблонов – это замыкания или методы класса, которые вызываются при отрисовки шаблонов. Если у вас есть данные, которые вы хотите привязать к шаблону каждый раз при его отрисовки, компоновщик шаблонов поможет вам организовать эту логику в одном месте. Компоновщики шаблонов особенно полезны, если один и тот же шаблон возвращается несколькими маршрутами или контроллерами в вашем приложении и всегда требует определенного фрагмента данных.
 
-Typically, view composers will be registered within one of your application's [service providers](providers.md). In this example, we'll assume that we have created a new `App\Providers\ViewServiceProvider` to house this logic.
+Как правило, компоновщики шаблонов регистрируются в одном из [поставщиков служб](provider.md) вашего приложения. В этом примере мы предположим, что мы создали новый `App\Providers\ViewServiceProvider` для размещения этой логики.
 
-We'll use the `View` facade's `composer` method to register the view composer. Laravel does not include a default directory for class based view composers, so you are free to organize them however you wish. For example, you could create an `app/Http/View/Composers` directory to house all of your application's view composers:
+Мы будем использовать метод `composer` фасада `View`, чтобы зарегистрировать компоновщик. Laravel по умолчанию не содержит каталог для классов компоновщиков, поэтому вы можете организовать их, как хотите. Например, вы можете создать каталог `app/Http/View/Composers` для размещения всех компоновщиков вашего приложения:
 
     <?php
 
@@ -151,7 +151,7 @@ We'll use the `View` facade's `composer` method to register the view composer. L
     class ViewServiceProvider extends ServiceProvider
     {
         /**
-         * Register any application services.
+         * Регистрация любых служб приложения.
          *
          * @return void
          */
@@ -161,25 +161,25 @@ We'll use the `View` facade's `composer` method to register the view composer. L
         }
 
         /**
-         * Bootstrap any application services.
+         * Загрузка любых служб приложения.
          *
          * @return void
          */
         public function boot()
         {
-            // Using class based composers...
+            // Использование компоновщиков на основе классов ...
             View::composer('profile', ProfileComposer::class);
 
-            // Using closure based composers...
+            // Использование компоновщиков на основе замыкания ...
             View::composer('dashboard', function ($view) {
                 //
             });
         }
     }
 
-> {note} Remember, if you create a new service provider to contain your view composer registrations, you will need to add the service provider to the `providers` array in the `config/app.php` configuration file.
+> {note} Помните, что если вы создаете нового поставщика служб, который будет содержать регистрации вашего компоновщика, вам нужно будет добавить поставщика служб в массив `providers` в файле конфигурации `config/app.php`.
 
-Now that we have registered the composer, the `compose` method of the `App\Http\View\Composers\ProfileComposer` class will be executed each time the `profile` view is being rendered. Let's take a look at an example of the composer class:
+Теперь, когда мы зарегистрировали компоновщик, метод `compose` класса `App\Http\View\Composers\ProfileComposer` будет выполняться каждый раз, когда отрисовывается шаблон профиля. Давайте посмотрим на пример класса компоновщика:
 
     <?php
 
@@ -191,26 +191,26 @@ Now that we have registered the composer, the `compose` method of the `App\Http\
     class ProfileComposer
     {
         /**
-         * The user repository implementation.
+         * Реализация репозитория User.
          *
          * @var \App\Repositories\UserRepository
          */
         protected $users;
 
         /**
-         * Create a new profile composer.
+         * Создать нового компоновщика профиля.
          *
          * @param  \App\Repositories\UserRepository  $users
          * @return void
          */
         public function __construct(UserRepository $users)
         {
-            // Dependencies automatically resolved by service container...
+            // Зависимости автоматически внедрятся контейнером служб ...
             $this->users = $users;
         }
 
         /**
-         * Bind data to the view.
+         * Привязать данные к шаблону.
          *
          * @param  \Illuminate\View\View  $view
          * @return void
@@ -221,12 +221,12 @@ Now that we have registered the composer, the `compose` method of the `App\Http\
         }
     }
 
-As you can see, all view composers are resolved via the [service container](container.md), so you may type-hint any dependencies you need within a composer's constructor.
+Как видите, все компоновщики внедряются через [контейнер служб](container.md), поэтому вы можете указать любые зависимости, которые вам нужны, в конструкторе компоновщика.
 
 <a name="attaching-a-composer-to-multiple-views"></a>
-#### Attaching A Composer To Multiple Views
+#### Связывание компоновщика с несколькими шаблонами
 
-You may attach a view composer to multiple views at once by passing an array of views as the first argument to the `composer` method:
+Вы можете связать компоновщика с несколькими шаблонами одновременно, передав массив шаблонов в качестве первого аргумента методу `composer`:
 
     use App\Http\Views\Composers\MultiComposer;
 
@@ -235,7 +235,7 @@ You may attach a view composer to multiple views at once by passing an array of 
         MultiComposer::class
     );
 
-The `composer` method also accepts the `*` character as a wildcard, allowing you to attach a composer to all views:
+Метод `composer` также принимает `*` в качестве метасимвола подстановки, позволяя вам прикрепить компоновщик ко всем шаблонам:
 
     View::composer('*', function ($view) {
         //
@@ -244,7 +244,7 @@ The `composer` method also accepts the `*` character as a wildcard, allowing you
 <a name="view-creators"></a>
 ### Создатели шаблонов
 
-View "creators" are very similar to view composers; however, they are executed immediately after the view is instantiated instead of waiting until the view is about to render. To register a view creator, use the `creator` method:
+«Создатели» шаблонов очень похожи на компоновщиков; но, они выполняются сразу после создания экземпляра, а не ожидают отрисовки шаблона. Чтобы зарегистрировать создателя шаблона, используйте метод `creator`:
 
     use App\Http\View\Creators\ProfileCreator;
     use Illuminate\Support\Facades\View;
@@ -254,12 +254,12 @@ View "creators" are very similar to view composers; however, they are executed i
 <a name="optimizing-views"></a>
 ## Оптимизация шаблонов
 
-By default, Blade template views are compiled on demand. When a request is executed that renders a view, Laravel will determine if a compiled version of the view exists. If the file exists, Laravel will then determine if the uncompiled view has been modified more recently than the compiled view. If the compiled view either does not exist, or the uncompiled view has been modified, Laravel will recompile the view.
+По умолчанию шаблоны Blade компилируются по требованию. Когда выполняется запрос, который отрисовывает шаблон, Laravel определит, существует ли скомпилированная версия шаблона. Если файл существует, Laravel далее определит, был ли исходный шаблон изменен позднее скомпилированного. Если скомпилированного шаблона либо не существует, либо исходный шаблон был изменен, Laravel перекомпилирует шаблон.
 
-Compiling views during the request may have a small negative impact on performance, so Laravel provides the `view:cache` Artisan command to precompile all of the views utilized by your application. For increased performance, you may wish to run this command as part of your deployment process:
+Компиляция шаблонов во время запроса отрицательно влияет на производительность, поэтому Laravel содержит команду Artisan `view:cache` для предварительной компиляции всех шаблонов, используемых вашим приложением. Для повышения производительности вы можете выполнить эту команду как часть процесса развертывания:
 
     php artisan view:cache
 
-You may use the `view:clear` command to clear the view cache:
+Вы можете использовать команду `view:clear` для очистки кэша шаблонов:
 
     php artisan view:clear
