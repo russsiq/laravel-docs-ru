@@ -1,179 +1,201 @@
-# Resetting Passwords
+# Service Providers
 
 - [Introduction](#introduction)
-    - [Model Preparation](#model-preparation)
-    - [Database Preparation](#database-preparation)
-- [Routing](#routing)
-    - [Requesting The Password Reset Link](#requesting-the-password-reset-link)
-    - [Resetting The Password](#resetting-the-password)
-- [Customization](#password-customization)
+- [Writing Service Providers](#writing-service-providers)
+    - [The Register Method](#the-register-method)
+    - [The Boot Method](#the-boot-method)
+- [Registering Providers](#registering-providers)
+- [Deferred Providers](#deferred-providers)
 
 <a name="introduction"></a>
 ## Introduction
 
-Most web applications provide a way for users to reset their forgotten passwords. Rather than forcing you to re-implement this by hand for every application you create, Laravel provides convenient services for sending password reset links and secure resetting passwords.
+Service providers are the central place of all Laravel application bootstrapping. Your own application, as well as all of Laravel's core services are bootstrapped via service providers.
 
-> {tip} Want to get started fast? Install a Laravel [application starter kit](/docs/{{version}}/starter-kits) in a fresh Laravel application. Laravel's starter kits will take care of scaffolding your entire authentication system, including resetting forgotten passwords.
+But, what do we mean by "bootstrapped"? In general, we mean **registering** things, including registering service container bindings, event listeners, middleware, and even routes. Service providers are the central place to configure your application.
 
-<a name="model-preparation"></a>
-### Model Preparation
+If you open the `config/app.php` file included with Laravel, you will see a `providers` array. These are all of the service provider classes that will be loaded for your application. By default, a set of Laravel core service providers are listed in this array. These providers bootstrap the core Laravel components, such as the mailer, queue, cache, and others. Many of these providers are "deferred" providers, meaning they will not be loaded on every request, but only when the services they provide are actually needed.
 
-Before using the password reset features of Laravel, your application's `App\Models\User` model must use the `Illuminate\Notifications\Notifiable` trait. Typically, this trait is already included on the default `App\Models\User` model that is created with new Laravel applications.
+In this overview you will learn how to write your own service providers and register them with your Laravel application.
 
-Next, verify that your `App\Models\User` model implements the `Illuminate\Contracts\Auth\CanResetPassword` contract. The `App\Models\User` model included with the framework already implements this interface, and uses the `Illuminate\Auth\Passwords\CanResetPassword` trait to include the methods needed to implement the interface.
+> {tip} If you would like to learn more about how Laravel handles requests and works internally, check out our documentation on the Laravel [request lifecycle](/docs/{{version}}/lifecycle).
 
-<a name="database-preparation"></a>
-### Database Preparation
+<a name="writing-service-providers"></a>
+## Writing Service Providers
 
-A table must be created to store your application's password reset tokens. The migration for this table is included in the default Laravel application, so you only need to migrate your database to create this table:
+All service providers extend the `Illuminate\Support\ServiceProvider` class. Most service providers contain a `register` and a `boot` method. Within the `register` method, you should **only bind things into the [service container](/docs/{{version}}/container)**. You should never attempt to register any event listeners, routes, or any other piece of functionality within the `register` method.
 
-    php artisan migrate
+The Artisan CLI can generate a new provider via the `make:provider` command:
 
-<a name="routing"></a>
-## Routing
+    php artisan make:provider RiakServiceProvider
 
-To properly implement support for allowing users to reset their passwords, we will need to define several routes. First, we will need a pair of routes to handle allowing the user to request a password reset link via their email address. Second, we will need a pair of routes to handle actually resetting the password once the user visits the password reset link that is emailed to them and completes the password reset form.
+<a name="the-register-method"></a>
+### The Register Method
 
-<a name="requesting-the-password-reset-link"></a>
-### Requesting The Password Reset Link
+As mentioned previously, within the `register` method, you should only bind things into the [service container](/docs/{{version}}/container). You should never attempt to register any event listeners, routes, or any other piece of functionality within the `register` method. Otherwise, you may accidentally use a service that is provided by a service provider which has not loaded yet.
 
-<a name="the-password-reset-link-request-form"></a>
-#### The Password Reset Link Request Form
+Let's take a look at a basic service provider. Within any of your service provider methods, you always have access to the `$app` property which provides access to the service container:
 
-First, we will define the routes that are needed to request password reset links. To get started, we will define a route that returns a view with the password reset link request form:
+    <?php
 
-    Route::get('/forgot-password', function () {
-        return view('auth.forgot-password');
-    })->middleware('guest')->name('password.request');
+    namespace App\Providers;
 
-The view that is returned by this route should have a form containing an `email` field, which will allow the user to request a password reset link for a given email address.
+    use App\Services\Riak\Connection;
+    use Illuminate\Support\ServiceProvider;
 
-<a name="password-reset-link-handling-the-form-submission"></a>
-#### Handling The Form Submission
+    class RiakServiceProvider extends ServiceProvider
+    {
+        /**
+         * Register any application services.
+         *
+         * @return void
+         */
+        public function register()
+        {
+            $this->app->singleton(Connection::class, function ($app) {
+                return new Connection(config('riak'));
+            });
+        }
+    }
 
-Next, we will define a route that handles the form submission request from the "forgot password" view. This route will be responsible for validating the email address and sending the password reset request to the corresponding user:
+This service provider only defines a `register` method, and uses that method to define an implementation of `App\Services\Riak\Connection` in the service container. If you you're not yet familiar with Laravel's service container, check out [its documentation](/docs/{{version}}/container).
 
-    use Illuminate\Http\Request;
-    use Illuminate\Support\Facades\Password;
+<a name="the-bindings-and-singletons-properties"></a>
+#### The `bindings` And `singletons` Properties
 
-    Route::post('/forgot-password', function (Request $request) {
-        $request->validate(['email' => 'required|email']);
+If your service provider registers many simple bindings, you may wish to use the `bindings` and `singletons` properties instead of manually registering each container binding. When the service provider is loaded by the framework, it will automatically check for these properties and register their bindings:
 
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+    <?php
 
-        return $status === Password::RESET_LINK_SENT
-                    ? back()->with(['status' => __($status)])
-                    : back()->withErrors(['email' => __($status)]);
-    })->middleware('guest')->name('password.email');
+    namespace App\Providers;
 
-Before moving on, let's examine this route in more detail. First, the request's `email` attribute is validated. Next, we will use Laravel's built-in "password broker" (via the `Password` facade) to send a password reset link to the user. The password broker will take care of retrieving the user by the given field (in this case, the email address) and sending the user a password reset link via Laravel's built-in [notification system](/docs/{{version}}/notifications).
+    use App\Contracts\DowntimeNotifier;
+    use App\Contracts\ServerProvider;
+    use App\Services\DigitalOceanServerProvider;
+    use App\Services\PingdomDowntimeNotifier;
+    use App\Services\ServerToolsProvider;
+    use Illuminate\Support\ServiceProvider;
 
-The `sendResetLink` method returns a "status" slug. This status may be translated using Laravel's [localization](/docs/{{version}}/localization) helpers in order to display a user-friendly message to the user regarding the status of their request. The translation of the password reset status is determined by your application's `resources/lang/{lang}/passwords.php` language file. An entry for each possible value of the status slug is located within the `passwords` language file.
+    class AppServiceProvider extends ServiceProvider
+    {
+        /**
+         * All of the container bindings that should be registered.
+         *
+         * @var array
+         */
+        public $bindings = [
+            ServerProvider::class => DigitalOceanServerProvider::class,
+        ];
 
-You may wondering how Laravel knows how to retrieve the user record from your application's database when calling the `Password` facade's `sendResetLink` method. The Laravel password broker utilizes your authentication system's "user providers" to retrieve database records. The user provider used by the password broker is configured within the `passwords` configuration array of your `config/auth.php` configuration file. To learn more about writing custom user providers, consult the [authentication documentation](/docs/{{version}}/authentication#adding-custom-user-providers)
+        /**
+         * All of the container singletons that should be registered.
+         *
+         * @var array
+         */
+        public $singletons = [
+            DowntimeNotifier::class => PingdomDowntimeNotifier::class,
+            ServerProvider::class => ServerToolsProvider::class,
+        ];
+    }
 
-> {tip} When manually implementing password resets, you are required to define the contents of the views and routes yourself. If you would like scaffolding that includes all necessary authentication and verification logic, check out the [Laravel application starter kits](/docs/{{version}}/starter-kits).
+<a name="the-boot-method"></a>
+### The Boot Method
 
-<a name="resetting-the-password"></a>
-### Resetting The Password
+So, what if we need to register a [view composer](/docs/{{version}}/views#view-composers) within our service provider? This should be done within the `boot` method. **This method is called after all other service providers have been registered**, meaning you have access to all other services that have been registered by the framework:
 
-<a name="the-password-reset-form"></a>
-#### The Password Reset Form
+    <?php
 
-Next, we will define the routes necessary to actually reset the password once the user clicks on the password reset link that has been emailed to them and provides a new password. First, let's define the route that will display the reset password form that is displayed when the user clicks the reset password link. This route will receive a `token` parameter that we will use later to verify the password reset request:
+    namespace App\Providers;
 
-    Route::get('/reset-password/{token}', function ($token) {
-        return view('auth.reset-password', ['token' => $token]);
-    })->middleware('guest')->name('password.reset');
+    use Illuminate\Support\Facades\View;
+    use Illuminate\Support\ServiceProvider;
 
-The view that is returned by this route should display a form containing an `email` field, a `password` field, a `password_confirmation` field, and a hidden `token` field, which should contain the value of the secret `$token` received by our route.
+    class ComposerServiceProvider extends ServiceProvider
+    {
+        /**
+         * Bootstrap any application services.
+         *
+         * @return void
+         */
+        public function boot()
+        {
+            View::composer('view', function () {
+                //
+            });
+        }
+    }
 
-<a name="password-reset-handling-the-form-submission"></a>
-#### Handling The Form Submission
+<a name="boot-method-dependency-injection"></a>
+#### Boot Method Dependency Injection
 
-Of course, we need to define a route to actually handle the password reset form submission. This route will be responsible for validating the incoming request and updating the user's password in the database:
+You may type-hint dependencies for your service provider's `boot` method. The [service container](/docs/{{version}}/container) will automatically inject any dependencies you need:
 
-    use Illuminate\Auth\Events\PasswordReset;
-    use Illuminate\Http\Request;
-    use Illuminate\Support\Facades\Hash;
-    use Illuminate\Support\Facades\Password;
-    use Illuminate\Support\Str;
-
-    Route::post('/reset-password', function (Request $request) {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|min:8|confirmed',
-        ]);
-
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user, $password) use ($request) {
-                $user->forceFill([
-                    'password' => Hash::make($password)
-                ])->save();
-
-                $user->setRememberToken(Str::random(60));
-
-                event(new PasswordReset($user));
-            }
-        );
-
-        return $status == Password::PASSWORD_RESET
-                    ? redirect()->route('login')->with('status', __($status))
-                    : back()->withErrors(['email' => [__($status)]]);
-    })->middleware('guest')->name('password.update');
-
-Before moving on, let's examine this route in more detail. First, the request's `token`, `email`, and `password` attributes are validated. Next, we will use Laravel's built-in "password broker" (via the `Password` facade) to validate the password reset request credentials.
-
-If the token, email address, and password given to the password broker are valid, the closure passed to the `reset` method will be invoked. Within this closure, which receives the user instance and the plain-text password provided to the password reset form, we may update the user's password in the database.
-
-The `reset` method returns a "status" slug. This status may be translated using Laravel's [localization](/docs/{{version}}/localization) helpers in order to display a user-friendly message to the user regarding the status of their request. The translation of the password reset status is determined by your application's `resources/lang/{lang}/passwords.php` language file. An entry for each possible value of the status slug is located within the `passwords` language file.
-
-Before moving on, you may wondering how Laravel knows how to retrieve the user record from your application's database when calling the `Password` facade's `reset` method. The Laravel password broker utilizes your authentication system's "user providers" to retrieve database records. The user provider used by the password broker is configured within the `passwords` configuration array of your `config/auth.php` configuration file. To learn more about writing custom user providers, consult the [authentication documentation](/docs/{{version}}/authentication#adding-custom-user-providers)
-
-<a name="password-customization"></a>
-## Customization
-
-<a name="reset-link-customization"></a>
-#### Reset Link Customization
-
-You may customize the password reset link URL using the `createUrlUsing` method provided by the `ResetPassword` notification class. This method accepts a closure which receives the user instance that is receiving the notification as well as the password reset link token. Typically, you should call this method from your `App\Providers\AuthServiceProvider` service provider's `boot` method:
-
-    use Illuminate\Auth\Notifications\ResetPassword;
+    use Illuminate\Contracts\Routing\ResponseFactory;
 
     /**
-     * Register any authentication / authorization services.
+     * Bootstrap any application services.
      *
+     * @param  \Illuminate\Contracts\Routing\ResponseFactory
      * @return void
      */
-    public function boot()
+    public function boot(ResponseFactory $response)
     {
-        $this->registerPolicies();
-
-        ResetPassword::createUrlUsing(function ($user, string $token) {
-            return 'https://example.com/reset-password?token='.$token;
+        $response->macro('serialized', function ($value) {
+            //
         });
     }
 
-<a name="reset-email-customization"></a>
-#### Reset Email Customization
+<a name="registering-providers"></a>
+## Registering Providers
 
-You may easily modify the notification class used to send the password reset link to the user. To get started, override the `sendPasswordResetNotification` method on your `App\Models\User` model. Within this method, you may send the notification using any [notification class](/docs/{{version}}/notifications) of your own creation. The password reset `$token` is the first argument received by the method. You may use this `$token` to build the password reset URL of your choice and send your notification to the user:
+All service providers are registered in the `config/app.php` configuration file. This file contains a `providers` array where you can list the class names of your service providers. By default, a set of Laravel core service providers are listed in this array. These providers bootstrap the core Laravel components, such as the mailer, queue, cache, and others.
 
-    use App\Notifications\ResetPasswordNotification;
+To register your provider, add it to the array:
 
-    /**
-     * Send a password reset notification to the user.
-     *
-     * @param  string  $token
-     * @return void
-     */
-    public function sendPasswordResetNotification($token)
+    'providers' => [
+        // Other Service Providers
+
+        App\Providers\ComposerServiceProvider::class,
+    ],
+
+<a name="deferred-providers"></a>
+## Deferred Providers
+
+If your provider is **only** registering bindings in the [service container](/docs/{{version}}/container), you may choose to defer its registration until one of the registered bindings is actually needed. Deferring the loading of such a provider will improve the performance of your application, since it is not loaded from the filesystem on every request.
+
+Laravel compiles and stores a list of all of the services supplied by deferred service providers, along with the name of its service provider class. Then, only when you attempt to resolve one of these services does Laravel load the service provider.
+
+To defer the loading of a provider, implement the `\Illuminate\Contracts\Support\DeferrableProvider` interface and define a `provides` method. The `provides` method should return the service container bindings registered by the provider:
+
+    <?php
+
+    namespace App\Providers;
+
+    use App\Services\Riak\Connection;
+    use Illuminate\Contracts\Support\DeferrableProvider;
+    use Illuminate\Support\ServiceProvider;
+
+    class RiakServiceProvider extends ServiceProvider implements DeferrableProvider
     {
-        $url = 'https://example.com/reset-password?token='.$token;
+        /**
+         * Register any application services.
+         *
+         * @return void
+         */
+        public function register()
+        {
+            $this->app->singleton(Connection::class, function ($app) {
+                return new Connection($app['config']['riak']);
+            });
+        }
 
-        $this->notify(new ResetPasswordNotification($url));
+        /**
+         * Get the services provided by the provider.
+         *
+         * @return array
+         */
+        public function provides()
+        {
+            return [Connection::class];
+        }
     }
