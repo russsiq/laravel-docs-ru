@@ -1,17 +1,17 @@
-# Localization
+# Локализация
 
-- [Introduction](#introduction)
-    - [Configuring The Locale](#configuring-the-locale)
-- [Defining Translation Strings](#defining-translation-strings)
-    - [Using Short Keys](#using-short-keys)
-    - [Using Translation Strings As Keys](#using-translation-strings-as-keys)
-- [Retrieving Translation Strings](#retrieving-translation-strings)
-    - [Replacing Parameters In Translation Strings](#replacing-parameters-in-translation-strings)
-    - [Pluralization](#pluralization)
-- [Overriding Package Language Files](#overriding-package-language-files)
+- [Введение](#introduction)
+    - [Настройка локали](#configuring-the-locale)
+- [Определение строк перевода](#defining-translation-strings)
+    - [Использование коротких ключей](#using-short-keys)
+    - [Использование строк перевода в качестве ключей](#using-translation-strings-as-keys)
+- [Получение строк перевода](#retrieving-translation-strings)
+    - [Замена параметров в строках перевода](#replacing-parameters-in-translation-strings)
+    - [Плюрализация](#pluralization)
+- [Переопределение языковых файлов пакета](#overriding-package-language-files)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
 Laravel's localization features provide a convenient way to retrieve strings in various languages, allowing you to easily support multiple languages within your application.
 
@@ -34,7 +34,7 @@ Or, translation strings may be defined within JSON files that are placed within 
 We'll discuss each approach to managing translation strings within this documentation.
 
 <a name="configuring-the-locale"></a>
-### Configuring The Locale
+### Настройка локали
 
 The default language for your application is stored in the `config/app.php` configuration file's `locale` configuration option. You are free to modify this value to suit the needs of your application.
 
@@ -70,10 +70,10 @@ You may use the `currentLocale` and `isLocale` methods on the `App` facade to de
     }
 
 <a name="defining-translation-strings"></a>
-## Defining Translation Strings
+## Определение строк перевода
 
 <a name="using-short-keys"></a>
-### Using Short Keys
+### Использование коротких ключей
 
 Typically, translation strings are stored in files within the `resources/lang` directory. Within this directory there should be a subdirectory for each language supported by your application. This is the approach Laravel uses to manage translation strings for built-in Laravel features such as validation error messages:
 
@@ -97,7 +97,7 @@ All language files return an array of keyed strings. For example:
 > {note} For languages that differ by territory, you should name the language directories according to the ISO 15897. For example, "en_GB" should be used for British English rather than "en-gb".
 
 <a name="using-translation-strings-as-keys"></a>
-### Using Translation Strings As Keys
+### Использование строк перевода в качестве ключей
 
 For applications with a large number of translatable strings, defining every string with a "short key" can become confusing when referencing the keys in your views and it is cumbersome to continually invent keys for every translation string supported by your application.
 
@@ -114,7 +114,7 @@ For this reason, Laravel also provides support for defining translation strings 
 You should not define translation string keys that conflict with other translation filenames. For example, translating `__('Action')` for the "NL" locale while a `nl/action.php` file exists but a `nl.json` file does not exist will result in the translator returning the contents of `nl/action.php`.
 
 <a name="retrieving-translation-strings"></a>
-## Retrieving Translation Strings
+## Получение строк перевода
 
 You may retrieve translation strings from your language files using the `__` helper function. If you are using "short keys" to define your translation strings, you should pass the file that contains the key and the key itself to the `__` function using "dot" syntax. For example, let's retrieve the `welcome` translation string from the `resources/lang/en/messages.php` language file:
 
@@ -128,12 +128,12 @@ If the specified translation string does not exist, the `__` function will retur
 
 Again, if the translation string does not exist, the `__` function will return the translation string key that it was given.
 
-If you are using the [Blade templating engine](/docs/{{version}}/blade), you may use the `{{ }}` echo syntax to display the translation string:
+If you are using the [Blade templating engine](blade.md), you may use the `{{ }}` echo syntax to display the translation string:
 
     {{ __('messages.welcome') }}
 
 <a name="replacing-parameters-in-translation-strings"></a>
-### Replacing Parameters In Translation Strings
+### Замена параметров в строках перевода
 
 If you wish, you may define placeholders in your translation strings. All placeholders are prefixed with a `:`. For example, you may define a welcome message with a placeholder name:
 
@@ -149,7 +149,7 @@ If your placeholder contains all capital letters, or only has its first letter c
     'goodbye' => 'Goodbye, :Name', // Goodbye, Dayle
 
 <a name="pluralization"></a>
-### Pluralization
+### Плюрализация
 
 Pluralization is a complex problem, as different languages have a variety of complex rules for pluralization; however, Laravel can help you translate strings differently based on pluralization rules that you define. Using a `|` character, you may distinguish singular and plural forms of a string:
 
@@ -182,7 +182,7 @@ If you would like to display the integer value that was passed to the `trans_cho
     'apples' => '{0} There are none|{1} There is one|[2,*] There are :count',
 
 <a name="overriding-package-language-files"></a>
-## Overriding Package Language Files
+## Переопределение языковых файлов пакета
 
 Some packages may ship with their own language files. Instead of changing the package's core files to tweak these lines, you may override them by placing files in the `resources/lang/vendor/{package}/{locale}` directory.
 
