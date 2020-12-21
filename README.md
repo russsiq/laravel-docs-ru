@@ -64,7 +64,7 @@
     - [x] [Подтверждение адреса электронной почты](/docs/verification.md)
     - [x] [Шифрование](/docs/encryption.md)
     - [x] [Хеширование](/docs/hashing.md)
-    - [ ] [Сброс пароля](/docs/passwords.md)
+    - [x] [Сброс пароля](/docs/passwords.md)
 - ## База данных
     - [ ] [Начало](/docs/database.md)
     - [ ] [Построитель запросов](/docs/queries.md)
