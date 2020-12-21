@@ -1,24 +1,24 @@
-# Configuration
+# Конфигурирование
 
-- [Introduction](#introduction)
-- [Environment Configuration](#environment-configuration)
-    - [Environment Variable Types](#environment-variable-types)
-    - [Retrieving Environment Configuration](#retrieving-environment-configuration)
-    - [Determining The Current Environment](#determining-the-current-environment)
-- [Accessing Configuration Values](#accessing-configuration-values)
-- [Configuration Caching](#configuration-caching)
-- [Debug Mode](#debug-mode)
-- [Maintenance Mode](#maintenance-mode)
+- [Введение](#introduction)
+- [Конфигурация окружения](#environment-configuration)
+    - [Типы переменных окружения](#environment-variable-types)
+    - [Получение конфигурации окружения](#retrieving-environment-configuration)
+    - [Определение текущего окружения](#determining-the-current-environment)
+- [Доступ к значениям конфигурации](#accessing-configuration-values)
+- [Кэширование конфигурации](#configuration-caching)
+- [Режим отладки](#debug-mode)
+- [Режим обслуживания](#maintenance-mode)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
 All of the configuration files for the Laravel framework are stored in the `config` directory. Each option is documented, so feel free to look through the files and get familiar with the options available to you.
 
 These configuration files allow you to configure things like your database connection information, your mail server information, as well as various other core configuration values such as your application timezone and encryption key.
 
 <a name="environment-configuration"></a>
-## Environment Configuration
+## Конфигурация окружения
 
 It is often helpful to have different configuration values based on the environment where the application is running. For example, you may wish to use a different cache driver locally than you do on your production server.
 
@@ -36,7 +36,7 @@ If you are developing with a team, you may wish to continue including a `.env.ex
 Your `.env` file should not be committed to your application's source control, since each developer / server using your application could require a different environment configuration. Furthermore, this would be a security risk in the event an intruder gains access to your source control repository, since any sensitive credentials would get exposed.
 
 <a name="environment-variable-types"></a>
-### Environment Variable Types
+### Типы переменных окружения
 
 All variables in your `.env` files are typically parsed as strings, so some reserved values have been created to allow you to return a wider range of types from the `env()` function:
 
@@ -56,7 +56,7 @@ If you need to define an environment variable with a value that contains spaces,
     APP_NAME="My Application"
 
 <a name="retrieving-environment-configuration"></a>
-### Retrieving Environment Configuration
+### Получение конфигурации окружения
 
 All of the variables listed in this file will be loaded into the `$_ENV` PHP super-global when your application receives a request. However, you may use the `env` helper to retrieve values from these variables in your configuration files. In fact, if you review the Laravel configuration files, you will notice many of the options are already using this helper:
 
@@ -65,9 +65,9 @@ All of the variables listed in this file will be loaded into the `$_ENV` PHP sup
 The second value passed to the `env` function is the "default value". This value will be returned if no environment variable exists for the given key.
 
 <a name="determining-the-current-environment"></a>
-### Determining The Current Environment
+### Определение текущего окружения
 
-The current application environment is determined via the `APP_ENV` variable from your `.env` file. You may access this value via the `environment` method on the `App` [facade](/docs/{{version}}/facades):
+The current application environment is determined via the `APP_ENV` variable from your `.env` file. You may access this value via the `environment` method on the `App` [facade](facades.md):
 
     use Illuminate\Support\Facades\App;
 
@@ -86,7 +86,7 @@ You may also pass arguments to the `environment` method to determine if the envi
 > {tip} The current application environment detection can be overridden by defining a server-level `APP_ENV` environment variable.
 
 <a name="accessing-configuration-values"></a>
-## Accessing Configuration Values
+## Доступ к значениям конфигурации
 
 You may easily access your configuration values using the global `config` helper function from anywhere in your application. The configuration values may be accessed using "dot" syntax, which includes the name of the file and option you wish to access. A default value may also be specified and will be returned if the configuration option does not exist:
 
@@ -100,7 +100,7 @@ To set configuration values at runtime, pass an array to the `config` helper:
     config(['app.timezone' => 'America/Chicago']);
 
 <a name="configuration-caching"></a>
-## Configuration Caching
+## Кэширование конфигурации
 
 To give your application a speed boost, you should cache all of your configuration files into a single file using the `config:cache` Artisan command. This will combine all of the configuration options for your application into a single file which can be quickly loaded by the framework.
 
@@ -109,14 +109,14 @@ You should typically run the `php artisan config:cache` command as part of your 
 > {note} If you execute the `config:cache` command during your deployment process, you should be sure that you are only calling the `env` function from within your configuration files. Once the configuration has been cached, the `.env` file will not be loaded and all calls to the `env` function will return `null`.
 
 <a name="debug-mode"></a>
-## Debug Mode
+## Режим отладки
 
 The `debug` option in your `config/app.php` configuration file determines how much information about an error is actually displayed to the user. By default, this option is set to respect the value of the `APP_DEBUG` environment variable, which is stored in your `.env` file.
 
 For local development, you should set the `APP_DEBUG` environment variable to `true`. **In your production environment, this value should always be `false`. If the variable is set to `true` in production, you risk exposing sensitive configuration values to your application's end users.**
 
 <a name="maintenance-mode"></a>
-## Maintenance Mode
+## Режим обслуживания
 
 When your application is in maintenance mode, a custom view will be displayed for all requests into your application. This makes it easy to "disable" your application while it is updating or when you are performing maintenance. A maintenance mode check is included in the default middleware stack for your application. If the application is in maintenance mode, a `MaintenanceModeException` will be thrown with a status code of 503.
 
@@ -169,7 +169,7 @@ To disable maintenance mode, use the `up` command:
 <a name="maintenance-mode-queues"></a>
 #### Maintenance Mode & Queues
 
-While your application is in maintenance mode, no [queued jobs](/docs/{{version}}/queues) will be handled. The jobs will continue to be handled as normal once the application is out of maintenance mode.
+While your application is in maintenance mode, no [queued jobs](queues.md) will be handled. The jobs will continue to be handled as normal once the application is out of maintenance mode.
 
 <a name="alternatives-to-maintenance-mode"></a>
 #### Alternatives To Maintenance Mode
