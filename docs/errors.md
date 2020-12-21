@@ -13,14 +13,14 @@
 <a name="introduction"></a>
 ## Введение
 
-When you start a new Laravel project, error and exception handling is already configured for you. The `App\Exceptions\Handler` class is where all exceptions thrown by your application are logged and then rendered to the user. We'll dive deeper into this class throughout this documentation.
+Когда вы запускаете новый проект Laravel, обработка ошибок и исключений уже настроена для вас. Класс `App\Exceptions\Handler` – это то место, где все исключения, созданные вашим приложением, регистрируются и затем отображаются пользователю. В этой документации мы углубимся в этот класс.
 
 <a name="configuration"></a>
 ## Конфигурирование
 
-The `debug` option in your `config/app.php` configuration file determines how much information about an error is actually displayed to the user. By default, this option is set to respect the value of the `APP_DEBUG` environment variable, which is stored in your `.env` file.
+Параметр `debug` в конфигурационном файле `config/app.php` определяет, сколько информации об ошибке фактически отобразится пользователю. По умолчанию этот параметр установлен, чтобы учесть значение переменной окружения `APP_DEBUG`, которая содержится в вашем файле `.env`.
 
-During local development, you should set the `APP_DEBUG` environment variable to `true`. **In your production environment, this value should always be `false`. If the value is set to `true` in production, you risk exposing sensitive configuration values to your application's end users.**
+Во время локальной разработки вы должны установить для переменной окружения `APP_DEBUG` значение `true`. **Во время эксплуатации приложения это значение всегда должно быть `false`. Если в рабочем окружении будет установлено значение `true`, вы рискуете раскрыть конфиденциальные значения конфигурации конечным пользователям вашего приложения.**
 
 <a name="the-exception-handler"></a>
 ## Обработчик исключений
@@ -28,14 +28,14 @@ During local development, you should set the `APP_DEBUG` environment variable to
 <a name="reporting-exceptions"></a>
 ### Отчет об исключениях
 
-All exceptions are handled by the `App\Exceptions\Handler` class. This class contains a `register` method where you may register custom exception reporting and rendering callbacks. We'll examine each of these concepts in detail. Exception reporting is used to log exceptions or send them to an external service like [Flare](https://flareapp.io), [Bugsnag](https://bugsnag.com) or [Sentry](https://github.com/getsentry/sentry-laravel). By default, exceptions will be logged based on your [logging](logging.md) configuration. However, you are free to log exceptions however you wish.
+Все исключения обрабатываются классом `App\Exceptions\Handler`. Этот класс содержит метод `register`, в котором вы можете зарегистрировать свои отчеты об исключениях и замыкания рендеринга. Мы подробно рассмотрим каждую из этих концепций. Отчеты об исключениях используются для регистрации исключений или отправки их во внешнюю службу, например [Flare](https://flareapp.io), [Bugsnag](https://bugsnag.com) или [Sentry](https://github.com/getsentry/sentry-laravel). По умолчанию исключения будут регистрироваться в соответствии с вашей конфигурацией [логирования](logging.md). Однако вы можете регистрировать исключения как хотите.
 
-For example, if you need to report different types of exceptions in different ways, you may use the `reportable` method to register a closure that should be executed when an exception of a given type needs to be reported. Laravel will deduce what type of exception the closure reports by examining the type-hint of the closure:
+Например, если вам нужно сообщать о различных типах исключений по-разному, вы можете использовать метод `reportable` для регистрации замыкания, которое должно быть выполнено, когда необходимо сообщить об исключении конкретного типа. Laravel определит о каком типе исключения сообщает замыкание с помощью типизации аргументов:
 
     use App\Exceptions\InvalidOrderException;
 
     /**
-     * Register the exception handling callbacks for the application.
+     * Зарегистрировать замыкания, обрабатывающие исключения приложения.
      *
      * @return void
      */
@@ -46,7 +46,7 @@ For example, if you need to report different types of exceptions in different wa
         });
     }
 
-When you register a custom exception reporting callback using the `reportable` method, Laravel will still log the exception using the default logging configuration for the application. If you wish to stop the propagation of the exception to the default logging stack, you may use the `stop` method when defining your reporting callback or return `false` from the callback:
+Когда вы регистрируете собственные замыкания для создания отчетов об исключениях, используя метод `reportable`, Laravel по-прежнему регистрирует исключение, используя конфигурацию логирования по умолчанию для приложения. Если вы хотите остановить распространение исключения в стек журналов по умолчанию, вы можете использовать метод `stop` при определении замыкания отчета или вернуть `false` из замыкания:
 
     $this->reportable(function (InvalidOrderException $e) {
         //
@@ -56,15 +56,15 @@ When you register a custom exception reporting callback using the `reportable` m
         return false;
     });
 
-> {tip} To customize the exception reporting for a given exception, you may also consider using [reportable exceptions](#renderable-exceptions)
+> {tip} Чтобы настроить отчет об исключениях для переданного исключения, вы можете рассмотреть возможность использования [отчетных исключений](#renderable-exceptions).
 
 <a name="global-log-context"></a>
-#### Global Log Context
+#### Глобальное содержимое журнала
 
-If available, Laravel automatically adds the current user's ID to every exception's log message as contextual data. You may define your own global contextual data by overriding the `context` method of your application's `App\Exceptions\Handler` class. This information will be included in every exception's log message written by your application:
+Если доступно, Laravel автоматически добавляет идентификатор текущего пользователя в каждое сообщение журнала исключения в качестве контекстных данных. Вы можете определить свои собственные глобальные контекстные данные, переопределив метод `context` класса `App\Exceptions\Handler` вашего приложения. Эта информация будет включена в каждое сообщение журнала исключения, написанное вашим приложением:
 
     /**
-     * Get the default context variables for logging.
+     * Получить переменные контекста по умолчанию для ведения журнала.
      *
      * @return array
      */
@@ -76,14 +76,14 @@ If available, Laravel automatically adds the current user's ID to every exceptio
     }
 
 <a name="the-report-helper"></a>
-#### The `report` Helper
+#### Помощник `report`
 
-Sometimes you may need to report an exception but continue handling the current request. The `report` helper function allows you to quickly report an exception via the exception handler without rendering an error page to the user:
+По желанию может потребоваться сообщить об исключении, но продолжить обработку текущего запроса. Помощник `report` позволяет вам быстро сообщить об исключении через обработчик исключений, не отображая страницу с ошибкой для пользователя:
 
     public function isValid($value)
     {
         try {
-            // Validate the value...
+            // Проверка `$value` ...
         } catch (Throwable $e) {
             report($e);
 
@@ -94,12 +94,12 @@ Sometimes you may need to report an exception but continue handling the current 
 <a name="ignoring-exceptions-by-type"></a>
 ### Игнорирование исключений по типу
 
-When building your application, there will be some types of exceptions you simply want to ignore and never report. Your application's exception handler contains a `$dontReport` property which is initialized to an empty array. Any classes that you add to this property will never be reported; however, they may still have custom rendering logic:
+При создании приложения будут некоторые типы исключений, которые вы просто хотите игнорировать и никогда не сообщать о них. Обработчик исключений вашего приложения содержит свойство `$dontReport`, которое инициализируется пустым массивом. Ни о каких классах, добавленных в это свойство, никогда не будет сообщено; однако у них все еще может быть собственная логика отображения:
 
     use App\Exceptions\InvalidOrderException;
 
     /**
-     * A list of the exception types that should not be reported.
+     * Список типов исключений, о которых не следует сообщать.
      *
      * @var array
      */
@@ -107,19 +107,19 @@ When building your application, there will be some types of exceptions you simpl
         InvalidOrderException::class,
     ];
 
-> {tip} Behind the scenes, Laravel already ignores some types of errors for you, such as exceptions resulting from 404 HTTP "not found" errors or 419 HTTP responses generated by invalid CSRF tokens.
+> {tip} За кулисами Laravel уже игнорирует для вас некоторые типы ошибок, такие как исключения, возникающие из-за ошибок 404 HTTP «не найдено» или 419 HTTP-ответ, сгенерированный при недопустимом CSRF-токене.
 
 <a name="rendering-exceptions"></a>
 ### Отображение исключений
 
-By default, the Laravel exception handler will convert exceptions into an HTTP response for you. However, you are free to register a custom rendering closure for exceptions of a given type. You may accomplish this via the `renderable` method of your exception handler.
+По умолчанию обработчик исключений Laravel будет преобразовывать исключения в HTTP-ответ за вас. Однако вы можете зарегистрировать свое замыкание для отображения исключений конкретного типа. Вы можете сделать это с помощью метода `renderable` обработчика исключений.
 
-The closure passed to the `renderable` method should return an instance of `Illuminate\Http\Response`, which may be generated via the `response` helper. Laravel will deduce what type of exception the closure renders by examining the type-hint of the closure:
+Замыкание, переданное методу `renderable`, должно вернуть экземпляр `Illuminate\Http\Response`, который может быть сгенерирован с помощью функции `response`. Laravel определит, какой тип исключения отображает замыкание с помощью типизации аргументов:
 
     use App\Exceptions\InvalidOrderException;
 
     /**
-     * Register the exception handling callbacks for the application.
+     * Зарегистрировать замыкания, обрабатывающие исключения приложения.
      *
      * @return void
      */
@@ -133,7 +133,7 @@ The closure passed to the `renderable` method should return an instance of `Illu
 <a name="renderable-exceptions"></a>
 ### Отчетные и отображаемые исключения
 
-Instead of type-checking exceptions in the exception handler's `register` method, you may define `report` and `render` methods directly on your custom exceptions. When these methods exist, they will be automatically called by the framework:
+Вместо проверки типов исключений в методе `register` обработчика исключений вы можете определить методы `report` и `render` непосредственно для ваших исключений. Если эти методы существуют, то они будут автоматически вызываться фреймворком:
 
     <?php
 
@@ -144,7 +144,7 @@ Instead of type-checking exceptions in the exception handler's `register` method
     class InvalidOrderException extends Exception
     {
         /**
-         * Report the exception.
+         * Отчитаться об исключении.
          *
          * @return void
          */
@@ -154,7 +154,7 @@ Instead of type-checking exceptions in the exception handler's `register` method
         }
 
         /**
-         * Render the exception into an HTTP response.
+         * Преобразовать исключение в HTTP-ответ.
          *
          * @param  \Illuminate\Http\Request  $request
          * @return \Illuminate\Http\Response
@@ -165,36 +165,36 @@ Instead of type-checking exceptions in the exception handler's `register` method
         }
     }
 
-If your exception contains custom reporting logic that is only necessary when certain conditions are met, you may need to instruct Laravel to sometimes report the exception using the default exception handling configuration. To accomplish this, you may return `false` from the exception's `report` method:
+Если ваше исключение содержит пользовательскую логику отчетности, которая необходима только при выполнении определенных условий, то вам может потребоваться указать Laravel когда сообщать об исключении, используя конфигурацию обработки исключений по умолчанию. Для этого вы можете вернуть `false` из метода `report` исключения:
 
     /**
-     * Report the exception.
+     * Сообщить об исключении.
      *
      * @return bool|void
      */
     public function report()
     {
-        // Determine if the exception needs custom reporting...
+        // Определить, требуется ли для исключения пользовательская отчетность ...
 
         return false;
     }
 
-> {tip} You may type-hint any required dependencies of the `report` method and they will automatically be injected into the method by Laravel's [service container](container.md).
+> {tip} Вы можете указать любые требуемые зависимости метода `report`, и они будут автоматически внедрены в метод [контейнером служб](container.md) Laravel.
 
 <a name="http-exceptions"></a>
 ## HTTP-исключения
 
-Some exceptions describe HTTP error codes from the server. For example, this may be a "page not found" error (404), an "unauthorized error" (401) or even a developer generated 500 error. In order to generate such a response from anywhere in your application, you may use the `abort` helper:
+Некоторые исключения описывают коды HTTP-ошибок с сервера. Например, это может быть ошибка «страница не найдена» (404), «неавторизованный доступ» (401) или даже ошибка 500, сгенерированная разработчиком. Чтобы создать такой ответ из любой точки вашего приложения, вы можете использовать глобальный помощник `abort`:
 
     abort(404);
 
 <a name="custom-http-error-pages"></a>
 ### Пользовательские страницы ошибок HTTP
 
-Laravel makes it easy to display custom error pages for various HTTP status codes. For example, if you wish to customize the error page for 404 HTTP status codes, create a `resources/views/errors/404.blade.php`. This file will be served on all 404 errors generated by your application. The views within this directory should be named to match the HTTP status code they correspond to. The `Symfony\Component\HttpKernel\Exception\HttpException` instance raised by the `abort` function will be passed to the view as an `$exception` variable:
+Laravel позволяет легко отображать пользовательские страницы ошибок для различных кодов состояния HTTP. Например, если вы хотите настроить страницу ошибок для кодов HTTP-состояния 404, создайте файл `resources/views/errors/404.blade.php`. Этот файл будет использоваться для всех ошибок 404, сгенерированных вашим приложением. Шаблоны в этом каталоге должны быть названы в соответствии с кодом состояния HTTP, которому они соответствуют. Экземпляр `Symfony\Component\HttpKernel\Exception\HttpException`, вызванный функцией `abort`, будет передан в шаблон как переменная `$exception`:
 
     <h2>{{ $exception->getMessage() }}</h2>
 
-You may publish Laravel's default error page templates using the `vendor:publish` Artisan command. Once the templates have been published, you may customize them to your liking:
+Вы можете опубликовать стандартные шаблоны страниц ошибок Laravel с помощью Artisan-команды `vendor:publish`. После публикации шаблонов вы можете настроить их по своему вкусу:
 
     php artisan vendor:publish --tag=laravel-errors
