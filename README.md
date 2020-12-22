@@ -21,7 +21,7 @@
     - [x] [Конфигурирование](/docs/configuration.md)
     - [x] [Структура каталогов](/docs/structure.md)
     - [ ] [Стартовые комплекты](/docs/starter-kits.md)
-    - [ ] [Развертывание](/docs/deployment.md)
+    - [x] [Развертывание](/docs/deployment.md)
 - ## Архитектурные концепции
     - [x] [Жизненный цикл запроса](/docs/lifecycle.md)
     - [ ] [Контейнер служб](/docs/container.md)
