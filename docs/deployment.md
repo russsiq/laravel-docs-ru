@@ -1,28 +1,28 @@
-# Deployment
+# Развертывание
 
-- [Introduction](#introduction)
-- [Server Requirements](#server-requirements)
-- [Server Configuration](#server-configuration)
+- [Введение](#introduction)
+- [Требования к серверу](#server-requirements)
+- [Конфигурация сервера](#server-configuration)
     - [Nginx](#nginx)
-- [Optimization](#optimization)
-    - [Autoloader Optimization](#autoloader-optimization)
-    - [Optimizing Configuration Loading](#optimizing-configuration-loading)
-    - [Optimizing Route Loading](#optimizing-route-loading)
-    - [Optimizing View Loading](#optimizing-view-loading)
-- [Debug Mode](#debug-mode)
-- [Deploying With Forge / Vapor](#deploying-with-forge-or-vapor)
+- [Оптимизация](#optimization)
+    - [Оптимизация автозагрузчика](#autoloader-optimization)
+    - [Оптимизация загрузки конфигурации](#optimizing-configuration-loading)
+    - [Оптимизация загрузки маршрута](#optimizing-route-loading)
+    - [Оптимизация загрузки шаблонов](#optimizing-view-loading)
+- [Режим отладки](#debug-mode)
+- [Развертывание с помощью Forge / Vapor](#deploying-with-forge-or-vapor)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
 When you're ready to deploy your Laravel application to production, there are some important things you can do to make sure your application is running as efficiently as possible. In this document, we'll cover some great starting points for making sure your Laravel application is deployed properly.
 
 <a name="server-requirements"></a>
-## Server Requirements
+## Требования к серверу
 
 The Laravel framework has a few system requirements. You should ensure that your web server has the following minimum PHP version and extensions:
 
-<div class="content-list" markdown="1">
+<!-- <div class="content-list" markdown="1"> -->
 - PHP >= 7.3
 - BCMath PHP Extension
 - Ctype PHP Extension
@@ -33,10 +33,10 @@ The Laravel framework has a few system requirements. You should ensure that your
 - PDO PHP Extension
 - Tokenizer PHP Extension
 - XML PHP Extension
-</div>
+<!-- </div> -->
 
 <a name="server-configuration"></a>
-## Server Configuration
+## Конфигурация сервера
 
 <a name="nginx"></a>
 ### Nginx
@@ -79,10 +79,10 @@ Please ensure, like the configuration below, your web server directs all request
     }
 
 <a name="optimization"></a>
-## Optimization
+## Оптимизация
 
 <a name="autoloader-optimization"></a>
-### Autoloader Optimization
+### Оптимизация автозагрузчика
 
 When deploying to production, make sure that you are optimizing Composer's class autoloader map so Composer can quickly find the proper file to load for a given class:
 
@@ -91,7 +91,7 @@ When deploying to production, make sure that you are optimizing Composer's class
 > {tip} In addition to optimizing the autoloader, you should always be sure to include a `composer.lock` file in your project's source control repository. Your project's dependencies can be installed much faster when a `composer.lock` file is present.
 
 <a name="optimizing-configuration-loading"></a>
-### Optimizing Configuration Loading
+### Оптимизация загрузки конфигурации
 
 When deploying your application to production, you should make sure that you run the `config:cache` Artisan command during your deployment process:
 
@@ -102,7 +102,7 @@ This command will combine all of Laravel's configuration files into a single, ca
 > {note} If you execute the `config:cache` command during your deployment process, you should be sure that you are only calling the `env` function from within your configuration files. Once the configuration has been cached, the `.env` file will not be loaded and all calls to the `env` function for `.env` variables will return `null`.
 
 <a name="optimizing-route-loading"></a>
-### Optimizing Route Loading
+### Оптимизация загрузки маршрута
 
 If you are building a large application with many routes, you should make sure that you are running the `route:cache` Artisan command during your deployment process:
 
@@ -111,7 +111,7 @@ If you are building a large application with many routes, you should make sure t
 This command reduces all of your route registrations into a single method call within a cached file, improving the performance of route registration when registering hundreds of routes.
 
 <a name="optimizing-view-loading"></a>
-### Optimizing View Loading
+### Оптимизация загрузки шаблонов
 
 When deploying your application to production, you should make sure that you run the `view:cache` Artisan command during your deployment process:
 
@@ -120,14 +120,14 @@ When deploying your application to production, you should make sure that you run
 This command precompiles all your Blade views so they are not compiled on demand, improving the performance of each request that returns a view.
 
 <a name="debug-mode"></a>
-## Debug Mode
+## Режим отладки
 
 The debug option in your config/app.php configuration file determines how much information about an error is actually displayed to the user. By default, this option is set to respect the value of the APP_DEBUG environment variable, which is stored in your .env file.
 
 **In your production environment, this value should always be `false`. If the `APP_DEBUG` variable is set to `true` in production, you risk exposing sensitive configuration values to your application's end users.**
 
 <a name="deploying-with-forge-or-vapor"></a>
-## Deploying With Forge / Vapor
+## Развертывание с помощью Forge / Vapor
 
 <a name="laravel-forge"></a>
 #### Laravel Forge
