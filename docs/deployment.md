@@ -24,15 +24,15 @@
 
 <!-- <div class="content-list" markdown="1"> -->
 - PHP >= 7.3
-- Расширение BCMath PHP
-- Расширение Ctype PHP
-- Расширение Fileinfo PHP
-- Расширение JSON PHP
-- Расширение Mbstring PHP
-- Расширение OpenSSL PHP
-- Расширение PDO PHP
-- Расширение Tokenizer PHP
-- Расширение XML PHP
+- Расширение PHP BCMath
+- Расширение PHP Ctype
+- Расширение PHP Fileinfo
+- Расширение PHP JSON
+- Расширение PHP Mbstring
+- Расширение PHP OpenSSL
+- Расширение PHP PDO
+- Расширение PHP Tokenizer
+- Расширение PHP XML
 <!-- </div> -->
 
 <a name="server-configuration"></a>
