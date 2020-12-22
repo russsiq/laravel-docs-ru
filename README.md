@@ -19,7 +19,7 @@
 - ## Начало
     - [ ] [Установка](/docs/installation.md)
     - [x] [Конфигурирование](/docs/configuration.md)
-    - [ ] [Структура каталогов](/docs/structure.md)
+    - [x] [Структура каталогов](/docs/structure.md)
     - [ ] [Стартовые комплекты](/docs/starter-kits.md)
     - [ ] [Развертывание](/docs/deployment.md)
 - ## Архитектурные концепции
