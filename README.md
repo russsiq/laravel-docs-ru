@@ -29,7 +29,7 @@
     - [ ] [Фасады](/docs/facades.md)
 - ## Основы
     - [ ] [Маршрутизация](/docs/routing.md)
-    - [ ] [Посредник](/docs/middleware.md)
+    - [x] [Посредники](/docs/middleware.md)
     - [x] [Предотвращение атак CSRF](/docs/csrf.md)
     - [ ] [Контроллеры](/docs/controllers.md)
     - [ ] [HTTP-запросы](/docs/requests.md)
