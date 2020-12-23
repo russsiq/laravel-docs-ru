@@ -50,7 +50,7 @@
     - [x] [Контракты](/docs/contracts.md)
     - [ ] [События](/docs/events.md)
     - [ ] [Файловое хранилище](/docs/filesystem.md)
-    - [ ] [Помощники](/docs/helpers.md)
+    - [ ] [Глобальные помощники](/docs/helpers.md)
     - [ ] [HTTP-клиент](/docs/http-client.md)
     - [x] [Локализация](/docs/localization.md)
     - [ ] [Почта](/docs/mail.md)
