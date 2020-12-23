@@ -1,24 +1,24 @@
-# Middleware
+# Посредники
 
-- [Introduction](#introduction)
-- [Defining Middleware](#defining-middleware)
-- [Registering Middleware](#registering-middleware)
-    - [Global Middleware](#global-middleware)
-    - [Assigning Middleware To Routes](#assigning-middleware-to-routes)
-    - [Middleware Groups](#middleware-groups)
-    - [Sorting Middleware](#sorting-middleware)
-- [Middleware Parameters](#middleware-parameters)
-- [Terminable Middleware](#terminable-middleware)
+- [Введение](#introduction)
+- [Определение посредника](#defining-middleware)
+- [Регистрация посредника](#registering-middleware)
+    - [Глобальный стек HTTP-посредников](#global-middleware)
+    - [Назначение посредников маршрутам](#assigning-middleware-to-routes)
+    - [Группы посредников](#middleware-groups)
+    - [Сортировка посредников](#sorting-middleware)
+- [Параметры посредника](#middleware-parameters)
+- [Завершающий посредник](#terminable-middleware)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
 Middleware provide a convenient mechanism for inspecting and filtering HTTP requests entering your application. For example, Laravel includes a middleware that verifies the user of your application is authenticated. If the user is not authenticated, the middleware will redirect the user to your application's login screen. However, if the user is authenticated, the middleware will allow the request to proceed further into the application.
 
 Additional middleware can be written to perform a variety of tasks besides authentication. For example, a logging middleware might log all incoming requests to your application. There are several middleware included in the Laravel framework, including middleware for authentication and CSRF protection. All of these middleware are located in the `app/Http/Middleware` directory.
 
 <a name="defining-middleware"></a>
-## Defining Middleware
+## Определение посредника
 
 To create a new middleware, use the `make:middleware` Artisan command:
 
@@ -55,7 +55,7 @@ As you can see, if the given `token` does not match our secret token, the middle
 
 It's best to envision middleware as a series of "layers" HTTP requests must pass through before they hit your application. Each layer can examine the request and even reject it entirely.
 
-> {tip} All middleware are resolved via the [service container](/docs/{{version}}/container), so you may type-hint any dependencies you need within a middleware's constructor.
+> {tip} All middleware are resolved via the [service container](container.md), so you may type-hint any dependencies you need within a middleware's constructor.
 
 <a name="before-after-middleware"></a>
 <a name="middleware-and-responses"></a>
@@ -100,15 +100,15 @@ However, this middleware would perform its task **after** the request is handled
     }
 
 <a name="registering-middleware"></a>
-## Registering Middleware
+## Регистрация посредника
 
 <a name="global-middleware"></a>
-### Global Middleware
+### Глобальный стек HTTP-посредников
 
 If you want a middleware to run during every HTTP request to your application, list the middleware class in the `$middleware` property of your `app/Http/Kernel.php` class.
 
 <a name="assigning-middleware-to-routes"></a>
-### Assigning Middleware To Routes
+### Назначение посредников маршрутам
 
 If you would like to assign middleware to specific routes, you should first assign the middleware a key in your application's `app/Http/Kernel.php` file. By default, the `$routeMiddleware` property of this class contains entries for the middleware included with Laravel. You may add your own middleware to this list and assign it a key of your choosing:
 
@@ -163,7 +163,7 @@ When assigning middleware to a group of routes, you may occasionally need to pre
 The `withoutMiddleware` method can only remove route middleware and does not apply to [global middleware](#global-middleware).
 
 <a name="middleware-groups"></a>
-### Middleware Groups
+### Группы посредников
 
 Sometimes you may want to group several middleware under a single key to make them easier to assign to routes. You may accomplish this using the `$middlewareGroups` property of your HTTP kernel.
 
@@ -204,7 +204,7 @@ Middleware groups may be assigned to routes and controller actions using the sam
 > {tip} Out of the box, the `web` and `api` middleware groups are automatically applied to your application's corresponding `routes/web.php` and `routes/api.php` files by the `App\Providers\RouteServiceProvider`.
 
 <a name="sorting-middleware"></a>
-### Sorting Middleware
+### Сортировка посредников
 
 Rarely, you may need your middleware to execute in a specific order but not have control over their order when they are assigned to the route. In this case, you may specify your middleware priority using the `$middlewarePriority` property of your `app/Http/Kernel.php` file. This property may not exist in your HTTP kernel by default. If it does not exist, you may copy its default definition below:
 
@@ -227,7 +227,7 @@ Rarely, you may need your middleware to execute in a specific order but not have
     ];
 
 <a name="middleware-parameters"></a>
-## Middleware Parameters
+## Параметры посредника
 
 Middleware can also receive additional parameters. For example, if your application needs to verify that the authenticated user has a given "role" before performing a given action, you could create a `EnsureUserHasRole` middleware that receives a role name as an additional argument.
 
@@ -267,7 +267,7 @@ Middleware parameters may be specified when defining the route by separating the
     })->middleware('role:editor');
 
 <a name="terminable-middleware"></a>
-## Terminable Middleware
+## Завершающий посредник
 
 Sometimes a middleware may need to do some work after the HTTP response has been sent to the browser. If you define a `terminate` method on your middleware and your web server is using FastCGI, the `terminate` method will automatically be called after the response is sent to the browser:
 
@@ -306,7 +306,7 @@ Sometimes a middleware may need to do some work after the HTTP response has been
 
 The `terminate` method should receive both the request and the response. Once you have defined a terminable middleware, you should add it to the list of route or global middleware in the `app/Http/Kernel.php` file.
 
-When calling the `terminate` method on your middleware, Laravel will resolve a fresh instance of the middleware from the [service container](/docs/{{version}}/container). If you would like to use the same middleware instance when the `handle` and `terminate` methods are called, register the middleware with the container using the container's `singleton` method. Typically this should be done in the `register` method of your `AppServiceProvider`:
+When calling the `terminate` method on your middleware, Laravel will resolve a fresh instance of the middleware from the [service container](container.md). If you would like to use the same middleware instance when the `handle` and `terminate` methods are called, register the middleware with the container using the container's `singleton` method. Typically this should be done in the `register` method of your `AppServiceProvider`:
 
     use App\Http\Middleware\TerminatingMiddleware;
 
