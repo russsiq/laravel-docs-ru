@@ -281,7 +281,7 @@ _Автор: [Taylor Otwell](https://github.com/taylorotwell)_.
         //
     });
 
-Кроме того, слушатели событий на основе замыкания теперь могут быть помечены как доступные для очереди с помощью функционала `Illuminate\Events\queueable`:
+Кроме того, анонимные слушатели событий теперь могут быть помечены как доступные для очереди с помощью функционала `Illuminate\Events\queueable`:
 
     use App\Events\PodcastProcessed;
     use function Illuminate\Events\queueable;
