@@ -25,7 +25,7 @@
 - ## Архитектурные концепции
     - [x] [Жизненный цикл запроса](/docs/lifecycle.md)
     - [ ] [Контейнер служб](/docs/container.md)
-    - [ ] [Поставщики служб](/docs/providers.md)
+    - [x] [Поставщики служб](/docs/providers.md)
     - [ ] [Фасады](/docs/facades.md)
 - ## Основы
     - [ ] [Маршрутизация](/docs/routing.md)
