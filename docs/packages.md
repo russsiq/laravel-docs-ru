@@ -18,21 +18,21 @@
 <a name="introduction"></a>
 ## Введение
 
-Packages are the primary way of adding functionality to Laravel. Packages might be anything from a great way to work with dates like [Carbon](https://github.com/briannesbitt/Carbon) or a package that allows you to associate files with Eloquent models like Spatie's [Laravel Media Library](https://github.com/spatie/laravel-medialibrary).
+Пакеты – это основной способ добавления функциональности в Laravel. Пакеты могут быть чем угодно, начиная от отличной библиотеки по работе с датами, такой как [Carbon](https://github.com/briannesbitt/Carbon) или даже пакетом, который позволяет вам прикреплять файлы к моделям Eloquent, например, [Laravel Media Library](https://github.com/spatie/laravel-medialibrary) от Spatie.
 
-There are different types of packages. Some packages are stand-alone, meaning they work with any PHP framework. Carbon and PHPUnit are examples of stand-alone packages. Any of these packages may be used with Laravel by requiring them in your `composer.json` file.
+Есть разные типы пакетов. Некоторые пакеты являются автономными, что означает, что они работают с любым фреймворком PHP. Carbon и PHPUnit – это примеры автономных пакетов. Любой из этих пакетов можно использовать с Laravel, указав их в вашем файле `composer.json`.
 
-On the other hand, other packages are specifically intended for use with Laravel. These packages may have routes, controllers, views, and configuration specifically intended to enhance a Laravel application. This guide primarily covers the development of those packages that are Laravel specific.
+С другой стороны, некоторые пакеты специально предназначены для использования с Laravel. Эти пакеты могут иметь маршруты, контроллеры, шаблоны и конфигурацию, специально предназначенные для улучшения приложения Laravel. Это руководство в первую очередь касается разработки пакетов, относящихся к Laravel.
 
 <a name="a-note-on-facades"></a>
 ### Примечание о фасадах
 
-When writing a Laravel application, it generally does not matter if you use contracts or facades since both provide essentially equal levels of testability. However, when writing packages, your package will not typically have access to all of Laravel's testing helpers. If you would like to be able to write your package tests as if the package were installed inside a typical Laravel application, you may use the [Orchestral Testbench](https://github.com/orchestral/testbench) package.
+При написании приложения Laravel обычно не имеет значения, используете ли вы контракты или фасады, поскольку оба обеспечивают по существу равные уровни тестируемости. Однако, при написании пакетов, ваш пакет обычно не будет иметь доступа ко всем помощникам тестирования Laravel. Если вы хотите иметь возможность писать тесты пакетов, как если бы пакет был установлен внутри типичного приложения Laravel, то вы можете использовать пакет [Orchestral Testbench](https://github.com/orchestral/testbench).
 
 <a name="package-discovery"></a>
 ## Обнаружение пакетов
 
-In a Laravel application's `config/app.php` configuration file, the `providers` option defines a list of service providers that should be loaded by Laravel. When someone installs your package, you will typically want your service provider to be included in this list. Instead of requiring users to manually add your service provider to the list, you may define the provider in the `extra` section of your package's `composer.json` file. In addition to service providers, you may also list any [facades](facades.md) you would like to be registered:
+В файле конфигурации приложения Laravel `config/app.php` параметр` providers` определяет список поставщиков служб, которые должны быть загружены Laravel. Когда кто-то устанавливает ваш пакет, вы обычно хотите, чтобы ваш поставщик служб был включен в этот список. Вместо того, чтобы требовать, чтобы пользователи вручную добавляли вашего поставщика служб в список, вы можете определить поставщика в разделе `extra` файла `composer.json` вашего пакета. Помимо поставщиков служб, вы также можете указать любые [фасады](facades.md), которых вы хотите зарегистрировать:
 
     "extra": {
         "laravel": {
@@ -45,12 +45,12 @@ In a Laravel application's `config/app.php` configuration file, the `providers` 
         }
     },
 
-Once your package has been configured for discovery, Laravel will automatically register its service providers and facades when it is installed, creating a convenient installation experience for your package's users.
+После того, как ваш пакет будет настроен для обнаружения, Laravel автоматически зарегистрирует поставщиков служб и фасады пакета при его установке, создавая удобство установки для пользователей вашего пакета.
 
 <a name="opting-out-of-package-discovery"></a>
-### Opting Out Of Package Discovery
+### Отказ от обнаружения пакетов
 
-If you are the consumer of a package and would like to disable package discovery for a package, you may list the package name in the `extra` section of your application's `composer.json` file:
+Если вы являетесь пользователем пакета и хотите отключить обнаружение пакета для пакета, то вы можете указать имя пакета в разделе `extra` файла `composer.json` вашего приложения:
 
     "extra": {
         "laravel": {
@@ -60,7 +60,7 @@ If you are the consumer of a package and would like to disable package discovery
         }
     },
 
-You may disable package discovery for all packages using the `*` character inside of your application's `dont-discover` directive:
+Вы можете отключить обнаружение для всех пакетов, используя символ `*` внутри директивы `dont-discover` вашего приложения:
 
     "extra": {
         "laravel": {
@@ -73,9 +73,9 @@ You may disable package discovery for all packages using the `*` character insid
 <a name="service-providers"></a>
 ## Поставщики служб
 
-[Service providers](providers.md) are the connection point between your package and Laravel. A service provider is responsible for binding things into Laravel's [service container](container.md) and informing Laravel where to load package resources such as views, configuration, and localization files.
+[Поставщики служб](providers.md) – это точка соприкосновения между вашим пакетом и Laravel. Поставщик службы отвечает за связывание объектов в [контейнере служб](container.md) и информирует Laravel куда загружать ресурсы пакета, такие как шаблоны, файлы конфигурации и локализации.
 
-A service provider extends the `Illuminate\Support\ServiceProvider` class and contains two methods: `register` and `boot`. The base `ServiceProvider` class is located in the `illuminate/support` Composer package, which you should add to your own package's dependencies. To learn more about the structure and purpose of service providers, check out [their documentation](providers.md).
+Поставщик службы расширяет класс `Illuminate\Support\ServiceProvider` и содержит два метода: `register` и `boot`. Базовый класс `ServiceProvider` находится в Composer-пакете `illuminate/support`, который вы должны добавить в зависимости вашего собственного пакета. Чтобы узнать больше о структуре и назначении поставщиков служб, ознакомьтесь с [их документацией](providers.md).
 
 <a name="resources"></a>
 ## Ресурсы
@@ -83,10 +83,10 @@ A service provider extends the `Illuminate\Support\ServiceProvider` class and co
 <a name="configuration"></a>
 ### Конфигурация
 
-Typically, you will need to publish your package's configuration file to the application's `config` directory. This will allow users of your package to easily override your default configuration options. To allow your configuration files to be published, call the `publishes` method from the `boot` method of your service provider:
+Обычно, вам нужно опубликовать файл конфигурации вашего пакета в каталоге `config` приложения. Это позволит пользователям вашего пакета легко переопределить параметры конфигурации по умолчанию. Чтобы разрешить публикацию ваших файлов конфигурации, вызовите метод `publishes` в методе `boot` вашего поставщика службы:
 
     /**
-     * Bootstrap any package services.
+     * Загрузка любых служб пакета.
      *
      * @return void
      */
@@ -97,21 +97,21 @@ Typically, you will need to publish your package's configuration file to the app
         ]);
     }
 
-Now, when users of your package execute Laravel's `vendor:publish` command, your file will be copied to the specified publish location. Once your configuration has been published, its values may be accessed like any other configuration file:
+Теперь, когда пользователи вашего пакета выполнят команду Laravel `vendor:publish`, ваш файл будет скопирован в указанное место публикации. После публикации вашей конфигурации, к ее значениям можно будет получить доступ, как к любому другому файлу конфигурации:
 
     $value = config('courier.option');
 
-> {note} You should not define closures in your configuration files. They can not be serialized correctly when users execute the `config:cache` Artisan command.
+> {note} Вы не должны определять замыкания в своих файлах конфигурации. Они не могут быть корректно сериализованы, когда пользователи выполняют команду Artisan `config:cache`.
 
 <a name="default-package-configuration"></a>
-#### Default Package Configuration
+#### Конфигурация пакета по умолчанию
 
-You may also merge your own package configuration file with the application's published copy. This will allow your users to define only the options they actually want to override in the published copy of the configuration file. To merge the configuration file values, use the `mergeConfigFrom` method within your service provider's `register` method.
+Вы также можете объединить свой собственный файл конфигурации пакета с опубликованной копией приложения. Это позволит вашим пользователям определять только те параметры, которые они действительно хотят переопределить в опубликованной копии файла конфигурации. Чтобы объединить значения файла конфигурации, используйте метод `mergeConfigFrom` в методе `register` вашего поставщика службы.
 
-The `mergeConfigFrom` method accepts the path to your package's configuration file as its first argument and the name of the application's copy of the configuration file as its second argument:
+Метод `mergeConfigFrom` принимает путь к файлу конфигурации вашего пакета в качестве первого аргумента и имя копии файла конфигурации приложения в качестве второго аргумента:
 
     /**
-     * Register any application services.
+     * Регистрация любых служб пакета.
      *
      * @return void
      */
@@ -122,15 +122,15 @@ The `mergeConfigFrom` method accepts the path to your package's configuration fi
         );
     }
 
-> {note} This method only merges the first level of the configuration array. If your users partially define a multi-dimensional configuration array, the missing options will not be merged.
+> {note} Этот метод объединяет только первый уровень массива конфигурации. Если ваши пользователи частично определяют многомерный массив конфигурации, отсутствующие параметры не будут объединены.
 
 <a name="routes"></a>
 ### Маршруты
 
-If your package contains routes, you may load them using the `loadRoutesFrom` method. This method will automatically determine if the application's routes are cached and will not load your routes file if the routes have already been cached:
+Если ваш пакет содержит маршруты, вы можете загрузить их с помощью метода `loadRoutesFrom`. Этот метод автоматически определяет, кэшируются ли маршруты приложения, и не загружает ваш файл маршрутов, если маршруты уже были кэшированы:
 
     /**
-     * Bootstrap any package services.
+     * Загрузка любых служб пакета.
      *
      * @return void
      */
@@ -142,10 +142,10 @@ If your package contains routes, you may load them using the `loadRoutesFrom` me
 <a name="migrations"></a>
 ### Миграции
 
-If your package contains [database migrations](migrations.md), you may use the `loadMigrationsFrom` method to inform Laravel how to load them. The `loadMigrationsFrom` method accepts the path to your package's migrations as its only argument:
+Если ваш пакет содержит [миграции базы данных](migrations.md), вы можете использовать метод `loadMigrationsFrom`, чтобы сообщить Laravel, как их загрузить. Метод `loadMigrationsFrom` принимает путь к миграции вашего пакета как единственный аргумент:
 
     /**
-     * Bootstrap any package services.
+     * Загрузка любых служб пакета.
      *
      * @return void
      */
@@ -154,15 +154,15 @@ If your package contains [database migrations](migrations.md), you may use the `
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
     }
 
-Once your package's migrations have been registered, they will automatically be run when the `php artisan migrate` command is executed. You do not need to export them to the application's `database/migrations` directory.
+Как только миграции вашего пакета будут зарегистрированы, они будут автоматически запускаться при выполнении команды `php artisan migrate`. Вам не нужно экспортировать их в каталог приложения `database/migrations`.
 
 <a name="translations"></a>
 ### Переводы
 
-If your package contains [translation files](localization.md), you may use the `loadTranslationsFrom` method to inform Laravel how to load them. For example, if your package is named `courier`, you should add the following to your service provider's `boot` method:
+Если ваш пакет содержит [файлы перевода](localization.md), вы можете использовать метод `loadTranslationsFrom`, чтобы сообщить Laravel, как их загрузить. Например, если ваш пакет называется `courier`, вы должны добавить следующее в метод `boot` вашего поставщика:
 
     /**
-     * Bootstrap any package services.
+     * Загрузка любых служб пакета.
      *
      * @return void
      */
@@ -171,17 +171,17 @@ If your package contains [translation files](localization.md), you may use the `
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'courier');
     }
 
-Package translations are referenced using the `package::file.line` syntax convention. So, you may load the `courier` package's `welcome` line from the `messages` file like so:
+Для ссылок на переводы пакетов используется синтаксическое соглашение `package::file.line`. Итак, вы можете загрузить строку приветствия пакета `courier` из файла `messages` следующим образом:
 
     echo trans('courier::messages.welcome');
 
 <a name="publishing-translations"></a>
 #### Publishing Translations
 
-If you would like to publish your package's translations to the application's `resources/lang/vendor` directory, you may use the service provider's `publishes` method. The `publishes` method accepts an array of package paths and their desired publish locations. For example, to publish the translation files for the `courier` package, you may do the following:
+Если вы хотите опубликовать переводы вашего пакета в каталоге `resources/lang/vendor` приложения, вы можете использовать метод `publishes` поставщика службы. Метод `publishes` принимает массив путей пакета и желаемых мест их публикации. Например, чтобы опубликовать файлы перевода пакета `courier`, вы можете сделать следующее:
 
     /**
-     * Bootstrap any package services.
+     * Загрузка любых служб пакета.
      *
      * @return void
      */
@@ -194,15 +194,15 @@ If you would like to publish your package's translations to the application's `r
         ]);
     }
 
-Now, when users of your package execute Laravel's `vendor:publish` Artisan command, your package's translations will be published to the specified publish location.
+Теперь, когда пользователи вашего пакета выполняют команду Artisan `vendor:publish`, переводы вашего пакета будут опубликованы в указанном месте публикации.
 
 <a name="views"></a>
 ### Шаблоны
 
-To register your package's [views](views.md) with Laravel, you need to tell Laravel where the views are located. You may do this using the service provider's `loadViewsFrom` method. The `loadViewsFrom` method accepts two arguments: the path to your view templates and your package's name. For example, if your package's name is `courier`, you would add the following to your service provider's `boot` method:
+Чтобы зарегистрировать [шаблоны](views.md) вашего пакета, вам необходимо указать Laravel, где они расположены. Вы можете сделать это, используя метод `loadViewsFrom` поставщика службы. Метод `loadViewsFrom` принимает два аргумента: путь к вашим шаблонам и имя вашего пакета. Например, если имя вашего пакета – `courier`, вы должны добавить следующее в метод `boot` вашего поставщика:
 
     /**
-     * Bootstrap any package services.
+     * Загрузка любых служб пакета.
      *
      * @return void
      */
@@ -211,24 +211,26 @@ To register your package's [views](views.md) with Laravel, you need to tell Lara
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'courier');
     }
 
-Package views are referenced using the `package::view` syntax convention. So, once your view path is registered in a service provider, you may load the `admin` view from the `courier` package like so:
+Для ссылок на шаблоны пакетов используется синтаксическое соглашение `package::view`. Итак, как только путь вашего шаблона зарегистрирован в поставщике службы, вы можете загрузить шаблон `admin` пакета `courier` следующим образом:
 
     Route::get('/dashboard', function () {
         return view('courier::dashboard');
     });
 
 <a name="overriding-package-views"></a>
-#### Overriding Package Views
+#### Переопределение шаблонов пакета
 
-When you use the `loadViewsFrom` method, Laravel actually registers two locations for your views: the application's `resources/views/vendor` directory and the directory you specify. So, using the `courier` package as an example, Laravel will first check if a custom version of the view has been placed in the `resources/views/vendor/courier` directory by the developer. Then, if the view has not been customized, Laravel will search the package view directory you specified in your call to `loadViewsFrom`. This makes it easy for package users to customize / override your package's views.
+Когда вы используете метод `loadViewsFrom`, Laravel фактически регистрирует два местоположения ваших шаблонов: каталог `resources/views/vendor` приложения и указанный вами каталог. Итак, используя пакет `courier` в качестве примера, Laravel сначала проверит, была ли размещена разработчиком пользовательская версия шаблона в каталоге `resources/views/vendor/courier`. Затем, если шаблон не был переопределен, то Laravel будет искать каталог шаблона пакета, который вы указали при вызове `loadViewsFrom`. Это позволяет пользователям пакета легко настраивать / переопределять шаблона вашего пакета.
 
 <a name="publishing-views"></a>
-#### Publishing Views
+#### Публикация шаблонов
 
-If you would like to make your views available for publishing to the application's `resources/views/vendor` directory, you may use the service provider's `publishes` method. The `publishes` method accepts an array of package view paths and their desired publish locations:
+Если вы хотите сделать свои шаблоны доступными для публикации в директории `resources/views/vendor` приложения, вы можете использовать метод `publishes` поставщика службы. Метод `publishes` принимает массив, состоящий из пути к шаблону и желаемого места публикации:
+
+Если вы хотите сделать свои шаблоны доступными для публикации в каталог `resources/views/vendor` приложения, то вы можете использовать метод `publishes` поставщика. Метод `publishes` принимает массив путей шаблонов пакета и их желаемых мест публикации:
 
     /**
-     * Bootstrap the package services.
+     * Загрузка любых служб пакета.
      *
      * @return void
      */
@@ -241,18 +243,18 @@ If you would like to make your views available for publishing to the application
         ]);
     }
 
-Now, when users of your package execute Laravel's `vendor:publish` Artisan command, your package's views will be copied to the specified publish location.
+Теперь, когда пользователи вашего пакета выполняют команду Artisan `vendor:publish`, шаблоны пакета будут скопированы в указанное место публикации.
 
 <a name="view-components"></a>
 ### Компоненты шаблонов
 
-If your package contains [view components](blade.md#components), you may use the `loadViewComponentsAs` method to inform Laravel how to load them. The `loadViewComponentsAs` method accepts two arguments: the tag prefix for your view components and an array of your view component class names. For example, if your package's prefix is `courier` and you have `Alert` and `Button` view components, you would add the following to your service provider's `boot` method:
+Если ваш пакет содержит [компоненты шаблонов](blade.md#components), вы можете использовать метод `loadViewComponentsAs`, чтобы сообщить Laravel, как их загрузить. Метод `loadViewComponentsAs` принимает два аргумента: префикс тега компонентов и массив имен классов компонентов. Например, если префикс вашего пакета `courier` и у вас есть компоненты `Alert` и `Button`, то вы должны добавить следующее в метод `boot` вашего поставщика:
 
     use Courier\Components\Alert;
     use Courier\Components\Button;
 
     /**
-     * Bootstrap any package services.
+     * Загрузка любых служб пакета.
      *
      * @return void
      */
@@ -264,29 +266,29 @@ If your package contains [view components](blade.md#components), you may use the
         ]);
     }
 
-Once your view components are registered in a service provider, you may reference them in your view like so:
+После того, как ваши компоненты шаблонов зарегистрированы в поставщике, вы можете ссылаться на них в своих шаблонах следующим образом:
 
     <x-courier-alert />
 
     <x-courier-button />
 
 <a name="anonymous-components"></a>
-#### Anonymous Components
+#### Анонимные компоненты
 
-If your package contains anonymous components, they must be placed within a `components` directory of your package's "views" directory (as specified by `loadViewsFrom`). Then, you may render them by prefixing the component name with the package's view namespace:
+Если ваш пакет содержит анонимные компоненты, то они должны быть помещены в каталог `components` каталога «views» вашего пакета (как указано в `loadViewsFrom`). Затем вы можете отобразить их, добавив к имени компонента префикс пространства имен шаблонов пакета:
 
     <x-courier::alert />
 
 <a name="commands"></a>
 ## Команды
 
-To register your package's Artisan commands with Laravel, you may use the `commands` method. This method expects an array of command class names. Once the commands have been registered, you may execute them using the [Artisan CLI](artisan.md):
+Чтобы зарегистрировать Artisan-команды вашего пакета в Laravel, вы можете использовать метод `commands`. Этот метод ожидает массив имен классов команд. После регистрации команд вы можете выполнять их с помощью [Artisan CLI](artisan.md):
 
     use Courier\Console\Commands\InstallCommand;
     use Courier\Console\Commands\NetworkCommand;
 
     /**
-     * Bootstrap any package services.
+     * Загрузка любых служб пакета.
      *
      * @return void
      */
@@ -303,10 +305,10 @@ To register your package's Artisan commands with Laravel, you may use the `comma
 <a name="public-assets"></a>
 ## Общие ресурсы
 
-Your package may have assets such as JavaScript, CSS, and images. To publish these assets to the application's `public` directory, use the service provider's `publishes` method. In this example, we will also add a `public` asset group tag, which may be used to easily publish groups of related assets:
+В вашем пакете могут быть такие ресурсы, как JavaScript, CSS и изображения. Чтобы опубликовать эти ресурсы в публичном каталоге приложения, используйте метод `publishes` поставщика. В этом примере мы также добавим тег `public` группе ресурсов, который можно использовать для простой публикации групп связанных ресурсов:
 
     /**
-     * Bootstrap any package services.
+     * Загрузка любых служб пакета.
      *
      * @return void
      */
@@ -317,17 +319,17 @@ Your package may have assets such as JavaScript, CSS, and images. To publish the
         ], 'public');
     }
 
-Now, when your package's users execute the `vendor:publish` command, your assets will be copied to the specified publish location. Since users will typically need to overwrite the assets every time the package is updated, you may use the `--force` flag:
+Теперь, когда пользователи вашего пакета выполнят команду `vendor:publish`, ваши ресурсы будут скопированы в указанное место публикации. Поскольку пользователям обычно требуется перезаписывать ресурсы каждый раз при обновлении пакета, вы можете использовать флаг `--force`:
 
     php artisan vendor:publish --tag=public --force
 
 <a name="publishing-file-groups"></a>
 ## Публикация групп файлов
 
-You may want to publish groups of package assets and resources separately. For instance, you might want to allow your users to publish your package's configuration files without being forced to publish your package's assets. You may do this by "tagging" them when calling the `publishes` method from a package's service provider. For example, let's use tags to define two publish groups (`config` and `migrations`) in the `boot` method of a package's service provider:
+Вы можете публиковать файлы пакета отдельно. Например, вы можете разрешить своим пользователям публиковать файлы конфигурации вашего пакета без необходимости публиковать ресурсы вашего пакета. Вы можете сделать это, «пометив» их при вызове метода `publishes` поставщика. Например, давайте используем теги для определения двух групп публикации (`config` и `migrations`) в методе `boot` поставщика:
 
     /**
-     * Bootstrap any package services.
+     * Загрузка любых служб пакета.
      *
      * @return void
      */
@@ -342,6 +344,6 @@ You may want to publish groups of package assets and resources separately. For i
         ], 'migrations');
     }
 
-Now your users may publish these groups separately by referencing their tag when executing the `vendor:publish` command:
+Теперь ваши пользователи могут публиковать эти группы отдельно, ссылаясь на их теги при выполнении команды `vendor:publish`:
 
     php artisan vendor:publish --tag=config

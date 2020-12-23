@@ -55,7 +55,7 @@
     - [x] [Локализация](/docs/localization.md)
     - [ ] [Почта](/docs/mail.md)
     - [ ] [Уведомления](/docs/notifications.md)
-    - [ ] [Разработка пакетов](/docs/packages.md)
+    - [x] [Разработка пакетов](/docs/packages.md)
     - [ ] [Очереди](/docs/queues.md)
     - [ ] [Планирование задач](/docs/scheduling.md)
 - ## Безопасность
