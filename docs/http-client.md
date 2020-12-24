@@ -1,20 +1,20 @@
-# HTTP Client
+# HTTP-клиент
 
-- [Introduction](#introduction)
-- [Making Requests](#making-requests)
-    - [Request Data](#request-data)
-    - [Headers](#headers)
-    - [Authentication](#authentication)
-    - [Timeout](#timeout)
-    - [Retries](#retries)
-    - [Error Handling](#error-handling)
-    - [Guzzle Options](#guzzle-options)
-- [Testing](#testing)
-    - [Faking Responses](#faking-responses)
-    - [Inspecting Requests](#inspecting-requests)
+- [Введение](#introduction)
+- [Выполнение запросов](#making-requests)
+    - [Данные запроса](#request-data)
+    - [Заголовки](#headers)
+    - [Аутентификация](#authentication)
+    - [Время ожидания](#timeout)
+    - [Повторные попытки](#retries)
+    - [Обработка ошибок](#error-handling)
+    - [Параметры Guzzle](#guzzle-options)
+- [Тестирование](#testing)
+    - [Фиктивные ответы](#faking-responses)
+    - [Исследование запросов](#inspecting-requests)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
 Laravel provides an expressive, minimal API around the [Guzzle HTTP client](http://docs.guzzlephp.org/en/stable/), allowing you to quickly make outgoing HTTP requests to communicate with other web applications. Laravel's wrapper around Guzzle is focused on its most common use cases and a wonderful developer experience.
 
@@ -23,7 +23,7 @@ Before getting started, you should ensure that you have installed the Guzzle pac
     composer require guzzlehttp/guzzle
 
 <a name="making-requests"></a>
-## Making Requests
+## Выполнение запросов
 
 To make requests, you may use the `get`, `post`, `put`, `patch`, and `delete` methods provided by the `Http` facade. First, let's examine how to make a basic `GET` request to another URL:
 
@@ -107,7 +107,7 @@ Instead of passing the raw contents of a file, you may pass a stream resource:
     )->post('http://example.com/attachments');
 
 <a name="headers"></a>
-### Headers
+### Заголовки
 
 Headers may be added to requests using the `withHeaders` method. This `withHeaders` method accepts an array of key / value pairs:
 
@@ -119,7 +119,7 @@ Headers may be added to requests using the `withHeaders` method. This `withHeade
     ]);
 
 <a name="authentication"></a>
-### Authentication
+### Аутентификация
 
 You may specify basic and digest authentication credentials using the `withBasicAuth` and `withDigestAuth` methods, respectively:
 
@@ -137,7 +137,7 @@ If you would like to quickly add a bearer token to the request's `Authorization`
     $response = Http::withToken('token')->post(...);
 
 <a name="timeout"></a>
-### Timeout
+### Время ожидания
 
 The `timeout` method may be used to specify the maximum number of seconds to wait for a response:
 
@@ -146,7 +146,7 @@ The `timeout` method may be used to specify the maximum number of seconds to wai
 If the given timeout is exceeded, an instance of `Illuminate\Http\Client\ConnectionException` will  be thrown.
 
 <a name="retries"></a>
-### Retries
+### Повторные попытки
 
 If you would like HTTP client to automatically retry the request if a client or server error occurs, you may use the `retry` method. The `retry` method accepts two arguments: the maximum number of times the request should be attempted and the number of milliseconds that Laravel should wait in between attempts:
 
@@ -155,7 +155,7 @@ If you would like HTTP client to automatically retry the request if a client or 
 If all of the requests fail, an instance of `Illuminate\Http\Client\RequestException` will be thrown.
 
 <a name="error-handling"></a>
-### Error Handling
+### Обработка ошибок
 
 Unlike Guzzle's default behavior, Laravel's HTTP client wrapper does not throw exceptions on client or server errors (`400` and `500` level responses from servers). You may determine if one of these errors was returned using the `successful`, `clientError`, or `serverError` methods:
 
@@ -196,7 +196,7 @@ If you would like to perform some additional logic before the exception is throw
     })->json();
 
 <a name="guzzle-options"></a>
-### Guzzle Options
+### Параметры Guzzle
 
 You may specify additional [Guzzle request options](http://docs.guzzlephp.org/en/stable/request-options.html) using the `withOptions` method. The `withOptions` method accepts an array of key / value pairs:
 
@@ -205,12 +205,12 @@ You may specify additional [Guzzle request options](http://docs.guzzlephp.org/en
     ])->get('http://example.com/users');
 
 <a name="testing"></a>
-## Testing
+## Тестирование
 
 Many Laravel services provide functionality to help you easily and expressively write tests, and Laravel's HTTP wrapper is no exception. The `Http` facade's `fake` method allows you to instruct the HTTP client to return stubbed / dummy responses when requests are made.
 
 <a name="faking-responses"></a>
-### Faking Responses
+### Фиктивные ответы
 
 For example, to instruct the HTTP client to return empty, `200` status code responses for every request, you may call the `fake` method with no arguments:
 
@@ -284,7 +284,7 @@ If you require more complicated logic to determine what responses to return for 
     });
 
 <a name="inspecting-requests"></a>
-### Inspecting Requests
+### Исследование запросов
 
 When faking responses, you may occasionally wish to inspect the requests the client receives in order to make sure your application is sending the correct data or headers. You may accomplish this by calling the `Http::assertSent` method after calling `Http::fake`.
 
