@@ -68,7 +68,7 @@
 - ## База данных
     - [ ] [Начало](/docs/database.md)
     - [ ] [Построитель запросов](/docs/queries.md)
-    - [ ] [Постраничная навигация](/docs/pagination.md)
+    - [x] [Постраничная навигация](/docs/pagination.md)
     - [ ] [Миграции](/docs/migrations.md)
     - [x] [Наполнение](/docs/seeding.md)
     - [ ] [Redis](/docs/redis.md)
@@ -240,7 +240,7 @@ optional  |  необязательный  |
 options  |  параметры  |  
 overriding  |  переопределение  |  
 <a name="dictionary-p">**P**</a>
-pagination  |  постраничная навигация  |  
+pagination  |  постраничная навигация, пагинация  |  
 permanently  |  окончательно  |  
 placeholder  |  заполнитель, метка-заполнитель, символ-заполнитель, заменитель  |  
 policy  |  политика  |  
