@@ -24,7 +24,7 @@
     - [x] [Развертывание](/docs/deployment.md)
 - ## Архитектурные концепции
     - [x] [Жизненный цикл запроса](/docs/lifecycle.md)
-    - [ ] [Контейнер служб](/docs/container.md)
+    - [x] [Контейнер служб](/docs/container.md)
     - [x] [Поставщики служб](/docs/providers.md)
     - [x] [Фасады](/docs/facades.md)
 - ## Основы
