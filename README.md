@@ -51,7 +51,7 @@
     - [ ] [События](/docs/events.md)
     - [ ] [Файловое хранилище](/docs/filesystem.md)
     - [ ] [Глобальные помощники](/docs/helpers.md)
-    - [ ] [HTTP-клиент](/docs/http-client.md)
+    - [x] [HTTP-клиент](/docs/http-client.md)
     - [x] [Локализация](/docs/localization.md)
     - [ ] [Почта](/docs/mail.md)
     - [ ] [Уведомления](/docs/notifications.md)
