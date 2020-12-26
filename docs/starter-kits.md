@@ -1,12 +1,12 @@
-# Starter Kits
+# Стартовые комплекты
 
-- [Introduction](#introduction)
+- [Введение](#introduction)
 - [Laravel Breeze](#laravel-breeze)
-    - [Installation](#laravel-breeze-installation)
+    - [Установка](#laravel-breeze-installation)
 - [Laravel Jetstream](#laravel-jetstream)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
 To give you a head start building your new Laravel application, we are happy to offer authentication and application starter kits. These kits automatically scaffold your application with the routes, controllers, and views you need to register and authenticate your application's users.
 
@@ -15,12 +15,12 @@ While you are welcome to use these starter kits, they are not required. You are 
 <a name="laravel-breeze"></a>
 ## Laravel Breeze
 
-Laravel Breeze is a minimal, simple implementation of all of Laravel's [authentication features](/docs/{{version}}/authentication), including login, registration, password reset, email verification, and password confirmation. Laravel Breeze's view layer is made up of simple [Blade templates](/docs/{{version}}/blade) styled with [Tailwind CSS](https://tailwindcss.com). Breeze provides a wonderful starting point for beginning a fresh Laravel application.
+Laravel Breeze is a minimal, simple implementation of all of Laravel's [authentication features](authentication.md), including login, registration, password reset, email verification, and password confirmation. Laravel Breeze's view layer is made up of simple [Blade templates](blade.md) styled with [Tailwind CSS](https://tailwindcss.com). Breeze provides a wonderful starting point for beginning a fresh Laravel application.
 
 <a name="laravel-breeze-installation"></a>
-### Installation
+### Установка
 
-First, you should [create a new Laravel application](/docs/{{version}}/installation), configure your database, and run your [database migrations](/docs/{{version}}/migrations):
+First, you should [create a new Laravel application](installation.md), configure your database, and run your [database migrations](migrations.md):
 
 ```bash
 curl -s https://laravel.build/example-app | bash
@@ -48,7 +48,7 @@ npm run dev
 
 Next, you may navigate to your application's `/login` or `/register` URLs in your web browser. All of Breeze's routes are defined within the `routes/auth.php` file.
 
-> {tip} To learn more about compiling your application's CSS and JavaScript, check out the [Laravel Mix documentation](/docs/{{version}}/mix#running-mix).
+> {tip} To learn more about compiling your application's CSS and JavaScript, check out the [Laravel Mix documentation](mix.md#running-mix).
 
 <a name="laravel-jetstream"></a>
 ## Laravel Jetstream
