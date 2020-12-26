@@ -1,32 +1,32 @@
-# Database: Getting Started
+# База данных: начало
 
-- [Introduction](#introduction)
-    - [Configuration](#configuration)
-    - [Read & Write Connections](#read-and-write-connections)
-- [Running SQL Queries](#running-queries)
-    - [Using Multiple Database Connections](#using-multiple-database-connections)
-    - [Listening For Query Events](#listening-for-query-events)
-- [Database Transactions](#database-transactions)
-- [Connecting To The Database CLI](#connecting-to-the-database-cli)
+- [Введение](#introduction)
+    - [Конфигурирование](#configuration)
+    - [Подключения чтения и записи](#read-and-write-connections)
+- [Выполнение SQL-запросов](#running-queries)
+    - [Использование нескольких подключений к базе данных](#using-multiple-database-connections)
+    - [Прослушивание событий запроса](#listening-for-query-events)
+- [Транзакции базы данных](#database-transactions)
+- [Подключение к базе данных с помощью интерфейса командной строки](#connecting-to-the-database-cli)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
-Almost every modern web application interacts with a database. Laravel makes interacting with databases extremely simple across a variety of supported databases using raw SQL, a [fluent query builder](/docs/{{version}}/queries), and the [Eloquent ORM](/docs/{{version}}/eloquent). Currently, Laravel provides first-party support for four databases:
+Almost every modern web application interacts with a database. Laravel makes interacting with databases extremely simple across a variety of supported databases using raw SQL, a [fluent query builder](queries.md), and the [Eloquent ORM](eloquent.md). Currently, Laravel provides first-party support for four databases:
 
-<div class="content-list" markdown="1">
+<!-- <div class="content-list" markdown="1"> -->
 - MySQL 5.6+ ([Version Policy](https://en.wikipedia.org/wiki/MySQL#Release_history))
 - PostgreSQL 9.4+ ([Version Policy](https://www.postgresql.org/support/versioning/))
 - SQLite 3.8.8+
 - SQL Server 2017+ ([Version Policy](https://support.microsoft.com/en-us/lifecycle/search))
-</div>
+<!-- </div> -->
 
 <a name="configuration"></a>
-### Configuration
+### Конфигурирование
 
 The configuration for Laravel's database services is located in your application's `config/database.php` configuration file. In this file you may define all of your database connections, as well as specify which connection should be used by default. Most of the configuration options within this file are driven by the values of your application's environment variables. Examples for most of Laravel's supported database systems are provided in this file.
 
-By default, Laravel's sample [environment configuration](/docs/{{version}}/configuration#environment-configuration) is ready to use with [Laravel Sail](/docs/{{version}}/sail), which is a Docker configuration for developing Laravel applications on your local machine. However, you are free to modify your database configuration as needed for your local database.
+By default, Laravel's sample [environment configuration](configuration.md#environment-configuration) is ready to use with [Laravel Sail](sail.md), which is a Docker configuration for developing Laravel applications on your local machine. However, you are free to modify your database configuration as needed for your local database.
 
 <a name="sqlite-configuration"></a>
 #### SQLite Configuration
@@ -65,7 +65,7 @@ driver://username:password@host:port/database?options
 For convenience, Laravel supports these URLs as an alternative to configuring your database with multiple configuration options. If the `url` (or corresponding `DATABASE_URL` environment variable) configuration option is present, it will be used to extract the database connection and credential information.
 
 <a name="read-and-write-connections"></a>
-### Read & Write Connections
+### Подключения чтения и записи
 
 Sometimes you may wish to use one database connection for SELECT statements, and another for INSERT, UPDATE, and DELETE statements. Laravel makes this a breeze, and the proper connections will always be used whether you are using raw queries, the query builder, or the Eloquent ORM.
 
@@ -103,7 +103,7 @@ You only need to place items in the `read` and `write` arrays if you wish to ove
 The `sticky` option is an *optional* value that can be used to allow the immediate reading of records that have been written to the database during the current request cycle. If the `sticky` option is enabled and a "write" operation has been performed against the database during the current request cycle, any further "read" operations will use the "write" connection. This ensures that any data written during the request cycle can be immediately read back from the database during that same request. It is up to you to decide if this is the desired behavior for your application.
 
 <a name="running-queries"></a>
-## Running SQL Queries
+## Выполнение SQL-запросов
 
 Once you have configured your database connection, you may run queries using the `DB` facade. The `DB` facade provides methods for each type of query: `select`, `update`, `insert`, `delete`, and `statement`.
 
@@ -209,7 +209,7 @@ When using the `DB` facade's `statement` and `unprepared` methods within transac
 Please refer to the MySQL manual for [a list of all statements](https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html) that trigger implicit commits.
 
 <a name="using-multiple-database-connections"></a>
-### Using Multiple Database Connections
+### Использование нескольких подключений к базе данных
 
 If your application defines multiple connections in your `config/database.php` configuration file, you may access each connection via the `connection` method provided by the `DB` facade. The connection name passed to the `connection` method should correspond to one of the connections listed in your `config/database.php` configuration file or configured at runtime using the `config` helper:
 
@@ -222,9 +222,9 @@ You may access the raw, underlying PDO instance of a connection using the `getPd
     $pdo = DB::connection()->getPdo();
 
 <a name="listening-for-query-events"></a>
-### Listening For Query Events
+### Прослушивание событий запроса
 
-If you would like to specify a closure that is invoked for each SQL query executed by your application, you may use the `DB` facade's `listen` method. This method can be useful for logging queries or debugging. You may register your query listener closure in the `boot` method of a [service provider](/docs/{{version}}/providers):
+If you would like to specify a closure that is invoked for each SQL query executed by your application, you may use the `DB` facade's `listen` method. This method can be useful for logging queries or debugging. You may register your query listener closure in the `boot` method of a [service provider](providers.md):
 
     <?php
 
@@ -303,10 +303,10 @@ Lastly, you can commit a transaction via the `commit` method:
 
     DB::commit();
 
-> {tip} The `DB` facade's transaction methods control the transactions for both the [query builder](/docs/{{version}}/queries) and [Eloquent ORM](/docs/{{version}}/eloquent).
+> {tip} The `DB` facade's transaction methods control the transactions for both the [query builder](queries.md) and [Eloquent ORM](eloquent.md).
 
 <a name="connecting-to-the-database-cli"></a>
-## Connecting To The Database CLI
+## Подключение к базе данных с помощью интерфейса командной строки
 
 If you would like to connect to your database's CLI, you may use the `db` Artisan command:
 
