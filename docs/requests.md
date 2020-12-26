@@ -12,7 +12,7 @@
     - [Получение данных полей ввода](#retrieving-input)
     - [Определение наличия требуемых данных](#determining-if-input-is-present)
     - [Данные прошлого запроса](#old-input)
-    - [Файлы cookie](#cookies)
+    - [Файлы cookies](#cookies)
     - [Обрезание и нормализация значений полей ввода](#input-trimming-and-normalization)
 - [Файлы](#files)
     - [Получение загруженных файлов](#retrieving-uploaded-files)
