@@ -164,6 +164,7 @@ chunking  |  разбиение  |
 clauses  |  условия  |  
 сlosure  |  замыкание  |  
 command line interface (CLI)  |  интерфейс командной строки  |  
+commit  |  коммит, фиксация  |  
 composer  |  компоновщик, конструктор  |  
 condition  |  условие  |  
 conditional  |  кондиционный  |  
@@ -287,7 +288,7 @@ source maps  |  карты исходников  |
 spy on an object  |  наблюдать за объектом  |  
 specific  |  конкретный, определенный  |  
 staging  |  промежуточная (стадия разработки)  |  
-statement  |  оператор  |  
+statement  |  оператор, выражение  |  
 starter kit  |  стартовый комплект  |  
 stub  |  заглушка  |  
 <a name="dictionary-t">**T**</a>
