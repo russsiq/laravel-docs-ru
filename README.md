@@ -46,7 +46,7 @@
     - [ ] [Широковещание](/docs/broadcasting.md)
     - [ ] [Кэш](/docs/cache.md)
     - [ ] [Коллекции](/docs/collections.md)
-    - [ ] [Компиляция исходников](/docs/mix.md)
+    - [x] [Компиляция исходников](/docs/mix.md)
     - [x] [Контракты](/docs/contracts.md)
     - [ ] [События](/docs/events.md)
     - [ ] [Файловое хранилище](/docs/filesystem.md)
@@ -144,6 +144,7 @@ Z
 abilities  |  полномочия, компетенции  |  
 accessors  |  аксессоры  |  
 argument  |  аргумент  |  
+asset pipeline  |  сценарий по сборки исходников  |  
 asset  |  исходник  |  
 assets  |  исходники  |  Директория исходных файлов проекта для фронтенда
 attach a relation  |  назначить отношение  |  
@@ -224,6 +225,7 @@ localization  |  локализация  |
 maintenance mode  |  режим обслуживания  |  
 making  |  инициализация  |  Например, метод фабрики `make` инициализирует, но не создает запись о модели в БД.
 manually  |  самостоятельно, вручную  |  
+mapping  |  сопоставление, картирование  |  
 mass assignment  |  массовое присвоение  |  
 middleware  |  посредник  |  
 migration  |  миграция  |  
@@ -281,6 +283,7 @@ session  |  сессия  |
 shortcut  |  ярлык, псевдоним  |  
 soft deleting  |  программное удаление  |  
 Sometimes you may need, Sometimes you may wish  |  По желанию можно (может)  |  
+source maps  |  карты исходников  |  
 spy on an object  |  наблюдать за объектом  |  
 specific  |  конкретный, определенный  |  
 staging  |  промежуточная (стадия разработки)  |  

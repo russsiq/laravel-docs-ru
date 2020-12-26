@@ -8,7 +8,7 @@
     - [PostCSS](#postcss)
     - [Sass](#sass)
     - [Обработка URL](#url-processing)
-    - [Карты исходников](#css-source-maps)
+    - [Карты исходников CSS](#css-source-maps)
 - [Работа с JavaScript](#working-with-scripts)
     - [Vue](#vue)
     - [React](#react)
@@ -22,71 +22,71 @@
 <a name="introduction"></a>
 ## Введение
 
-[Laravel Mix](https://github.com/JeffreyWay/laravel-mix), a package developed by [Laracasts](https://laracasts.com) creator Jeffrey Way, provides a fluent API for defining [webpack](https://webpack.js.org) build steps for your Laravel application using several common CSS and JavaScript pre-processors.
+[Laravel Mix](https://github.com/JeffreyWay/laravel-mix) – это пакет, разработанный создателем [Laracasts](https://laracasts.com) Джеффри Уэй, предоставляет гибкий API для определения шагов сборки [Webpack](https://webpack.js.org) для вашего приложения Laravel с использованием нескольких распространенных препроцессоров CSS и JavaScript.
 
-In other words, Mix makes it a cinch to compile and minify your application's CSS and JavaScript files. Through simple method chaining, you can fluently define your asset pipeline. For example:
+Другими словами, Mix упрощает компиляцию и минимизацию файлов CSS и JavaScript вашего приложения. Посредством простой цепочки методов вы можете гибко определять свой сценарий по сборки исходников. Например:
 
     mix.js('resources/js/app.js', 'public/js')
         .postCss('resources/css/app.css', 'public/css');
 
-If you've ever been confused and overwhelmed about getting started with webpack and asset compilation, you will love Laravel Mix. However, you are not required to use it while developing your application; you are free to use any asset pipeline tool you wish, or even none at all.
+Если вы когда-либо были сбиты с толку и ошеломлены, начав работать с webpack и компиляцией ресурсов, то вам понравится Laravel Mix. Однако от вас не требуется использовать его при разработке приложения; вы можете использовать любой инструмент сборки, который пожелаете, или даже не использовать его вовсе.
 
-> {tip} If you need a head start building your application with Laravel and [Tailwind CSS](https://tailwindcss.com), check out one of our [application starter kits](/starter-kits.md).
+> {tip} Если вам нужно начать разработку приложения с помощью Laravel и [Tailwind CSS](https://tailwindcss.com), ознакомьтесь с одним из наших [стартовых комплектов приложения](starter-kits.md).
 
 <a name="installation"></a>
 ## Установка и настройка
 
 <a name="installing-node"></a>
-#### Installing Node
+#### Установка Node
 
-Before running Mix, you must first ensure that Node.js and NPM are installed on your machine:
+Перед запуском Mix вы должны сначала убедиться, что на вашем компьютере установлены Node.js и NPM:
 
     node -v
     npm -v
 
-You can easily install the latest version of Node and NPM using simple graphical installers from [the official Node website](https://nodejs.org/en/download/). Or, if you are using [Laravel Sail](/sail.md), you may invoke Node and NPM through Sail:
+Вы можете легко установить последнюю версию Node и NPM с помощью простых графических установщиков с [официального веб-сайта Node](https://nodejs.org/en/download/). Или, если вы используете [Laravel Sail](sail.md), вы можете вызывать Node и NPM через Sail:
 
     ./sail node -v
     ./sail npm -v
 
 <a name="installing-laravel-mix"></a>
-#### Installing Laravel Mix
+#### Установка Laravel Mix
 
-The only remaining step is to install Laravel Mix. Within a fresh installation of Laravel, you'll find a `package.json` file in the root of your directory structure. The default `package.json` file already includes everything you need to get started using Laravel Mix. Think of this file like your `composer.json` file, except it defines Node dependencies instead of PHP dependencies. You may install the dependencies it references by running:
+Единственный оставшийся шаг – установить Laravel Mix. В свежей установке Laravel вы найдете файл `package.json` в вашем корневом каталоге. Файл `package.json` по умолчанию уже включает в себя все, что вам нужно для начала работы с Laravel Mix. Думайте об этом файле как о вашем файле `composer.json`, за исключением того, что он определяет зависимости Node вместо зависимостей PHP. Вы можете установить зависимости, на которые он ссылается, запустив:
 
     npm install
 
 <a name="running-mix"></a>
 ## Запуск Mix
 
-Mix is a configuration layer on top of [webpack](https://webpack.js.org), so to run your Mix tasks you only need to execute one of the NPM scripts that is included in the default Laravel `package.json` file. When you run the `dev` or `production` scripts, all of your application's CSS and JavaScript assets will be compiled and placed in your application's `public` directory:
+Mix – это слой конфигурации поверх [Webpack](https://webpack.js.org), поэтому для запуска задач Mix вам нужно только выполнить один из сценариев NPM, который содержится в файле `package.json` по умолчанию. Когда вы запускаете сценарии `dev` или `production`, все исходники CSS и JavaScript вашего приложения будут скомпилированы и помещены в каталог `public` приложения:
 
-    // Run all Mix tasks...
+    // Запустить все задачи Mix ...
     npm run dev
 
-    // Run all Mix tasks and minify output...
+    // Запустить все задачи Mix и минифицировать на выходе ...
     npm run prod
 
 <a name="watching-assets-for-changes"></a>
-#### Watching Assets For Changes
+#### Наблюдение за изменениями исходников
 
-The `npm run watch` command will continue running in your terminal and watch all relevant CSS and JavaScript files for changes. Webpack will automatically recompile your assets when it detects a change to one of these files:
+Команда `npm run watch` продолжит работу в консоли и будет следить за изменениями во всех соответствующих файлах CSS и JavaScript. Webpack автоматически перекомпилирует ваши исходники, когда обнаружит изменение в одном из этих файлов:
 
     npm run watch
 
-Webpack may not be able to detect your file changes in certain local development environments. If this is the case on your system, consider using the `watch-poll` command:
+Webpack может не обнаруживать изменения ваших файлов в определенных локальных средах разработки. Если это наблюдается в вашей системе, рассмотрите возможность использования команды `watch-poll`:
 
     npm run watch-poll
 
 <a name="working-with-stylesheets"></a>
-## Working With Stylesheets
+## Работа с таблицами стилей
 
-Your application's `webpack.mix.js` file is your entry point for all asset compilation. Think of it as a light configuration wrapper around [webpack](https://webpack.js.org). Mix tasks can be chained together to define exactly how your assets should be compiled.
+Файл `webpack.mix.js` вашего приложения является отправной точкой для компиляции всех ресурсов. Думайте об этом как о легкой конфигурационной оболочке вокруг [Webpack](https://webpack.js.org). Задачи Mix могут быть объединены в цепочку, чтобы точно определить, как должны компилироваться ваши ресурсы.
 
 <a name="tailwindcss"></a>
 ### Tailwind CSS
 
-[Tailwind CSS](https://tailwindcss.com) is a modern, utility-first framework for building amazing sites without ever leaving your HTML. Let's dig into how to start using it in a Laravel project with Laravel Mix. First, we should install Tailwind using NPM and generate our Tailwind configuration file:
+[Tailwind CSS](https://tailwindcss.com) – это современный, низкоутилитарный фреймворк для создания удивительных сайтов, не покидая HTML. Давайте рассмотрим, как начать использовать его в проекте Laravel с Laravel Mix. Во-первых, мы должны установить Tailwind с помощью NPM и сгенерировать наш файл конфигурации Tailwind:
 
     npm install
 
@@ -94,7 +94,7 @@ Your application's `webpack.mix.js` file is your entry point for all asset compi
 
     npx tailwindcss init
 
-The `init` command will generate a `tailwind.config.js` file. Within this file, you may configure the paths to all of your application's templates and JavaScript so that Tailwind can tree-shake unused styles when optimizing your CSS for production:
+Команда `init` сгенерирует файл `tailwind.config.js`. В этом файле вы можете настроить пути ко всем шаблонам вашего приложения и JavaScript, чтобы Tailwind мог сбрасывать неиспользуемые стили при оптимизации CSS для эксплуатационного окружения:
 
 ```js
 purge: [
@@ -105,7 +105,7 @@ purge: [
 ],
 ```
 
-Next, you should add each of Tailwind's "layers" to your application's `resources/css/app.css` file:
+Затем вы должны добавить каждый из «слоев» Tailwind в файл `resources/css/app.css` вашего приложения:
 
 ```css
 @tailwind base;
@@ -113,7 +113,7 @@ Next, you should add each of Tailwind's "layers" to your application's `resource
 @tailwind utilities;
 ```
 
-Once you have configured Tailwind's layers, you are ready to update your application's `webpack.mix.js` file to compile your Tailwind powered CSS:
+После того, как вы настроили слои Tailwind, вы готовы обновить файл `webpack.mix.js` вашего приложения, чтобы скомпилировать ваш CSS на основе Tailwind:
 
 ```js
 mix.js('resources/js/app.js', 'public/js')
@@ -122,7 +122,7 @@ mix.js('resources/js/app.js', 'public/js')
     ]);
 ```
 
-Finally, you should reference your stylesheet in your application's primary layout template. Many applications choose to store this template at `resources/views/layouts/app.blade.php`. In addition, ensure you add the responsive viewport `meta` tag if it's not already present:
+Наконец, вы должны указать свою таблицу стилей в основном шаблоне макета вашего приложения. Многие разработчики приложений предпочитают хранить этот шаблон в `resources/views/layouts/app.blade.php`. Кроме того, убедитесь, что вы добавили метатег `viewport`, если он еще не присутствует:
 
 ```html
 <head>
@@ -135,26 +135,26 @@ Finally, you should reference your stylesheet in your application's primary layo
 <a name="postcss"></a>
 ### PostCSS
 
-[PostCSS](https://postcss.org/), a powerful tool for transforming your CSS, is included with Laravel Mix out of the box. By default, Mix leverages the popular [Autoprefixer](https://github.com/postcss/autoprefixer) plugin to automatically apply all necessary CSS3 vendor prefixes. However, you're free to add any additional plugins that are appropriate for your application.
+[PostCSS](https://postcss.org/) – мощный инструмент для преобразования вашего CSS, включен в Laravel Mix из коробки. По умолчанию Mix использует популярный плагин [Autoprefixer](https://github.com/postcss/autoprefixer) для автоматического применения всех необходимых префиксов поставщиков CSS3. Однако вы можете добавлять любые дополнительные плагины, подходящие для вашего приложения.
 
-First, install the desired plugin through NPM and include it in your array of plugins when calling Mix's `postCss` method. The `postCss` method accepts the path to your CSS file as its first argument and the directory where the compiled file should be placed as its second argument:
+Сначала установите нужный плагин через NPM и включите его в свой массив плагинов при вызове метода `postCss` Mix. Метод `postCss` принимает путь к вашему файлу CSS в качестве первого аргумента, а в качестве второго аргумента – каталог, в который следует поместить скомпилированный файл:
 
     mix.postCss('resources/css/app.css', 'public/css', [
         require('postcss-custom-properties')
     ]);
 
-Or, you may execute `postCss` with no additional plugins in order to achieve simple CSS compilation and minification:
+Или вы можете выполнить `postCss` без дополнительных плагинов, чтобы получить простую компиляцию и минификацию CSS:
 
     mix.postCss('resources/css/app.css', 'public/css');
 
 <a name="sass"></a>
 ### Sass
 
-The `sass` method allows you to compile [Sass](https://sass-lang.com/) into CSS that can be understood by web browsers. The `sass` method accepts the path to your Sass file as its first argument and the directory where the compiled file should be placed as its second argument:
+Метод `sass` позволяет вам скомпилировать [Sass](https://sass-lang.com/) в CSS, понятный веб-браузерам. Метод `sass` принимает путь к вашему файлу Sass в качестве своего первого аргумента и каталог, в который должен быть помещен скомпилированный файл, в качестве второго аргумента:
 
     mix.sass('resources/sass/app.scss', 'public/css');
 
-You may compile multiple Sass files into their own respective CSS files and even customize the output directory of the resulting CSS by calling the `sass` method multiple times:
+Вы можете скомпилировать несколько файлов Sass в отдельные файлы CSS и даже настроить каталог назначения результирующего CSS, вызывая метод `sass` несколько раз:
 
     mix.sass('resources/sass/app.sass', 'public/css')
         .sass('resources/sass/admin.sass', 'public/css/admin');
@@ -162,44 +162,44 @@ You may compile multiple Sass files into their own respective CSS files and even
 <a name="url-processing"></a>
 ### Обработка URL
 
-Because Laravel Mix is built on top of webpack, it's important to understand a few webpack concepts. For CSS compilation, webpack will rewrite and optimize any `url()` calls within your stylesheets. While this might initially sound strange, it's an incredibly powerful piece of functionality. Imagine that we want to compile Sass that includes a relative URL to an image:
+Поскольку Laravel Mix построен поверх Webpack, важно понимать несколько концепций Webpack. Для компиляции CSS Webpack перезапишет и оптимизирует любые вызовы `url()` в ваших таблицах стилей. Хотя поначалу это может показаться странным, это невероятно мощная функциональность. Представьте, что мы хотим скомпилировать Sass, который включает относительный URL-адрес изображения:
 
     .example {
         background: url('../images/example.png');
     }
 
-> {note} Absolute paths for any given `url()` will be excluded from URL-rewriting. For example, `url('/images/thing.png')` or `url('http://example.com/images/thing.png')` won't be modified.
+> {note} Абсолютные пути для любого заданного `url()` будут исключены из перезаписи URL. Например, `url('/images/thing.png')` или `url('http://example.com/images/thing.png')` не будут изменены.
 
-By default, Laravel Mix and webpack will find `example.png`, copy it to your `public/images` folder, and then rewrite the `url()` within your generated stylesheet. As such, your compiled CSS will be:
+По умолчанию Laravel Mix и Webpack найдут `example.png`, скопируют его в вашу папку `public/images`, а затем перепишут `url()` в созданной вами таблице стилей. Таким образом, ваш скомпилированный CSS будет:
 
     .example {
         background: url(/images/example.png?d41d8cd98f00b204e9800998ecf8427e);
     }
 
-As useful as this feature may be, it's possible that your existing folder structure is already configured in a way you like. If this is the case, you may disable `url()` rewriting like so:
+Какой бы полезной ни была эта функция, возможно, ваша существующая структура папок уже настроена так, как вам нравится. В этом случае вы можете отключить перезапись `url()` следующим образом:
 
     mix.sass('resources/sass/app.scss', 'public/css').options({
         processCssUrls: false
     });
 
-With this addition to your `webpack.mix.js` file, Mix will no longer match any `url()` or copy assets to your public directory. In other words, the compiled CSS will look just like how you originally typed it:
+После добавления этой записи в ваш файл `webpack.mix.js`, Mix больше не будет сопоставлять какой-либо `url()` или копировать ресурсы в ваш публичный каталог. Другими словами, скомпилированный CSS будет выглядеть так же, как вы его изначально указали:
 
     .example {
         background: url("../images/thing.png");
     }
 
 <a name="css-source-maps"></a>
-### Карты исходников
+### Карты исходников CSS
 
-Though disabled by default, source maps may be activated by calling the `mix.sourceMaps()` method in your `webpack.mix.js` file. Though it comes with a compile/performance cost, this will provide extra debugging information to your browser's developer tools when using compiled assets:
+Хотя по умолчанию они отключены, карты исходников могут быть активированы путем вызова метода `mix.sourceMaps()` в вашем файле `webpack.mix.js`. Хоть это и связано с затратами на компиляцию / производительность, но, в свою очередь, предоставит дополнительную отладочную информацию в инструментах разработчика вашего браузера при использовании скомпилированных ресурсов:
 
     mix.js('resources/js/app.js', 'public/js')
         .sourceMaps();
 
 <a name="style-of-source-mapping"></a>
-#### Style Of Source Mapping
+#### Сопоставление стилей исходников
 
-Webpack offers a variety of [source mapping styles](https://webpack.js.org/configuration/devtool/#devtool). By default, Mix's source mapping style is set to `eval-source-map`, which provides a fast rebuild time. If you want to change the mapping style, you may do so using the `sourceMaps` method:
+Webpack предлагает множество вариантов [сопоставления стилей исходников](https://webpack.js.org/configuration/devtool/#devtool). По умолчанию сопоставления стилей исходников Mix установлено как `eval-source-map`, что обеспечивает быстрое по времени перестроение. Если вы хотите изменить сопоставление, вы можете сделать это с помощью метода `sourceMaps`:
 
     let productionSourceMaps = false;
 
@@ -209,26 +209,26 @@ Webpack offers a variety of [source mapping styles](https://webpack.js.org/confi
 <a name="working-with-scripts"></a>
 ## Работа с JavaScript
 
-Mix provides several features to help you work with your JavaScript files, such as compiling ECMAScript 2015, module bundling, minification, and concatenating plain JavaScript files. Even better, this all works seamlessly, without requiring an ounce of custom configuration:
+Mix содержит функционал, помогающий вам работать с вашими файлами JavaScript, например, компиляцию ECMAScript 2015, объединение модулей, минификацию и объединение простых файлов JavaScript. Более того, все это работает без проблем, не требуя ни унции специального конфигурирования:
 
     mix.js('resources/js/app.js', 'public/js');
 
-With this single line of code, you may now take advantage of:
+Теперь, с помощью одной строчки кода вы можете воспользоваться следующими преимуществами:
 
-<div class="content-list" markdown="1">
+/* <div class="content-list" markdown="1"> */
 - ES2015 syntax.
 - Modules
 - Minification for production environments.
-</div>
+/* </div> */
 
 <a name="vue"></a>
 ### Vue
 
-Mix will automatically install the Babel plugins necessary for Vue single-file component compilation support when using the `js` method. No further configuration is required:
+Mix автоматически установит плагины Babel, необходимые для поддержки компиляции однофайловых компонентов Vue при использовании метода `js`. Никакой дополнительной настройки не требуется:
 
     mix.js('resources/js/app.js', 'public/js');
 
-Once your JavaScript has been compiled, you can reference it in your application:
+После того, как ваш JavaScript скомпилирован, вы можете ссылаться на него в своем приложении:
 
 ```html
 <head>
@@ -241,11 +241,11 @@ Once your JavaScript has been compiled, you can reference it in your application
 <a name="react"></a>
 ### React
 
-Mix can automatically install the Babel plugins necessary for React support. To get started, replace your call to Mix's `js` method with a call to the `react` method:
+Mix автоматически установит плагины Babel, необходимые для поддержки React. Для начала замените ваш вызов метода `js` Mix на `react`:
 
     mix.react('resources/js/app.jsx', 'public/js');
 
-Behind the scenes, Mix will download and include the appropriate `babel-preset-react` Babel plugin. Once your JavaScript has been compiled, you can reference it in your application:
+За кулисами Mix загрузит и включит соответствующий плагин `babel-preset-react` Babel. После того, как ваш JavaScript скомпилирован, вы можете ссылаться на него в своем приложении:
 
 ```html
 <head>
@@ -258,22 +258,22 @@ Behind the scenes, Mix will download and include the appropriate `babel-preset-r
 <a name="vendor-extraction"></a>
 ### Извлечение сторонних библиотек
 
-One potential downside to bundling all of your application-specific JavaScript with your vendor libraries such as React and Vue is that it makes long-term caching more difficult. For example, a single update to your application code will force the browser to re-download all of your vendor libraries even if they haven't changed.
+Одним из потенциальных недостатков объединения всего кода JavaScript для конкретного приложения со сторонними библиотеками, такими как React и Vue, является то, что это затрудняет долгосрочное кэширование. Например, одно обновление кода вашего приложения заставит браузер повторно загрузить все сторонние библиотеки, даже если они не изменились.
 
-If you intend to make frequent updates to your application's JavaScript, you should consider extracting all of your vendor libraries into their own file. This way, a change to your application code will not affect the caching of your large `vendor.js` file. Mix's `extract` method makes this a breeze:
+Если вы намереваетесь часто обновлять JavaScript своего приложения, вам следует рассмотреть возможность извлечения всех сторонних библиотек в их собственный файл. Таким образом, изменение кода вашего приложения не повлияет на кэширование вашего большого файла `vendor.js`. Метод `extract` Mix делает это проще простого:
 
     mix.js('resources/js/app.js', 'public/js')
         .extract(['vue'])
 
-The `extract` method accepts an array of all libraries or modules that you wish to extract into a `vendor.js` file. Using the snippet above as an example, Mix will generate the following files:
+Метод `extract` принимает массив всех библиотек или модулей, которые вы хотите извлечь в файл `vendor.js`. Используя приведенный выше фрагмент в качестве примера, Mix сгенерирует следующие файлы:
 
-<div class="content-list" markdown="1">
+/* <div class="content-list" markdown="1"> */
 - `public/js/manifest.js`: *The Webpack manifest runtime*
 - `public/js/vendor.js`: *Your vendor libraries*
 - `public/js/app.js`: *Your application code*
-</div>
+/* </div> */
 
-To avoid JavaScript errors, be sure to load these files in the proper order:
+Чтобы избежать ошибок JavaScript, обязательно загружайте эти файлы в правильном порядке:
 
     <script src="/js/manifest.js"></script>
     <script src="/js/vendor.js"></script>
@@ -282,12 +282,12 @@ To avoid JavaScript errors, be sure to load these files in the proper order:
 <a name="custom-webpack-configuration"></a>
 ### Пользовательская конфигурация Webpack
 
-Behind the scenes, Laravel Mix references a pre-configured `webpack.config.js` file to get you up and running as quickly as possible. Occasionally, you may need to manually modify this file. For example, you might have a special loader or plugin that needs to be referenced. In such instances, you have two choices:
+За кулисами Laravel Mix ссылается на предварительно сконфигурированный файл `webpack.config.js`, чтобы вы могли как можно быстрее приступить к работе. Иногда вам может потребоваться вручную изменить этот файл. Например, у вас может быть специальный загрузчик или плагин, на который нужно сослаться. В таких случаях у вас есть два варианта:
 
 <a name="merging-custom-configuration"></a>
-#### Merging Custom Configuration
+#### Слияние пользовательской конфигурации
 
-Mix provides a useful `webpackConfig` method that allows you to merge any short Webpack configuration overrides. This is a particularly appealing choice, as it doesn't require you to copy and maintain your own copy of the `webpack.config.js` file. The `webpackConfig` method accepts an object, which should contain any [Webpack-specific configuration](https://webpack.js.org/configuration/) that you wish to apply.
+Mix предоставляет полезный метод `webpackConfig`, который позволяет вам объединить небольшие переопределения конфигурации Webpack. Это особенно привлекательный вариант, поскольку он не требует от вас копирования и поддержки вашей собственной копии файла `webpack.config.js`. Метод `webpackConfig` принимает объект, который должен содержать любую [специфичную для Webpack конфигурацию](https://webpack.js.org/configuration/), которую вы хотите применить.
 
     mix.webpackConfig({
         resolve: {
@@ -298,25 +298,25 @@ Mix provides a useful `webpackConfig` method that allows you to merge any short 
     });
 
 <a name="custom-configuration-files"></a>
-#### Custom Configuration Files
+#### Пользовательские файлы конфигурации
 
-If you would like to completely customize your Webpack configuration, copy the `node_modules/laravel-mix/setup/webpack.config.js` file to your project's root directory. Next, point all of the `--config` references in your `package.json` file to the newly copied configuration file. If you choose to take this approach to customization, any future upstream updates to Mix's `webpack.config.js` must be manually merged into your customized file.
+Если вы хотите полностью настроить конфигурацию Webpack, скопируйте файл `node_modules/laravel-mix/setup/webpack.config.js` в корневой каталог вашего проекта. Затем укажите все ссылки `--config` в вашем файле `package.json` на только что скопированный файл конфигурации. Если вы решите применить этот подход конфигурирования, то любые дальнейшие обновления файла `webpack.config.js` Mix должны быть вручную объединены в ваш пользовательский файл.
 
 <a name="versioning-and-cache-busting"></a>
 ## Версионирование / очистка кэша
 
-Many developers suffix their compiled assets with a timestamp or unique token to force browsers to load the fresh assets instead of serving stale copies of the code. Mix can automatically handle this for you using the `version` method.
+Многие разработчики дополняют имена своих скомпилированных ресурсов меткой времени или уникальным токеном, чтобы заставить браузеры загружать свежие ресурсы вместо устаревших копий кода. Mix может автоматически обработать это за вас, используя метод `version`.
 
-The `version` method will append a unique hash to the filenames of all compiled files, allowing for more convenient cache busting:
+Метод `version` добавит уникальный хэш к именам файлов всех скомпилированных исходников, что сделает очистку кеша более удобной:
 
     mix.js('resources/js/app.js', 'public/js')
         .version();
 
-After generating the versioned file, you won't know the exact filename. So, you should use Laravel's global `mix` function within your [views](/views.md) to load the appropriately hashed asset. The `mix` function will automatically determine the current name of the hashed file:
+После создания файла версионирования вы не узнаете его точное имя. Итак, вы должны использовать глобальную функцию Laravel `mix` в вашем [шаблонах](views.md) для загрузки хешированного ресурса. Функция `mix` автоматически определит текущее имя хешированного файла:
 
     <script src="{{ mix('/js/app.js') }}"></script>
 
-Because versioned files are usually unnecessary in development, you may instruct the versioning process to only run during `npm run prod`:
+Поскольку файлы с поддержкой версий обычно нужны только в эксплуатационном окружении, вы можете указать, чтобы процесс управления версиями выполнялся только во время запуска `npm run prod`:
 
     mix.js('resources/js/app.js', 'public/js');
 
@@ -325,13 +325,13 @@ Because versioned files are usually unnecessary in development, you may instruct
     }
 
 <a name="custom-mix-base-urls"></a>
-#### Custom Mix Base URLs
+#### Корректировка базовых URL-адресов с помощью Mix
 
-If your Mix compiled assets are deployed to a CDN separate from your application, you will need to change the base URL generated by the `mix` function. You may do so by adding a `mix_url` configuration option to your application's `config/app.php` configuration file:
+Если ваши скомпилированные ресурсы Mix развернуты в CDN отдельно от вашего приложения, то вам нужно будет изменить базовый URL-адрес, сгенерированный функцией `mix`. Вы можете сделать это, добавив параметр `mix_url` в файл конфигурации вашего приложения `config/app.php`:
 
     'mix_url' => env('MIX_ASSET_URL', null)
 
-After configuring the Mix URL, The `mix` function will prefix the configured URL when generating URLs to assets:
+После указания URL-адреса, функция `mix` будет подставлять указанный префикс при создании URL-адресов для ресурсов:
 
 ```bash
 https://cdn.example.com/js/app.js?id=1964becbdd96414518cd
@@ -340,13 +340,13 @@ https://cdn.example.com/js/app.js?id=1964becbdd96414518cd
 <a name="browsersync-reloading"></a>
 ## Перезагрузка с помощью Browsersync
 
-[BrowserSync](https://browsersync.io/) can automatically monitor your files for changes, and inject your changes into the browser without requiring a manual refresh. You may enable support for this by calling the `mix.browserSync()` method:
+[BrowserSync](https://browsersync.io/) может автоматически отслеживать изменения в ваших файлах и вносить изменения в браузер, не требуя обновления страницы вручную. Вы можете включить эту поддержку, вызвав метод `mix.browserSync()`:
 
 ```js
 mix.browserSync('laravel.test');
 ```
 
-[BrowserSync options](https://browsersync.io/docs/options) may be specified by passing a JavaScript object to the `browserSync` method:
+[Параметры BrowserSync](https://browsersync.io/docs/options) можно указать путем передачи объекта JavaScript в метод `browserSync`:
 
 ```js
 mix.browserSync({
@@ -354,22 +354,22 @@ mix.browserSync({
 });
 ```
 
-Next, start webpack's development server using the `npm run watch` command. Now, when you modify a script or PHP file you can watch as the browser instantly refreshes the page to reflect your changes.
+Затем запустите сервер разработки Webpack с помощью команды `npm run watch`. Теперь, когда вы изменяете скрипт или файл PHP, вы можете наблюдать, как браузер мгновенно обновляет страницу, чтобы отразить ваши изменения.
 
 <a name="environment-variables"></a>
 ## Переменные окружения
 
-You may inject environment variables into your `webpack.mix.js` script by prefixing one of the environment variables in your `.env` file with `MIX_`:
+Вы можете использовать переменные окружения в своем `webpack.mix.js`, добавив к одной из переменных префикс `MIX_` в вашем файле `.env`:
 
     MIX_SENTRY_DSN_PUBLIC=http://example.com
 
-After the variable has been defined in your `.env` file, you may access it via the `process.env` object. However, you will need to restart the task if the environment variable's value changes while the task is running:
+После того, как переменная была определена в вашем файле `.env`, вы можете получить к ней доступ через объект `process.env`. Однако, вам нужно будет перезапустить задание, если значение переменной среды изменится во время ее выполнения:
 
     process.env.MIX_SENTRY_DSN_PUBLIC
 
 <a name="notifications"></a>
 ## Уведомления
 
-When available, Mix will automatically display OS notifications when compiling, giving you instant feedback as to whether the compilation was successful or not. However, there may be instances when you would prefer to disable these notifications. One such example might be triggering Mix on your production server. Notifications may be deactivated using the `disableNotifications` method:
+Когда доступно, Mix будет автоматически отображать уведомления ОС при компиляции, давая вам мгновенную информацию о том, была ли компиляция успешной или нет. Однако, могут быть случаи, когда вы предпочтете отключить эти уведомления. Одним из таких примеров может быть запуск Mix на вашем рабочем сервере. Уведомления можно отключить с помощью метода `disableNotifications`:
 
     mix.disableNotifications();
