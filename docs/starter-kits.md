@@ -8,19 +8,19 @@
 <a name="introduction"></a>
 ## Введение
 
-To give you a head start building your new Laravel application, we are happy to offer authentication and application starter kits. These kits automatically scaffold your application with the routes, controllers, and views you need to register and authenticate your application's users.
+Чтобы дать вам фору при создании нового приложения Laravel, мы рады предложить стартовые комплекты приложения и, в частности, аутентификации. Эти комплекты автоматически дополнят ваше приложение маршрутами, контроллерами и шаблонами, необходимыми для регистрации и аутентификации пользователей вашего приложения.
 
-While you are welcome to use these starter kits, they are not required. You are free to build your own application from the ground up by simply installing a fresh copy of Laravel. Either way, we know you will build something great!
+Вы можете использовать эти стартовые комплекты, но они не требуются. Вы можете создать собственное приложение с нуля, просто установив новую копию Laravel. В любом случае, мы знаем, что вы создадите что-то отличное!
 
 <a name="laravel-breeze"></a>
 ## Laravel Breeze
 
-Laravel Breeze is a minimal, simple implementation of all of Laravel's [authentication features](authentication.md), including login, registration, password reset, email verification, and password confirmation. Laravel Breeze's view layer is made up of simple [Blade templates](blade.md) styled with [Tailwind CSS](https://tailwindcss.com). Breeze provides a wonderful starting point for beginning a fresh Laravel application.
+Laravel Breeze – это минимальная и простая реализация всех [функций аутентификации](authentication.md) Laravel, включая вход в систему, регистрацию, сброс пароля, подтверждение адреса электронной почты и пароля. Слой «View» комплекта Laravel Breeze состоит из простых [шаблонов Blade](blade.md), стилизованных с помощью [Tailwind CSS](https://tailwindcss.com). Breeze является прекрасной отправной точкой для создания нового приложения Laravel.
 
 <a name="laravel-breeze-installation"></a>
 ### Установка
 
-First, you should [create a new Laravel application](installation.md), configure your database, and run your [database migrations](migrations.md):
+Сначала вы должны [создать новое приложение Laravel](installation.md), настроить свою базу данных и запустить [миграции базы данных](migrations.md):
 
 ```bash
 curl -s https://laravel.build/example-app | bash
@@ -30,13 +30,13 @@ cd example-app
 php artisan migrate
 ```
 
-Once you have created a new Laravel application, you may install Laravel Breeze using Composer:
+Создав новое приложение Laravel, вы можете установить Laravel Breeze с помощью Composer:
 
 ```bash
 composer require laravel/breeze --dev
 ```
 
-After Composer has installed the Laravel Breeze package, you may run the `breeze:install` Artisan command. This command publishes the authentication views, routes, controllers, and other resources to your application. Laravel Breeze publishes all of its code to your application so that you have full control and visibility over its features and implementation. After Breeze is installed, you should also compile your assets so that your application's CSS file is available:
+После того, как Composer установит пакет Laravel Breeze, вы можете запустить команду `breeze:install` Artisan. Эта команда опубликует для вашего приложения шаблоны, маршруты, контроллеры и другие ресурсы аутентификации. Laravel Breeze опубликует весь свой код в вашем приложении, чтобы у вас был полный контроль, обзор всего функционала и его реализация. После установки Breeze вы также должны скомпилировать свои исходники, чтобы был доступен файл CSS вашего приложения:
 
 ```bash
 php artisan breeze:install
@@ -46,15 +46,15 @@ npm install
 npm run dev
 ```
 
-Next, you may navigate to your application's `/login` or `/register` URLs in your web browser. All of Breeze's routes are defined within the `routes/auth.php` file.
+Затем, вы можете перейти в своем веб-браузере по URL-адресам вашего приложения `/login` или `/register`. Все маршруты Breeze определены в файле `routes/auth.php`.
 
-> {tip} To learn more about compiling your application's CSS and JavaScript, check out the [Laravel Mix documentation](mix.md#running-mix).
+> {tip} Чтобы узнать больше о компиляции CSS и JavaScript вашего приложения, ознакомьтесь с [документацией Laravel Mix](mix.md#running-mix).
 
 <a name="laravel-jetstream"></a>
 ## Laravel Jetstream
 
-While Laravel Breeze provides a simple and minimal starting point for building a Laravel application, Jetstream augments that functionality with more robust features and additional frontend technology stacks. **For those brand new to Laravel, we recommend learning the ropes with Laravel Breeze before graduating to Laravel Jetstream.**
+В то время как Laravel Breeze обеспечивает простую и минимальную отправную точку для создания приложения Laravel, Jetstream дополняет эту функциональность более надежными функциями и дополнительными стеками технологий внешнего интерфейса. **Для тех, кто новичок в Laravel, мы рекомендуем изучить основы работы с Laravel Breeze перед тем, как перейти на Laravel Jetstream.**
 
-Jetstream provides a beautifully designed application scaffolding for Laravel and includes login, registration, email verification, two-factor authentication, session management, API support via Laravel Sanctum, and optional team management. Jetstream is designed using [Tailwind CSS](https://tailwindcss.com) and offers your choice of [Livewire](https://laravel-livewire.com) or [Inertia.js](https://inertiajs.com) driven frontend scaffolding.
+Jetstream предоставляет красиво оформленный каркас приложений для Laravel и включает в себя вход в систему, регистрацию, подтверждение адреса электронной почты, двухфакторную аутентификацию, управление сессиями, поддержку API через Laravel Sanctum, и дополнительно, управление командой. Jetstream разработан с использованием [Tailwind CSS](https://tailwindcss.com) и предлагает на ваш выбор [Livewire](https://laravel-livewire.com) или [Inertia.js](https://inertiajs.com), управляемые каркасным программированием фронтенда на основе заготовок.
 
-Complete documentation for installing Laravel Jetstream can be found within the [official Jetstream documentation](https://jetstream.laravel.com/1.x/introduction.html).
+Полную описание по установке Laravel Jetstream можно найти в [официальной документации Jetstream](https://jetstream.laravel.com/1.x/introduction.html).

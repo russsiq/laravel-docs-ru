@@ -20,7 +20,7 @@
     - [ ] [Установка](/docs/installation.md)
     - [x] [Конфигурирование](/docs/configuration.md)
     - [x] [Структура каталогов](/docs/structure.md)
-    - [ ] [Стартовые комплекты](/docs/starter-kits.md)
+    - [x] [Стартовые комплекты](/docs/starter-kits.md)
     - [x] [Развертывание](/docs/deployment.md)
 - ## Архитектурные концепции
     - [x] [Жизненный цикл запроса](/docs/lifecycle.md)
