@@ -66,7 +66,7 @@
     - [x] [Хеширование](/docs/hashing.md)
     - [x] [Сброс пароля](/docs/passwords.md)
 - ## База данных
-    - [ ] [Начало](/docs/database.md)
+    - [x] [Начало](/docs/database.md)
     - [ ] [Построитель запросов](/docs/queries.md)
     - [x] [Постраничная навигация](/docs/pagination.md)
     - [ ] [Миграции](/docs/migrations.md)
