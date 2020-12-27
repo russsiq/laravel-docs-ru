@@ -34,7 +34,7 @@
     - [ ] [Контроллеры](/docs/controllers.md)
     - [x] [HTTP-запросы](/docs/requests.md)
     - [ ] [HTTP-ответы](/docs/responses.md)
-    - [x] [Шаблоны HTML](/docs/views.md)
+    - [x] [HTML-шаблоны](/docs/views.md)
     - [ ] [Шаблонизатор Blade](/docs/blade.md)
     - [x] [Генерация URL-адресов](/docs/urls.md)
     - [ ] [Сессия](/docs/session.md)

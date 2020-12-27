@@ -1,4 +1,4 @@
-# Шаблоны HTML
+# HTML-шаблоны
 
 - [Введение](#introduction)
 - [Создание и отрисовка шаблонов](#creating-and-rendering-views)
