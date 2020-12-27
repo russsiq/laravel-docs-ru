@@ -76,7 +76,7 @@
     - [x] [Начало](/docs/eloquent.md)
     - [ ] [Отношения](/docs/eloquent-relationships.md)
     - [x] [Коллекции](/docs/eloquent-collections.md)
-    - [ ] [Мутаторы](/docs/eloquent-mutators.md)
+    - [ ] [Мутаторы и типизация](/docs/eloquent-mutators.md)
     - [ ] [Ресурсы API](/docs/eloquent-resources.md)
     - [x] [Сериализация](/docs/eloquent-serialization.md)
 - ## Тестирование
