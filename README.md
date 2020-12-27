@@ -32,7 +32,7 @@
     - [x] [Посредники](/docs/middleware.md)
     - [x] [Предотвращение атак CSRF](/docs/csrf.md)
     - [ ] [Контроллеры](/docs/controllers.md)
-    - [ ] [HTTP-запросы](/docs/requests.md)
+    - [x] [HTTP-запросы](/docs/requests.md)
     - [ ] [HTTP-ответы](/docs/responses.md)
     - [x] [Шаблоны HTML](/docs/views.md)
     - [ ] [Шаблонизатор Blade](/docs/blade.md)
@@ -198,6 +198,7 @@ facade  |  фасад  |
 factory callbacks  |  хуки фабрики  |  
 fake  |  фальсификация, фальшивка  |  
 feature  |  функционал, особенность  |  
+filesystem  |  файловое хранилище, файловая система  |  
 fired  |  инициировано, сработано  |  
 flash data  |  флеш-данные  |  Данные, имеющие непродолжительный срок существования
 flashed to the session  |  записаны (краткосрочно) в сессию  |  
@@ -220,6 +221,7 @@ job batching  |  пакетная обработка заданий  |
 layer over  |  обертка над  |  
 lazy  |  отложенный  |  
 listener  |  слушатель  |  
+load balancer  |  балансировщик нагрузки  |  
 log  |  журнал  |  
 logger  |  регистратор  |  
 logging  |  логирование  |  
@@ -246,6 +248,7 @@ options  |  параметры  |
 overriding  |  переопределение  |  
 <a name="dictionary-p">**P**</a>
 pagination  |  постраничная навигация, пагинация  |  
+payload  |  информационная часть данных (HTTP-запроса)  |  
 permanently  |  окончательно  |  
 placeholder  |  заполнитель, метка-заполнитель, символ-заполнитель, заменитель  |  
 policy  |  политика  |  
