@@ -1,4 +1,4 @@
-# Eloquent: Сериализация
+# Eloquent: сериализация
 
 - [Введение](#introduction)
 - [Сериализация моделей и коллекций](#serializing-models-and-collections)
