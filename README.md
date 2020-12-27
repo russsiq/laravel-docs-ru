@@ -33,7 +33,7 @@
     - [x] [Предотвращение атак CSRF](/docs/csrf.md)
     - [ ] [Контроллеры](/docs/controllers.md)
     - [x] [HTTP-запросы](/docs/requests.md)
-    - [ ] [HTTP-ответы](/docs/responses.md)
+    - [x] [HTTP-ответы](/docs/responses.md)
     - [x] [HTML-шаблоны](/docs/views.md)
     - [ ] [Шаблонизатор Blade](/docs/blade.md)
     - [x] [Генерация URL-адресов](/docs/urls.md)
