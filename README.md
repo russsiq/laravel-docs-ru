@@ -31,7 +31,7 @@
     - [ ] [Маршрутизация](/docs/routing.md)
     - [x] [Посредники](/docs/middleware.md)
     - [x] [Предотвращение атак CSRF](/docs/csrf.md)
-    - [ ] [Контроллеры](/docs/controllers.md)
+    - [x] [Контроллеры](/docs/controllers.md)
     - [x] [HTTP-запросы](/docs/requests.md)
     - [x] [HTTP-ответы](/docs/responses.md)
     - [x] [HTML-шаблоны](/docs/views.md)
