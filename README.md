@@ -28,7 +28,7 @@
     - [x] [Поставщики служб](/docs/providers.md)
     - [x] [Фасады](/docs/facades.md)
 - ## Основы
-    - [ ] [Маршрутизация](/docs/routing.md)
+    - [x] [Маршрутизация](/docs/routing.md)
     - [x] [Посредники](/docs/middleware.md)
     - [x] [Предотвращение атак CSRF](/docs/csrf.md)
     - [x] [Контроллеры](/docs/controllers.md)
@@ -287,6 +287,7 @@ service container  |  контейнер служб  |
 service providers  |  поставщики служб  |  
 session  |  сессия  |  
 shortcut  |  ярлык, псевдоним  |  
+slug  |  дружественный URI (фрагмент URL-адреса)  |  
 soft deleting  |  программное удаление  |  
 Sometimes you may need, Sometimes you may wish  |  По желанию можно (может)  |  
 source maps  |  карты исходников  |  
