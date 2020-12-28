@@ -176,7 +176,7 @@ contract  |  контракт  |
 cookie  |  (файл) cookie  |  
 custom  |  пользовательский, желаемый, собственный  |  
 customization  |  настройка  |  
-customizing  |  корректировка  |  
+customizing  |  корректировка, изменение  |  
 <a name="dictionary-d">**D**</a>
 defining  |  определение  |  
 deployment  |  развертывание  |  
