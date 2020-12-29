@@ -137,7 +137,7 @@ U
 [V](#dictionary-v)
 [W](#dictionary-w)
 X
-Y
+[Y](#dictionary-y)
 Z
 
 Исходный вариант  |  Вариации перевода  |  Замечания
@@ -267,7 +267,7 @@ redirector  |  перенаправитель  |
 refreshing  |  обновление  |  
 reflection  |  рефлексия (отражение)  |  
 relationships  |  отношения  |  
-rendering  |  отображение, рендеринг  |  
+rendering  |  отображение, визуализация, рендеринг  |  
 replicating  |  репликация, тиражирование  |  
 request  |  запрос  |  
 resource  |  ресурс  |  Источник информации, например, API-ресурс
@@ -313,3 +313,5 @@ view  |  шаблон, представление  |
 <a name="dictionary-w">**W**</a>
 wildcard  |  метасимвол подстановки  |  
 work factor  |  коэффициент работы  |  
+<a name="dictionary-y">**Y**</a>
+yield  |  дополнение, дополнять  |  
