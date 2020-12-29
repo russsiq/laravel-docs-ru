@@ -37,7 +37,7 @@
     - [x] [HTML-шаблоны](/docs/views.md)
     - [x] [Шаблонизатор Blade](/docs/blade.md)
     - [x] [Генерация URL-адресов](/docs/urls.md)
-    - [ ] [HTTP-сессия](/docs/session.md)
+    - [x] [HTTP-сессия](/docs/session.md)
     - [ ] [Валидация](/docs/validation.md)
     - [x] [Обработка ошибок](/docs/errors.md)
     - [ ] [Логирование](/docs/logging.md)
@@ -149,6 +149,7 @@ argument  |  аргумент  |
 asset pipeline  |  сценарий по сборки исходников  |  
 asset  |  исходник  |  
 assets  |  исходники  |  Директория исходных файлов проекта для фронтенда
+atomic  |  атомарный, неделимый  |  
 attach a relation  |  назначить отношение  |  
 attaching  |  прикрепление  |  
 attempting  |  пытается  |  
