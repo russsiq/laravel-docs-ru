@@ -1,45 +1,45 @@
-# HTTP Session
+# HTTP-сессия
 
-- [Introduction](#introduction)
-    - [Configuration](#configuration)
-    - [Driver Prerequisites](#driver-prerequisites)
-- [Interacting With The Session](#interacting-with-the-session)
-    - [Retrieving Data](#retrieving-data)
-    - [Storing Data](#storing-data)
-    - [Flash Data](#flash-data)
-    - [Deleting Data](#deleting-data)
-    - [Regenerating The Session ID](#regenerating-the-session-id)
-- [Session Blocking](#session-blocking)
-- [Adding Custom Session Drivers](#adding-custom-session-drivers)
-    - [Implementing The Driver](#implementing-the-driver)
-    - [Registering The Driver](#registering-the-driver)
+- [Введение](#introduction)
+    - [Конфигурирование](#configuration)
+    - [Предварительная подготовка драйверов](#driver-prerequisites)
+- [Взаимодействие с сессией](#interacting-with-the-session)
+    - [Получение данных](#retrieving-data)
+    - [Сохранение данных](#storing-data)
+    - [Кратковременные данные](#flash-data)
+    - [Удаление данных](#deleting-data)
+    - [Пересоздание идентификатора сессии](#regenerating-the-session-id)
+- [Блокирование сессии](#session-blocking)
+- [Добавление пользовательских драйверов сессии](#adding-custom-session-drivers)
+    - [Реализация драйвера](#implementing-the-driver)
+    - [Регистрация драйвера](#registering-the-driver)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
 Since HTTP driven applications are stateless, sessions provide a way to store information about the user across multiple requests. That user information is typically placed in a persistent store / backend that can be accessed from subsequent requests.
 
 Laravel ships with a variety of session backends that are accessed through an expressive, unified API. Support for popular backends such as [Memcached](https://memcached.org), [Redis](https://redis.io), and databases is included.
 
 <a name="configuration"></a>
-### Configuration
+### Конфигурирование
 
 Your application's session configuration file is stored at `config/session.php`. Be sure to review the options available to you in this file. By default, Laravel is configured to use the `file` session driver, which will work well for many applications. If your application will be load balanced across multiple web servers, you should choose a centralized store that all servers can access, such as Redis or a database.
 
 The session `driver` configuration option defines where session data will be stored for each request. Laravel ships with several great drivers out of the box:
 
-<div class="content-list" markdown="1">
+<!-- <div class="content-list" markdown="1"> -->
 - `file` - sessions are stored in `storage/framework/sessions`.
 - `cookie` - sessions are stored in secure, encrypted cookies.
 - `database` - sessions are stored in a relational database.
 - `memcached` / `redis` - sessions are stored in one of these fast, cache based stores.
 - `array` - sessions are stored in a PHP array and will not be persisted.
-</div>
+<!-- </div> -->
 
-> {tip} The array driver is primarily used during [testing](/docs/{{version}}/testing) and prevents the data stored in the session from being persisted.
+> {tip} The array driver is primarily used during [testing](testing.md) and prevents the data stored in the session from being persisted.
 
 <a name="driver-prerequisites"></a>
-### Driver Prerequisites
+### Предварительная подготовка драйверов
 
 <a name="database"></a>
 #### Database
@@ -55,7 +55,7 @@ When using the `database` session driver, you will need to create a table to con
         $table->integer('last_activity')->index();
     });
 
-You may use the `session:table` Artisan command to generate this migration. To learn more about database migrations, you may consult the complete [migration documentation](/docs/{{version}}/migrations):
+You may use the `session:table` Artisan command to generate this migration. To learn more about database migrations, you may consult the complete [migration documentation](migrations.md):
 
     php artisan session:table
 
@@ -64,17 +64,17 @@ You may use the `session:table` Artisan command to generate this migration. To l
 <a name="redis"></a>
 #### Redis
 
-Before using Redis sessions with Laravel, you will need to either install the PhpRedis PHP extension via PECL or install the `predis/predis` package (~1.0) via Composer. For more information on configuring Redis, consult Laravel's [Redis documentation](/docs/{{version}}/redis#configuration).
+Before using Redis sessions with Laravel, you will need to either install the PhpRedis PHP extension via PECL or install the `predis/predis` package (~1.0) via Composer. For more information on configuring Redis, consult Laravel's [Redis documentation](redis.md#configuration).
 
 > {tip} In the `session` configuration file, the `connection` option may be used to specify which Redis connection is used by the session.
 
 <a name="interacting-with-the-session"></a>
-## Interacting With The Session
+## Взаимодействие с сессией
 
 <a name="retrieving-data"></a>
-### Retrieving Data
+### Получение данных
 
-There are two primary ways of working with session data in Laravel: the global `session` helper and via a `Request` instance. First, let's look at accessing the session via a `Request` instance, which can be type-hinted on a route closure or controller method. Remember, controller method dependencies are automatically injected via the Laravel [service container](/docs/{{version}}/container):
+There are two primary ways of working with session data in Laravel: the global `session` helper and via a `Request` instance. First, let's look at accessing the session via a `Request` instance, which can be type-hinted on a route closure or controller method. Remember, controller method dependencies are automatically injected via the Laravel [service container](container.md):
 
     <?php
 
@@ -86,7 +86,7 @@ There are two primary ways of working with session data in Laravel: the global `
     class UserController extends Controller
     {
         /**
-         * Show the profile for the given user.
+         * Показать профиль конкретного пользователя.
          *
          * @param  Request  $request
          * @param  int  $id
@@ -109,25 +109,25 @@ When you retrieve an item from the session, you may also pass a default value as
     });
 
 <a name="the-global-session-helper"></a>
-#### The Global Session Helper
+#### Глобальный помощник `session`
 
 You may also use the global `session` PHP function to retrieve and store data in the session. When the `session` helper is called with a single, string argument, it will return the value of that session key. When the helper is called with an array of key / value pairs, those values will be stored in the session:
 
     Route::get('/home', function () {
-        // Retrieve a piece of data from the session...
+        // Получить часть данных из сессии ...
         $value = session('key');
 
-        // Specifying a default value...
+        // Получить с указанием значения по умолчанию ...
         $value = session('key', 'default');
 
-        // Store a piece of data in the session...
+        // Сохранить часть данных в сессию ...
         session(['key' => 'value']);
     });
 
-> {tip} There is little practical difference between using the session via an HTTP request instance versus using the global `session` helper. Both methods are [testable](/docs/{{version}}/testing) via the `assertSessionHas` method which is available in all of your test cases.
+> {tip} There is little practical difference between using the session via an HTTP request instance versus using the global `session` helper. Both methods are [testable](testing.md) via the `assertSessionHas` method which is available in all of your test cases.
 
 <a name="retrieving-all-session-data"></a>
-#### Retrieving All Session Data
+#### Получение всех данных сессии
 
 If you would like to retrieve all the data in the session, you may use the `all` method:
 
@@ -149,32 +149,32 @@ To determine if an item is present in the session, even if its value is `null`, 
     }
 
 <a name="storing-data"></a>
-### Storing Data
+### Сохранение данных
 
 To store data in the session, you will typically use the request instance's `put` method or the `session` helper:
 
-    // Via a request instance...
+    // Через экземпляр запроса ...
     $request->session()->put('key', 'value');
 
-    // Via the global "session" helper...
+    // Через глобальный помощник «session» ...
     session(['key' => 'value']);
 
 <a name="pushing-to-array-session-values"></a>
-#### Pushing To Array Session Values
+#### Добавление в массив значений сессии
 
 The `push` method may be used to push a new value onto a session value that is an array. For example, if the `user.teams` key contains an array of team names, you may push a new value onto the array like so:
 
     $request->session()->push('user.teams', 'developers');
 
 <a name="retrieving-deleting-an-item"></a>
-#### Retrieving & Deleting An Item
+#### Получение с последующим удалением элемента
 
 The `pull` method will retrieve and delete an item from the session in a single statement:
 
     $value = $request->session()->pull('key', 'default');
 
 <a name="flash-data"></a>
-### Flash Data
+### Кратковременные данные
 
 Sometimes you may wish to store items in the session for the next request. You may do so using the `flash` method. Data stored in the session using this method will be available immediately and during the subsequent HTTP request. After the subsequent HTTP request, the flashed data will be deleted. Flash data is primarily useful for short-lived status messages:
 
@@ -187,31 +187,31 @@ If you need to persist your flash data for several requests, you may use the `re
     $request->session()->keep(['username', 'email']);
 
 <a name="deleting-data"></a>
-### Deleting Data
+### Удаление данных
 
 The `forget` method will remove a piece of data from the session. If you would like to remove all data from the session, you may use the `flush` method:
 
-    // Forget a single key...
+    // Удалить единственный ключ ...
     $request->session()->forget('name');
 
-    // Forget multiple keys...
+    // Удалить несколько ключей ...
     $request->session()->forget(['name', 'status']);
 
     $request->session()->flush();
 
 <a name="regenerating-the-session-id"></a>
-### Regenerating The Session ID
+### Пересоздание идентификатора сессии
 
 Regenerating the session ID is often done in order to prevent malicious users from exploiting a [session fixation](https://owasp.org/www-community/attacks/Session_fixation) attack on your application.
 
-Laravel automatically regenerates the session ID during authentication if you are using one of the Laravel [application starter kits](/docs/{{version}}/starter-kits) or [Laravel Fortify](/docs/{{version}}/fortify); however, if you need to manually regenerate the session ID, you may use the `regenerate` method.
+Laravel automatically regenerates the session ID during authentication if you are using one of the Laravel [application starter kits](starter-kits.md) or [Laravel Fortify](fortify.md); however, if you need to manually regenerate the session ID, you may use the `regenerate` method.
 
     $request->session()->regenerate();
 
 <a name="session-blocking"></a>
-## Session Blocking
+## Блокирование сессии
 
-> {note} To utilize session blocking, your application must be using a cache driver that supports [atomic locks](/docs/{{version}}/cache#atomic-locks). Currently, those cache drivers include the `memcached`, `dynamodb`, `redis`, and `database` drivers. In addition, you may not use the `cookie` session driver.
+> {note} To utilize session blocking, your application must be using a cache driver that supports [atomic locks](cache.md#atomic-locks). Currently, those cache drivers include the `memcached`, `dynamodb`, `redis`, and `database` drivers. In addition, you may not use the `cookie` session driver.
 
 By default, Laravel allows requests using the same session to execute concurrently. So, for example, if you use a JavaScript HTTP library to make two HTTP requests to your application, they will both execute at the same time. For many applications, this is not a problem; however, session data loss can occur in a small subset of applications that make concurrent requests to two different application endpoints which both write data to the session.
 
@@ -236,10 +236,10 @@ If neither of these arguments are passed, the lock will be obtained for a maximu
     })->block()
 
 <a name="adding-custom-session-drivers"></a>
-## Adding Custom Session Drivers
+## Добавление пользовательских драйверов сессии
 
 <a name="implementing-the-driver"></a>
-#### Implementing The Driver
+#### Реализация драйвера
 
 If none of the existing session drivers fit your application's needs, Laravel makes it possible to write your own session handler. Your custom session driver should implement PHP's built-in `SessionHandlerInterface`. This interface contains just a few simple methods. A stubbed MongoDB implementation looks like the following:
 
@@ -261,19 +261,19 @@ If none of the existing session drivers fit your application's needs, Laravel ma
 
 Since the purpose of these methods is not readily understandable, let's quickly cover what each of the methods do:
 
-<div class="content-list" markdown="1">
+<!-- <div class="content-list" markdown="1"> -->
 - The `open` method would typically be used in file based session store systems. Since Laravel ships with a `file` session driver, you will almost never need to put anything in this method. You can simply leave this method empty.
 - The `close` method, like the `open` method, can also usually be disregarded. For most drivers, it is not needed.
 - The `read` method should return the string version of the session data associated with the given `$sessionId`. There is no need to do any serialization or other encoding when retrieving or storing session data in your driver, as Laravel will perform the serialization for you.
 - The `write` method should write the given `$data` string associated with the `$sessionId` to some persistent storage system, such as MongoDB or another storage system of your choice.  Again, you should not perform any serialization - Laravel will have already handled that for you.
 - The `destroy` method should remove the data associated with the `$sessionId` from persistent storage.
 - The `gc` method should destroy all session data that is older than the given `$lifetime`, which is a UNIX timestamp. For self-expiring systems like Memcached and Redis, this method may be left empty.
-</div>
+<!-- </div> -->
 
 <a name="registering-the-driver"></a>
-#### Registering The Driver
+#### Регистрация драйвера
 
-Once your driver has been implemented, you are ready to register it with Laravel. To add additional drivers to Laravel's session backend, you may use the `extend` method provided by the `Session` [facade](/docs/{{version}}/facades). You should call the `extend` method from the `boot` method of a [service provider](/docs/{{version}}/providers). You may do this from the existing `App\Providers\AppServiceProvider` or create an entirely new provider:
+Once your driver has been implemented, you are ready to register it with Laravel. To add additional drivers to Laravel's session backend, you may use the `extend` method provided by the `Session` [facade](facades.md). You should call the `extend` method from the `boot` method of a [service provider](providers.md). You may do this from the existing `App\Providers\AppServiceProvider` or create an entirely new provider:
 
     <?php
 
@@ -286,7 +286,7 @@ Once your driver has been implemented, you are ready to register it with Laravel
     class SessionServiceProvider extends ServiceProvider
     {
         /**
-         * Register any application services.
+         * Регистрация любых служб приложения.
          *
          * @return void
          */
@@ -296,7 +296,7 @@ Once your driver has been implemented, you are ready to register it with Laravel
         }
 
         /**
-         * Bootstrap any application services.
+         * Загрузка любых служб приложения.
          *
          * @return void
          */
