@@ -35,7 +35,7 @@
     - [x] [HTTP-запросы](/docs/requests.md)
     - [x] [HTTP-ответы](/docs/responses.md)
     - [x] [HTML-шаблоны](/docs/views.md)
-    - [ ] [Шаблонизатор Blade](/docs/blade.md)
+    - [x] [Шаблонизатор Blade](/docs/blade.md)
     - [x] [Генерация URL-адресов](/docs/urls.md)
     - [ ] [HTTP-сессия](/docs/session.md)
     - [ ] [Валидация](/docs/validation.md)
@@ -267,6 +267,7 @@ redirector  |  перенаправитель  |
 refreshing  |  обновление  |  
 reflection  |  рефлексия (отражение)  |  
 relationships  |  отношения  |  
+rendered  |  обработанный (HTML-код)  |  
 rendering  |  отображение, визуализация, рендеринг  |  
 replicating  |  репликация, тиражирование  |  
 request  |  запрос  |  
