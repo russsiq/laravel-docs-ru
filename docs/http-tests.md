@@ -9,7 +9,7 @@
 - [Тестирование JSON API](#testing-json-apis)
 - [Тестирование загрузки файлов](#testing-file-uploads)
 - [Тестирование шаблонной системы](#testing-views)
-    - [Отрисовка Blade и компонентов](#rendering-blade-and-components)
+    - [Отрисовка Blade и компоненты](#rendering-blade-and-components)
 - [Доступные утверждения](#available-assertions)
     - [Утверждения ответов](#response-assertions)
     - [Утверждения аутентификации](#authentication-assertions)
@@ -17,7 +17,7 @@
 <a name="introduction"></a>
 ## Введение
 
-Laravel provides a very fluent API for making HTTP requests to your application and examining the responses. For example, take a look at the feature test defined below:
+Laravel предоставляет очень гибкий API для выполнения HTTP-запросов к вашему приложению и проверки ответов. Например, взгляните на функциональный тест, расположенный ниже:
 
     <?php
 
@@ -42,14 +42,14 @@ Laravel provides a very fluent API for making HTTP requests to your application 
         }
     }
 
-The `get` method makes a `GET` request into the application, while the `assertStatus` method asserts that the returned response should have the given HTTP status code. In addition to this simple assertion, Laravel also contains a variety of assertions for inspecting the response headers, content, JSON structure, and more.
+Метод `get` отправляет в приложение запрос `GET`, а метод `assertStatus` утверждает, что возвращаемый ответ должен иметь указанный код состояния HTTP. Помимо этого простого утверждения, Laravel также содержит множество утверждений для проверки заголовков ответов, содержимого, структуры JSON и многого другого.
 
 <a name="making-requests"></a>
 ## Выполнение запросов
 
-To make a request to your application, you may invoke the `get`, `post`, `put`, `patch`, or `delete` methods within your test. These methods do not actually issue a "real" HTTP request to your application. Instead, the entire network request is simulated internally.
+Чтобы сделать запрос к вашему приложению, вы можете вызвать в своем тесте методы `get`, `post`, `put`, `patch`, или `delete`. Эти методы фактически не отправляют вашему приложению «настоящий» HTTP-запрос. Вместо этого внутри моделируется полный сетевой запрос.
 
-Instead of returning an `Illuminate\Http\Response` instance, test request methods return an instance of `Illuminate\Testing\TestResponse`, which provides a [variety of helpful assertions](#available-assertions) that allow you to inspect your application's responses:
+Вместо того, чтобы возвращать экземпляр `Illuminate\Http\Response`, методы тестового запроса возвращают экземпляр `Illuminate\Testing\TestResponse`, который предоставляет [множество полезных утверждений](#available-assertions), которые позволяют вам инспектировать ответы вашего приложения:
 
     <?php
 
@@ -74,12 +74,12 @@ Instead of returning an `Illuminate\Http\Response` instance, test request method
         }
     }
 
-> {tip} For convenience, the CSRF middleware is automatically disabled when running tests.
+> {tip} Для удобства посредник CSRF автоматически отключается при запуске тестов.
 
 <a name="customizing-request-headers"></a>
 ### Настройка заголовков запросов
 
-You may use the `withHeaders` method to customize the request's headers before it is sent to the application. This method allows you to add any custom headers you would like to the request:
+Вы можете использовать метод `withHeaders` для настройки заголовков запроса перед его отправкой в ​​приложение. Этот метод позволяет вам добавлять в запрос любые пользовательские заголовки:
 
     <?php
 
@@ -107,7 +107,7 @@ You may use the `withHeaders` method to customize the request's headers before i
 <a name="cookies"></a>
 ### Cookies
 
-You may use the `withCookie` or `withCookies` methods to set cookie values before making a request. The `withCookie` method accepts a cookie name and value as its two arguments, while the `withCookies` method accepts an array of name / value pairs:
+Вы можете использовать методы `withCookie` или `withCookies` для установки значений файлов Cookies перед отправкой запроса. Метод `withCookie` принимает имя и значение Cookie в качестве двух аргументов, а метод `withCookies` принимает массив пар имя / значение:
 
     <?php
 
@@ -131,7 +131,7 @@ You may use the `withCookie` or `withCookies` methods to set cookie values befor
 <a name="session-and-authentication"></a>
 ### Сессия / Аутентификация
 
-Laravel provides several helpers for interacting with the session during HTTP testing. First, you may set the session data to a given array using the `withSession` method. This is useful for loading the session with data before issuing a request to your application:
+Laravel предоставляет несколько помощников для взаимодействия с сессией во время HTTP-тестирования. Во-первых, вы можете установить данные сессии, передав массив, используя метод `withSession`. Это полезно для загрузки сессии данными перед отправкой запроса вашему приложению:
 
     <?php
 
@@ -147,7 +147,7 @@ Laravel provides several helpers for interacting with the session during HTTP te
         }
     }
 
-Laravel's session is typically used to maintain state for the currently authenticated user. Therefore, the `actingAs` helper method provides a simple way to authenticate a given user as the current user. For example, we may use a [model factory](database-testing.md#writing-factories) to generate and authenticate a user:
+Сессия Laravel обычно используется для сохранения состояния текущего аутентифицированного пользователя. Таким образом, вспомогательный метод `actingAs` предоставляет простой способ аутентифицировать переданного пользователя как текущего. Например, мы можем использовать [фабрику модели](database-testing.md#writing-factories) для генерации и аутентификации пользователя:
 
     <?php
 
@@ -168,14 +168,14 @@ Laravel's session is typically used to maintain state for the currently authenti
         }
     }
 
-You may also specify which guard should be used to authenticate the given user by passing the guard name as the second argument to the `actingAs` method:
+Вы также можете указать, какой охранник должен использоваться для аутентификации переданного пользователя, передав имя охранника в качестве второго аргумента методу `actingAs`:
 
     $this->actingAs($user, 'api')
 
 <a name="debugging-responses"></a>
 ### Отладка ответов
 
-After making a test request to your application, the `dump`, `dumpHeaders`, and `dumpSession` methods may be used to examine and debug the response contents:
+После выполнения тестового запроса к вашему приложению методы `dump`, `dumpHeaders`, и `dumpSession` могут быть использованы для проверки и отладки содержимого ответа:
 
     <?php
 
@@ -207,7 +207,7 @@ After making a test request to your application, the `dump`, `dumpHeaders`, and 
 <a name="testing-json-apis"></a>
 ## Тестирование JSON API
 
-Laravel also provides several helpers for testing JSON APIs and their responses. For example, the `json`, `getJson`, `postJson`, `putJson`, `patchJson`, `deleteJson`, and `optionsJson` methods may be used to issue JSON requests with various HTTP verbs. You may also easily pass data and headers to these methods. To get started, let's write a test to make a `POST` request to `/api/user` and assert that the expected JSON data was returned:
+Laravel также содержит несколько помощников для тестирования API-интерфейсов JSON и их ответов. Например, методы `json`, `getJson`, `postJson`, `putJson`, `patchJson`, `deleteJson`, и `optionsJson` могут использоваться для отправки запросов JSON с различными HTTP-командами. Вы также можете легко передавать данные и заголовки этим методам. Для начала давайте напишем тест, чтобы сделать запрос `POST` к `/api/user` и убедиться, что были возвращены ожидаемые данные JSON:
 
     <?php
 
@@ -234,16 +234,16 @@ Laravel also provides several helpers for testing JSON APIs and their responses.
         }
     }
 
-In addition, JSON response data may be accessed as array variables on the response, making it convenient for you to inspect the individual values returned within a JSON response:
+Кроме того, к данным ответа JSON можно получить доступ как к переменным массива в ответе, что позволяет удобно проверять отдельные значения, возвращаемые в JSON-ответе:
 
     $this->assertTrue($response['created']);
 
-> {tip} The `assertJson` method converts the response to an array and utilizes `PHPUnit::assertArraySubset` to verify that the given array exists within the JSON response returned by the application. So, if there are other properties in the JSON response, this test will still pass as long as the given fragment is present.
+> {tip} Метод `assertJson` преобразует ответ в массив и использует `PHPUnit::assertArraySubset` для проверки того, что переданный массив существует в ответе JSON, возвращаемом приложением. Итак, если в ответе JSON есть другие свойства, этот тест все равно будет проходить, пока присутствует переданный фрагмент.
 
 <a name="verifying-exact-match"></a>
 #### Утверждение точных совпадений JSON
 
-As previously mentioned, the `assertJson` method may be used to assert that a fragment of JSON exists within the JSON response. If you would like to verify that a given array **exactly matches** the JSON returned by your application, you should use the `assertExactJson` method:
+Как упоминалось ранее, метод `assertJson` может использоваться для подтверждения наличия фрагмента JSON в ответе JSON. Если вы хотите убедиться, что данный массив **в точности соответствует** JSON, возвращаемому вашим приложением, вы должны использовать метод `assertExactJson`:
 
     <?php
 
@@ -273,7 +273,7 @@ As previously mentioned, the `assertJson` method may be used to assert that a fr
 <a name="verifying-json-paths"></a>
 #### Утверждения JSON-путей
 
-If you would like to verify that the JSON response contains the given data at a specified path, you should use the `assertJsonPath` method:
+Если вы хотите убедиться, что ответ JSON содержит данные по указанному пути, вам следует использовать метод `assertJsonPath`:
 
     <?php
 
@@ -301,7 +301,7 @@ If you would like to verify that the JSON response contains the given data at a 
 <a name="testing-file-uploads"></a>
 ## Тестирование загрузки файлов
 
-The `Illuminate\Http\UploadedFile` class provides a `fake` method which may be used to generate dummy files or images for testing. This, combined with the `Storage` facade's `fake` method, greatly simplifies the testing of file uploads. For example, you may combine these two features to easily test an avatar upload form:
+Класс `Illuminate\Http\UploadedFile` предоставляет метод `fake`, который можно использовать для создания фиктивных файлов или изображений для тестирования. Это, в сочетании с методом `fake` фасада `Storage`, значительно упрощает тестирование загрузки файлов. Например, вы можете объединить эти две функции, чтобы легко протестировать форму загрузки аватара:
 
     <?php
 
@@ -329,7 +329,7 @@ The `Illuminate\Http\UploadedFile` class provides a `fake` method which may be u
         }
     }
 
-If you would like to assert that a given file does not exist, you may use the `assertMissing` method provided by the `Storage` facade:
+Если вы хотите подтвердить, что переданный файл не существует, вы можете использовать метод `assertMissing` фасада `Storage`:
 
     Storage::fake('avatars');
 
@@ -340,15 +340,15 @@ If you would like to assert that a given file does not exist, you may use the `a
 <a name="fake-file-customization"></a>
 #### Настройка фиктивного файла
 
-When creating files using the `fake` method provided by the `UploadedFile` class, you may specify the width, height, and size of the image (in kilobytes) in order to better test your application's validation rules:
+При создании файлов с использованием метода `fake`, предоставляемого классом `UploadedFile`, вы можете указать ширину, высоту и размер изображения (в килобайтах), чтобы лучше протестировать правила валидации вашего приложения:
 
     UploadedFile::fake()->image('avatar.jpg', $width, $height)->size(100);
 
-In addition to creating images, you may create files of any other type using the `create` method:
+Помимо создания изображений, вы можете создавать файлы любого другого типа, используя метод `create`:
 
     UploadedFile::fake()->create('document.pdf', $sizeInKilobytes);
 
-If needed, you may pass a `$mimeType` argument to the method to explicitly define the MIME type that should be returned by the file:
+При необходимости вы можете передать аргумент `$mimeType` методу, чтобы явно определить MIME-тип, который должен возвращать файл:
 
     UploadedFile::fake()->create(
         'document.pdf', $sizeInKilobytes, 'application/pdf'
@@ -357,7 +357,7 @@ If needed, you may pass a `$mimeType` argument to the method to explicitly defin
 <a name="testing-views"></a>
 ## Тестирование шаблонной системы
 
-Laravel also allows you to render a view without making a simulated HTTP request to the application. To accomplish this, you may call the `view` method within your test. The `view` method accepts the view name and an optional array of data. The method returns an instance of `Illuminate\Testing\TestView`, which offers several methods to conveniently make assertions about the view's contents:
+Laravel также позволяет отображать шаблоны без имитации HTTP-запроса к приложению. Для этого вы можете вызвать в своем тесте метод `view`. Метод `view` принимает имя шаблона и необязательный массив данных. Метод возвращает экземпляр `Illuminate\Testing\TestView`, который предлагает несколько методов для удобных утверждений о содержимом шаблона:
 
     <?php
 
@@ -375,16 +375,16 @@ Laravel also allows you to render a view without making a simulated HTTP request
         }
     }
 
-The `TestView` class provides the following assertion methods: `assertSee`, `assertSeeInOrder`, `assertSeeText`, `assertSeeTextInOrder`, `assertDontSee`, and `assertDontSeeText`.
+Класс `TestView` содержит следующие методы утверждения: `assertSee`, `assertSeeInOrder`, `assertSeeText`, `assertSeeTextInOrder`, `assertDontSee` и `assertDontSeeText`.
 
-If needed, you may get the raw, rendered view contents by casting the `TestView` instance to a string:
+При необходимости вы можете получить необработанное отрисованное содержимое шаблона, преобразовав экземпляр `TestView` в строку:
 
     $contents = (string) $this->view('welcome');
 
 <a name="sharing-errors"></a>
 #### Передача ошибок валидации в шаблоны
 
-Some views may depend on errors shared in the [global error bag provided by Laravel](validation.md#quick-displaying-the-validation-errors). To hydrate the error bag with error messages, you may use the `withViewErrors` method:
+Некоторые шаблоны могут зависеть от ошибок, хранящихся в [глобальной коллекции ошибок Laravel](validation.md#quick-displaying-the-validation-errors). Чтобы добавить в эту коллекцию сообщения об ошибках, вы можете использовать метод `withViewErrors`:
 
     $view = $this->withViewErrors([
         'name' => ['Please provide a valid name.']
@@ -393,9 +393,9 @@ Some views may depend on errors shared in the [global error bag provided by Lara
     $view->assertSee('Please provide a valid name.');
 
 <a name="rendering-blade-and-components"></a>
-### Отрисовка Blade и компонентов
+### Отрисовка Blade и компоненты
 
-If necessary, you may use the `blade` method to evaluate and render a raw [Blade](blade.md) string. Like the `view` method, the `blade` method returns an instance of `Illuminate\Testing\TestView`:
+Если необходимо, вы можете использовать метод `blade` для анализа и отрисовки необработанной строки [Blade](blade.md). Подобно методу `view`, метод `blade` возвращает экземпляр `Illuminate\Testing\TestView`:
 
     $view = $this->blade(
         '<x-component :name="$name" />',
@@ -404,7 +404,7 @@ If necessary, you may use the `blade` method to evaluate and render a raw [Blade
 
     $view->assertSee('Taylor');
 
-You may use the `component` method to evaluate and render a [Blade component](blade.md#components). Like the `view` method, the `component` method returns an instance of `Illuminate\Testing\TestView`:
+Вы можете использовать метод `component` для анализа и отрисовки [компонента Blade](blade.md#components). Как и метод `view`, метод `component` возвращает экземпляр `Illuminate\Testing\TestView`:
 
     $view = $this->component(Profile::class, ['name' => 'Taylor']);
 
@@ -416,7 +416,7 @@ You may use the `component` method to evaluate and render a [Blade component](bl
 <a name="response-assertions"></a>
 ### Утверждения ответов
 
-Laravel's `Illuminate\Testing\TestResponse` class provides a variety of custom assertion methods that you may utilize when testing your application. These assertions may be accessed on the response that is returned by the `json`, `get`, `post`, `put`, and `delete` test methods:
+Класс `Illuminate\Testing\TestResponse` содержит множество своих методов утверждения, которые вы можете использовать при тестировании вашего приложения. К этим утверждениям можно получить доступ в ответе, возвращаемом тестовыми методами `json`, `get`, `post`, `put`, и `delete`:
 
 <!-- <style> -->
     .collection-method-list > p {
@@ -482,100 +482,100 @@ Laravel's `Illuminate\Testing\TestResponse` class provides a variety of custom a
 <a name="assert-cookie"></a>
 #### assertCookie
 
-Assert that the response contains the given cookie:
+Утверждает, что ответ содержит переданный cookie:
 
     $response->assertCookie($cookieName, $value = null);
 
 <a name="assert-cookie-expired"></a>
 #### assertCookieExpired
 
-Assert that the response contains the given cookie and it is expired:
+Утверждает, что в ответе содержится переданный cookie и срок его действия истек:
 
     $response->assertCookieExpired($cookieName);
 
 <a name="assert-cookie-not-expired"></a>
 #### assertCookieNotExpired
 
-Assert that the response contains the given cookie and it is not expired:
+Утверждает, что в ответе содержится переданный cookie и срок его действия не истек:
 
     $response->assertCookieNotExpired($cookieName);
 
 <a name="assert-cookie-missing"></a>
 #### assertCookieMissing
 
-Assert that the response does not contains the given cookie:
+Утверждает, что ответ не содержит переданный cookie:
 
     $response->assertCookieMissing($cookieName);
 
 <a name="assert-created"></a>
 #### assertCreated
 
-Assert that the response has a 201 HTTP status code:
+Утверждает, что ответ имеет код `201` состояния HTTP:
 
     $response->assertCreated();
 
 <a name="assert-dont-see"></a>
 #### assertDontSee
 
-Assert that the given string is not contained within the response returned by the application. This assertion will automatically escape the given string unless you pass a second argument of `false`:
+Утверждает, что переданная строка не содержится в ответе, возвращаемом приложением. Это утверждение автоматически экранирует переданную строку, если вы не передадите второй аргумент как `false`:
 
     $response->assertDontSee($value, $escaped = true);
 
 <a name="assert-dont-see-text"></a>
 #### assertDontSeeText
 
-Assert that the given string is not contained within the response text. This assertion will automatically escape the given string unless you pass a second argument of `false`. This method will pass the response content to the `strip_tags` PHP function before making the assertion:
+Утверждает, что переданная строка не содержится в тексте ответа. Это утверждение автоматически экранирует переданную строку, если вы не передадите второй аргумент как `false`. Этот метод передаст содержимое ответа PHP-функции `strip_tags` перед тем, как выполнить утверждение:
 
     $response->assertDontSeeText($value, $escaped = true);
 
 <a name="assert-exact-json"></a>
 #### assertExactJson
 
-Assert that the response contains an exact match of the given JSON data:
+Утверждает, что ответ содержит точное совпадение указанных данных JSON:
 
     $response->assertExactJson(array $data);
 
 <a name="assert-forbidden"></a>
 #### assertForbidden
 
-Assert that the response has a forbidden (403) HTTP status code:
+Утверждает, что ответ имеет код `403` состояния HTTP – `forbidden`:
 
     $response->assertForbidden();
 
 <a name="assert-header"></a>
 #### assertHeader
 
-Assert that the given header and value is present on the response:
+Утверждает, что переданный заголовок и значение присутствуют в ответе:
 
     $response->assertHeader($headerName, $value = null);
 
 <a name="assert-header-missing"></a>
 #### assertHeaderMissing
 
-Assert that the given header is not present on the response:
+Утверждает, что переданный заголовок отсутствует в ответе:
 
     $response->assertHeaderMissing($headerName);
 
 <a name="assert-json"></a>
 #### assertJson
 
-Assert that the response contains the given JSON data:
+Утверждает, что ответ содержит указанные данные JSON:
 
     $response->assertJson(array $data, $strict = false);
 
-The `assertJson` method converts the response to an array and utilizes `PHPUnit::assertArraySubset` to verify that the given array exists within the JSON response returned by the application. So, if there are other properties in the JSON response, this test will still pass as long as the given fragment is present.
+Метод `assertJson` преобразует ответ в массив и использует `PHPUnit::assertArraySubset` для проверки того, что переданный массив существует в ответе JSON, возвращаемом приложением. Итак, если в ответе JSON есть другие свойства, этот тест все равно будет проходить, пока присутствует переданный фрагмент.
 
 <a name="assert-json-count"></a>
 #### assertJsonCount
 
-Assert that the response JSON has an array with the expected number of items at the given key:
+Утверждает, что ответ JSON имеет массив с ожидаемым количеством элементов указанного ключа:
 
     $response->assertJsonCount($count, $key = null);
 
 <a name="assert-json-fragment"></a>
 #### assertJsonFragment
 
-Assert that the response contains the given JSON data anywhere in the response:
+Утверждает, что ответ содержит указанные данные JSON в любом месте ответа:
 
     Route::get('/users', function () {
         return [
@@ -592,32 +592,32 @@ Assert that the response contains the given JSON data anywhere in the response:
 <a name="assert-json-missing"></a>
 #### assertJsonMissing
 
-Assert that the response does not contain the given JSON data:
+Утверждает, что ответ не содержит указанных данных JSON:
 
     $response->assertJsonMissing(array $data);
 
 <a name="assert-json-missing-exact"></a>
 #### assertJsonMissingExact
 
-Assert that the response does not contain the exact JSON data:
+Утверждает, что ответ не содержит точных указанных данных JSON:
 
     $response->assertJsonMissingExact(array $data);
 
 <a name="assert-json-missing-validation-errors"></a>
 #### assertJsonMissingValidationErrors
 
-Assert that the response has no JSON validation errors for the given keys:
+Утверждает, что ответ не содержит ошибок валидации JSON для переданных ключей:
 
     $response->assertJsonMissingValidationErrors($keys);
 
 <a name="assert-json-path"></a>
 #### assertJsonPath
 
-Assert that the response contains the given data at the specified path:
+Утверждает, что ответ содержит конкретные данные по указанному пути:
 
     $response->assertJsonPath($path, array $data, $strict = true);
 
-For example, if the JSON response returned by your application contains the following data:
+Например, если ответ JSON, возвращаемый вашим приложением, содержит следующие данные:
 
 ```js
 {
@@ -627,18 +627,18 @@ For example, if the JSON response returned by your application contains the foll
 }
 ```
 
-You may assert that the `name` property of the `user` object matches a given value like so:
+Вы можете утверждать, что свойство `name` объекта `user` соответствует переданному значению следующим образом:
 
     $response->assertJsonPath('user.name', 'Steve Schoger');
 
 <a name="assert-json-structure"></a>
 #### assertJsonStructure
 
-Assert that the response has a given JSON structure:
+Утверждает, что ответ имеет переданную структуру JSON:
 
     $response->assertJsonStructure(array $structure);
 
-For example, if the JSON response returned by your application contains the following data:
+Например, если ответ JSON, возвращаемый вашим приложением, содержит следующие данные:
 
 ```js
 {
@@ -648,7 +648,7 @@ For example, if the JSON response returned by your application contains the foll
 }
 ```
 
-You may assert that the JSON structure matches your expectations like so:
+Вы можете утверждать, что структура JSON соответствует вашим ожиданиям, например:
 
     $response->assertJsonStructure([
         'user' => [
@@ -659,102 +659,102 @@ You may assert that the JSON structure matches your expectations like so:
 <a name="assert-json-validation-errors"></a>
 #### assertJsonValidationErrors
 
-Assert that the response has the given JSON validation errors for the given keys. This method should be used when asserting against responses where the validation errors are returned as a JSON structure instead of being flashed to the session:
+Утверждает, что ответ содержит переданные ошибки валидации JSON для переданных ключей. Этот метод следует использовать при утверждении ответов, в которых ошибки валидации возвращаются как структура JSON, а не кратковременно передаются в сесиию:
 
     $response->assertJsonValidationErrors(array $data);
 
 <a name="assert-location"></a>
 #### assertLocation
 
-Assert that the response has the given URI value in the `Location` header:
+Утверждает, что ответ имеет переданное значение URI в заголовке `Location`:
 
     $response->assertLocation($uri);
 
 <a name="assert-no-content"></a>
 #### assertNoContent
 
-Assert that the response has the given HTTP status code and no content:
+Утверждает, что ответ имеет код `204` состояния HTTP – `no content`:
 
     $response->assertNoContent($status = 204);
 
 <a name="assert-not-found"></a>
 #### assertNotFound
 
-Assert that the response has a not found (404) HTTP status code:
+Утверждает, что ответ имеет код `404` состояния HTTP – `not found`:
 
     $response->assertNotFound();
 
 <a name="assert-ok"></a>
 #### assertOk
 
-Assert that the response has a 200 HTTP status code:
+Утверждает, что ответ имеет код `200` состояния HTTP – `OK`:
 
     $response->assertOk();
 
 <a name="assert-plain-cookie"></a>
 #### assertPlainCookie
 
-Assert that the response contains the given unencrypted cookie:
+Утверждает, что ответ содержит переданный незашифрованный cookie:
 
     $response->assertPlainCookie($cookieName, $value = null);
 
 <a name="assert-redirect"></a>
 #### assertRedirect
 
-Assert that the response is a redirect to the given URI:
+Утверждает, что ответ является перенаправлением на указанный URI:
 
     $response->assertRedirect($uri);
 
 <a name="assert-see"></a>
 #### assertSee
 
-Assert that the given string is contained within the response. This assertion will automatically escape the given string unless you pass a second argument of `false`:
+Утверждает, что переданная строка содержится в ответе. Это утверждение автоматически экранирует переданную строку, если вы не передадите второй аргумент как `false`:
 
     $response->assertSee($value, $escaped = true);
 
 <a name="assert-see-in-order"></a>
 #### assertSeeInOrder
 
-Assert that the given strings are contained in order within the response. This assertion will automatically escape the given strings unless you pass a second argument of `false`:
+Утверждает, что переданные строки содержатся в ответе в указанном порядке. Это утверждение автоматически экранирует переданные строки, если вы не передадите второй аргумент как `false`:
 
     $response->assertSeeInOrder(array $values, $escaped = true);
 
 <a name="assert-see-text"></a>
 #### assertSeeText
 
-Assert that the given string is contained within the response text. This assertion will automatically escape the given string unless you pass a second argument of `false`. The response content will be passed to the `strip_tags` PHP function before the assertion is made:
+Утверждает, что переданная строка содержится в тексте ответа. Это утверждение автоматически экранирует переданную строку, если вы не передадите второй аргумент как `false`. Этот метод передаст содержимое ответа PHP-функции `strip_tags` перед тем, как выполнить утверждение:
 
     $response->assertSeeText($value, $escaped = true);
 
 <a name="assert-see-text-in-order"></a>
 #### assertSeeTextInOrder
 
-Assert that the given strings are contained in order within the response text. This assertion will automatically escape the given strings unless you pass a second argument of `false`. The response content will be passed to the `strip_tags` PHP function before the assertion is made:
+Утверждает, что переданные строки содержатся в тексте ответа в указанном порядке. Это утверждение автоматически экранирует переданные строки, если вы не передадите второй аргумент как `false`. Этот метод передаст содержимое ответа PHP-функции `strip_tags` перед тем, как выполнить утверждение:
 
     $response->assertSeeTextInOrder(array $values, $escaped = true);
 
 <a name="assert-session-has"></a>
 #### assertSessionHas
 
-Assert that the session contains the given piece of data:
+Утверждает, что сессия содержит переданный фрагмент данных:
 
     $response->assertSessionHas($key, $value = null);
 
 <a name="assert-session-has-input"></a>
 #### assertSessionHasInput
 
-Assert that the session has a given value in the [flashed input array](responses.md#redirecting-with-flashed-session-data):
+Утверждает, что сессия имеет переданное значение в [массиве входящих данных кратковременного сохранения](responses.md#redirecting-with-flashed-session-data):
 
     $response->assertSessionHasInput($key, $value = null);
 
 <a name="assert-session-has-all"></a>
 #### assertSessionHasAll
 
-Assert that the session contains a given array of key / value pairs:
+Утверждает, что сессия содержит переданный массив пар ключ / значение:
 
     $response->assertSessionHasAll(array $data);
 
-For example, if your application's session contains `name` and `status` keys, you may assert that both exist and have the specified values like so:
+Например, если сессия вашего приложения содержит ключи `name` и `status`, вы можете утверждать, что оба они существуют и имеют указанные значения, например:
 
     $response->assertSessionHasAll([
         'name' => 'Taylor Otwell',
@@ -764,17 +764,17 @@ For example, if your application's session contains `name` and `status` keys, yo
 <a name="assert-session-has-errors"></a>
 #### assertSessionHasErrors
 
-Assert that the session contains an error for the given `$keys`. If `$keys` is an associative array, assert that the session contains a specific error message (value) for each field (key). This method should be used when testing routes that flash validation errors to the session instead of returning them as a JSON structure:
+Утверждает, что сессия содержит ошибку для переданных `$keys`. Если `$keys` является ассоциативным массивом, следует утверждать, что сессия содержит конкретное сообщение об ошибке (значение) для каждого поля (ключа). Этот метод следует использовать при тестировании маршрутов, которые передают ошибки валидации в сессию вместо того, чтобы возвращать их в виде структуры JSON:
 
     $response->assertSessionHasErrors(
         array $keys, $format = null, $errorBag = 'default'
     );
 
-For example, to assert that the `name` and `email` field have validation error messages that were flashed to the session, you may invoke the `assertSessionHasErrors` method like so:
+Например, чтобы утверждать, что поля `name` и `email` содержат сообщения об ошибках валидации, которые были переданы в сессию, вы можете вызвать метод `assertSessionHasErrors` следующим образом:
 
     $response->assertSessionHasErrors(['name', 'email']);
 
-Or, you may assert that a given field has a particular validation error message:
+Или вы можете утверждать, что переданное поле имеет конкретное сообщение об ошибке валидации:
 
     $response->assertSessionHasErrors([
         'name' => 'The given name was invalid.'
@@ -783,78 +783,78 @@ Or, you may assert that a given field has a particular validation error message:
 <a name="assert-session-has-errors-in"></a>
 #### assertSessionHasErrorsIn
 
-Assert that the session contains an error for the given `$keys` within a specific [error bag](validation.md#named-error-bags). If `$keys` is an associative array, assert that the session contains a specific error message (value) for each field (key), within the error bag:
+Утверждает, что сессия содержит ошибку для переданных `$keys` в конкретной [коллекции ошибок](validation.md#named-error-bags). Если `$keys` является ассоциативным массивом, убедитесь, что сессия содержит конкретное сообщение об ошибке (значение) для каждого поля (ключа) в коллекции ошибок:
 
     $response->assertSessionHasErrorsIn($errorBag, $keys = [], $format = null);
 
 <a name="assert-session-has-no-errors"></a>
 #### assertSessionHasNoErrors
 
-Assert that the session has no validation errors:
+Утверждает, что в сессии нет ошибок валидации:
 
     $response->assertSessionHasNoErrors();
 
 <a name="assert-session-doesnt-have-errors"></a>
 #### assertSessionDoesntHaveErrors
 
-Assert that the session has no validation errors for the given keys:
+Утверждает, что в сессии нет ошибок валидации для переданных ключей:
 
     $response->assertSessionDoesntHaveErrors($keys = [], $format = null, $errorBag = 'default');
 
 <a name="assert-session-missing"></a>
 #### assertSessionMissing
 
-Assert that the session does not contain the given key:
+Утверждает, что сессия не содержит переданного ключа:
 
     $response->assertSessionMissing($key);
 
 <a name="assert-status"></a>
 #### assertStatus
 
-Assert that the response has a given HTTP status code:
+Утверждает, что ответ имеет указанный код `$code` состояния HTTP:
 
     $response->assertStatus($code);
 
 <a name="assert-successful"></a>
 #### assertSuccessful
 
-Assert that the response has a successful (>= 200 and < 300) HTTP status code:
+Утверждает, что ответ имеет код `>= 200` и `< 300` состояния HTTP – `successful`:
 
     $response->assertSuccessful();
 
 <a name="assert-unauthorized"></a>
 #### assertUnauthorized
 
-Assert that the response has an unauthorized (401) HTTP status code:
+Утверждает, что ответ имеет код `401` состояния HTTP – `unauthorized`:
 
     $response->assertUnauthorized();
 
 <a name="assert-view-has"></a>
 #### assertViewHas
 
-Assert that the response view contains given a piece of data:
+Утверждает, что шаблон ответа содержит переданный фрагмент данных:
 
     $response->assertViewHas($key, $value = null);
 
-In addition, view data may be accessed as array variables on the response, allowing you to convenient inspect it:
+Кроме того, данные шаблона могут быть доступны как переменные массива в ответе, что позволяет вам удобно инспектировать их:
 
     $this->assertEquals('Taylor', $response['name']);
 
 <a name="assert-view-has-all"></a>
 #### assertViewHasAll
 
-Assert that the response view has a given list of data:
+Утверждает, что в шаблон ответа содержит переданный список данных:
 
     $response->assertViewHasAll(array $data);
 
-This method may be used to assert that the view simply contains data matching the given keys:
+Этот метод может использоваться, чтобы утверждать, что шаблон просто содержит данные с соответствующими переданными ключами:
 
     $rseponse->assertViewHasAll([
         'name',
         'email',
     ]);
 
-Or, you may assert that the view data is present and has specific values:
+Или вы можете утверждать, что данные шаблона присутствуют и имеют определенные значения:
 
     $rseponse->assertViewHasAll([
         'name' => 'Taylor Otwell',
@@ -864,39 +864,39 @@ Or, you may assert that the view data is present and has specific values:
 <a name="assert-view-is"></a>
 #### assertViewIs
 
-Assert that the given view was returned by the route:
+Утверждает, что маршрутом был возвращен указанный шаблон:
 
     $response->assertViewIs($value);
 
 <a name="assert-view-missing"></a>
 #### assertViewMissing
 
-Assert that the given data key was not made available to the view returned in the application's response:
+Утверждает, что переданный ключ данных не был доступен для шаблона, возвращенного ответом приложения:
 
     $response->assertViewMissing($key);
 
 <a name="authentication-assertions"></a>
 ### Утверждения аутентификации
 
-Laravel also provides a variety of authentication related assertions that you may utilize within your application's feature tests. Note that these methods are invoked on the test class itself and not the `Illuminate\Testing\TestResponse` instance returned by methods such as `get` and `post`.
+Laravel также содержит множество утверждений, связанных с аутентификацией, которые вы можете использовать в функциональных тестах вашего приложения. Обратите внимание, что эти методы вызываются в самом тестовом классе, а не в экземпляре `Illuminate\Testing\TestResponse`, возвращаемом такими методами, как `get` и `post`.
 
 <a name="assert-authenticated"></a>
 #### assertAuthenticated
 
-Assert that a user is authenticated:
+Утверждает, что пользователь аутентифицирован:
 
     $this->assertAuthenticated($guard = null);
 
 <a name="assert-guest"></a>
 #### assertGuest
 
-Assert that a user is not authenticated:
+Утверждает, что пользователь не аутентифицирован:
 
     $this->assertGuest($guard = null);
 
 <a name="assert-authenticated-as"></a>
 #### assertAuthenticatedAs
 
-Assert that a specific user is authenticated:
+Утверждает, что конкретный пользователь аутентифицирован:
 
     $this->assertAuthenticatedAs($user, $guard = null);

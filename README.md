@@ -81,7 +81,7 @@
     - [x] [Сериализация](/docs/eloquent-serialization.md)
 - ## Тестирование
     - [x] [Начало работы](/docs/testing.md)
-    - [ ] [Тесты HTTP](/docs/http-tests.md)
+    - [x] [Тесты HTTP](/docs/http-tests.md)
     - [x] [Консольные тесты](/docs/console-tests.md)
     - [ ] [Браузерные тесты](/docs/dusk.md)
     - [ ] [База данных](/docs/database-testing.md)
