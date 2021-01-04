@@ -21,7 +21,7 @@
     - [Встроенные шаблоны компонентов](#inline-component-views)
     - [Анонимные компоненты](#anonymous-components)
     - [Динамические компоненты](#dynamic-components)
-    - [Manually Registering Components](#manually-registering-components)
+    - [Самостоятельная регистрация компонентов](#manually-registering-components)
 - [Создание макетов](#building-layouts)
     - [Макеты с использованием компонентов](#layouts-using-components)
     - [Макеты с использованием наследования шаблонов](#layouts-using-template-inheritance)
