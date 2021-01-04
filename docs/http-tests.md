@@ -1,21 +1,21 @@
-# HTTP Tests
+# Тесты HTTP
 
-- [Introduction](#introduction)
-- [Making Requests](#making-requests)
-    - [Customizing Request Headers](#customizing-request-headers)
+- [Введение](#introduction)
+- [Выполнение запросов](#making-requests)
+    - [Настройка заголовков запросов](#customizing-request-headers)
     - [Cookies](#cookies)
-    - [Session / Authentication](#session-and-authentication)
-    - [Debugging Responses](#debugging-responses)
-- [Testing JSON APIs](#testing-json-apis)
-- [Testing File Uploads](#testing-file-uploads)
-- [Testing Views](#testing-views)
-    - [Rendering Blade & Components](#rendering-blade-and-components)
-- [Available Assertions](#available-assertions)
-    - [Response Assertions](#response-assertions)
-    - [Authentication Assertions](#authentication-assertions)
+    - [Сессия / Аутентификация](#session-and-authentication)
+    - [Отладка ответов](#debugging-responses)
+- [Тестирование JSON API](#testing-json-apis)
+- [Тестирование загрузки файлов](#testing-file-uploads)
+- [Тестирование шаблонной системы](#testing-views)
+    - [Отрисовка Blade и компонентов](#rendering-blade-and-components)
+- [Доступные утверждения](#available-assertions)
+    - [Утверждения ответов](#response-assertions)
+    - [Утверждения аутентификации](#authentication-assertions)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
 Laravel provides a very fluent API for making HTTP requests to your application and examining the responses. For example, take a look at the feature test defined below:
 
@@ -30,7 +30,7 @@ Laravel provides a very fluent API for making HTTP requests to your application 
     class ExampleTest extends TestCase
     {
         /**
-         * A basic test example.
+         * Базовый пример теста.
          *
          * @return void
          */
@@ -45,7 +45,7 @@ Laravel provides a very fluent API for making HTTP requests to your application 
 The `get` method makes a `GET` request into the application, while the `assertStatus` method asserts that the returned response should have the given HTTP status code. In addition to this simple assertion, Laravel also contains a variety of assertions for inspecting the response headers, content, JSON structure, and more.
 
 <a name="making-requests"></a>
-## Making Requests
+## Выполнение запросов
 
 To make a request to your application, you may invoke the `get`, `post`, `put`, `patch`, or `delete` methods within your test. These methods do not actually issue a "real" HTTP request to your application. Instead, the entire network request is simulated internally.
 
@@ -62,7 +62,7 @@ Instead of returning an `Illuminate\Http\Response` instance, test request method
     class ExampleTest extends TestCase
     {
         /**
-         * A basic test example.
+         * Базовый пример теста.
          *
          * @return void
          */
@@ -77,7 +77,7 @@ Instead of returning an `Illuminate\Http\Response` instance, test request method
 > {tip} For convenience, the CSRF middleware is automatically disabled when running tests.
 
 <a name="customizing-request-headers"></a>
-### Customizing Request Headers
+### Настройка заголовков запросов
 
 You may use the `withHeaders` method to customize the request's headers before it is sent to the application. This method allows you to add any custom headers you would like to the request:
 
@@ -90,7 +90,7 @@ You may use the `withHeaders` method to customize the request's headers before i
     class ExampleTest extends TestCase
     {
         /**
-         * A basic functional test example.
+         * Пример базового функционального теста.
          *
          * @return void
          */
@@ -129,7 +129,7 @@ You may use the `withCookie` or `withCookies` methods to set cookie values befor
     }
 
 <a name="session-and-authentication"></a>
-### Session / Authentication
+### Сессия / Аутентификация
 
 Laravel provides several helpers for interacting with the session during HTTP testing. First, you may set the session data to a given array using the `withSession` method. This is useful for loading the session with data before issuing a request to your application:
 
@@ -147,7 +147,7 @@ Laravel provides several helpers for interacting with the session during HTTP te
         }
     }
 
-Laravel's session is typically used to maintain state for the currently authenticated user. Therefore, the `actingAs` helper method provides a simple way to authenticate a given user as the current user. For example, we may use a [model factory](/docs/{{version}}/database-testing#writing-factories) to generate and authenticate a user:
+Laravel's session is typically used to maintain state for the currently authenticated user. Therefore, the `actingAs` helper method provides a simple way to authenticate a given user as the current user. For example, we may use a [model factory](database-testing.md#writing-factories) to generate and authenticate a user:
 
     <?php
 
@@ -173,7 +173,7 @@ You may also specify which guard should be used to authenticate the given user b
     $this->actingAs($user, 'api')
 
 <a name="debugging-responses"></a>
-### Debugging Responses
+### Отладка ответов
 
 After making a test request to your application, the `dump`, `dumpHeaders`, and `dumpSession` methods may be used to examine and debug the response contents:
 
@@ -188,7 +188,7 @@ After making a test request to your application, the `dump`, `dumpHeaders`, and 
     class ExampleTest extends TestCase
     {
         /**
-         * A basic test example.
+         * Базовый пример теста.
          *
          * @return void
          */
@@ -205,7 +205,7 @@ After making a test request to your application, the `dump`, `dumpHeaders`, and 
     }
 
 <a name="testing-json-apis"></a>
-## Testing JSON APIs
+## Тестирование JSON API
 
 Laravel also provides several helpers for testing JSON APIs and their responses. For example, the `json`, `getJson`, `postJson`, `putJson`, `patchJson`, `deleteJson`, and `optionsJson` methods may be used to issue JSON requests with various HTTP verbs. You may also easily pass data and headers to these methods. To get started, let's write a test to make a `POST` request to `/api/user` and assert that the expected JSON data was returned:
 
@@ -218,7 +218,7 @@ Laravel also provides several helpers for testing JSON APIs and their responses.
     class ExampleTest extends TestCase
     {
         /**
-         * A basic functional test example.
+         * Пример базового функционального теста.
          *
          * @return void
          */
@@ -241,7 +241,7 @@ In addition, JSON response data may be accessed as array variables on the respon
 > {tip} The `assertJson` method converts the response to an array and utilizes `PHPUnit::assertArraySubset` to verify that the given array exists within the JSON response returned by the application. So, if there are other properties in the JSON response, this test will still pass as long as the given fragment is present.
 
 <a name="verifying-exact-match"></a>
-#### Asserting Exact JSON Matches
+#### Утверждение точных совпадений JSON
 
 As previously mentioned, the `assertJson` method may be used to assert that a fragment of JSON exists within the JSON response. If you would like to verify that a given array **exactly matches** the JSON returned by your application, you should use the `assertExactJson` method:
 
@@ -254,7 +254,7 @@ As previously mentioned, the `assertJson` method may be used to assert that a fr
     class ExampleTest extends TestCase
     {
         /**
-         * A basic functional test example.
+         * Пример базового функционального теста.
          *
          * @return void
          */
@@ -271,7 +271,7 @@ As previously mentioned, the `assertJson` method may be used to assert that a fr
     }
 
 <a name="verifying-json-paths"></a>
-#### Asserting On JSON Paths
+#### Утверждения JSON-путей
 
 If you would like to verify that the JSON response contains the given data at a specified path, you should use the `assertJsonPath` method:
 
@@ -284,7 +284,7 @@ If you would like to verify that the JSON response contains the given data at a 
     class ExampleTest extends TestCase
     {
         /**
-         * A basic functional test example.
+         * Пример базового функционального теста.
          *
          * @return void
          */
@@ -299,7 +299,7 @@ If you would like to verify that the JSON response contains the given data at a 
     }
 
 <a name="testing-file-uploads"></a>
-## Testing File Uploads
+## Тестирование загрузки файлов
 
 The `Illuminate\Http\UploadedFile` class provides a `fake` method which may be used to generate dummy files or images for testing. This, combined with the `Storage` facade's `fake` method, greatly simplifies the testing of file uploads. For example, you may combine these two features to easily test an avatar upload form:
 
@@ -338,7 +338,7 @@ If you would like to assert that a given file does not exist, you may use the `a
     Storage::disk('avatars')->assertMissing('missing.jpg');
 
 <a name="fake-file-customization"></a>
-#### Fake File Customization
+#### Настройка фиктивного файла
 
 When creating files using the `fake` method provided by the `UploadedFile` class, you may specify the width, height, and size of the image (in kilobytes) in order to better test your application's validation rules:
 
@@ -355,7 +355,7 @@ If needed, you may pass a `$mimeType` argument to the method to explicitly defin
     );
 
 <a name="testing-views"></a>
-## Testing Views
+## Тестирование шаблонной системы
 
 Laravel also allows you to render a view without making a simulated HTTP request to the application. To accomplish this, you may call the `view` method within your test. The `view` method accepts the view name and an optional array of data. The method returns an instance of `Illuminate\Testing\TestView`, which offers several methods to conveniently make assertions about the view's contents:
 
@@ -382,9 +382,9 @@ If needed, you may get the raw, rendered view contents by casting the `TestView`
     $contents = (string) $this->view('welcome');
 
 <a name="sharing-errors"></a>
-#### Sharing Errors
+#### Передача ошибок валидации в шаблоны
 
-Some views may depend on errors shared in the [global error bag provided by Laravel](/docs/{{version}}/validation#quick-displaying-the-validation-errors). To hydrate the error bag with error messages, you may use the `withViewErrors` method:
+Some views may depend on errors shared in the [global error bag provided by Laravel](validation.md#quick-displaying-the-validation-errors). To hydrate the error bag with error messages, you may use the `withViewErrors` method:
 
     $view = $this->withViewErrors([
         'name' => ['Please provide a valid name.']
@@ -393,9 +393,9 @@ Some views may depend on errors shared in the [global error bag provided by Lara
     $view->assertSee('Please provide a valid name.');
 
 <a name="rendering-blade-and-components"></a>
-### Rendering Blade & Components
+### Отрисовка Blade и компонентов
 
-If necessary, you may use the `blade` method to evaluate and render a raw [Blade](/docs/{{version}}/blade) string. Like the `view` method, the `blade` method returns an instance of `Illuminate\Testing\TestView`:
+If necessary, you may use the `blade` method to evaluate and render a raw [Blade](blade.md) string. Like the `view` method, the `blade` method returns an instance of `Illuminate\Testing\TestView`:
 
     $view = $this->blade(
         '<x-component :name="$name" />',
@@ -404,21 +404,21 @@ If necessary, you may use the `blade` method to evaluate and render a raw [Blade
 
     $view->assertSee('Taylor');
 
-You may use the `component` method to evaluate and render a [Blade component](/docs/{{version}}/blade#components). Like the `view` method, the `component` method returns an instance of `Illuminate\Testing\TestView`:
+You may use the `component` method to evaluate and render a [Blade component](blade.md#components). Like the `view` method, the `component` method returns an instance of `Illuminate\Testing\TestView`:
 
     $view = $this->component(Profile::class, ['name' => 'Taylor']);
 
     $view->assertSee('Taylor');
 
 <a name="available-assertions"></a>
-## Available Assertions
+## Доступные утверждения
 
 <a name="response-assertions"></a>
-### Response Assertions
+### Утверждения ответов
 
 Laravel's `Illuminate\Testing\TestResponse` class provides a variety of custom assertion methods that you may utilize when testing your application. These assertions may be accessed on the response that is returned by the `json`, `get`, `post`, `put`, and `delete` test methods:
 
-<style>
+<!-- <style> -->
     .collection-method-list > p {
         column-count: 2; -moz-column-count: 2; -webkit-column-count: 2;
         column-gap: 2em; -moz-column-gap: 2em; -webkit-column-gap: 2em;
@@ -427,9 +427,9 @@ Laravel's `Illuminate\Testing\TestResponse` class provides a variety of custom a
     .collection-method-list a {
         display: block;
     }
-</style>
+<!-- </style> -->
 
-<div class="collection-method-list" markdown="1">
+<!-- <div class="collection-method-list" markdown="1"> -->
 
 [assertCookie](#assert-cookie)
 [assertCookieExpired](#assert-cookie-expired)
@@ -477,7 +477,7 @@ Laravel's `Illuminate\Testing\TestResponse` class provides a variety of custom a
 [assertViewIs](#assert-view-is)
 [assertViewMissing](#assert-view-missing)
 
-</div>
+<!-- </div> -->
 
 <a name="assert-cookie"></a>
 #### assertCookie
@@ -743,7 +743,7 @@ Assert that the session contains the given piece of data:
 <a name="assert-session-has-input"></a>
 #### assertSessionHasInput
 
-Assert that the session has a given value in the [flashed input array](/docs/{{version}}/responses#redirecting-with-flashed-session-data):
+Assert that the session has a given value in the [flashed input array](responses.md#redirecting-with-flashed-session-data):
 
     $response->assertSessionHasInput($key, $value = null);
 
@@ -783,7 +783,7 @@ Or, you may assert that a given field has a particular validation error message:
 <a name="assert-session-has-errors-in"></a>
 #### assertSessionHasErrorsIn
 
-Assert that the session contains an error for the given `$keys` within a specific [error bag](/docs/{{version}}/validation#named-error-bags). If `$keys` is an associative array, assert that the session contains a specific error message (value) for each field (key), within the error bag:
+Assert that the session contains an error for the given `$keys` within a specific [error bag](validation.md#named-error-bags). If `$keys` is an associative array, assert that the session contains a specific error message (value) for each field (key), within the error bag:
 
     $response->assertSessionHasErrorsIn($errorBag, $keys = [], $format = null);
 
@@ -876,7 +876,7 @@ Assert that the given data key was not made available to the view returned in th
     $response->assertViewMissing($key);
 
 <a name="authentication-assertions"></a>
-### Authentication Assertions
+### Утверждения аутентификации
 
 Laravel also provides a variety of authentication related assertions that you may utilize within your application's feature tests. Note that these methods are invoked on the test class itself and not the `Illuminate\Testing\TestResponse` instance returned by methods such as `get` and `post`.
 
