@@ -418,7 +418,7 @@ Laravel также позволяет отображать шаблоны без
 
 Класс `Illuminate\Testing\TestResponse` содержит множество своих методов утверждения, которые вы можете использовать при тестировании вашего приложения. К этим утверждениям можно получить доступ в ответе, возвращаемом тестовыми методами `json`, `get`, `post`, `put`, и `delete`:
 
-<!-- <style> -->
+<!-- <style>
     .collection-method-list > p {
         column-count: 2; -moz-column-count: 2; -webkit-column-count: 2;
         column-gap: 2em; -moz-column-gap: 2em; -webkit-column-gap: 2em;
@@ -427,7 +427,7 @@ Laravel также позволяет отображать шаблоны без
     .collection-method-list a {
         display: block;
     }
-<!-- </style> -->
+</style> -->
 
 <!-- <div class="collection-method-list" markdown="1"> -->
 
