@@ -1,33 +1,33 @@
-# Mocking
+# Тестирование: имитация
 
-- [Introduction](#introduction)
-- [Mocking Objects](#mocking-objects)
-- [Mocking Facades](#mocking-facades)
-    - [Facade Spies](#facade-spies)
-- [Bus Fake](#bus-fake)
-    - [Job Chains](#bus-job-chains)
-    - [Job Batches](#job-batches)
-- [Event Fake](#event-fake)
-    - [Scoped Event Fakes](#scoped-event-fakes)
-- [HTTP Fake](#http-fake)
-- [Mail Fake](#mail-fake)
-- [Notification Fake](#notification-fake)
-- [Queue Fake](#queue-fake)
-    - [Job Chains](#job-chains)
-- [Storage Fake](#storage-fake)
-- [Interacting With Time](#interacting-with-time)
+- [Введение](#introduction)
+- [Подставные объекты](#mocking-objects)
+- [Имитация фасадов](#mocking-facades)
+    - [Шпионы фасадов](#facade-spies)
+- [Фальсификация Bus](#bus-fake)
+    - [Цепочка заданий](#bus-job-chains)
+    - [Пакетная обработка заданий](#job-batches)
+- [Фальсификация Event](#event-fake)
+    - [Ограниченная фальсификация событий](#scoped-event-fakes)
+- [Фальсификация HTTP](#http-fake)
+- [Фальсификация Mail](#mail-fake)
+- [Фальсификация Notification](#notification-fake)
+- [Фальсификация Queue](#queue-fake)
+    - [Цепочка заданий](#job-chains)
+- [Фальсификация Storage](#storage-fake)
+- [Взаимодействие со временем](#interacting-with-time)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
 When testing Laravel applications, you may wish to "mock" certain aspects of your application so they are not actually executed during a given test. For example, when testing a controller that dispatches an event, you may wish to mock the event listeners so they are not actually executed during the test. This allows you to only test the controller's HTTP response without worrying about the execution of the event listeners since the event listeners can be tested in their own test case.
 
 Laravel provides helpful methods for mocking events, jobs, and other facades out of the box. These helpers primarily provide a convenience layer over Mockery so you do not have to manually make complicated Mockery method calls.
 
 <a name="mocking-objects"></a>
-## Mocking Objects
+## Подставные объекты
 
-When mocking an object that is going to be injected into your application via Laravel's [service container](/docs/{{version}}/container), you will need to bind your mocked instance into the container as an `instance` binding. This will instruct the container to use your mocked instance of the object instead of constructing the object itself:
+When mocking an object that is going to be injected into your application via Laravel's [service container](container.md), you will need to bind your mocked instance into the container as an `instance` binding. This will instruct the container to use your mocked instance of the object instead of constructing the object itself:
 
     use App\Service;
     use Mockery;
@@ -72,9 +72,9 @@ Similarly, if you want to [spy](http://docs.mockery.io/en/latest/reference/spies
     $spy->shouldHaveReceived('process')
 
 <a name="mocking-facades"></a>
-## Mocking Facades
+## Имитация фасадов
 
-Unlike traditional static method calls, [facades](/docs/{{version}}/facades) (including [real-time facades](/docs/{{version}}/facades#real-time-facades)) may be mocked. This provides a great advantage over traditional static methods and grants you the same testability that you would have if you were using traditional dependency injection. When testing, you may often want to mock a call to a Laravel facade that occurs in one of your controllers. For example, consider the following controller action:
+Unlike traditional static method calls, [facades](facades.md) (including [real-time facades](facades.md#real-time-facades)) may be mocked. This provides a great advantage over traditional static methods and grants you the same testability that you would have if you were using traditional dependency injection. When testing, you may often want to mock a call to a Laravel facade that occurs in one of your controllers. For example, consider the following controller action:
 
     <?php
 
@@ -97,7 +97,7 @@ Unlike traditional static method calls, [facades](/docs/{{version}}/facades) (in
         }
     }
 
-We can mock the call to the `Cache` facade by using the `shouldReceive` method, which will return an instance of a [Mockery](https://github.com/padraic/mockery) mock. Since facades are actually resolved and managed by the Laravel [service container](/docs/{{version}}/container), they have much more testability than a typical static class. For example, let's mock our call to the `Cache` facade's `get` method:
+We can mock the call to the `Cache` facade by using the `shouldReceive` method, which will return an instance of a [Mockery](https://github.com/padraic/mockery) mock. Since facades are actually resolved and managed by the Laravel [service container](container.md), they have much more testability than a typical static class. For example, let's mock our call to the `Cache` facade's `get` method:
 
     <?php
 
@@ -123,10 +123,10 @@ We can mock the call to the `Cache` facade by using the `shouldReceive` method, 
         }
     }
 
-> {note} You should not mock the `Request` facade. Instead, pass the input you desire into the [HTTP testing methods](/docs/{{version}}/http-tests) such as `get` and `post` when running your test. Likewise, instead of mocking the `Config` facade, call the `Config::set` method in your tests.
+> {note} You should not mock the `Request` facade. Instead, pass the input you desire into the [HTTP testing methods](http-tests.md) such as `get` and `post` when running your test. Likewise, instead of mocking the `Config` facade, call the `Config::set` method in your tests.
 
 <a name="facade-spies"></a>
-### Facade Spies
+### Шпионы фасадов
 
 If you would like to [spy](http://docs.mockery.io/en/latest/reference/spies.html) on a facade, you may call the `spy` method on the corresponding facade. Spies are similar to mocks; however, spies record any interaction between the spy and the code being tested, allowing you to make assertions after the code is executed:
 
@@ -144,7 +144,7 @@ If you would like to [spy](http://docs.mockery.io/en/latest/reference/spies.html
     }
 
 <a name="bus-fake"></a>
-## Bus Fake
+## Фальсификация Bus
 
 When testing code that dispatches jobs, you typically want to assert that a given job was dispatched but not actually queue or execute the job. This is because the job's execution can normally be tested in a separate test class.
 
@@ -183,9 +183,9 @@ You may pass a closure to the `assertDispatched` or `assertNotDispatched` method
     });
 
 <a name="bus-job-chains"></a>
-### Job Chains
+### Цепочка заданий
 
-The `Bus` facade's `assertChained` method may be used to assert that a [chain of jobs](/docs/{{version}}/queues#job-chaining) was dispatched. The `assertChained` method accepts an array of chained jobs as its first argument:
+The `Bus` facade's `assertChained` method may be used to assert that a [chain of jobs](queues.md#job-chaining) was dispatched. The `assertChained` method accepts an array of chained jobs as its first argument:
 
     use App\Jobs\RecordShipment;
     use App\Jobs\ShipOrder;
@@ -207,9 +207,9 @@ As you can see in the example above, the array of chained jobs may be an array o
     ]);
 
 <a name="job-batches"></a>
-### Job Batches
+### Пакетная обработка заданий
 
-The `Bus` facade's `assertBatched` method may be used to assert that a [batch of jobs](/docs/{{version}}/queues#job-batches) was dispatched. The closure given to the `assertBatched` method receives an instance of `Illuminate\Bus\PendingBatch`, which may be used to inspect the jobs within the batch:
+The `Bus` facade's `assertBatched` method may be used to assert that a [batch of jobs](queues.md#job-batches) was dispatched. The closure given to the `assertBatched` method receives an instance of `Illuminate\Bus\PendingBatch`, which may be used to inspect the jobs within the batch:
 
     use Illuminate\Bus\PendingBatch;
     use Illuminate\Support\Facades\Bus;
@@ -220,7 +220,7 @@ The `Bus` facade's `assertBatched` method may be used to assert that a [batch of
     });
 
 <a name="event-fake"></a>
-## Event Fake
+## Фальсификация Event
 
 When testing code that dispatches events, you may wish to instruct Laravel to not actually execute the event's listeners. Using the `Event` facade's `fake` method, you may prevent listeners from executing, execute the code under test, and then assert which events were dispatched by your application using the `assertDispatched` and `assertNotDispatched` methods:
 
@@ -266,7 +266,7 @@ You may pass a closure to the `assertDispatched` or `assertNotDispatched` method
 > {note} After calling `Event::fake()`, no event listeners will be executed. So, if your tests use model factories that rely on events, such as creating a UUID during a model's `creating` event, you should call `Event::fake()` **after** using your factories.
 
 <a name="faking-a-subset-of-events"></a>
-#### Faking A Subset Of Events
+#### Фальсификация подмножества событий
 
 If you only want to fake event listeners for a specific set of events, you may pass them to the `fake` or `fakeFor` method:
 
@@ -288,7 +288,7 @@ If you only want to fake event listeners for a specific set of events, you may p
     }
 
 <a name="scoped-event-fakes"></a>
-### Scoped Event Fakes
+### Ограниченная фальсификация событий
 
 If you only want to fake event listeners for a portion of your test, you may use the `fakeFor` method:
 
@@ -324,16 +324,16 @@ If you only want to fake event listeners for a portion of your test, you may use
     }
 
 <a name="http-fake"></a>
-## HTTP Fake
+## Фальсификация HTTP
 
-The `Http` facade's `fake` method allows you to instruct the HTTP client to return stubbed / dummy responses when requests are made. For more information on faking outgoing HTTP requests, please consult the [HTTP Client testing documentation](/docs/{{version}}/http-client#testing).
+The `Http` facade's `fake` method allows you to instruct the HTTP client to return stubbed / dummy responses when requests are made. For more information on faking outgoing HTTP requests, please consult the [HTTP Client testing documentation](http-client.md#testing).
 
 <a name="mail-fake"></a>
-## Mail Fake
+## Фальсификация Mail
 
 You may use the `Mail` facade's `fake` method to prevent mail from being sent. Typically, sending mail is unrelated to the code you are actually testing. Most likely, it is sufficient to simply assert that Laravel was instructed to send a given mailable.
 
-After calling the `Mail` facade's `fake` method, you may then assert that [mailables](/docs/{{version}}/mail) were instructed to be sent to users and even inspect the data the mailables received:
+After calling the `Mail` facade's `fake` method, you may then assert that [mailables](mail.md) were instructed to be sent to users and even inspect the data the mailables received:
 
     <?php
 
@@ -388,11 +388,11 @@ When calling the `Mail` facade's assertion methods, the mailable instance accept
     });
 
 <a name="notification-fake"></a>
-## Notification Fake
+## Фальсификация Notification
 
 You may use the `Notification` facade's `fake` method to prevent notifications from being sent. Typically, sending notifications is unrelated to the code you are actually testing. Most likely, it is sufficient to simply assert that Laravel was instructed to send a given notification.
 
-After calling the `Notification` facade's `fake` method, you may then assert that [notifications](/docs/{{version}}/notifications) were instructed to be sent to users and even inspect the data the notifications received:
+After calling the `Notification` facade's `fake` method, you may then assert that [notifications](notifications.md) were instructed to be sent to users and even inspect the data the notifications received:
 
     <?php
 
@@ -437,9 +437,9 @@ You may pass a closure to the `assertSentTo` or `assertNotSentTo` methods in ord
     );
 
 <a name="on-demand-notifications"></a>
-#### On-Demand Notifications
+#### Уведомления по запросу
 
-If the code you are testing sends [on-demand notifications](/docs/{{version}}/notifications#on-demand-notifications), you will need to assert that the notification was sent to an `Illuminate\Notifications\AnonymousNotifiable` instance:
+If the code you are testing sends [on-demand notifications](notifications.md#on-demand-notifications), you will need to assert that the notification was sent to an `Illuminate\Notifications\AnonymousNotifiable` instance:
 
     use Illuminate\Notifications\AnonymousNotifiable;
 
@@ -458,7 +458,7 @@ By passing a closure as the third argument to the notification assertion methods
     );
 
 <a name="queue-fake"></a>
-## Queue Fake
+## Фальсификация Queue
 
 You may use the `Queue` facade's `fake` method to prevent queued jobs from being pushed to the queue. Most likely, it is sufficient to simply assert that Laravel was instructed to push a given job to the queue since the queued jobs themselves may be tested in another test class.
 
@@ -505,7 +505,7 @@ You may pass a closure to the `assertPushed` or `assertNotPushed` methods in ord
     });
 
 <a name="job-chains"></a>
-### Job Chains
+### Цепочка заданий
 
 The `Queue` facade's `assertPushedWithChain` and `assertPushedWithoutChain` methods may be used to inspect the job chain of a pushed job. The `assertPushedWithChain` method accepts the primary job as its first argument and an array of chained jobs as its second argument:
 
@@ -531,7 +531,7 @@ You may use the `assertPushedWithoutChain` method to assert that a job was pushe
     Queue::assertPushedWithoutChain(ShipOrder::class);
 
 <a name="storage-fake"></a>
-## Storage Fake
+## Фальсификация Storage
 
 The `Storage` facade's `fake` method allows you to easily generate a fake disk that, combined with the file generation utilities of the `Illuminate\Http\UploadedFile` class, greatly simplifies the testing of file uploads. For example:
 
@@ -566,12 +566,12 @@ The `Storage` facade's `fake` method allows you to easily generate a fake disk t
         }
     }
 
-For more information on testing file uploads, you may consult the [HTTP testing documentation's information on file uploads](/docs/{{version}}/http-tests#testing-file-uploads).
+For more information on testing file uploads, you may consult the [HTTP testing documentation's information on file uploads](http-tests.md#testing-file-uploads).
 
 > {tip} By default, the `fake` method will delete all files in its temporary directory. If you would like to keep these files, you may use the "persistentFake" method instead.
 
 <a name="interacting-with-time"></a>
-## Interacting With Time
+## Взаимодействие со временем
 
 When testing, you may occasionally need to modify the time returned by helpers such as `now` or `Illuminate\Support\Carbon::now()`. Thankfully, Laravel's base feature test class includes helpers that allow you to manipulate the current time:
 
