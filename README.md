@@ -38,7 +38,7 @@
     - [x] [Шаблонизатор Blade](/docs/blade.md)
     - [x] [Генерация URL-адресов](/docs/urls.md)
     - [x] [HTTP-сессия](/docs/session.md)
-    - [ ] [Валидация](/docs/validation.md)
+    - [x] [Валидация](/docs/validation.md)
     - [x] [Обработка ошибок](/docs/errors.md)
     - [ ] [Логирование](/docs/logging.md)
 - ## Углубленное изучение
@@ -207,6 +207,7 @@ flexibility  |  гибкость  |
 force  |  принудительно  |  
 foreign key constraints  |  ограничения внешнего ключа  |  
 <a name="dictionary-g">**G**</a>
+gate  |  шлюз (авторизации)  |  
 given  |  переданный, указанный, конкретный  |  
 guard  |  охранник (аутентификатора)  |  
 guarding  |  защита  |  
@@ -230,7 +231,7 @@ localization  |  локализация  |
 <a name="dictionary-m">**M**</a>
 maintenance mode  |  режим обслуживания  |  
 making  |  инициализация  |  Например, метод фабрики `make` инициализирует, но не создает запись о модели в БД.
-manually  |  самостоятельно, вручную  |  
+manually  |  самостоятельно, вручную, по требованию  |  
 mapping  |  сопоставление, картирование  |  
 mass assignment  |  массовое присвоение  |  
 middleware  |  посредник  |  
