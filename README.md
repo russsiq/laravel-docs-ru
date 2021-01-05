@@ -164,7 +164,7 @@ cache  |  кэш  |
 casting  |  типизация  |  
 cast type  |  типизатор  |  
 chunking  |  разбиение  |  
-clauses  |  условия  |  
+clauses  |  выражения  |  
 сlosure  |  замыкание  |  
 command line interface (CLI)  |  интерфейс командной строки  |  
 commit  |  коммит, фиксация  |  
