@@ -67,7 +67,7 @@
     - [x] [Сброс пароля](/docs/passwords.md)
 - ## База данных
     - [x] [Начало работы](/docs/database.md)
-    - [ ] [Построитель запросов](/docs/queries.md)
+    - [x] [Построитель запросов](/docs/queries.md)
     - [x] [Постраничная навигация](/docs/pagination.md)
     - [x] [Миграции](/docs/migrations.md)
     - [x] [Наполнение](/docs/seeding.md)
