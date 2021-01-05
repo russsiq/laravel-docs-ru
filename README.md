@@ -85,7 +85,7 @@
     - [x] [Консольные тесты](/docs/console-tests.md)
     - [ ] [Браузерные тесты](/docs/dusk.md)
     - [ ] [База данных](/docs/database-testing.md)
-    - [ ] [Имитация](/docs/mocking.md)
+    - [x] [Имитация](/docs/mocking.md)
 - ## Пакеты
     - [ ] [Cashier (Stripe)](/docs/billing.md)
     - [ ] [Cashier (Paddle)](/docs/cashier-paddle.md)
@@ -245,6 +245,7 @@ mutator  |  мутатор  |
 named error bag  |  массив именованных ошибок  |  
 <a name="dictionary-o">**O**</a>
 observers  |  наблюдатели  |  
+on-demand  |  по требованию, по запросу  |  
 optional  |  необязательный  |  
 options  |  параметры  |  
 overriding  |  переопределение  |  
