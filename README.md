@@ -84,7 +84,7 @@
     - [x] [Тесты HTTP](/docs/http-tests.md)
     - [x] [Консольные тесты](/docs/console-tests.md)
     - [ ] [Браузерные тесты](/docs/dusk.md)
-    - [ ] [База данных](/docs/database-testing.md)
+    - [x] [База данных](/docs/database-testing.md)
     - [x] [Имитация](/docs/mocking.md)
 - ## Пакеты
     - [ ] [Cashier (Stripe)](/docs/billing.md)
