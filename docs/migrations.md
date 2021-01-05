@@ -1,38 +1,38 @@
-# Database: Migrations
+# База данных: миграции
 
-- [Introduction](#introduction)
-- [Generating Migrations](#generating-migrations)
-    - [Squashing Migrations](#squashing-migrations)
-- [Migration Structure](#migration-structure)
-- [Running Migrations](#running-migrations)
-    - [Rolling Back Migrations](#rolling-back-migrations)
-- [Tables](#tables)
-    - [Creating Tables](#creating-tables)
-    - [Updating Tables](#updating-tables)
-    - [Renaming / Dropping Tables](#renaming-and-dropping-tables)
-- [Columns](#columns)
-    - [Creating Columns](#creating-columns)
-    - [Available Column Types](#available-column-types)
-    - [Column Modifiers](#column-modifiers)
-    - [Modifying Columns](#modifying-columns)
-    - [Dropping Columns](#dropping-columns)
-- [Indexes](#indexes)
-    - [Creating Indexes](#creating-indexes)
-    - [Renaming Indexes](#renaming-indexes)
-    - [Dropping Indexes](#dropping-indexes)
-    - [Foreign Key Constraints](#foreign-key-constraints)
+- [Введение](#introduction)
+- [Создание миграций](#generating-migrations)
+    - [Сжатие миграций](#squashing-migrations)
+- [Структура миграций](#migration-structure)
+- [Запуск миграций](#running-migrations)
+    - [Откат миграций](#rolling-back-migrations)
+- [Таблицы](#tables)
+    - [Создание таблиц](#creating-tables)
+    - [Обновление таблиц](#updating-tables)
+    - [Переименование / удаление таблиц](#renaming-and-dropping-tables)
+- [Столбцы](#columns)
+    - [Создание столбцов](#creating-columns)
+    - [Доступные типы столбцов](#available-column-types)
+    - [Модификаторы столбца](#column-modifiers)
+    - [Изменение столбцов](#modifying-columns)
+    - [Удаление столбцов](#dropping-columns)
+- [Индексы](#indexes)
+    - [Создание индексов](#creating-indexes)
+    - [Переименование индексов](#renaming-indexes)
+    - [Удаление индексов](#dropping-indexes)
+    - [Ограничения внешнего ключа](#foreign-key-constraints)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
 Migrations are like version control for your database, allowing your team to define and share the application's database schema definition. If you have ever had to tell a teammate to manually add a column to their local database schema after pulling in your changes from source control, you've faced the problem that database migrations solve.
 
-The Laravel `Schema` [facade](/docs/{{version}}/facades) provides database agnostic support for creating and manipulating tables across all of Laravel's supported database systems. Typically, migrations will use this facade to create and modify database tables and columns.
+The Laravel `Schema` [facade](facades.md) provides database agnostic support for creating and manipulating tables across all of Laravel's supported database systems. Typically, migrations will use this facade to create and modify database tables and columns.
 
 <a name="generating-migrations"></a>
-## Generating Migrations
+## Создание миграций
 
-You may use the `make:migration` [Artisan command](/docs/{{version}}/artisan) to generate a database migration. The new migration will be placed in your `database/migrations` directory. Each migration filename contains a timestamp that allows Laravel to determine the order of the migrations:
+You may use the `make:migration` [Artisan command](artisan.md) to generate a database migration. The new migration will be placed in your `database/migrations` directory. Each migration filename contains a timestamp that allows Laravel to determine the order of the migrations:
 
     php artisan make:migration create_flights_table
 
@@ -44,10 +44,10 @@ The `--table` and `--create` options may be used to indicate the name of the tab
 
 If you would like to specify a custom path for the generated migration, you may use the `--path` option when executing the `make:migration` command. The given path should be relative to your application's base path.
 
-> {tip} Migration stubs may be customized using [stub publishing](/docs/{{version}}/artisan#stub-customization)
+> {tip} Migration stubs may be customized using [stub publishing](artisan.md#stub-customization)
 
 <a name="squashing-migrations"></a>
-### Squashing Migrations
+### Сжатие миграций
 
 As you build your application, you may accumulate more and more migrations over time. This can lead to your `database/migrations` directory becoming bloated with potentially hundreds of migrations. If you would like, you may "squash" your migrations into a single SQL file. To get started, execute the `schema:dump` command:
 
@@ -63,7 +63,7 @@ You should commit your database schema file to source control so that other new 
 > {note} Migration squashing is only available for the MySQL, PostgreSQL, and SQLite databases. However, schema dumps may not be restored to in-memory SQLite databases.
 
 <a name="migration-structure"></a>
-## Migration Structure
+## Структура миграций
 
 A migration class contains two methods: `up` and `down`. The `up` method is used to add new tables, columns, or indexes to your database, while the `down` method should reverse the operations performed by the `up` method.
 
@@ -78,7 +78,7 @@ Within both of these methods you may use the Laravel schema builder to expressiv
     class CreateFlightsTable extends Migration
     {
         /**
-         * Run the migrations.
+         * Запустить миграцию.
          *
          * @return void
          */
@@ -93,7 +93,7 @@ Within both of these methods you may use the Laravel schema builder to expressiv
         }
 
         /**
-         * Reverse the migrations.
+         * Обратить миграции.
          *
          * @return void
          */
@@ -104,21 +104,21 @@ Within both of these methods you may use the Laravel schema builder to expressiv
     }
 
 <a name="running-migrations"></a>
-## Running Migrations
+## Запуск миграций
 
 To run all of your outstanding migrations, execute the `migrate` Artisan command:
 
     php artisan migrate
 
 <a name="forcing-migrations-to-run-in-production"></a>
-#### Forcing Migrations To Run In Production
+#### Принудительный запуск миграции в рабочем окружении
 
 Some migration operations are destructive, which means they may cause you to lose data. In order to protect you from running these commands against your production database, you will be prompted for confirmation before the commands are executed. To force the commands to run without a prompt, use the `--force` flag:
 
     php artisan migrate --force
 
 <a name="rolling-back-migrations"></a>
-### Rolling Back Migrations
+### Откат миграций
 
 To roll back the latest migration operation, you may use the `rollback` Artisan command. This command rolls back the last "batch" of migrations, which may include multiple migration files:
 
@@ -133,7 +133,7 @@ The `migrate:reset` command will roll back all of your application's migrations:
     php artisan migrate:reset
 
 <a name="roll-back-migrate-using-a-single-command"></a>
-#### Roll Back & Migrate Using A Single Command
+#### Откат и миграция с помощью одной команды
 
 The `migrate:refresh` command will roll back all of your migrations and then execute the `migrate` command. This command effectively re-creates your entire database:
 
@@ -147,7 +147,7 @@ You may roll back and re-migrate a limited number of migrations by providing the
     php artisan migrate:refresh --step=5
 
 <a name="drop-all-tables-migrate"></a>
-#### Drop All Tables & Migrate
+#### Удаление всех таблиц и миграция
 
 The `migrate:fresh` command will drop all tables from the database and then execute the `migrate` command:
 
@@ -158,10 +158,10 @@ The `migrate:fresh` command will drop all tables from the database and then exec
 > {note} The `migrate:fresh` command will drop all database tables regardless of their prefix. This command should be used with caution when developing on a database that is shared with other applications.
 
 <a name="tables"></a>
-## Tables
+## Таблицы
 
 <a name="creating-tables"></a>
-### Creating Tables
+### Создание таблиц
 
 To create a new database table, use the `create` method on the `Schema` facade. The `create` method accepts two arguments: the first is the name of the table, while the second is a closure which receives a `Blueprint` object that may be used to define the new table:
 
@@ -178,20 +178,20 @@ To create a new database table, use the `create` method on the `Schema` facade. 
 When creating the table, you may use any of the schema builder's [column methods](#creating-columns) to define the table's columns.
 
 <a name="checking-for-table-column-existence"></a>
-#### Checking For Table / Column Existence
+#### Проверка наличия таблицы / столбца
 
 You may check for the existence of a table or column using the `hasTable` and `hasColumn` methods:
 
     if (Schema::hasTable('users')) {
-        // The "users" table exists...
+        // Таблица `users` существует ...
     }
 
     if (Schema::hasColumn('users', 'email')) {
-        // The "users" table exists and has an "email" column...
+        // Таблица `users` существует и содержит столбец `email` ...
     }
 
 <a name="database-connection-table-options"></a>
-#### Database Connection & Table Options
+#### Соединение с базой данных и параметры таблицы
 
 If you want to perform a schema operation on a database connection that is not your application's default connection, use the `connection` method:
 
@@ -225,7 +225,7 @@ The `temporary` method may be used to indicate that the table should be "tempora
     });
 
 <a name="updating-tables"></a>
-### Updating Tables
+### Обновление таблиц
 
 The `table` method on the `Schema` facade may be used to update existing tables. Like the `create` method, the `table` method accepts two arguments: the name of the table and a closure that receives a `Blueprint` instance you may use to add columns or indexes to the table:
 
@@ -237,7 +237,7 @@ The `table` method on the `Schema` facade may be used to update existing tables.
     });
 
 <a name="renaming-and-dropping-tables"></a>
-### Renaming / Dropping Tables
+### Переименование / удаление таблиц
 
 To rename an existing database table, use the `rename` method:
 
@@ -252,15 +252,15 @@ To drop an existing table, you may use the `drop` or `dropIfExists` methods:
     Schema::dropIfExists('users');
 
 <a name="renaming-tables-with-foreign-keys"></a>
-#### Renaming Tables With Foreign Keys
+#### Переименование таблиц с внешними ключами
 
 Before renaming a table, you should verify that any foreign key constraints on the table have an explicit name in your migration files instead of letting Laravel assign a convention based name. Otherwise, the foreign key constraint name will refer to the old table name.
 
 <a name="columns"></a>
-## Columns
+## Столбцы
 
 <a name="creating-columns"></a>
-### Creating Columns
+### Создание столбцов
 
 The `table` method on the `Schema` facade may be used to update existing tables. Like the `create` method, the `table` method accepts two arguments: the name of the table and a closure that receives an `Illuminate\Database\Schema\Blueprint` instance you may use to add columns to the table:
 
@@ -272,11 +272,11 @@ The `table` method on the `Schema` facade may be used to update existing tables.
     });
 
 <a name="available-column-types"></a>
-### Available Column Types
+### Доступные типы столбцов
 
 The schema builder blueprint offers a variety of methods that correspond to the different types of columns you can add to your database tables. Each of the available methods are listed in the table below:
 
-<style>
+<!-- <style>
     #collection-method-list > p {
         column-count: 3; -moz-column-count: 3; -webkit-column-count: 3;
         column-gap: 2em; -moz-column-gap: 2em; -webkit-column-gap: 2em;
@@ -285,505 +285,505 @@ The schema builder blueprint offers a variety of methods that correspond to the 
     #collection-method-list a {
         display: block;
     }
-</style>
+</style> -->
 
-<div id="collection-method-list" markdown="1">
-[bigIncrements](#column-method-bigIncrements)
-[bigInteger](#column-method-bigInteger)
-[binary](#column-method-binary)
-[boolean](#column-method-boolean)
-[char](#column-method-char)
-[dateTimeTz](#column-method-dateTimeTz)
-[dateTime](#column-method-dateTime)
-[date](#column-method-date)
-[decimal](#column-method-decimal)
-[double](#column-method-double)
-[enum](#column-method-enum)
-[float](#column-method-float)
-[foreignId](#column-method-foreignId)
-[geometryCollection](#column-method-geometryCollection)
-[geometry](#column-method-geometry)
-[id](#column-method-id)
-[increments](#column-method-increments)
-[integer](#column-method-integer)
-[ipAddress](#column-method-ipAddress)
-[json](#column-method-json)
-[jsonb](#column-method-jsonb)
-[lineString](#column-method-lineString)
-[longText](#column-method-longText)
-[macAddress](#column-method-macAddress)
-[mediumIncrements](#column-method-mediumIncrements)
-[mediumInteger](#column-method-mediumInteger)
-[mediumText](#column-method-mediumText)
-[morphs](#column-method-morphs)
-[multiLineString](#column-method-multiLineString)
-[multiPoint](#column-method-multiPoint)
-[multiPolygon](#column-method-multiPolygon)
-[nullableMorphs](#column-method-nullableMorphs)
-[nullableTimestamps](#column-method-nullableTimestamps)
-[nullableUuidMorphs](#column-method-nullableUuidMorphs)
-[point](#column-method-point)
-[polygon](#column-method-polygon)
-[rememberToken](#column-method-rememberToken)
-[set](#column-method-set)
-[smallIncrements](#column-method-smallIncrements)
-[smallInteger](#column-method-smallInteger)
-[softDeletesTz](#column-method-softDeletesTz)
-[softDeletes](#column-method-softDeletes)
-[string](#column-method-string)
-[text](#column-method-text)
-[timeTz](#column-method-timeTz)
-[time](#column-method-time)
-[timestampTz](#column-method-timestampTz)
-[timestamp](#column-method-timestamp)
-[timestampsTz](#column-method-timestampsTz)
-[timestamps](#column-method-timestamps)
-[tinyIncrements](#column-method-tinyIncrements)
-[tinyInteger](#column-method-tinyInteger)
-[unsignedBigInteger](#column-method-unsignedBigInteger)
-[unsignedDecimal](#column-method-unsignedDecimal)
-[unsignedInteger](#column-method-unsignedInteger)
-[unsignedMediumInteger](#column-method-unsignedMediumInteger)
-[unsignedSmallInteger](#column-method-unsignedSmallInteger)
-[unsignedTinyInteger](#column-method-unsignedTinyInteger)
-[uuidMorphs](#column-method-uuidMorphs)
-[uuid](#column-method-uuid)
-[year](#column-method-year)
-</div>
+<!-- <div id="collection-method-list" markdown="1"> -->
+- [bigIncrements](#column-method-bigIncrements)
+- [bigInteger](#column-method-bigInteger)
+- [binary](#column-method-binary)
+- [boolean](#column-method-boolean)
+- [char](#column-method-char)
+- [dateTimeTz](#column-method-dateTimeTz)
+- [dateTime](#column-method-dateTime)
+- [date](#column-method-date)
+- [decimal](#column-method-decimal)
+- [double](#column-method-double)
+- [enum](#column-method-enum)
+- [float](#column-method-float)
+- [foreignId](#column-method-foreignId)
+- [geometryCollection](#column-method-geometryCollection)
+- [geometry](#column-method-geometry)
+- [id](#column-method-id)
+- [increments](#column-method-increments)
+- [integer](#column-method-integer)
+- [ipAddress](#column-method-ipAddress)
+- [json](#column-method-json)
+- [jsonb](#column-method-jsonb)
+- [lineString](#column-method-lineString)
+- [longText](#column-method-longText)
+- [macAddress](#column-method-macAddress)
+- [mediumIncrements](#column-method-mediumIncrements)
+- [mediumInteger](#column-method-mediumInteger)
+- [mediumText](#column-method-mediumText)
+- [morphs](#column-method-morphs)
+- [multiLineString](#column-method-multiLineString)
+- [multiPoint](#column-method-multiPoint)
+- [multiPolygon](#column-method-multiPolygon)
+- [nullableMorphs](#column-method-nullableMorphs)
+- [nullableTimestamps](#column-method-nullableTimestamps)
+- [nullableUuidMorphs](#column-method-nullableUuidMorphs)
+- [point](#column-method-point)
+- [polygon](#column-method-polygon)
+- [rememberToken](#column-method-rememberToken)
+- [set](#column-method-set)
+- [smallIncrements](#column-method-smallIncrements)
+- [smallInteger](#column-method-smallInteger)
+- [softDeletesTz](#column-method-softDeletesTz)
+- [softDeletes](#column-method-softDeletes)
+- [string](#column-method-string)
+- [text](#column-method-text)
+- [timeTz](#column-method-timeTz)
+- [time](#column-method-time)
+- [timestampTz](#column-method-timestampTz)
+- [timestamp](#column-method-timestamp)
+- [timestampsTz](#column-method-timestampsTz)
+- [timestamps](#column-method-timestamps)
+- [tinyIncrements](#column-method-tinyIncrements)
+- [tinyInteger](#column-method-tinyInteger)
+- [unsignedBigInteger](#column-method-unsignedBigInteger)
+- [unsignedDecimal](#column-method-unsignedDecimal)
+- [unsignedInteger](#column-method-unsignedInteger)
+- [unsignedMediumInteger](#column-method-unsignedMediumInteger)
+- [unsignedSmallInteger](#column-method-unsignedSmallInteger)
+- [unsignedTinyInteger](#column-method-unsignedTinyInteger)
+- [uuidMorphs](#column-method-uuidMorphs)
+- [uuid](#column-method-uuid)
+- [year](#column-method-year)
+<!-- </div> -->
 
 <a name="column-method-bigIncrements"></a>
-#### `bigIncrements()` {#collection-method .first-collection-method}
+#### `bigIncrements()`
 
 The `bigIncrements` method creates an auto-incrementing `UNSIGNED BIGINT` (primary key) equivalent column:
 
     $table->bigIncrements('id');
 
 <a name="column-method-bigInteger"></a>
-#### `bigInteger()` {#collection-method}
+#### `bigInteger()`
 
 The `bigInteger` method creates a `BIGINT` equivalent column:
 
     $table->bigInteger('votes');
 
 <a name="column-method-binary"></a>
-#### `binary()` {#collection-method}
+#### `binary()`
 
 The `binary` method creates a `BLOB` equivalent column:
 
     $table->binary('photo');
 
 <a name="column-method-boolean"></a>
-#### `boolean()` {#collection-method}
+#### `boolean()`
 
 The `boolean` method creates a `BOOLEAN` equivalent column:
 
     $table->boolean('confirmed');
 
 <a name="column-method-char"></a>
-#### `char()` {#collection-method}
+#### `char()`
 
 The `char` method creates a `CHAR` equivalent column with of a given length:
 
     $table->char('name', 100);
 
 <a name="column-method-dateTimeTz"></a>
-#### `dateTimeTz()` {#collection-method}
+#### `dateTimeTz()`
 
 The `dateTimeTz` method creates a `DATETIME` (with timezone) equivalent column with an optional precision (total digits):
 
     $table->dateTimeTz('created_at', $precision = 0);
 
 <a name="column-method-dateTime"></a>
-#### `dateTime()` {#collection-method}
+#### `dateTime()`
 
 The `dateTime` method creates a `DATETIME` equivalent column with an optional precision (total digits):
 
     $table->dateTime('created_at', $precision = 0);
 
 <a name="column-method-date"></a>
-#### `date()` {#collection-method}
+#### `date()`
 
 The `date` method creates a `DATE` equivalent column:
 
     $table->date('created_at');
 
 <a name="column-method-decimal"></a>
-#### `decimal()` {#collection-method}
+#### `decimal()`
 
 The `decimal` method creates a `DECIMAL` equivalent column with the given precision (total digits) and scale (decimal digits):
 
     $table->decimal('amount', $precision = 8, $scale = 2);
 
 <a name="column-method-double"></a>
-#### `double()` {#collection-method}
+#### `double()`
 
 The `double` method creates a `DOUBLE` equivalent column with the given precision (total digits) and scale (decimal digits):
 
     $table->double('amount', 8, 2);
 
 <a name="column-method-enum"></a>
-#### `enum()` {#collection-method}
+#### `enum()`
 
 The `enum` method creates a `ENUM` equivalent column with the given valid values:
 
     $table->enum('difficulty', ['easy', 'hard']);
 
 <a name="column-method-float"></a>
-#### `float()` {#collection-method}
+#### `float()`
 
 The `float` method creates a `FLOAT` equivalent column with the given precision (total digits) and scale (decimal digits):
 
     $table->float('amount', 8, 2);
 
 <a name="column-method-foreignId"></a>
-#### `foreignId()` {#collection-method}
+#### `foreignId()`
 
 The `foreignId` method is an alias of the `unsignedBigInteger` method:
 
     $table->foreignId('user_id');
 
 <a name="column-method-geometryCollection"></a>
-#### `geometryCollection()` {#collection-method}
+#### `geometryCollection()`
 
 The `geometryCollection` method creates a `GEOMETRYCOLLECTION` equivalent column:
 
     $table->geometryCollection('positions');
 
 <a name="column-method-geometry"></a>
-#### `geometry()` {#collection-method}
+#### `geometry()`
 
 The `geometry` method creates a `GEOMETRY` equivalent column:
 
     $table->geometry('positions');
 
 <a name="column-method-id"></a>
-#### `id()` {#collection-method}
+#### `id()`
 
 The `id` method is an alias of the `bigIncrements` method. By default, the method will create an `id` column; however, you may pass a column name if you would like to assign a different name to the column:
 
     $table->id();
 
 <a name="column-method-increments"></a>
-#### `increments()` {#collection-method}
+#### `increments()`
 
 The `increments` method creates an auto-incrementing `UNSIGNED INTEGER` equivalent column as a primary key:
 
     $table->increments('id');
 
 <a name="column-method-integer"></a>
-#### `integer()` {#collection-method}
+#### `integer()`
 
 The `integer` method creates an `INTEGER` equivalent column:
 
     $table->integer('votes');
 
 <a name="column-method-ipAddress"></a>
-#### `ipAddress()` {#collection-method}
+#### `ipAddress()`
 
 The `ipAddress` method creates an `INTEGER` equivalent column:
 
     $table->ipAddress('visitor');
 
 <a name="column-method-json"></a>
-#### `json()` {#collection-method}
+#### `json()`
 
 The `json` method creates an `JSON` equivalent column:
 
     $table->json('options');
 
 <a name="column-method-jsonb"></a>
-#### `jsonb()` {#collection-method}
+#### `jsonb()`
 
 The `jsonb` method creates an `JSONB` equivalent column:
 
     $table->jsonb('options');
 
 <a name="column-method-lineString"></a>
-#### `lineString()` {#collection-method}
+#### `lineString()`
 
 The `lineString` method creates an `LINESTRING` equivalent column:
 
     $table->lineString('positions');
 
 <a name="column-method-longText"></a>
-#### `longText()` {#collection-method}
+#### `longText()`
 
 The `longText` method creates an `LONGTEXT` equivalent column:
 
     $table->longText('description');
 
 <a name="column-method-macAddress"></a>
-#### `macAddress()` {#collection-method}
+#### `macAddress()`
 
 The `macAddress` method creates a column that is intended to hold a MAC address. Some database systems, such as PostgreSQL, have a dedicated column type for this type of data. Other database systems will use a string equivalent column:
 
     $table->macAddress('device');
 
 <a name="column-method-mediumIncrements"></a>
-#### `mediumIncrements()` {#collection-method}
+#### `mediumIncrements()`
 
 The `mediumIncrements` method creates an auto-incrementing `UNSIGNED MEDIUMINT` equivalent column as a primary key:
 
     $table->mediumIncrements('id');
 
 <a name="column-method-mediumInteger"></a>
-#### `mediumInteger()` {#collection-method}
+#### `mediumInteger()`
 
 The `mediumInteger` method creates an `MEDIUMINT` equivalent column:
 
     $table->mediumInteger('votes');
 
 <a name="column-method-mediumText"></a>
-#### `mediumText()` {#collection-method}
+#### `mediumText()`
 
 The `mediumText` method creates an `MEDIUMTEXT` equivalent column:
 
     $table->mediumText('description');
 
 <a name="column-method-morphs"></a>
-#### `morphs()` {#collection-method}
+#### `morphs()`
 
 The `morphs` method is a convenience method that adds a `{column}_id` `UNSIGNED BIGINT` equivalent column and a `{column}_type` `VARCHAR` equivalent column.
 
-This method is intended to be used when defining the columns necessary for a polymorphic [Eloquent relationship](/docs/{{version}}/eloquent-relationships). In the following example, `taggable_id` and `taggable_type` columns would be created:
+This method is intended to be used when defining the columns necessary for a polymorphic [Eloquent relationship](eloquent-relationships.md). In the following example, `taggable_id` and `taggable_type` columns would be created:
 
     $table->morphs('taggable');
 
 <a name="column-method-multiLineString"></a>
-#### `multiLineString()` {#collection-method}
+#### `multiLineString()`
 
 The `multiLineString` method creates an `MULTILINESTRING` equivalent column:
 
     $table->multiLineString('positions');
 
 <a name="column-method-multiPoint"></a>
-#### `multiPoint()` {#collection-method}
+#### `multiPoint()`
 
 The `multiPoint` method creates an `MULTIPOINT` equivalent column:
 
     $table->multiPoint('positions');
 
 <a name="column-method-multiPolygon"></a>
-#### `multiPolygon()` {#collection-method}
+#### `multiPolygon()`
 
 The `multiPolygon` method creates an `MULTIPOLYGON` equivalent column:
 
     $table->multiPolygon('positions');
 
 <a name="column-method-nullableTimestamps"></a>
-#### `nullableTimestamps()` {#collection-method}
+#### `nullableTimestamps()`
 
 The method is similar to the [timestamps](#column-method-timestamps) method; however, the column that is created will be "nullable":
 
     $table->nullableTimestamps(0);
 
 <a name="column-method-nullableMorphs"></a>
-#### `nullableMorphs()` {#collection-method}
+#### `nullableMorphs()`
 
 The method is similar to the [morphs](#column-method-morphs) method; however, the columns that are created will be "nullable":
 
     $table->nullableMorphs('taggable');
 
 <a name="column-method-nullableUuidMorphs"></a>
-#### `nullableUuidMorphs()` {#collection-method}
+#### `nullableUuidMorphs()`
 
 The method is similar to the [uuidMorphs](#column-method-uuidMorphs) method; however, the columns that are created will be "nullable":
 
     $table->nullableUuidMorphs('taggable');
 
 <a name="column-method-point"></a>
-#### `point()` {#collection-method}
+#### `point()`
 
 The `point` method creates an `POINT` equivalent column:
 
     $table->point('position');
 
 <a name="column-method-polygon"></a>
-#### `polygon()` {#collection-method}
+#### `polygon()`
 
 The `polygon` method creates an `POLYGON` equivalent column:
 
     $table->polygon('position');
 
 <a name="column-method-rememberToken"></a>
-#### `rememberToken()` {#collection-method}
+#### `rememberToken()`
 
-The `rememberToken` method creates a nullable, `VARCHAR(100)` equivalent column that is intended to store the current "remember me" [authentication token](/docs/{{version}}/authentication#remembering-users):
+The `rememberToken` method creates a nullable, `VARCHAR(100)` equivalent column that is intended to store the current "remember me" [authentication token](authentication.md#remembering-users):
 
     $table->rememberToken();
 
 <a name="column-method-set"></a>
-#### `set()` {#collection-method}
+#### `set()`
 
 The `set` method creates an `SET` equivalent column with the given list of valid values:
 
     $table->set('flavors', ['strawberry', 'vanilla']);
 
 <a name="column-method-smallIncrements"></a>
-#### `smallIncrements()` {#collection-method}
+#### `smallIncrements()`
 
 The `smallIncrements` method creates an auto-incrementing `UNSIGNED SMALLINT` equivalent column as a primary key:
 
     $table->smallIncrements('id');
 
 <a name="column-method-smallInteger"></a>
-#### `smallInteger()` {#collection-method}
+#### `smallInteger()`
 
 The `smallInteger` method creates an `SMALLINT` equivalent column:
 
     $table->smallInteger('votes');
 
 <a name="column-method-softDeletesTz"></a>
-#### `softDeletesTz()` {#collection-method}
+#### `softDeletesTz()`
 
 The `softDeletesTz` method adds a nullable `deleted_at` `TIMESTAMP` (with timezone) equivalent column with an optional precision (total digits). This column is intended to store the `deleted_at` timestamp needed for Eloquent's "soft delete" functionality:
 
     $table->softDeletesTz($column = 'deleted_at', $precision = 0);
 
 <a name="column-method-softDeletes"></a>
-#### `softDeletes()` {#collection-method}
+#### `softDeletes()`
 
 The `softDeletes` method adds a nullable `deleted_at` `TIMESTAMP` equivalent column with an optional precision (total digits). This column is intended to store the `deleted_at` timestamp needed for Eloquent's "soft delete" functionality:
 
     $table->softDeletes($column = 'deleted_at', $precision = 0);
 
 <a name="column-method-string"></a>
-#### `string()` {#collection-method}
+#### `string()`
 
 The `string` method creates an `VARCHAR` equivalent column of the given length:
 
     $table->string('name', 100);
 
 <a name="column-method-text"></a>
-#### `text()` {#collection-method}
+#### `text()`
 
 The `text` method creates an `TEXT` equivalent column:
 
     $table->text('description');
 
 <a name="column-method-timeTz"></a>
-#### `timeTz()` {#collection-method}
+#### `timeTz()`
 
 The `timeTz` method creates an `TIME` (with timezone) equivalent column with an optional precision (total digits):
 
     $table->timeTz('sunrise', $precision = 0);
 
 <a name="column-method-time"></a>
-#### `time()` {#collection-method}
+#### `time()`
 
 The `time` method creates an `TIME` equivalent column with an optional precision (total digits):
 
     $table->time('sunrise', $precision = 0);
 
 <a name="column-method-timestampTz"></a>
-#### `timestampTz()` {#collection-method}
+#### `timestampTz()`
 
 The `timestampTz` method creates an `TIMESTAMP` (with timezone) equivalent column with an optional precision (total digits):
 
     $table->timestampTz('added_at', $precision = 0);
 
 <a name="column-method-timestamp"></a>
-#### `timestamp()` {#collection-method}
+#### `timestamp()`
 
 The `timestamp` method creates an `TIMESTAMP` equivalent column with an optional precision (total digits):
 
     $table->timestamp('added_at', $precision = 0);
 
 <a name="column-method-timestampsTz"></a>
-#### `timestampsTz()` {#collection-method}
+#### `timestampsTz()`
 
 The `timestampsTz` method creates `created_at` and `updated_at` `TIMESTAMP` (with timezone) equivalent columns with an optional precision (total digits):
 
     $table->timestampsTz($precision = 0);
 
 <a name="column-method-timestamps"></a>
-#### `timestamps()` {#collection-method}
+#### `timestamps()`
 
 The `timestamps` method creates `created_at` and `updated_at` `TIMESTAMP` equivalent columns with an optional precision (total digits):
 
     $table->timestamps($precision = 0);
 
 <a name="column-method-tinyIncrements"></a>
-#### `tinyIncrements()` {#collection-method}
+#### `tinyIncrements()`
 
 The `tinyIncrements` method creates an auto-incrementing `UNSIGNED TINYINT` equivalent column as a primary key:
 
     $table->tinyIncrements('id');
 
 <a name="column-method-tinyInteger"></a>
-#### `tinyInteger()` {#collection-method}
+#### `tinyInteger()`
 
 The `tinyInteger` method creates an `TINYINT` equivalent column:
 
     $table->tinyInteger('votes');
 
 <a name="column-method-unsignedBigInteger"></a>
-#### `unsignedBigInteger()` {#collection-method}
+#### `unsignedBigInteger()`
 
 The `unsignedBigInteger` method creates an `UNSIGNED BIGINT` equivalent column:
 
     $table->unsignedBigInteger('votes');
 
 <a name="column-method-unsignedDecimal"></a>
-#### `unsignedDecimal()` {#collection-method}
+#### `unsignedDecimal()`
 
 The `unsignedDecimal` method creates an `UNSIGNED DECIMAL` equivalent column with an optinoal precision (total digits) and scale (decimal digits):
 
     $table->unsignedDecimal('amount', $precision = 8, $scale = 2);
 
 <a name="column-method-unsignedInteger"></a>
-#### `unsignedInteger()` {#collection-method}
+#### `unsignedInteger()`
 
 The `unsignedInteger` method creates an `UNSIGNED INTEGER` equivalent column:
 
     $table->unsignedInteger('votes');
 
 <a name="column-method-unsignedMediumInteger"></a>
-#### `unsignedMediumInteger()` {#collection-method}
+#### `unsignedMediumInteger()`
 
 The `unsignedMediumInteger` method creates an `UNSIGNED MEDIUMINT` equivalent column:
 
     $table->unsignedMediumInteger('votes');
 
 <a name="column-method-unsignedSmallInteger"></a>
-#### `unsignedSmallInteger()` {#collection-method}
+#### `unsignedSmallInteger()`
 
 The `unsignedSmallInteger` method creates an `UNSIGNED SMALLINT` equivalent column:
 
     $table->unsignedSmallInteger('votes');
 
 <a name="column-method-unsignedTinyInteger"></a>
-#### `unsignedTinyInteger()` {#collection-method}
+#### `unsignedTinyInteger()`
 
 The `unsignedTinyInteger` method creates an `UNSIGNED TINYINT` equivalent column:
 
     $table->unsignedTinyInteger('votes');
 
 <a name="column-method-uuidMorphs"></a>
-#### `uuidMorphs()` {#collection-method}
+#### `uuidMorphs()`
 
 The `uuidMorphs` method is a convenience method that adds a `{column}_id` `CHAR(36)` equivalent column and a `{column}_type` `VARCHAR` equivalent column.
 
-This method is intended to be used when defining the columns necessary for a polymorphic [Eloquent relationship](/docs/{{version}}/eloquent-relationships) that use UUID identifiers. In the following example, `taggable_id` and `taggable_type` columns would be created:
+This method is intended to be used when defining the columns necessary for a polymorphic [Eloquent relationship](eloquent-relationships.md) that use UUID identifiers. In the following example, `taggable_id` and `taggable_type` columns would be created:
 
     $table->uuidMorphs('taggable');
 
 <a name="column-method-uuid"></a>
-#### `uuid()` {#collection-method}
+#### `uuid()`
 
 The `uuid` method creates an `UUID` equivalent column:
 
     $table->uuid('id');
 
 <a name="column-method-year"></a>
-#### `year()` {#collection-method}
+#### `year()`
 
 The `year` method creates an `YEAR` equivalent column:
 
     $table->year('birth_year');
 
 <a name="column-modifiers"></a>
-### Column Modifiers
+### Модификаторы столбца
 
 In addition to the column types listed above, there are several column "modifiers" you may use when adding a column to a database table. For example, to make the column "nullable", you may use the `nullable` method:
 
@@ -816,7 +816,7 @@ Modifier  |  Description
 `->always()`  |  Defines the precedence of sequence values over input for an identity column (PostgreSQL).
 
 <a name="default-expressions"></a>
-#### Default Expressions
+#### Выражения для значений по умолчанию
 
 The `default` modifier accepts a value or an `Illuminate\Database\Query\Expression` instance. Using an `Expression` instance will prevent Laravel from wrapping the value in quotes and allow you to use database specific functions. One situation where this is particularly useful is when you need to assign default values to JSON columns:
 
@@ -830,7 +830,7 @@ The `default` modifier accepts a value or an `Illuminate\Database\Query\Expressi
     class CreateFlightsTable extends Migration
     {
         /**
-         * Run the migrations.
+         * Запустить миграцию.
          *
          * @return void
          */
@@ -847,17 +847,17 @@ The `default` modifier accepts a value or an `Illuminate\Database\Query\Expressi
 > {note} Support for default expressions depends on your database driver, database version, and the field type. Please refer to your database's documentation.
 
 <a name="modifying-columns"></a>
-### Modifying Columns
+### Изменение столбцов
 
 <a name="prerequisites"></a>
-#### Prerequisites
+#### Необходимые компоненты
 
 Before modifying a column, you must install the `doctrine/dbal` package using the Composer package manager. The Doctrine DBAL library is used to determine the current state of the column and to create the SQL queries needed to make the requested changes to your column:
 
     composer require doctrine/dbal
 
 <a name="updating-column-attributes"></a>
-#### Updating Column Attributes
+#### Обновление атрибутов столбца
 
 The `change` method allows you to modify the type and attributes of existing columns. For example, you may wish to increase the size of a `string` column. To see the `change` method in action, let's increase the size of the `name` column from 25 to 50. To accomplish this, we simply define the new state of the column and then call the `change` method:
 
@@ -874,7 +874,7 @@ We could also modify a column to be nullable:
 > {note} The following column types can be modified: `bigInteger`, `binary`, `boolean`, `date`, `dateTime`, `dateTimeTz`, `decimal`, `integer`, `json`, `longText`, `mediumText`, `smallInteger`, `string`, `text`, `time`, `unsignedBigInteger`, `unsignedInteger`, `unsignedSmallInteger`, and `uuid`.
 
 <a name="renaming-columns"></a>
-#### Renaming Columns
+#### Переименование столбцов
 
 To rename a column, you may use the `renameColumn` method provided by the schema builder blueprint. Before renaming a column, ensure that you have installed the `doctrine/dbal` library via the Composer package manager:
 
@@ -885,7 +885,7 @@ To rename a column, you may use the `renameColumn` method provided by the schema
 > {note} Renaming an `enum` column is not currently supported.
 
 <a name="dropping-columns"></a>
-### Dropping Columns
+### Удаление столбцов
 
 To drop a column, you may use the `dropColumn` method on the schema builder blueprint. If your application is utilizing an SQLite database, you must install the `doctrine/dbal` package via the Composer package manager before the `dropColumn` method may be used:
 
@@ -902,7 +902,7 @@ You may drop multiple columns from a table by passing an array of column names t
 > {note} Dropping or modifying multiple columns within a single migration while using a SQLite database is not supported.
 
 <a name="available-command-aliases"></a>
-#### Available Command Aliases
+#### Доступные псевдонимы команд
 
 Laravel provides several convenient methods related to dropping common types of columns. Each of these methods is described in the table below:
 
@@ -916,10 +916,10 @@ Command  |  Description
 `$table->dropTimestampsTz();` |  Alias of `dropTimestamps()` method.
 
 <a name="indexes"></a>
-## Indexes
+## Индексы
 
 <a name="creating-indexes"></a>
-### Creating Indexes
+### Создание индексов
 
 The Laravel schema builder supports several types of indexes. The following example creates a new `email` column and specifies that its values should be unique. To create the index, we can chain the `unique` method onto the column definition:
 
@@ -943,7 +943,7 @@ When creating an index, Laravel will automatically generate an index name based 
     $table->unique('email', 'unique_email');
 
 <a name="available-index-types"></a>
-#### Available Index Types
+#### Доступные типы индексов
 
 Laravel's schema builder blueprint class provides methods for creating each type of index supported by Laravel. Each index method accepts an optional second argument to specify the name of the index. If omitted, the name will be derived from the names of the table and column(s) used for the index, as well as the index type. Each of the available index methods are described in the table below:
 
@@ -956,14 +956,14 @@ Command  |  Description
 `$table->spatialIndex('location');`  |  Adds a spatial index (except SQLite).
 
 <a name="index-lengths-mysql-mariadb"></a>
-#### Index Lengths & MySQL / MariaDB
+#### Длина индекса и MySQL / MariaDB
 
 By default, Laravel uses the `utf8mb4` character set. If you are running a version of MySQL older than the 5.7.7 release or MariaDB older than the 10.2.2 release, you may need to manually configure the default string length generated by migrations in order for MySQL to create indexes for them. You may configure the default string length by calling the `Schema::defaultStringLength` method within the `boot` method of your `App\Providers\AppServiceProvider` class:
 
     use Illuminate\Support\Facades\Schema;
 
     /**
-     * Bootstrap any application services.
+     * Загрузка любых служб приложения.
      *
      * @return void
      */
@@ -975,14 +975,14 @@ By default, Laravel uses the `utf8mb4` character set. If you are running a versi
 Alternatively, you may enable the `innodb_large_prefix` option for your database. Refer to your database's documentation for instructions on how to properly enable this option.
 
 <a name="renaming-indexes"></a>
-### Renaming Indexes
+### Переименование индексов
 
 To rename an index, you may use the `renameIndex` method provided by the schema builder blueprint. This method accepts the current index name as its first argument and the desired name as its second argument:
 
     $table->renameIndex('from', 'to')
 
 <a name="dropping-indexes"></a>
-### Dropping Indexes
+### Удаление индексов
 
 To drop an index, you must specify the index's name. By default, Laravel automatically assigns an index name based on the table name, the name of the indexed column, and the index type. Here are some examples:
 
@@ -1000,7 +1000,7 @@ If you pass an array of columns into a method that drops indexes, the convention
     });
 
 <a name="foreign-key-constraints"></a>
-### Foreign Key Constraints
+### Ограничения внешнего ключа
 
 Laravel also provides support for creating foreign key constraints, which are used to force referential integrity at the database level. For example, let's define a `user_id` column on the `posts` table that references the `id` column on a `users` table:
 
@@ -1040,7 +1040,7 @@ Any additional [column modifiers](#column-modifiers) must be called before the `
           ->constrained();
 
 <a name="dropping-foreign-keys"></a>
-#### Dropping Foreign Keys
+#### Удаление внешних ключей
 
 To drop a foreign key, you may use the `dropForeign` method, passing the name of the foreign key constraint to be deleted as an argument. Foreign key constraints use the same naming convention as indexes. In other words, the foreign key constraint name is based on the name of the table and the columns in the constraint, followed by a "\_foreign" suffix:
 
@@ -1051,7 +1051,7 @@ Alternatively, you may pass an array containing the column name that holds the f
     $table->dropForeign(['user_id']);
 
 <a name="toggling-foreign-key-constraints"></a>
-#### Toggling Foreign Key Constraints
+#### Переключение ограничений внешнего ключа
 
 You may enable or disable foreign key constraints within your migrations by using the following methods:
 
@@ -1059,4 +1059,4 @@ You may enable or disable foreign key constraints within your migrations by usin
 
     Schema::disableForeignKeyConstraints();
 
-> {note} SQLite disables foreign key constraints by default. When using SQLite, make sure to [enable foreign key support](/docs/{{version}}/database#configuration) in your database configuration before attempting to create them in your migrations. In addition, SQLite only supports foreign keys upon creation of the table and [not when tables are altered](https://www.sqlite.org/omitted.html).
+> {note} SQLite disables foreign key constraints by default. When using SQLite, make sure to [enable foreign key support](database.md#configuration) in your database configuration before attempting to create them in your migrations. In addition, SQLite only supports foreign keys upon creation of the table and [not when tables are altered](https://www.sqlite.org/omitted.html).
