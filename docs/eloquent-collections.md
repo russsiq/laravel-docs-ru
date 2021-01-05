@@ -48,9 +48,9 @@
     #collection-method-list a {
         display: block;
     }
-</style>
+</style> -->
 
-<div id="collection-method-list" markdown="1"> -->
+<!-- <div id="collection-method-list" markdown="1"> -->
 
 - [contains](#method-contains)
 - [diff](#method-diff)
