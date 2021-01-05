@@ -286,6 +286,7 @@ scaffolding  |  каркасное программирование  |  Авто
 skeleton  |  каркас  |  
 scope  |  область, сфера, диапазон  |  То, что имеет ограничения
 seeding  |  наполнение  |  
+sequence  |  последовательность, серия  |  
 serialization  |  сериализация  |  
 service container  |  контейнер служб  |  
 service providers  |  поставщики служб  |  
