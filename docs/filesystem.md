@@ -1,30 +1,30 @@
-# File Storage
+# Файловое хранилище
 
-- [Introduction](#introduction)
-- [Configuration](#configuration)
-    - [The Local Driver](#the-local-driver)
-    - [The Public Disk](#the-public-disk)
-    - [Driver Prerequisites](#driver-prerequisites)
-    - [Caching](#caching)
-- [Obtaining Disk Instances](#obtaining-disk-instances)
-- [Retrieving Files](#retrieving-files)
-    - [Downloading Files](#downloading-files)
-    - [File URLs](#file-urls)
-    - [File Metadata](#file-metadata)
-- [Storing Files](#storing-files)
-    - [File Uploads](#file-uploads)
-    - [File Visibility](#file-visibility)
-- [Deleting Files](#deleting-files)
-- [Directories](#directories)
-- [Custom Filesystems](#custom-filesystems)
+- [Введение](#introduction)
+- [Конфигурирование](#configuration)
+    - [Локальный драйвер](#the-local-driver)
+    - [Публичный диск](#the-public-disk)
+    - [Предварительная подготовка драйверов](#driver-prerequisites)
+    - [Кэширование](#caching)
+- [Доступ к экземплярам дисков](#obtaining-disk-instances)
+- [Получение файлов](#retrieving-files)
+    - [Скачивание файлов](#downloading-files)
+    - [URL-адреса файлов](#file-urls)
+    - [Метаданные файла](#file-metadata)
+- [Хранение файлов](#storing-files)
+    - [Загрузка файлов](#file-uploads)
+    - [Видимость файла](#file-visibility)
+- [Удаление файлов](#deleting-files)
+- [Каталоги](#directories)
+- [Пользовательские файловые системы](#custom-filesystems)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
 Laravel provides a powerful filesystem abstraction thanks to the wonderful [Flysystem](https://github.com/thephpleague/flysystem) PHP package by Frank de Jonge. The Laravel Flysystem integration provides simple drivers for working with local filesystems, SFTP, and Amazon S3. Even better, it's amazingly simple to switch between these storage options between your local development machine and production server as the API remains the same for each system.
 
 <a name="configuration"></a>
-## Configuration
+## Конфигурирование
 
 Laravel's filesystem configuration file is located at `config/filesystems.php`. Within this file you may configure all of your filesystem "disks". Each disk represents a particular storage driver and storage location. Example configurations for each supported driver are included in the configuration file so you can modify the configuration to reflect your storage preferences and credentials.
 
@@ -33,7 +33,7 @@ The `local` driver interacts with files stored locally on the server running the
 > {tip} You may configure as many disks as you like and may even have multiple disks that use the same driver.
 
 <a name="the-local-driver"></a>
-### The Local Driver
+### Локальный драйвер
 
 When using the `local` driver, all file operations are relative to the `root` directory defined in your `filesystems` configuration file. By default, this value is set to the `storage/app` directory. Therefore, the following method would write to `storage/app/example.txt`:
 
@@ -42,7 +42,7 @@ When using the `local` driver, all file operations are relative to the `root` di
     Storage::disk('local')->put('example.txt', 'Contents');
 
 <a name="the-public-disk"></a>
-### The Public Disk
+### Публичный диск
 
 The `public` disk included in your application's `filesystems` configuration file is intended for files that are going to be publicly accessible. By default, the `public` disk uses the `local` driver and stores its files in `storage/app/public`.
 
@@ -64,10 +64,10 @@ You may configure additional symbolic links in your `filesystems` configuration 
     ],
 
 <a name="driver-prerequisites"></a>
-### Driver Prerequisites
+### Предварительная подготовка драйверов
 
 <a name="composer-packages"></a>
-#### Composer Packages
+#### Пакеты Composer
 
 Before using the S3 or SFTP drivers, you will need to install the appropriate package via the Composer package manager:
 
@@ -79,12 +79,12 @@ In addition, you may choose to install a cached adapter for increased performanc
 - CachedAdapter: `league/flysystem-cached-adapter ~1.0`
 
 <a name="s3-driver-configuration"></a>
-#### S3 Driver Configuration
+#### Конфигурирование драйвера S3
 
 The S3 driver configuration information is located in your `config/filesystems.php` configuration file. This file contains an example configuration array for an S3 driver. You are free to modify this array with your own S3 configuration and credentials. For convenience, these environment variables match the naming convention used by the AWS CLI.
 
 <a name="ftp-driver-configuration"></a>
-#### FTP Driver Configuration
+#### Конфигурирование драйвера FTP
 
 Laravel's Flysystem integrations works great with FTP; however, a sample configuration is not included with the framework's default `filesystems.php` configuration file. If you need to configure a FTP filesystem, you may use the configuration example below:
 
@@ -103,7 +103,7 @@ Laravel's Flysystem integrations works great with FTP; however, a sample configu
     ],
 
 <a name="sftp-driver-configuration"></a>
-#### SFTP Driver Configuration
+#### Конфигурирование драйвера SFTP
 
 Laravel's Flysystem integrations works great with SFTP; however, a sample configuration is not included with the framework's default `filesystems.php` configuration file. If you need to configure a SFTP filesystem, you may use the configuration example below:
 
@@ -124,7 +124,7 @@ Laravel's Flysystem integrations works great with SFTP; however, a sample config
     ],
 
 <a name="caching"></a>
-### Caching
+### Кэширование
 
 To enable caching for a given disk, you may add a `cache` directive to the disk's configuration options. The `cache` option should be an array of caching options containing the `disk` name, the `expire` time in seconds, and the cache `prefix`:
 
@@ -141,7 +141,7 @@ To enable caching for a given disk, you may add a `cache` directive to the disk'
     ],
 
 <a name="obtaining-disk-instances"></a>
-## Obtaining Disk Instances
+## Доступ к экземплярам дисков
 
 The `Storage` facade may be used to interact with any of your configured disks. For example, you may use the `put` method on the facade to store an avatar on the default disk. If you call methods on the `Storage` facade without first calling the `disk` method, the method will automatically be passed to the default disk:
 
@@ -154,7 +154,7 @@ If your application interacts with multiple disks, you may use the `disk` method
     Storage::disk('s3')->put('avatars/1', $content);
 
 <a name="retrieving-files"></a>
-## Retrieving Files
+## Получение файлов
 
 The `get` method may be used to retrieve the contents of a file. The raw string contents of the file will be returned by the method. Remember, all file paths should be specified relative to the disk's "root" location:
 
@@ -173,7 +173,7 @@ The `missing` method may be used to determine if a file is missing from the disk
     }
 
 <a name="downloading-files"></a>
-### Downloading Files
+### Скачивание файлов
 
 The `download` method may be used to generate a response that forces the user's browser to download the file at the given path. The `download` method accepts a filename as the second argument to the method, which will determine the filename that is seen by the user downloading the file. Finally, you may pass an array of HTTP headers as the third argument to the method:
 
@@ -182,7 +182,7 @@ The `download` method may be used to generate a response that forces the user's 
     return Storage::download('file.jpg', $name, $headers);
 
 <a name="file-urls"></a>
-### File URLs
+### URL-адреса файлов
 
 You may use the `url` method to get the URL for a given file. If you are using the `local` driver, this will typically just prepend `/storage` to the given path and return a relative URL to the file. If you are using the `s3` driver, the fully qualified remote URL will be returned:
 
@@ -195,7 +195,7 @@ When using the `local` driver, all files that should be publicly accessible shou
 > {note} When using the `local` driver, the return value of `url` is not URL encoded. For this reason, we recommend always storing your files using names that will create valid URLs.
 
 <a name="temporary-urls"></a>
-#### Temporary URLs
+#### Временные URL
 
 Using the `temporaryUrl` method, you may create temporary URLs to files stored using the `s3` driver. This method accepts a path and a `DateTime` instance specifying when the URL should expire:
 
@@ -217,7 +217,7 @@ If you need to specify additional [S3 request parameters](https://docs.aws.amazo
     );
 
 <a name="url-host-customization"></a>
-#### URL Host Customization
+#### Настройка хоста URL
 
 If you would like to pre-define the host for URLs generated using the `Storage` facade, you may add a `url` option to the disk's configuration array:
 
@@ -229,7 +229,7 @@ If you would like to pre-define the host for URLs generated using the `Storage` 
     ],
 
 <a name="file-metadata"></a>
-### File Metadata
+### Метаданные файла
 
 In addition to reading and writing files, Laravel can also provide information about the files themselves. For example, the `size` method may be used to get the size of a file in bytes:
 
@@ -242,7 +242,7 @@ The `lastModified` method returns the UNIX timestamp of the last time the file w
     $time = Storage::lastModified('file.jpg');
 
 <a name="file-paths"></a>
-#### File Paths
+#### Пути к файлам
 
 You may use the `path` method to get the path for a given file. If you are using the `local` driver, this will return the absolute path to the file. If you are using the `s3` driver, this method will return the relative path to the file in the S3 bucket:
 
@@ -251,7 +251,7 @@ You may use the `path` method to get the path for a given file. If you are using
     $path = Storage::path('file.jpg');
 
 <a name="storing-files"></a>
-## Storing Files
+## Хранение файлов
 
 The `put` method may be used to store file contents on a disk. You may also pass a PHP `resource` to the `put` method, which will use Flysystem's underlying stream support. Remember, all file paths should be specified relative to the "root" location configured for the disk:
 
@@ -262,7 +262,7 @@ The `put` method may be used to store file contents on a disk. You may also pass
     Storage::put('file.jpg', $resource);
 
 <a name="automatic-streaming"></a>
-#### Automatic Streaming
+#### Автоматическая потоковая передача
 
 Streaming files to storage offers significantly reduced memory usage. If you would like Laravel to automatically manage streaming a given file to your storage location, you may use the `putFile` or `putFileAs` method. This method accepts either an `Illuminate\Http\File` or `Illuminate\Http\UploadedFile` instance and will automatically stream the file to your desired location:
 
@@ -282,7 +282,7 @@ The `putFile` and `putFileAs` methods also accept an argument to specify the "vi
     Storage::putFile('photos', new File('/path/to/photo'), 'public');
 
 <a name="prepending-appending-to-files"></a>
-#### Prepending & Appending To Files
+#### Добавление информации к файлам
 
 The `prepend` and `append` methods allow you to write to the beginning or end of a file:
 
@@ -291,7 +291,7 @@ The `prepend` and `append` methods allow you to write to the beginning or end of
     Storage::append('file.log', 'Appended Text');
 
 <a name="copying-moving-files"></a>
-#### Copying & Moving Files
+#### Копирование и перемещение файлов
 
 The `copy` method may be used to copy an existing file to a new location on the disk, while the `move` method may be used to rename or move an existing file to a new location:
 
@@ -300,7 +300,7 @@ The `copy` method may be used to copy an existing file to a new location on the 
     Storage::move('old/file.jpg', 'new/file.jpg');
 
 <a name="file-uploads"></a>
-### File Uploads
+### Загрузка файлов
 
 In web applications, one of the most common use-cases for storing files is storing user uploaded files such as photos and documents. Laravel makes it very easy to store uploaded files using the `store` method on an uploaded file instance. Call the `store` method with the path at which you wish to store the uploaded file:
 
@@ -334,7 +334,7 @@ You may also call the `putFile` method on the `Storage` facade to perform the sa
     $path = Storage::putFile('avatars', $request->file('avatar'));
 
 <a name="specifying-a-file-name"></a>
-#### Specifying A File Name
+#### Указание имени файла
 
 If you do not want a filename to be automatically assigned to your stored file, you may use the `storeAs` method, which receives the path, the filename, and the (optional) disk as its arguments:
 
@@ -351,7 +351,7 @@ You may also use the `putFileAs` method on the `Storage` facade, which will perf
 > {note} Unprintable and invalid unicode characters will automatically be removed from file paths. Therefore, you may wish to sanitize your file paths before passing them to Laravel's file storage methods. File paths are normalized using the `League\Flysystem\Util::normalizePath` method.
 
 <a name="specifying-a-disk"></a>
-#### Specifying A Disk
+#### Указание диска
 
 By default, this uploaded file's `store` method will use your default disk. If you would like to specify another disk, pass the disk name as the second argument to the `store` method:
 
@@ -368,7 +368,7 @@ If you are using the `storeAs` method, you may pass the disk name as the third a
     );
 
 <a name="other-uploaded-file-information"></a>
-#### Other Uploaded File Information
+#### Другая информация о загружаемом файле
 
 If you would like to get original name of the uploaded file, you may do so using the `getClientOriginalName` method:
 
@@ -379,7 +379,7 @@ The `extension` method may be used to get the file extension of the uploaded fil
     $extension = $request->file('avatar')->extension();
 
 <a name="file-visibility"></a>
-### File Visibility
+### Видимость файла
 
 In Laravel's Flysystem integration, "visibility" is an abstraction of file permissions across multiple platforms. Files may either be declared `public` or `private`. When a file is declared `public`, you are indicating that the file should generally be accessible to others. For example, when using the S3 driver, you may retrieve URLs for `public` files.
 
@@ -406,7 +406,7 @@ When interacting with uploaded files, you may use the `storePublicly` and `store
     );
 
 <a name="local-files-and-visibility"></a>
-#### Local Files & Visibility
+#### Локальные файлы и видимость
 
 When using the `local` driver, `public` [visibility](#file-visibility) translates to `0755` permissions for directories and `0644` permissions for files. You can modify the permissions mappings in your application's `filesystems` configuration file:
 
@@ -426,7 +426,7 @@ When using the `local` driver, `public` [visibility](#file-visibility) translate
     ],
 
 <a name="deleting-files"></a>
-## Deleting Files
+## Удаление файлов
 
 The `delete` method accepts a single filename or an array of files to delete:
 
@@ -443,10 +443,10 @@ If necessary, you may specify the disk that the file should be deleted from:
     Storage::disk('s3')->delete('path/file.jpg');
 
 <a name="directories"></a>
-## Directories
+## Каталоги
 
 <a name="get-all-files-within-a-directory"></a>
-#### Get All Files Within A Directory
+#### Получение всех файлов каталога
 
 The `files` method returns an array of all of the files in a given directory. If you would like to retrieve a list of all files within a given directory including all subdirectories, you may use the `allFiles` method:
 
@@ -457,7 +457,7 @@ The `files` method returns an array of all of the files in a given directory. If
     $files = Storage::allFiles($directory);
 
 <a name="get-all-directories-within-a-directory"></a>
-#### Get All Directories Within A Directory
+#### Получение всех каталогов из каталога
 
 The `directories` method returns an array of all the directories within a given directory. Additionally, you may use the `allDirectories` method to get a list of all directories within a given directory and all of its subdirectories:
 
@@ -466,21 +466,21 @@ The `directories` method returns an array of all the directories within a given 
     $directories = Storage::allDirectories($directory);
 
 <a name="create-a-directory"></a>
-#### Create A Directory
+#### Создание каталога
 
 The `makeDirectory` method will create the given directory, including any needed subdirectories:
 
     Storage::makeDirectory($directory);
 
 <a name="delete-a-directory"></a>
-#### Delete A Directory
+#### Удаление каталога
 
 Finally, the `deleteDirectory` method may be used to remove a directory and all of its files:
 
     Storage::deleteDirectory($directory);
 
 <a name="custom-filesystems"></a>
-## Custom Filesystems
+## Пользовательские файловые системы
 
 Laravel's Flysystem integration provides support for several "drivers" out of the box; however, Flysystem is not limited to these and has adapters for many other storage systems. You can create a custom driver if you want to use one of these additional adapters in your Laravel application.
 
@@ -488,7 +488,7 @@ In order to define a custom filesystem you will need a Flysystem adapter. Let's 
 
     composer require spatie/flysystem-dropbox
 
-Next, you can register the driver within the `boot` method of one of your application's [service providers](/docs/{{version}}/providers). To accomplish this, you should use the `extend` method of the `Storage` facade:
+Next, you can register the driver within the `boot` method of one of your application's [service providers](providers.md). To accomplish this, you should use the `extend` method of the `Storage` facade:
 
     <?php
 
@@ -503,7 +503,7 @@ Next, you can register the driver within the `boot` method of one of your applic
     class AppServiceProvider extends ServiceProvider
     {
         /**
-         * Register any application services.
+         * Регистрация любых служб приложения.
          *
          * @return void
          */
@@ -513,7 +513,7 @@ Next, you can register the driver within the `boot` method of one of your applic
         }
 
         /**
-         * Bootstrap any application services.
+         * Загрузка любых служб приложения.
          *
          * @return void
          */
