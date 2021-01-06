@@ -45,7 +45,7 @@
     - [x] [Консоль Artisan](/docs/artisan.md)
     - [ ] [Широковещание](/docs/broadcasting.md)
     - [ ] [Кэш](/docs/cache.md)
-    - [ ] [Коллекции](/docs/collections.md)
+    - [x] [Коллекции](/docs/collections.md)
     - [x] [Компиляция исходников (Mix)](/docs/mix.md)
     - [x] [Контракты](/docs/contracts.md)
     - [ ] [События](/docs/events.md)
@@ -314,7 +314,7 @@ stub  |  заглушка  |
 <a name="dictionary-t">**T**</a>
 terms of service  |  условия использования  |  
 timestamp  |  временная метка  |  
-type-hinting  |  типизация (аргументов)  |  
+type-hinting  |  типизация (аргументов), объявление зависимостей  |  
 toggling  |  переключение  |  
 <a name="dictionary-v">**V**</a>
 valid  |  действительный  |  
