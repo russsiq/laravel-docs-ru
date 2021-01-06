@@ -50,7 +50,7 @@
     - [x] [Контракты](/docs/contracts.md)
     - [ ] [События](/docs/events.md)
     - [ ] [Файловое хранилище](/docs/filesystem.md)
-    - [ ] [Глобальные помощники](/docs/helpers.md)
+    - [x] [Глобальные помощники](/docs/helpers.md)
     - [x] [HTTP-клиент](/docs/http-client.md)
     - [x] [Локализация](/docs/localization.md)
     - [ ] [Почта](/docs/mail.md)
@@ -246,6 +246,7 @@ mutator  |  мутатор  |
 named error bag  |  массив именованных ошибок  |  
 <a name="dictionary-o">**O**</a>
 observers  |  наблюдатели  |  
+old input  |  прежний ввод  |  
 on-demand  |  по требованию, по запросу  |  
 optional  |  необязательный  |  
 options  |  параметры  |  
