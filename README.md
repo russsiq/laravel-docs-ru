@@ -51,7 +51,7 @@
     - [x] [Компиляция исходников (Mix)](/docs/mix.md)
     - [x] [Контракты](/docs/contracts.md)
     - [ ] [События](/docs/events.md)
-    - [ ] [Файловое хранилище](/docs/filesystem.md)
+    - [x] [Файловое хранилище](/docs/filesystem.md)
     - [x] [Глобальные помощники](/docs/helpers.md)
     - [x] [HTTP-клиент](/docs/http-client.md)
     - [x] [Локализация](/docs/localization.md)
@@ -319,7 +319,7 @@ timestamp  |  временная метка  |
 type-hinting  |  типизация (аргументов), объявление зависимостей  |  
 toggling  |  переключение  |  
 <a name="dictionary-v">**V**</a>
-valid  |  действительный  |  
+valid  |  действительный, допустимый  |  
 validation  |  валидация, проверка  |  
 validator  |  валидатор  |  
 vendor  |  поставщик  |  Директория `vendor` с библиотеками от сторонних поставщиков
