@@ -4,7 +4,7 @@
 - [Определение отношений](#defining-relationships)
     - [Один к одному](#one-to-one)
     - [Один ко многим](#one-to-many)
-    - [Один ко многим (обратное)](#one-to-many-inverse)
+    - [Определение обратной связи Один ко многим](#one-to-many-inverse)
     - [Один через отношение](#has-one-through)
     - [Многие через отношение](#has-many-through)
 - [Отношения многие ко многим](#many-to-many)
@@ -12,9 +12,9 @@
     - [Фильтрация запросов по столбцам сводной таблицы](#filtering-queries-via-intermediate-table-columns)
     - [Определение пользовательских моделей сводных таблиц](#defining-custom-intermediate-table-models)
 - [Полиморфные отношения](#polymorphic-relationships)
-    - [Один к одному](#one-to-one-polymorphic-relations)
-    - [Один ко многим](#one-to-many-polymorphic-relations)
-    - [Многие ко многим](#many-to-many-polymorphic-relations)
+    - [Один к одному (полиморфное)](#one-to-one-polymorphic-relations)
+    - [Один ко многим (полиморфное)](#one-to-many-polymorphic-relations)
+    - [Многие ко многим (полиморфное)](#many-to-many-polymorphic-relations)
     - [Именование полиморфных типов](#custom-polymorphic-types)
 - [Динамические отношения](#dynamic-relationships)
 - [Запросы отношений](#querying-relations)
@@ -96,7 +96,7 @@ Additionally, Eloquent assumes that the foreign key should have a value matching
     return $this->hasOne(Phone::class, 'foreign_key', 'local_key');
 
 <a name="one-to-one-defining-the-inverse-of-the-relationship"></a>
-#### Определение обратной связи
+#### Определение обратной связи Один к одному
 
 So, we can access the `Phone` model from our `User` model. Next, let's define a relationship on the `Phone` model that will let us access the user that owns the phone. We can define the inverse of a `hasOne` relationship using the `belongsTo` method:
 
@@ -186,7 +186,7 @@ Like the `hasOne` method, you may also override the foreign and local keys by pa
     return $this->hasMany(Comment::class, 'foreign_key', 'local_key');
 
 <a name="one-to-many-inverse"></a>
-### Один ко многим (обратное)
+#### Определение обратной связи Один ко многим
 
 Now that we can access all of a post's comments, let's define a relationship to allow a comment to access its parent post. To define the inverse of a `hasMany` relationship, define a relationship method on the child model which calls the `belongsTo` method:
 
@@ -240,7 +240,7 @@ If your parent model does not use `id` as its primary key, or you wish to find t
     }
 
 <a name="default-models"></a>
-#### Модели по умолчанию
+### Модели по умолчанию
 
 The `belongsTo`, `hasOne`, `hasOneThrough`, and `morphOne` relationships allow you to define a default model that will be returned if the given relationship is `null`. This pattern is often referred to as the [Null Object pattern](https://en.wikipedia.org/wiki/Null_Object_pattern) and can help remove conditional checks in your code. In the following example, the `user` relation will return an empty `App\Models\User` model if no user is attached to the `Post` model:
 
@@ -317,7 +317,7 @@ Now that we have examined the table structure for the relationship, let's define
 The first argument passed to the `hasOneThrough` method is the name of the final model we wish to access, while the second argument is the name of the intermediate model.
 
 <a name="has-one-through-key-conventions"></a>
-#### Соглашения по именованию ключей отношения
+#### Соглашения по именованию ключей отношения Один через отношение
 
 Typical Eloquent foreign key conventions will be used when performing the relationship's queries. If you would like to customize the keys of the relationship, you may pass them as the third and fourth arguments to the `hasOneThrough` method. The third argument is the name of the foreign key on the intermediate model. The fourth argument is the name of the foreign key on the final model. The fifth argument is the local key, while the sixth argument is the local key of the intermediate model:
 
@@ -382,7 +382,7 @@ The first argument passed to the `hasManyThrough` method is the name of the fina
 Though the `Deployment` model's table does not contain a `project_id` column, the `hasManyThrough` relation provides access to a project's deployments via `$project->deployments`. To retrieve these models, Eloquent inspects the `project_id` column on the intermediate `Environment` model's table. After finding the relevant environment IDs, they are used to query the `Deployment` model's table.
 
 <a name="has-many-through-key-conventions"></a>
-#### Соглашения по именованию ключей отношения
+#### Соглашения по именованию ключей отношения Многие через отношение
 
 Typical Eloquent foreign key conventions will be used when performing the relationship's queries. If you would like to customize the keys of the relationship, you may pass them as the third and fourth arguments to the `hasManyThrough` method. The third argument is the name of the foreign key on the intermediate model. The fourth argument is the name of the foreign key on the final model. The fifth argument is the local key, while the sixth argument is the local key of the intermediate model:
 
@@ -402,12 +402,12 @@ Typical Eloquent foreign key conventions will be used when performing the relati
     }
 
 <a name="many-to-many"></a>
-## Отношения многие ко многим
+## Отношения Многие ко многим
 
 Many-to-many relations are slightly more complicated than `hasOne` and `hasMany` relationships. An example of a many-to-many relationship is a user that has many roles and those roles are also shared by other users in the application. For example, a user may be assigned the role of "Author" and "Editor"; however, those roles may also be assigned to other users as well. So, a user has many roles and a role has many users.
 
 <a name="many-to-many-table-structure"></a>
-#### Структура таблицы
+#### Структура таблицы Многие ко многим
 
 To define this relationship, three database tables are needed: `users`, `roles`, and `role_user`. The `role_user` table is derived from the alphabetical order of the related model names and contains `user_id` and `role_id` columns. This table is used as an intermediate table linking the users and roles.
 
@@ -426,7 +426,7 @@ Remember, since a role can belong to many users, we cannot simply place a `user_
         role_id - integer
 
 <a name="many-to-many-model-structure"></a>
-#### Структура модели
+#### Структура модели Многие ко многим
 
 Many-to-many relationships are defined by writing a method that returns the result of the `belongsToMany` method. The `belongsToMany` method is provided by the `Illuminate\Database\Eloquent\Model` base class that is used by all of your application's Eloquent models. For example, let's define a `roles` method on our `User` model. The first argument passed to this method is the name of the related model class:
 
@@ -470,7 +470,7 @@ In addition to customizing the name of the intermediate table, you may also cust
     return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
 
 <a name="many-to-many-defining-the-inverse-of-the-relationship"></a>
-#### Определение обратной связи
+#### Определение обратной связи Многие ко многим
 
 To define the "inverse" of a many-to-many relationship, you should define a method on the related model which also returns the result of the `belongsToMany` method. To complete our user / role example, let's define the `users` method on the `Role` model:
 
@@ -611,7 +611,7 @@ A polymorphic relationship allows the child model to belong to more than one typ
 ### Один к одному (полиморфное)
 
 <a name="one-to-one-polymorphic-table-structure"></a>
-#### Структура таблицы
+#### Структура таблицы отношения Один к одному (полиморфное)
 
 A one-to-one polymorphic relation is similar to a typical one-to-one relation; however, the child model can belong to more than one type of model using a single association. For example, a blog `Post` and a `User` may share a polymorphic relation to an `Image` model. Using a one-to-one polymorphic relation allows you to have a single table of unique images that may be associated with posts and users. First, let's examine the table structure:
 
@@ -632,7 +632,7 @@ A one-to-one polymorphic relation is similar to a typical one-to-one relation; h
 Note the `imageable_id` and `imageable_type` columns on the `images` table. The `imageable_id` column will contain the ID value of the post or user, while the `imageable_type` column will contain the class name of the parent model. The `imageable_type` column is used by Eloquent to determine which "type" of parent model to return when accessing the `imageable` relation. In this case, the column would contain either `App\Models\Post` or `App\Models\User`.
 
 <a name="one-to-one-polymorphic-model-structure"></a>
-#### Структура модели
+#### Структура модели отношения Один к одному (полиморфное)
 
 Next, let's examine the model definitions needed to build this relationship:
 
@@ -676,7 +676,7 @@ Next, let's examine the model definitions needed to build this relationship:
     }
 
 <a name="one-to-one-polymorphic-retrieving-the-relationship"></a>
-#### Получение отношения
+#### Получение отношения Один к одному (полиморфное)
 
 Once your database table and models are defined, you may access the relationships via your models. For example, to retrieve the image for a post, we can access the `image` dynamic relationship property:
 
@@ -697,7 +697,7 @@ You may retrieve the parent of the polymorphic model by accessing the name of th
 The `imageable` relation on the `Image` model will return either a `Post` or `User` instance, depending on which type of model owns the image.
 
 <a name="morph-one-to-one-key-conventions"></a>
-#### Соглашения по именованию ключей отношения
+#### Соглашения по именованию ключей отношения Один к одному (полиморфное)
 
 If necessary, you may specify the name of the "id" and "type" columns utilized by your polymorphic child model. If you do so, ensure that you always pass the name of the relationship as the first argument to the `morphTo` method. Typically, this value should match the method name, so you may use PHP's `__FUNCTION__` constant:
 
@@ -713,7 +713,7 @@ If necessary, you may specify the name of the "id" and "type" columns utilized b
 ### Один ко многим (полиморфное)
 
 <a name="one-to-many-polymorphic-table-structure"></a>
-#### Структура таблицы
+#### Структура таблицы отношения Один ко многим (полиморфное)
 
 A one-to-many polymorphic relation is similar to a typical one-to-many relation; however, the child model can belong to more than one type of model using a single association. For example, imagine users of your application can "comment" on posts and videos. Using polymorphic relationships, you may use a single `comments` table to contain comments for both posts and videos. First, let's examine the table structure required to build this relationship:
 
@@ -734,7 +734,7 @@ A one-to-many polymorphic relation is similar to a typical one-to-many relation;
         commentable_type - string
 
 <a name="one-to-many-polymorphic-model-structure"></a>
-#### Структура модели
+#### Структура модели отношения Один ко многим (полиморфное)
 
 Next, let's examine the model definitions needed to build this relationship:
 
@@ -778,7 +778,7 @@ Next, let's examine the model definitions needed to build this relationship:
     }
 
 <a name="one-to-many-polymorphic-retrieving-the-relationship"></a>
-#### Получение отношения
+#### Получение отношения Один ко многим (полиморфное)
 
 Once your database table and models are defined, you may access the relationships via your model's dynamic relationship properties. For example, to access all of the comments for a post, we can use the `comments` dynamic property:
 
@@ -804,7 +804,7 @@ The `commentable` relation on the `Comment` model will return either a `Post` or
 ### Многие ко многим (полиморфное)
 
 <a name="many-to-many-polymorphic-table-structure"></a>
-#### Структура таблицы
+#### Структура таблицы отношения Многие ко многим (полиморфное)
 
 Many-to-many polymorphic relations are slightly more complicated than "morph one" and "morph many" relationships. For example, a `Post` model and `Video` model could share a polymorphic relation to a `Tag` model. Using a many-to-many polymorphic relation in this situation would allow your application to have a single table of unique tags that may be associated with posts or videos. First, let's examine the table structure required to build this relationship:
 
@@ -828,7 +828,7 @@ Many-to-many polymorphic relations are slightly more complicated than "morph one
 > {tip} Before diving into polymorphic many-to-many relationships, you may benefit from reading the documentation on typical [many-to-many relationships](#many-to-many).
 
 <a name="many-to-many-polymorphic-model-structure"></a>
-#### Структура модели
+#### Структура модели отношения Многие ко многим (полиморфное)
 
 Next, we're ready to define the relationships on the models. The `Post` and `Video` models will both contain a `tags` method that calls the `morphToMany` method provided by the base Eloquent model class.
 
@@ -852,7 +852,7 @@ The `morphToMany` method accepts the name of the related model as well as the "r
     }
 
 <a name="many-to-many-polymorphic-defining-the-inverse-of-the-relationship"></a>
-#### Определение обратной связи
+#### Определение обратной связи Многие ко многим (полиморфное)
 
 Next, on the `Tag` model, you should define a method for each of its possible parent models. So, in this example, we will define a `posts` method and a `videos` method. Both of these methods should return the result of the `morphedByMany` method.
 
@@ -884,7 +884,7 @@ The `morphedByMany` method accepts the name of the related model as well as the 
     }
 
 <a name="many-to-many-polymorphic-retrieving-the-relationship"></a>
-#### Получение отношения
+#### Получение отношения Многие ко многим (полиморфное)
 
 Once your database table and models are defined, you may access the relationships via your models. For example, to access all of the tags for a post, you may use the `tags` dynamic relationship property:
 
@@ -937,7 +937,7 @@ You may determine the morph alias of a given model at runtime using the model's 
 > {note} When adding a "morph map" to your existing application, every morphable `*_type` column value in your database that still contains a fully-qualified class will need to be converted to its "map" name.
 
 <a name="dynamic-relationships"></a>
-### Динамические отношения
+## Динамические отношения
 
 You may use the `resolveRelationUsing` method to define relations between Eloquent models at runtime. While not typically recommended for normal application development, this may occasionally be useful when developing Laravel packages.
 
