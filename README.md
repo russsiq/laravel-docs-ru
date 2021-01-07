@@ -76,7 +76,7 @@
     - [ ] [Redis](/docs/redis.md)
 - ## Eloquent ORM
     - [x] [Начало работы](/docs/eloquent.md)
-    - [ ] [Отношения](/docs/eloquent-relationships.md)
+    - [x] [Отношения](/docs/eloquent-relationships.md)
     - [x] [Коллекции](/docs/eloquent-collections.md)
     - [x] [Мутаторы и типизация](/docs/eloquent-mutators.md)
     - [x] [Ресурсы API](/docs/eloquent-resources.md)
@@ -177,7 +177,7 @@ configuration  |  конфигурация, конфигурирование  |
 constraints  |  ограничения, условия  |  
 contract  |  контракт  |  
 cookie  |  (файл) cookie  |  
-custom  |  пользовательский, желаемый, собственный  |  
+custom  |  ваш, пользовательский, желаемый, собственный  |  
 customization  |  настройка  |  
 customizing  |  корректировка, изменение  |  
 <a name="dictionary-d">**D**</a>
