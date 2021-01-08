@@ -272,7 +272,7 @@ production  |  эксплуатация  |
 query builder  |  построитель запросов  |  
 query constraints  |  ограничения запроса  |  
 queue  |  очередь  |  
-queueable  |  последовательный  |  
+queueable  |  поочередный, последовательный  |  
 <a name="dictionary-r">**R**</a>
 rate limiting  |  ограничение количества запросов  |  
 redirect  |  перенаправление  |  
