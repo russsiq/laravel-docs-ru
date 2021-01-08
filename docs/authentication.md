@@ -119,7 +119,7 @@ Passport можно выбрать, если вашему приложению �
 
 Во-первых, вы должны [установить стартовый комплект Laravel](starter-kits.md). Наши текущие стартовые комплекты, Laravel Breeze и Laravel Jetstream, предлагают красиво оформленные отправные точки для интеграции аутентификации в ваше новое приложение Laravel.
 
-Laravel Breeze – это минимальная и простая реализация всех возможностей аутентификации Laravel, включая вход в систему, регистрацию, сброс пароля, подтверждение электронной почты и подтверждение пароля. Слой представления Laravel Breeze состоит из простых [шаблонов Blade](blade.md), стилизованных с помощью [Tailwind CSS](htts://tailwindcss.com).
+Laravel Breeze – это минимальная и простая реализация всех возможностей аутентификации Laravel, включая вход в систему, регистрацию, сброс пароля, подтверждение электронной почты и подтверждение пароля. Слой представления Laravel Breeze состоит из простых [шаблонов Blade](blade.md), стилизованных с помощью [Tailwind CSS](https://tailwindcss.com).
 
 [Laravel Jetstream](https://jetstream.laravel.com) – это более надежный стартовый комплект для приложений, который включает поддержку построения вашего приложения с помощью [Livewire](https://laravel-livewire.com) или [Inertia.js и Vue](https://inertiajs.com). Кроме того, Jetstream предлагает дополнительную поддержку двухфакторной аутентификации, команд, управления профилями, управления сеансами браузера, поддержки API через [Laravel Sanctum](sanctum.md), удаления аккаунтов и т. д.
 
@@ -279,33 +279,6 @@ Laravel Breeze – это минимальная и простая реализ�
     if (Auth::guard('admin')->attempt($credentials)) {
         // ...
     }
-
-<!-- <a name="manually-logging-out"></a>
-#### Logging Out
-
-To log users out of your application, you may use the `logout` method on the `Auth` facade. This will clear the authentication information in the user's session so that subsequent requests to the application are not authenticated.
-
-In addition to calling the `logout` method, it is recommended that you invalidate the user's session and regenerate their [CSRF token](/docs/{{version}}/csrf). After logging the user out, you would typically redirect the user to the root of your application:
-
-    use Illuminate\Http\Request;
-    use Illuminate\Support\Facades\Auth;
-
-    /**
-     * Log the user out of the application.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function logout(Request $request)
-    {
-        Auth::logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return redirect('/');
-    } -->
 
 <a name="remembering-users"></a>
 ### Запоминание пользователей

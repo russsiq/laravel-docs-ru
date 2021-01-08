@@ -388,7 +388,7 @@ Eloquent определяет имя внешнего ключа по умолч
 
     class Project extends Model
     {
-        public function posts()
+        public function deployments()
         {
             return $this->hasManyThrough(
                 Deployment::class,

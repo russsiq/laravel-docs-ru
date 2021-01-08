@@ -89,6 +89,7 @@
     - [x] [База данных](/docs/database-testing.md)
     - [x] [Имитация](/docs/mocking.md)
 - ## Пакеты
+    - [x] [Breeze](/docs/starter-kits.md#laravel-breeze)
     - [ ] [Cashier (Stripe)](/docs/billing.md)
     - [ ] [Cashier (Paddle)](/docs/cashier-paddle.md)
     - [ ] [Dusk](/docs/dusk.md)

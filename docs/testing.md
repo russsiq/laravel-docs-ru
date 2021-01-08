@@ -56,7 +56,7 @@ Laravel построен с учетом требований тестирова
          *
          * @return void
          */
-        public function testBasicTest()
+        public function test_basic_test()
         {
             $this->assertTrue(true);
         }

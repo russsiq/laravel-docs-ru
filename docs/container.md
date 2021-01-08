@@ -167,7 +167,7 @@
 
 Очень мощная функция контейнера служб – это его способность связывать интерфейс с конкретной реализацией. Например, предположим, что у нас есть интерфейс `EventPusher` и реализация `RedisEventPusher`. После того, как мы написали нашу реализацию `RedisEventPusher` этого интерфейса, мы можем зарегистрировать его в контейнере следующим образом:
 
-    use App\Contrats\EventPusher;
+    use App\Contracts\EventPusher;
     use App\Services\RedisEventPusher;
 
     $this->app->bind(EventPusher::class, RedisEventPusher::class);
