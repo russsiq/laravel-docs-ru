@@ -1,4 +1,4 @@
-# Тесты HTTP
+# Laravel 8.x — Тесты HTTP
 
 - [Введение](#introduction)
 - [Выполнение запросов](#making-requests)

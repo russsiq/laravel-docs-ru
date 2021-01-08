@@ -1,4 +1,4 @@
-# Стартовые комплекты
+# Laravel 8.x — Стартовые комплекты
 
 - [Введение](#introduction)
 - [Laravel Breeze](#laravel-breeze)

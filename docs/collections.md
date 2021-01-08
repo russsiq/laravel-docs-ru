@@ -1,4 +1,4 @@
-# Коллекции
+# Laravel 8.x — Коллекции
 
 - [Введение](#introduction)
     - [Создание коллекций](#creating-collections)

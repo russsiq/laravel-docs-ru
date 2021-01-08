@@ -1,4 +1,4 @@
-# Шаблонизатор Blade
+# Laravel 8.x — Шаблонизатор Blade
 
 - [Введение](#introduction)
 - [Отображение данных](#displaying-data)

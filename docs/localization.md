@@ -1,4 +1,4 @@
-# Локализация
+# Laravel 8.x — Локализация
 
 - [Введение](#introduction)
     - [Настройка локали](#configuring-the-locale)

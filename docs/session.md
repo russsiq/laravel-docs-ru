@@ -1,4 +1,4 @@
-# HTTP-сессия
+# Laravel 8.x — HTTP-сессия
 
 - [Введение](#introduction)
     - [Конфигурирование](#configuration)

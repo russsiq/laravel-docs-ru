@@ -1,4 +1,4 @@
-# Конфигурирование
+# Laravel 8.x — Конфигурирование
 
 - [Введение](#introduction)
 - [Конфигурация окружения](#environment-configuration)

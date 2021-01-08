@@ -1,4 +1,4 @@
-# Сброс пароля
+# Laravel 8.x — Сброс пароля
 
 - [Введение](#introduction)
     - [Подготовка модели](#model-preparation)

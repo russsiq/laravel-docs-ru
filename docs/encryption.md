@@ -1,4 +1,4 @@
-# Шифрование
+# Laravel 8.x — Шифрование
 
 - [Введение](#introduction)
 - [Конфигурирование](#configuration)

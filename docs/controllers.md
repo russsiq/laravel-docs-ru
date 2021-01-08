@@ -1,4 +1,4 @@
-# Контроллеры
+# Laravel 8.x — Контроллеры
 
 - [Введение](#introduction)
 - [Написание контроллеров](#writing-controllers)

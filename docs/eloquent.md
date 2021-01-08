@@ -1,4 +1,4 @@
-# Eloquent: начало работы
+# Laravel 8.x — Eloquent: начало работы
 
 - [Введение](#introduction)
 - [Генерация классов модели](#generating-model-classes)

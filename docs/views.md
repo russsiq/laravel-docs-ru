@@ -1,4 +1,4 @@
-# HTML-шаблоны
+# Laravel 8.x — HTML-шаблоны
 
 - [Введение](#introduction)
 - [Создание и отрисовка шаблонов](#creating-and-rendering-views)
