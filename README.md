@@ -62,7 +62,7 @@
     - [ ] [Планирование задач](/docs/scheduling.md)
 - ## Безопасность
     - [x] [Аутентификация](/docs/authentication.md)
-    - [ ] [Авторизация](/docs/authorization.md)
+    - [x] [Авторизация](/docs/authorization.md)
     - [x] [Подтверждение адреса электронной почты](/docs/verification.md)
     - [x] [Шифрование](/docs/encryption.md)
     - [x] [Хеширование](/docs/hashing.md)
