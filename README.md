@@ -160,6 +160,7 @@ authentication  |  аутентификация  |
 authorization  |  авторизация  |  
 auto-incrementing ID  |  автоинкрементный идентификатор  |  
 <a name="dictionary-b">**B**</a>
+backend  |  серверная часть  |  
 bag, message bag, attribute bag  |  коллекция, коллекция сообщений, коллекция атрибутов  |  
 binding  |  связывание  |  
 <a name="dictionary-c">**C**</a>
@@ -314,7 +315,7 @@ staging  |  промежуточная (стадия разработки)  |
 statement  |  оператор, выражение  |  
 starter kit  |  стартовый комплект  |  
 strict comparisons  |  жесткое сравнение  |  Противоположное `loose comparisons`
-stub  |  заглушка  |  
+stub  |  заглушка, заготовка  |  «Заготовка» может употребляться, например, относительно пустого класса с нереализованными методами, а «заглушка» – в контексте тестов.
 <a name="dictionary-t">**T**</a>
 terms of service  |  условия использования  |  
 timestamp  |  временная метка  |  
@@ -331,5 +332,6 @@ view  |  шаблон, представление  |
 <a name="dictionary-w">**W**</a>
 wildcard  |  метасимвол подстановки  |  
 work factor  |  коэффициент работы  |  
+queue worker  |  обработчик очереди  |  
 <a name="dictionary-y">**Y**</a>
 yield  |  дополнение, дополнять  |  
