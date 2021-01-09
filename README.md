@@ -274,7 +274,7 @@ query constraints  |  ограничения запроса  |
 queue  |  очередь  |  
 queueable  |  поочередный, последовательный  |  
 <a name="dictionary-r">**R**</a>
-rate limiting  |  ограничение частоты запросов  |  
+rate limiting  |  ограничение частоты  |  
 redirect  |  перенаправление  |  
 redirector  |  перенаправитель  |  
 refreshing  |  обновление  |  
