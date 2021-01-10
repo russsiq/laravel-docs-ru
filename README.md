@@ -50,7 +50,7 @@
     - [x] [Коллекции](/docs/collections.md)
     - [x] [Компиляция исходников (Mix)](/docs/mix.md)
     - [x] [Контракты](/docs/contracts.md)
-    - [ ] [События](/docs/events.md)
+    - [x] [События](/docs/events.md)
     - [x] [Файловое хранилище](/docs/filesystem.md)
     - [x] [Глобальные помощники](/docs/helpers.md)
     - [x] [HTTP-клиент](/docs/http-client.md)
