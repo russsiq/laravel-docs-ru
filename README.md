@@ -58,7 +58,7 @@
     - [ ] [Почта](/docs/mail.md)
     - [ ] [Уведомления](/docs/notifications.md)
     - [x] [Разработка пакетов](/docs/packages.md)
-    - [ ] [Очереди](/docs/queues.md)
+    - [x] [Очереди](/docs/queues.md)
     - [ ] [Планирование задач](/docs/scheduling.md)
 - ## Безопасность
     - [x] [Аутентификация](/docs/authentication.md)
@@ -153,8 +153,8 @@ asset pipeline  |  сценарий по сборки исходников  |
 asset  |  исходник  |  
 assets  |  исходники  |  Директория исходных файлов проекта для фронтенда
 atomic  |  атомарный, неделимый  |  
-attach a relation  |  назначить отношение  |  
-attaching  |  прикрепление  |  
+attach (a relation)  |  назначить (отношение)  |  
+attaching  |  прикрепление, присоединение  |  
 attempting  |  пытается  |  
 authentication  |  аутентификация  |  
 authorization  |  авторизация  |  
@@ -167,9 +167,12 @@ binding  |  связывание  |
 cache  |  кэш  |  
 casting  |  типизация  |  
 cast type  |  типизатор  |  
+chain  |  связать (например, методы)  |  
+chaining  |  цепочка (например, заданий)  |  
 chunking  |  разбиение  |  
 clauses  |  выражения  |  
 сlosure  |  замыкание  |  
+command bus  |  командная шина  |  
 command line interface (CLI)  |  интерфейс командной строки  |  
 commit  |  коммит, фиксация  |  
 composer  |  компоновщик, конструктор  |  Менеджер пакетов Composer не переводится
@@ -224,7 +227,7 @@ helpful  |  полезный  |
 helpers  |  помощники, глобальные вспомогательные функции  |  
 hydrated  |  присоединены (включены в результирующий набор)  |  Например, в коллекцию при использовании генераторов на основе курсоров
 <a name="dictionary-j">**J**</a>
-job  |  задание  |  
+job  |  задание, задача  |  
 job batching  |  пакетная обработка заданий  |  
 <a name="dictionary-l">**L**</a>
 layer over  |  обертка над  |  
@@ -275,6 +278,7 @@ query constraints  |  ограничения запроса  |
 queue  |  очередь  |  
 queueable  |  поочередный, последовательный  |  
 <a name="dictionary-r">**R**</a>
+rate limit  |  предел (лимит) частоты  |  
 rate limiting  |  ограничение частоты  |  
 redirect  |  перенаправление  |  
 redirector  |  перенаправитель  |  
