@@ -55,7 +55,7 @@
     - [x] [Глобальные помощники](/docs/helpers.md)
     - [x] [HTTP-клиент](/docs/http-client.md)
     - [x] [Локализация](/docs/localization.md)
-    - [ ] [Почта](/docs/mail.md)
+    - [ ] [Почтовые отправления](/docs/mail.md)
     - [ ] [Уведомления](/docs/notifications.md)
     - [x] [Разработка пакетов](/docs/packages.md)
     - [x] [Очереди](/docs/queues.md)
