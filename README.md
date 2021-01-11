@@ -42,7 +42,7 @@
     - [x] [HTTP-сессия](/docs/session.md)
     - [x] [Валидация](/docs/validation.md)
     - [x] [Обработка ошибок](/docs/errors.md)
-    - [ ] [Логирование](/docs/logging.md)
+    - [x] [Логирование](/docs/logging.md)
 - ## Углубленное изучение
     - [x] [Консоль Artisan](/docs/artisan.md)
     - [ ] [Широковещание](/docs/broadcasting.md)
