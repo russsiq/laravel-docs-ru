@@ -1576,7 +1576,7 @@ Eloquent предоставляет удобные методы для доба�
         ['message' => 'Another new comment.'],
     ]);
 
-<!-- You may also use the `findOrNew`, `firstOrNew`, `firstOrCreate`, and `updateOrCreate` methods to [create and update models on relationships](https://laravel.comeloquent.md#other-creation-methods). -->
+Вы также можете использовать методы `findOrNew`, `firstOrNew`, `firstOrCreate`, и `updateOrCreate` для [создания и обновления моделей отношений](eloquent.md#upserts).
 
 > {tip} Перед использованием метода `create` обязательно ознакомьтесь с документацией о [массовом присвоении](eloquent.md#mass-assignment) атрибутов.
 

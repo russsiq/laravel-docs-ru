@@ -46,7 +46,7 @@ Jetstream разработан с использованием [Tailwind CSS](ht
 
 _Автор: [Taylor Otwell](https://github.com/taylorotwell)_.
 
-[Фабрики модели](/docs/database-testing.md#creating-factories) Eloquent были полностью переписаны как фабрики на основе классов и улучшены для обеспечения "first-class" поддержки отношений. Например, `UserFactory`, включенный в Laravel, написан так:
+[Фабрики модели](/docs/database-testing.md#defining-model-factories) Eloquent были полностью переписаны как фабрики на основе классов и улучшены для обеспечения "first-class" поддержки отношений. Например, `UserFactory`, включенный в Laravel, написан так:
 
     <?php
 
@@ -120,7 +120,7 @@ _Автор: [Taylor Otwell](https://github.com/taylorotwell)_.
 
 Чтобы упростить процесс обновления, был выпущен пакет [laravel/legacy-factories](https://github.com/laravel/legacy-factories), обеспечивающий поддержку предыдущей итерации фабрик модели в Laravel 8.x.
 
-Переписанные фабрики Laravel содержат гораздо больше функций, которые, как мы думаем, вам понравятся. Чтобы узнать больше о фабриках моделей, обратитесь к [документации по тестированию баз данных](/docs/database-testing.md#creating-factories).
+Переписанные фабрики Laravel содержат гораздо больше функций, которые, как мы думаем, вам понравятся. Чтобы узнать больше о фабриках моделей, обратитесь к [документации по тестированию баз данных](/docs/database-testing.md#defining-model-factories).
 
 <a name="migration-squashing"></a>
 ### Сжатие миграций
@@ -158,7 +158,7 @@ _Авторы: by [Taylor Otwell](https://github.com/taylorotwell) и [Mohamed S
         new ProcessPodcast(Podcast::find(4)),
         new ProcessPodcast(Podcast::find(5)),
     ])->then(function (Batch $batch) {
-        // Все работы успешно завершены ...
+        // Все задания успешно завершены ...
     })->catch(function (Batch $batch, Throwable $e) {
         // Обнаружено первое проваленное задание из пакета ...
     })->finally(function (Batch $batch) {
