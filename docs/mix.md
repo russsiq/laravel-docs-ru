@@ -215,11 +215,11 @@ Mix предоставляет несколько функций, которые
 
 Теперь, с помощью одной строчки кода вы можете воспользоваться следующими преимуществами:
 
-/* <div class="content-list" markdown="1"> */
+<!-- <div class="content-list" markdown="1"> -->
 - синтаксис современного EcmaScript.
 - модули
 - минификация для эксплуатационного режима.
-/* </div> */
+<!-- </div> -->
 
 <a name="vue"></a>
 ### Vue
@@ -269,11 +269,11 @@ Mix автоматически установит плагины Babel, необ
 
 Метод `extract` принимает массив всех библиотек или модулей, которые вы хотите извлечь в файл `vendor.js`. Используя приведенный выше фрагмент в качестве примера, Mix сгенерирует следующие файлы:
 
-/* <div class="content-list" markdown="1"> */
+<!-- <div class="content-list" markdown="1"> -->
 - `public/js/manifest.js`: *The Webpack manifest runtime*
 - `public/js/vendor.js`: *Your vendor libraries*
 - `public/js/app.js`: *Your application code*
-/* </div> */
+<!-- </div> -->
 
 Чтобы избежать ошибок JavaScript, обязательно загружайте эти файлы в правильном порядке:
 
