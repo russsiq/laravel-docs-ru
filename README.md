@@ -90,19 +90,21 @@
     - [x] [Имитация](/docs/mocking.md)
 - ## Пакеты
     - [x] [Breeze](/docs/starter-kits.md#laravel-breeze)  
-        Легковесная реализация аутентификации Laravel для ознакомления с функционалом. Включает простые шаблоны Blade, стилизованные с помощью Tailwind CSS.
+        Легковесная реализация аутентификации Laravel для ознакомления с функционалом. Включает простые шаблоны Blade, стилизованные с помощью Tailwind CSS. Содержит маршруты для публикации.
     - [ ] [Cashier (Stripe)](/docs/billing.md)
     - [ ] [Cashier (Paddle)](/docs/cashier-paddle.md)
     - [ ] [Dusk](/docs/dusk.md)
     - [ ] [Envoy](/docs/envoy.md)
     - [x] [Fortify](/docs/fortify.md)  
-        Серверная (не содержит шаблоны) реализация аутентификации для Laravel. Используется в Laravel Jetstream.
+        Серверная реализация аутентификации Laravel. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
     - [ ] [Homestead](/docs/homestead.md)
     - [ ] [Horizon](/docs/horizon.md)
-    - [ ] [Jetstream](https://jetstream.laravel.com)
+    - [ ] [Jetstream](https://jetstream.laravel.com)  
+        Красиво оформленный каркас приложений. Включает в себя Fortify и Sanctum.
     - [ ] [Passport](/docs/passport.md)
     - [ ] [Sail](/docs/sail.md)
-    - [ ] [Sanctum](/docs/sanctum.md)
+    - [ ] [Sanctum](/docs/sanctum.md)  
+        Легкая система аутентификации для SPA (одностраничных приложений), мобильных приложений и простых API на основе токенов. Управление токенами API, аутентификация сессии. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
     - [ ] [Scout](/docs/scout.md)
     - [ ] [Socialite](/docs/socialite.md)
     - [ ] [Telescope](/docs/telescope.md)
