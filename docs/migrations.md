@@ -608,7 +608,7 @@
 <a name="column-method-rememberToken"></a>
 #### `rememberToken()`
 
-Метод `rememberToken` создает NULL-эквивалент столбца `VARCHAR(100)`, предназначенный для хранения текущего [токена аутентификации] (authentication.md#remembering-users):
+Метод `rememberToken` создает NULL-эквивалент столбца `VARCHAR(100)`, предназначенный для хранения текущего [токена аутентификации](authentication.md#remembering-users):
 
     $table->rememberToken();
 
