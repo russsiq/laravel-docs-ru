@@ -662,7 +662,7 @@ Blade также позволяет вам определять коммента
      */
     public function boot()
     {
-        Blade::component('package-alert', AlertComponent::class);
+        Blade::component('package-alert', Alert::class);
     }
 
 После того, как ваш компонент был зарегистрирован, он может быть отображен с использованием псевдонима тега:

@@ -1086,7 +1086,7 @@ Laravel также содержит глобального помощника `o
 <a name="rule-numeric"></a>
 #### numeric
 
-Проверяемое поле должно быть числовым.
+Проверяемое поле должно быть [числовым](https://www.php.net/manual/en/function.is-numeric.php).
 
 <a name="rule-password"></a>
 #### password

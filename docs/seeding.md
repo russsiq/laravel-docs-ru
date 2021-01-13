@@ -69,7 +69,7 @@ Laravel включает в себя возможность наполнить �
     public function run()
     {
         User::factory()
-                ->times(50)
+                ->count(50)
                 ->hasPosts(1)
                 ->create();
     }

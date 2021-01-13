@@ -336,20 +336,20 @@
 
     use App\Services\Transistor;
 
-    $api = $this->app->make(Transistor::class);
+    $transistor = $this->app->make(Transistor::class);
 
-Если некоторые зависимости вашего класса не могут быть разрешены через контейнер, вы можете ввести их, передав их как ассоциативный массив в метод `makeWith`. Например, мы можем вручную передать конструктору аргумент `$id`, требуемый службой `HelpSpot\API`:
+Если некоторые зависимости вашего класса не могут быть разрешены через контейнер, вы можете ввести их, передав их как ассоциативный массив в метод `makeWith`. Например, мы можем вручную передать конструктору аргумент `$id`, требуемый службой `Transistor`:
 
     use App\Services\Transistor;
 
-    $api = $this->app->makeWith(Transistor::class, ['id' => 1]);
+    $transistor = $this->app->makeWith(Transistor::class, ['id' => 1]);
 
 Если вы находитесь за пределами поставщика служб и не имеете доступа к переменной `$app`, вы можете использовать [фасад](facades.md) `App` для полуения экземпляра класса из контейнера:
 
     use App\Services\Transistor;
     use Illuminate\Support\Facades\App;
 
-    $api = App::make(Transistor::class);
+    $transistor = App::make(Transistor::class);
 
 Если вы хотите, чтобы сам экземпляр контейнера Laravel был внедрен в класс, извлекаемый контейнером, вы можете указать класс `Illuminate\Container\Container` в конструкторе вашего класса:
 
@@ -418,8 +418,8 @@
 
     use App\Services\Transistor;
 
-    $this->app->resolving(Transistor::class, function ($api, $app) {
-        // Вызывается, когда контейнер извлекает объекты типа `HelpSpot\API` ...
+    $this->app->resolving(Transistor::class, function ($transistor, $app) {
+        // Вызывается, когда контейнер извлекает объекты типа `Transistor` ...
     });
 
     $this->app->resolving(function ($object, $app) {

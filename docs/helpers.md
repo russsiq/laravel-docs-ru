@@ -2693,6 +2693,10 @@ If no matches are found, an empty collection will be returned.
 
     report($e);
 
+Функция `report` также принимает строку в качестве аргумента. Когда в функцию передается строка, она создает исключение с переданной строкой в ​​качестве сообщения:
+
+    report('Something went wrong.');
+
 <a name="method-request"></a>
 #### `request()`
 

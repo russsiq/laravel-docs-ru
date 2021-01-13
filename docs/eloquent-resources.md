@@ -24,7 +24,7 @@
 
 Чтобы сгенерировать класс ресурса, вы можете использовать команду `make:resource` Artisan. По умолчанию ресурсы будут помещены в каталог `app/Http/Resources` вашего приложения. Ресурсы расширяют класс `Illuminate\Http\Resources\Json\JsonResource`:
 
-    php artisan make:resource User
+    php artisan make:resource UserResource
 
 <a name="generating-resource-collections"></a>
 #### Генерация коллекций ресурса
@@ -42,7 +42,7 @@
 
 > {tip} Это лишь общий обзор ресурсов и коллекций ресурса. Мы настоятельно рекомендуем вам прочитать другие разделы этой документации, чтобы получить более глубокое понимание возможностей создания и настройки ресурса, предлагаемые вам.
 
-Прежде чем углубляться во все варианты, доступные вам при написании ресурсов, давайте сначала рассмотрим, как ресурсы используются в Laravel. Класс ресурсов представляет собой единую модель, которую необходимо преобразовать в структуру JSON. Например, вот простой класс ресурса `User`:
+Прежде чем углубляться во все варианты, доступные вам при написании ресурсов, давайте сначала рассмотрим, как ресурсы используются в Laravel. Класс ресурсов представляет собой единую модель, которую необходимо преобразовать в структуру JSON. Например, вот простой класс ресурса `UserResource`:
 
     <?php
 
@@ -50,7 +50,7 @@
 
     use Illuminate\Http\Resources\Json\JsonResource;
 
-    class User extends JsonResource
+    class UserResource extends JsonResource
     {
         /**
          * Преобразовать ресурс в массив.
@@ -74,7 +74,7 @@
 
 Обратите внимание, что мы можем получить доступ к свойствам модели непосредственно из переменной `$this`. Это связано с тем, что класс ресурсов автоматически проксирует свойства и методы к базовой модели для удобства доступа. Как только ресурс определен, он может быть возвращен из маршрута или контроллера. Ресурс принимает основной экземпляр модели через свой конструктор:
 
-    use App\Http\Resources\User as UserResource;
+    use App\Http\Resources\UserResource;
     use App\Models\User;
 
     Route::get('/user/{id}', function ($id) {
@@ -86,7 +86,7 @@
 
 Если вы возвращаете коллекцию ресурса или ответ с постраничной разбивкой, то вы должны использовать метод `collection` класса ресурса, при создании экземпляра ресурса в вашем маршруте или контроллере:
 
-    use App\Http\Resources\User as UserResource;
+    use App\Http\Resources\UserResource;
     use App\Models\User;
 
     Route::get('/users', function () {
@@ -144,7 +144,7 @@
 
     use Illuminate\Http\Resources\Json\JsonResource;
 
-    class User extends JsonResource
+    class UserResource extends JsonResource
     {
         /**
          * Указывает, следует ли сохранить ключи коллекции ресурса.
@@ -156,7 +156,7 @@
 
 Когда для свойства `$preserveKeys` установлено значение `true`, ключи коллекции будут сохранены, когда коллекция будет возвращена из маршрута или контроллера:
 
-    use App\Http\Resources\User as UserResource;
+    use App\Http\Resources\UserResource;
     use App\Models\User;
 
     Route::get('/users', function () {
@@ -166,9 +166,9 @@
 <a name="customizing-the-underlying-resource-class"></a>
 #### Настройка базового класса ресурсов
 
-Обычно свойство `$this->collection` коллекции ресурса автоматически заполняется результатом сопоставления каждого элемента коллекции с его единственным классом ресурсов. Предполагается, что единственным классом ресурса является имя класса коллекции без завершающей части `Collection`.
+Обычно свойство `$this->collection` коллекции ресурса автоматически заполняется результатом сопоставления каждого элемента коллекции с его единственным классом ресурсов. Предполагается, что единственным классом ресурса является имя класса коллекции без завершающей части `Collection`. Кроме того, в зависимости от личных предпочтений, класс ресурсов в единственном числе может иметь суффикс `Resource`, а может и не иметь его.
 
-Например, `UserCollection` попытается сопоставить переданные экземпляры `User` с ресурсом `User`. Чтобы изменить это поведение, вы можете переопределить свойство `$collects` вашей коллекции ресурса:
+Например, `UserCollection` попытается сопоставить переданные экземпляры пользователя с ресурсом `UserResource`. Чтобы изменить это поведение, вы можете переопределить свойство `$collects` вашей коллекции ресурса:
 
     <?php
 
@@ -199,7 +199,7 @@
 
     use Illuminate\Http\Resources\Json\JsonResource;
 
-    class User extends JsonResource
+    class UserResource extends JsonResource
     {
         /**
          * Преобразовать ресурс в массив.
@@ -221,7 +221,7 @@
 
 Как только ресурс определен, он может быть возвращен непосредственно из маршрута или контроллера:
 
-    use App\Http\Resources\User as UserResource;
+    use App\Http\Resources\UserResource;
     use App\Models\User;
 
     Route::get('/user/{id}', function ($id) {
@@ -231,9 +231,9 @@
 <a name="relationships"></a>
 #### Отношения
 
-Если вы хотите включить связанные ресурсы в свой ответ, вы можете добавить их в массив, возвращаемый методом вашего ресурса `toArray`. В этом примере мы будем использовать метод `collection` ресурса `Post`, чтобы добавить сообщения блога пользователя в ответ ресурса:
+Если вы хотите включить связанные ресурсы в свой ответ, вы можете добавить их в массив, возвращаемый методом вашего ресурса `toArray`. В этом примере мы будем использовать метод `collection` ресурса `PostResource`, чтобы добавить сообщения блога пользователя в ответ ресурса:
 
-    use App\Http\Resources\Post;
+    use App\Http\Resources\PostResource;
 
     /**
      * Преобразовать ресурс в массив.
@@ -247,7 +247,7 @@
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'posts' => Post::collection($this->posts),
+            'posts' => PostResource::collection($this->posts),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
@@ -260,7 +260,7 @@
 
 В то время как ресурсы преобразуют одну модель в массив, коллекции ресурса преобразуют коллекцию моделей в массив. Однако, необязательно определять класс коллекции ресурса для каждой из ваших моделей, поскольку все ресурсы предоставляют метод `collection` для генерации «специальной» (ad hoc) коллекции ресурсов на лету:
 
-    use App\Http\Resources\User as UserResource;
+    use App\Http\Resources\UserResource;
     use App\Models\User;
 
     Route::get('/users', function () {
@@ -331,7 +331,7 @@
 
     use Illuminate\Http\Resources\Json\JsonResource;
 
-    class User extends JsonResource
+    class UserResource extends JsonResource
     {
         /**
          * Обертка «данных», которую следует применить.
@@ -551,7 +551,7 @@
 
 Метод `whenLoaded` может использоваться для условной загрузки отношения. Чтобы избежать ненужной загрузки отношений, этот метод принимает имя отношения вместо самого отношения:
 
-    use App\Http\Resources\Post;
+    use App\Http\Resources\PostResource;
 
     /**
      * Преобразовать ресурс в массив.
@@ -565,7 +565,7 @@
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'posts' => Post::collection($this->whenLoaded('posts')),
+            'posts' => PostResource::collection($this->whenLoaded('posts')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
@@ -707,7 +707,7 @@
 
 Однако, иногда вам может потребоваться настроить исходящий HTTP-ответ перед его отправкой клиенту. Это можно сделать двумя способами. Во-первых, вы можете связать метод `response` с ресурсом. Этот метод вернет экземпляр `Illuminate\Http\JsonResponse`, что даст вам полный контроль над заголовками ответа:
 
-    use App\Http\Resources\User as UserResource;
+    use App\Http\Resources\UserResource;
     use App\Models\User;
 
     Route::get('/user', function () {
@@ -724,7 +724,7 @@
 
     use Illuminate\Http\Resources\Json\JsonResource;
 
-    class User extends JsonResource
+    class UserResource extends JsonResource
     {
         /**
          * Преобразовать ресурс в массив.
