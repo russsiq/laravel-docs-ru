@@ -89,12 +89,14 @@
     - [x] [База данных](/docs/database-testing.md)
     - [x] [Имитация](/docs/mocking.md)
 - ## Пакеты
-    - [x] [Breeze](/docs/starter-kits.md#laravel-breeze)
+    - [x] [Breeze](/docs/starter-kits.md#laravel-breeze)  
+        Легковесная реализация аутентификации Laravel для ознакомления с функционалом. Включает простые шаблоны Blade.
     - [ ] [Cashier (Stripe)](/docs/billing.md)
     - [ ] [Cashier (Paddle)](/docs/cashier-paddle.md)
     - [ ] [Dusk](/docs/dusk.md)
     - [ ] [Envoy](/docs/envoy.md)
-    - [ ] [Fortify](/docs/fortify.md)
+    - [x] [Fortify](/docs/fortify.md)  
+        Серверная (не содержит шаблоны) реализация аутентификации для Laravel. Используется в Laravel Jetstream.
     - [ ] [Homestead](/docs/homestead.md)
     - [ ] [Horizon](/docs/horizon.md)
     - [ ] [Jetstream](https://jetstream.laravel.com)
