@@ -103,7 +103,7 @@
         Красиво оформленный каркас приложений. Включает в себя Fortify и Sanctum.
     - [ ] [Passport](./docs/passport.md)
     - [ ] [Sail](./docs/sail.md)
-    - [ ] [Sanctum](./docs/sanctum.md)  
+    - [x] [Sanctum](./docs/sanctum.md)  
         Легкая система аутентификации для SPA (одностраничных приложений), мобильных приложений и простых API на основе токенов. Управление токенами API, аутентификация сессии. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
     - [ ] [Scout](./docs/scout.md)
     - [ ] [Socialite](./docs/socialite.md)
