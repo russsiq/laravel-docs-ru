@@ -1705,6 +1705,26 @@
 
     // 10
 
+Метод `reduce` также передает ключи массива ассоциативных коллекций указанному замыканию:
+
+    $collection = collect([
+        'usd' => 1400,
+        'gbp' => 1200,
+        'eur' => 1000,
+    ]);
+
+    $ratio = [
+        'usd' => 1,
+        'gbp' => 1.37,
+        'eur' => 1.22,
+    ];
+
+    $collection->reduceWithKeys(function ($carry, $value, $key) use ($ratio) {
+        return $carry + ($value * $ratio[$key]);
+    });
+
+    // 4264
+
 <a name="method-reject"></a>
 #### `reject()`
 

@@ -174,6 +174,19 @@ Laravel содержит множество различных типов хра
 
     $value = $request->session()->pull('key', 'default');
 
+<a name="#incrementing-and-decrementing-session-values"></a>
+#### Увеличение и уменьшение отдельных значений в сессии
+
+Если данные вашей сессии содержат целое число, которое вы хотите увеличить или уменьшить, то вы можете использовать методы `increment` и `decrement`:
+
+    $request->session()->increment('count');
+
+    $request->session()->increment('count', $incrementBy = 2);
+
+    $request->session()->decrement('count');
+
+    $request->session()->decrement('count', $decrementBy = 2);
+
 <a name="flash-data"></a>
 ### Кратковременные данные
 
@@ -186,6 +199,10 @@ Laravel содержит множество различных типов хра
     $request->session()->reflash();
 
     $request->session()->keep(['username', 'email']);
+
+Чтобы сохранить ваши кратковременные данные только для текущего запроса, вы можете использовать метод `now`:
+
+    $request->session()->now('status', 'Task was successful!');
 
 <a name="deleting-data"></a>
 ### Удаление данных
@@ -208,6 +225,10 @@ Laravel содержит множество различных типов хра
 Laravel автоматически пересоздает идентификатор сессии во время аутентификации, если вы используете один из [стартовых комплектов приложений](starter-kits.md) Laravel или [Laravel Fortify](fortify.md); однако, если вам нужно вручную повторно сгенерировать идентификатор сессии, вы можете использовать метод `regenerate`:
 
     $request->session()->regenerate();
+
+Если вам нужно повторно сгенерировать идентификатор сессии и удалить одним оператором все данные из нее, то вы можете использовать метод `invalidate`:
+
+    $request->session()->invalidate();
 
 <a name="session-blocking"></a>
 ## Блокировка сессии

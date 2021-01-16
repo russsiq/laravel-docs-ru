@@ -660,7 +660,7 @@ Eloquent предоставляет методы `isDirty`, `isClean` и `wasCha
      *
      * @var array
      */
-    $fillable = [
+    protected $fillable = [
         'options->enabled',
     ];
 
