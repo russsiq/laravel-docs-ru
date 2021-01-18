@@ -57,4 +57,4 @@ npm run dev
 
 Jetstream предоставляет красиво оформленный каркас приложений для Laravel и включает в себя вход в систему, регистрацию, подтверждение адреса электронной почты, двухфакторную аутентификацию, управление сессиями, поддержку API через Laravel Sanctum, и дополнительно, управление командой. Jetstream разработан с использованием [Tailwind CSS](https://tailwindcss.com) и предлагает на ваш выбор [Livewire](https://laravel-livewire.com) или [Inertia.js](https://inertiajs.com), управляемые каркасным программированием фронтенда на основе заготовок.
 
-Полную описание по установке Laravel Jetstream можно найти в [официальной документации Jetstream](https://jetstream.laravel.com/2.x/introduction.html).
+Полное описание по установке Laravel Jetstream можно найти в [официальной документации Jetstream](https://jetstream.laravel.com/2.x/introduction.html).
