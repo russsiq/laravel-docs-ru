@@ -46,7 +46,7 @@
 - ## Углубленное изучение
     - [x] [Консоль Artisan](./docs/artisan.md)
     - [ ] [Широковещание](./docs/broadcasting.md)
-    - [ ] [Кэш](./docs/cache.md)
+    - [ ] [Кеш](./docs/cache.md)
     - [x] [Коллекции](./docs/collections.md)
     - [x] [Компиляция исходников (Mix)](./docs/mix.md)
     - [x] [Контракты](./docs/contracts.md)
@@ -168,7 +168,7 @@ backend  |  серверная часть  |
 bag, message bag, attribute bag  |  коллекция, коллекция сообщений, коллекция атрибутов  |  
 binding  |  связывание  |  
 <a name="dictionary-c">**C**</a>
-cache  |  кэш  |  
+cache  |  кеш  |  
 casting  |  типизация  |  
 cast type  |  типизатор  |  
 chain  |  связать (например, методы)  |  

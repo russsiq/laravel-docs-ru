@@ -260,6 +260,6 @@
 
     php artisan view:cache
 
-Вы можете использовать команду `view:clear` для очистки кэша шаблонов:
+Вы можете использовать команду `view:clear` для очистки кеша шаблонов:
 
     php artisan view:clear
