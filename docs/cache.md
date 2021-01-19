@@ -25,16 +25,16 @@
 <a name="introduction"></a>
 ## Введение
 
-Some of the data retrieval or processing tasks performed by your application could be CPU intensive or take several seconds to complete. When this is the case, it is common to cache the retrieved data for a time so it be can retrieved quickly on subsequent requests for the same data. The cached data is usually stored in a very fast data store such as [Memcached](https://memcached.org) or [Redis](https://redis.io).
+Некоторые задачи по извлечению или обработке данных, выполняемые вашим приложением, могут потребовать больших ресурсов ЦП или занять несколько секунд. В этом случае извлеченные данные обычно кэшируют на некоторое время, чтобы их можно было быстро извлечь при последующих запросах тех же данных. Кэшированные данные обычно хранятся в хранилище с быстрым доступом данных, например, [Memcached](https://memcached.org) или [Redis](https://redis.io).
 
-Thankfully, Laravel provides an expressive, unified API for various cache backends, allowing you to take advantage of their blazing fast data retrieval and speed up your web application.
+К счастью, Laravel предоставляет выразительный унифицированный API для различных серверов кеширования, позволяя вам воспользоваться их невероятно быстрым извлечением данных и ускорить работу вашего веб-приложения.
 
 <a name="configuration"></a>
 ## Конфигурирование
 
-Your application's cache configuration file is located at `config/cache.php`. In this file you may specify which cache driver you would like to be used by default throughout your application. Laravel supports popular caching backends like [Memcached](https://memcached.org), [Redis](https://redis.io), [DynamoDB](https://aws.amazon.com/dynamodb), and relational databases out of the box. In addition, a file based cache driver is available, while `array` and "null" cache drivers provide convenient cache backends for your automated tests.
+Файл конфигурации кеша вашего приложения находится в `config/cache.php`. В этом файле вы можете указать, какой драйвер кеша вы хотите использовать по умолчанию для всего приложении. Laravel из коробки поддерживает популярные механизмы кэширования, такие как [Memcached](https://memcached.org), [Redis](https://redis.io), [DynamoDB](https://aws.amazon.com/dynamodb) и реляционные базы данных. Кроме того, доступен драйвер кеширования на основе файлов, в то время как драйверы `array` и `null` предоставляют удобные механизмы кеширования для ваших автоматических тестов.
 
-The cache configuration file also contains various other options, which are documented within the file, so make sure to read over these options. By default, Laravel is configured to use the `file` cache driver, which stores the serialized, cached objects on the server's filesystem. For larger applications, it is recommended that you use a more robust driver such as Memcached or Redis. You may even configure multiple cache configurations for the same driver.
+Файл конфигурации кеша также содержит различные другие параметры, которые описаны в файле, поэтому обязательно изучите эти параметры. По умолчанию Laravel настроен на использование драйвера кеширования файлов, который хранит сериализованные кэшированные объекты в файловой системе сервера. Для более крупных приложений рекомендуется использовать более надежный драйвер, например Memcached или Redis. Вы даже можете настроить несколько конфигураций кеша для одного и того же драйвера.
 
 <a name="driver-prerequisites"></a>
 ### Предварительная подготовка драйверов
@@ -42,7 +42,7 @@ The cache configuration file also contains various other options, which are docu
 <a name="prerequisites-database"></a>
 #### Предварительная подготовка драйвера на основе базы данных
 
-When using the `database` cache driver, you will need to setup a table to contain the cache items. You'll find an example `Schema` declaration for the table below:
+При использовании драйвера кэша `database` вам нужно будет настроить таблицу для хранения элементов кеша. Вы найдете пример объявления `Schema` ниже:
 
     Schema::create('cache', function ($table) {
         $table->string('key')->unique();
@@ -50,12 +50,12 @@ When using the `database` cache driver, you will need to setup a table to contai
         $table->integer('expiration');
     });
 
-> {tip} You may also use the `php artisan cache:table` Artisan command to generate a migration with the proper schema.
+> {tip} Вы также можете использовать команду `php artisan cache:table` Artisan для генерации миграции с правильной схемой.
 
 <a name="memcached"></a>
 #### Предварительная подготовка драйвера на основе Memcached
 
-Using the Memcached driver requires the [Memcached PECL package](https://pecl.php.net/package/memcached) to be installed. You may list all of your Memcached servers in the `config/cache.php` configuration file. This file already contains a `memcached.servers` entry to get you started:
+Для использования драйвера Memcached требуется установить [пакет Memcached PECL](https://pecl.php.net/package/memcached). Вы можете перечислить все ваши серверы Memcached в файле конфигурации `config/cache.php`. Этот файл уже содержит запись `memcached.servers` для начала:
 
     'memcached' => [
         'servers' => [
@@ -67,7 +67,7 @@ Using the Memcached driver requires the [Memcached PECL package](https://pecl.ph
         ],
     ],
 
-If needed, you may set the `host` option to a UNIX socket path. If you do this, the `port` option should be set to `0`:
+При необходимости вы можете задать параметр `host` сокета UNIX. Если вы это сделаете, то параметр `port` должен быть задан как `0`:
 
     'memcached' => [
         [
@@ -80,9 +80,9 @@ If needed, you may set the `host` option to a UNIX socket path. If you do this, 
 <a name="redis"></a>
 #### Предварительная подготовка драйвера на основе Redis
 
-Before using a Redis cache with Laravel, you will need to either install the PhpRedis PHP extension via PECL or install the `predis/predis` package (~1.0) via Composer. [Laravel Sail](sail.md) already includes this extension. In addition, official Laravel deployment platforms such as [Laravel Forge](https://forge.laravel.com) and [Laravel Vapor](https://vapor.laravel.com) have the PhpRedis extension installed by default.
+Перед использованием драйвера кеша Redis, вам нужно будет либо установить расширение PHP PhpRedis через PECL, либо установить пакет `predis/predis` (~ 1.0) через Composer. [Laravel Sail](sail.md) уже включает это расширение. Кроме того, на официальных платформах развертывания Laravel, таких как [Laravel Forge](https://forge.laravel.com) и [Laravel Vapor](https://vapor.laravel.com), расширение PhpRedis установлено по умолчанию.
 
-For more information on configuring Redis, consult its [Laravel documentation page](redis.md#configuration).
+Для получения дополнительной информации о настройке Redis обратитесь к его [странице документации Laravel](redis.md#configuration).
 
 <a name="cache-usage"></a>
 ## Управление кешем приложения
@@ -90,7 +90,7 @@ For more information on configuring Redis, consult its [Laravel documentation pa
 <a name="obtaining-a-cache-instance"></a>
 ### Получение экземпляра кеша
 
-To obtain a cache store instance, you may use the `Cache` facade, which is what we will use throughout this documentation. The `Cache` facade provides convenient, terse access to the underlying implementations of the Laravel cache contracts:
+Чтобы получить экземпляр хранилища кеша, вы можете использовать фасад `Cache`, который мы будем использовать в этой документации. Фасад `Cache` обеспечивает удобный и краткий доступ к базовым реализациям контрактов кеширования Laravel:
 
     <?php
 
@@ -116,7 +116,7 @@ To obtain a cache store instance, you may use the `Cache` facade, which is what 
 <a name="accessing-multiple-cache-stores"></a>
 #### Доступ к различным кеш-хранилищам
 
-Using the `Cache` facade, you may access various cache stores via the `store` method. The key passed to the `store` method should correspond to one of the stores listed in the `stores` configuration array in your `cache` configuration file:
+Используя фасад `Cache`, вы можете получить доступ к различным хранилищам кеша с помощью метода `store`. Ключ, переданный методу `store`, должен соответствовать одному из хранилищ, перечисленных в массиве конфигурации `stores` в вашем конфигурационном файле `cache`:
 
     $value = Cache::store('file')->get('foo');
 
@@ -125,13 +125,13 @@ Using the `Cache` facade, you may access various cache stores via the `store` me
 <a name="retrieving-items-from-the-cache"></a>
 ### Получение элементов из кеша
 
-The `Cache` facade's `get` method is used to retrieve items from the cache. If the item does not exist in the cache, `null` will be returned. If you wish, you may pass a second argument to the `get` method specifying the default value you wish to be returned if the item doesn't exist:
+Метод `get` фасада `Cache` используется для извлечения элементов из кеша. Если элемент не существует в кеше, будет возвращено значение `null`. Если хотите, то вы можете передать второй аргумент методу `get`, указав значение по умолчанию, которое вы хотите вернуть, если элемент отсутствует:
 
     $value = Cache::get('key');
 
     $value = Cache::get('key', 'default');
 
-You may even pass a closure as the default value. The result of the closure will be returned if the specified item does not exist in the cache. Passing a closure allows you to defer the retrieval of default values from a database or other external service:
+Вы даже можете передать замыкание в качестве значения по умолчанию. Результат замыкания будет возвращен, если указанный элемент не существует в кеше. Передача замыкания позволяет отложить получение значений по умолчанию из базы данных или другой внешней службы:
 
     $value = Cache::get('key', function () {
         return DB::table(...)->get();
@@ -140,7 +140,7 @@ You may even pass a closure as the default value. The result of the closure will
 <a name="checking-for-item-existence"></a>
 #### Проверка наличия элемента
 
-The `has` method may be used to determine if an item exists in the cache. This method will also return `false` if the item exists but its value is `null`:
+Метод `has` может использоваться для определения того, существует ли элемент в кэше. Этот метод также вернет `false`, если элемент существует, но его значение равно `null`:
 
     if (Cache::has('key')) {
         //
@@ -149,7 +149,7 @@ The `has` method may be used to determine if an item exists in the cache. This m
 <a name="incrementing-decrementing-values"></a>
 #### Увеличение и уменьшение отдельных значений в кеше
 
-The `increment` and `decrement` methods may be used to adjust the value of integer items in the cache. Both of these methods accept an optional second argument indicating the amount by which to increment or decrement the item's value:
+Методы `increment` и `decrement` могут использоваться для изменения значений целочисленных элементов в кэше. Оба эти метода принимают необязательный второй аргумент, указывающий величину увеличения или уменьшения значения элемента:
 
     Cache::increment('key');
     Cache::increment('key', $amount);
@@ -159,15 +159,15 @@ The `increment` and `decrement` methods may be used to adjust the value of integ
 <a name="retrieve-store"></a>
 #### Выполнение замыкания с последующим сохранением и получением результата
 
-Sometimes you may wish to retrieve an item from the cache, but also store a default value if the requested item doesn't exist. For example, you may wish to retrieve all users from the cache or, if they don't exist, retrieve them from the database and add them to the cache. You may do this using the `Cache::remember` method:
+По желанию можно получить элемент из кеша, но также сохранить значение по умолчанию, если запрошенный элемент не существует. Например, вы можете получить всех пользователей из кеша или, если они не существуют, получить их из базы данных и добавить их в кеш. Вы можете сделать это с помощью метода `Cache::remember`:
 
     $value = Cache::remember('users', $seconds, function () {
         return DB::table('users')->get();
     });
 
-If the item does not exist in the cache, the closure passed to the `remember` method will be executed and its result will be placed in the cache.
+Если элемент не существует в кеше, то замыкание, переданное методу `remember`, будет выполнено, и его результат будет помещен в кеш.
 
-You may use the `rememberForever` method to retrieve an item from the cache or store it forever if it does not exist:
+Вы можете использовать метод `rememberForever`, чтобы получить элемент из кеша или сохранить его навсегда, если он не существует:
 
     $value = Cache::rememberForever('users', function () {
         return DB::table('users')->get();
@@ -176,90 +176,90 @@ You may use the `rememberForever` method to retrieve an item from the cache or s
 <a name="retrieve-delete"></a>
 #### Получение данных с последующим удалением элемента
 
-If you need to retrieve an item from the cache and then delete the item, you may use the `pull` method. Like the `get` method, `null` will be returned if the item does not exist in the cache:
+Если вам нужно получить элемент из кеша, а затем удалить этот элемент, вы можете использовать метод `pull`. Как и в методе `get`, если элемент не существует в кеше, то будет возвращен `null`:
 
     $value = Cache::pull('key');
 
 <a name="storing-items-in-the-cache"></a>
 ### Сохранение элементов в кеше
 
-You may use the `put` method on the `Cache` facade to store items in the cache:
+Вы можете использовать метод `put` фасада` Cache` для сохранения элементов в кеше:
 
     Cache::put('key', 'value', $seconds = 10);
 
-If the storage time is not passed to the `put` method, the item will be stored indefinitely:
+Если время хранения не передается методу `put`, то элемент будет храниться бесконечно:
 
     Cache::put('key', 'value');
 
-Instead of passing the number of seconds as an integer, you may also pass a `DateTime` instance representing the desired expiration time of the cached item:
+Вместо того, чтобы передавать количество секунд как целое число, вы также можете передать экземпляр `DateTime`, представляющий желаемое время хранения кэшированного элемента:
 
     Cache::put('key', 'value', now()->addMinutes(10));
 
 <a name="store-if-not-present"></a>
 #### Сохранение значений при условии их отсутствия
 
-The `add` method will only add the item to the cache if it does not already exist in the cache store. The method will return `true` if the item is actually added to the cache. Otherwise, the method will return `false`. The `add` method is an atomic operation:
+Метод `add` добавит элемент в кеш, только если он еще не существует в хранилище кеша. Метод вернет `true`, если элемент был действительно добавлен в кеш. В противном случае метод вернет `false`. Метод `add` – это [атомарная операция](https://ru.wikipedia.org/wiki/Атомарная_операция):
 
     Cache::add('key', 'value', $seconds);
 
 <a name="storing-items-forever"></a>
 #### Сохранение элементов на постоянной основе
 
-The `forever` method may be used to store an item in the cache permanently. Since these items will not expire, they must be manually removed from the cache using the `forget` method:
+Метод `forever` может использоваться для постоянного хранения элемента в кеше. Поскольку срок действия этих элементов не истекает, то их необходимо вручную удалить из кеша с помощью метода `forget`:
 
     Cache::forever('key', 'value');
 
-> {tip} If you are using the Memcached driver, items that are stored "forever" may be removed when the cache reaches its size limit.
+> {tip} Если вы используете драйвер `memcached`, то элементы, которые хранятся «на постоянной основе», могут быть удалены, когда кэш достигнет предельного размера.
 
 <a name="removing-items-from-the-cache"></a>
 ### Удаление элементов из кеша
 
-You may remove items from the cache using the `forget` method:
+Вы можете удалить элементы из кеша с помощью метода `forget`:
 
     Cache::forget('key');
 
-You may also remove items by providing a zero or negative number of expiration seconds:
+Вы также можете удалить элементы, указав нулевое или отрицательное количество секунд срока хранения:
 
     Cache::put('key', 'value', 0);
 
     Cache::put('key', 'value', -5);
 
-You may clear the entire cache using the `flush` method:
+Вы можете очистить весь кеш, используя метод `flush`:
 
     Cache::flush();
 
-> {note} Flushing the cache does not respect your configured cache "prefix" and will remove all entries from the cache. Consider this carefully when clearing a cache which is shared by other applications.
+> {note} Очистка кеша не учитывает ваш настроенный «префикс» кеша и удаляет все записи из кеша. Внимательно учитывайте это при очистке кеша, который используется другими приложениями.
 
 <a name="the-cache-helper"></a>
 ### Глобальный помощник кеша
 
-In addition to using the `Cache` facade, you may also use the global `cache` function to retrieve and store data via the cache. When the `cache` function is called with a single, string argument, it will return the value of the given key:
+Помимо использования фасада `Cache`, вы также можете использовать глобальную функцию `cache` для извлечения и хранения данных через кеш. Когда функция `cache` вызывается с одним строковым аргументом, она возвращает значение переданного ключа:
 
     $value = cache('key');
 
-If you provide an array of key / value pairs and an expiration time to the function, it will store values in the cache for the specified duration:
+Если вы передадите массив пар ключ / значение и срок хранения в функцию, то она будет хранить значения в кеше в течение указанного времени:
 
     cache(['key' => 'value'], $seconds);
 
     cache(['key' => 'value'], now()->addMinutes(10));
 
-When the `cache` function is called without any arguments, it returns an instance of the `Illuminate\Contracts\Cache\Factory` implementation, allowing you to call other caching methods:
+Когда функция `cache` вызывается без каких-либо аргументов, то она возвращает экземпляр реализации `Illuminate\Contracts\Cache\Factory`, позволяя вам вызывать другие методы кеширования:
 
     cache()->remember('users', $seconds, function () {
         return DB::table('users')->get();
     });
 
-> {tip} When testing call to the global `cache` function, you may use the `Cache::shouldReceive` method just as if you were [testing the facade](mocking.md#mocking-facades).
+> {tip} При тестировании вызова глобальной функции `cache` вы можете использовать метод `Cache::shouldReceive` так же, как если бы вы [тестировали фасад](mocking.md#mocking-facades).
 
 <a name="cache-tags"></a>
 ## Тегированный кеш
 
-> {note} Cache tags are not supported when using the `file`, `dynamodb`, or `database` cache drivers. Furthermore, when using multiple tags with caches that are stored "forever", performance will be best with a driver such as `memcached`, which automatically purges stale records.
+> {note} Теги кеширования не поддерживаются при использовании драйверов кеширования `file`, `dynamodb` или `database`. Более того, при использовании нескольких тегов с кешами, которые хранятся «на постоянной основе», то производительность будет лучше с драйвером, таким как `memcached`, который автоматически очищает устаревшие записи.
 
 <a name="storing-tagged-cache-items"></a>
-### Удаление элементов тегированного кеша
+### Сохранение элементов тегированного кеша
 
-Cache tags allow you to tag related items in the cache and then flush all cached values that have been assigned a given tag. You may access a tagged cache by passing in an ordered array of tag names. For example, let's access a tagged cache and `put` a value into the cache:
+Теги кэша позволяют помечать связанные элементы в кеше, а затем сбрасывать все кэшированные значения, которым был назначен данный тег. Вы можете получить доступ к тегированному кешу, передав упорядоченный массив имен тегов. Например, давайте обратимся к тегированному кешу и поместим значение в кеш:
 
     Cache::tags(['people', 'artists'])->put('John', $john, $seconds);
 
@@ -268,27 +268,27 @@ Cache tags allow you to tag related items in the cache and then flush all cached
 <a name="accessing-tagged-cache-items"></a>
 ### Доступ к элементам тегированного кеша
 
-To retrieve a tagged cache item, pass the same ordered list of tags to the `tags` method and then call the `get` method with the key you wish to retrieve:
+Чтобы получить элемент тегированного кеша, передайте тот же упорядоченный список тегов методу `tags`, а затем вызовите метод `get` с ключом, который вы хотите получить:
 
     $john = Cache::tags(['people', 'artists'])->get('John');
 
     $anne = Cache::tags(['people', 'authors'])->get('Anne');
 
 <a name="removing-tagged-cache-items"></a>
-### Сохранение элементов тегированного кеша
+### Удаление элементов тегированного кеша
 
-You may flush all items that are assigned a tag or list of tags. For example, this statement would remove all caches tagged with either `people`, `authors`, or both. So, both `Anne` and `John` would be removed from the cache:
+Вы можете удалить все элементы, которым назначен тег или список тегов. Например, эта операция удалит все кеши, помеченные либо `people`, либо `authors`, либо обоими. Таким образом, и `Anne`, и `John` будут удалены из кеша:
 
     Cache::tags(['people', 'authors'])->flush();
 
-In contrast, this statement would remove only cached values tagged with `authors`, so `Anne` would be removed, but not `John`:
+Напротив, эта операция удалит только кешированные значения, помеченные как `authors`, поэтому будет удалена `Anne`, но не `John`:
 
     Cache::tags('authors')->flush();
 
 <a name="atomic-locks"></a>
 ## Атомарные блокировки
 
-> {note} To utilize this feature, your application must be using the `memcached`, `redis`, `dynamodb`, `database`, `file`, or `array` cache driver as your application's default cache driver. In addition, all servers must be communicating with the same central cache server.
+> {note} Чтобы использовать этот функционал, ваше приложение должно использовать драйвер кэша `memcached`, `redis`, `dynamodb`, `database`, `file`, или `array` в качестве драйвера кэша по умолчанию для вашего приложения. Кроме того, все серверы должны взаимодействовать с одним и тем же центральным сервером кэширования.
 
 <a name="lock-driver-prerequisites"></a>
 ### Предварительная подготовка драйверов
@@ -296,7 +296,7 @@ In contrast, this statement would remove only cached values tagged with `authors
 <a name="atomic-locks-prerequisites-database"></a>
 #### Предварительная подготовка драйвера на основе базы данных для атомарных блокировок
 
-When using the `database` cache driver, you will need to setup a table to contain your application's cache locks. You'll find an example `Schema` declaration for the table below:
+При использовании драйвера кеша `database` вам необходимо настроить таблицу, в которой будут храниться блокировки кеша вашего приложения. Вы найдете пример объявления `Schema` ниже:
 
     Schema::create('cache_locks', function ($table) {
         $table->string('key')->primary();
@@ -307,7 +307,7 @@ When using the `database` cache driver, you will need to setup a table to contai
 <a name="managing-locks"></a>
 ### Управление блокировками
 
-Atomic locks allow for the manipulation of distributed locks without worrying about race conditions. For example, [Laravel Forge](https://forge.laravel.com) uses atomic locks to ensure that only one remote task is being executed on a server at a time. You may create and manage locks using the `Cache::lock` method:
+Атомарные блокировки позволяют управлять распределенными блокировками, не беспокоясь об условиях приоритетности. Например, [Laravel Forge](https://forge.laravel.com) использует атомарные блокировки, чтобы гарантировать, что на сервере одновременно выполняется только одна удаленная задача. Вы можете создавать и управлять блокировками, используя метод `Cache::lock`:
 
     use Illuminate\Support\Facades\Cache;
 
@@ -319,13 +319,13 @@ Atomic locks allow for the manipulation of distributed locks without worrying ab
         $lock->release();
     }
 
-The `get` method also accepts a closure. After the closure is executed, Laravel will automatically release the lock:
+Метод `get` также принимает замыкание. После выполнения замыкания Laravel автоматически снимет блокировку:
 
     Cache::lock('foo')->get(function () {
         // Блокировка установлена ​​на неопределенный срок и автоматически снимается ...
     });
 
-If the lock is not available at the moment you request it, you may instruct Laravel to wait for a specified number of seconds. If the lock can not be acquired within the specified time limit, an `Illuminate\Contracts\Cache\LockTimeoutException` will be thrown:
+Если блокировка недоступна в тот момент, когда вы ее запрашиваете, вы можете указать Laravel подождать определенное количество секунд. Если блокировка не может быть получена в течение указанного срока, то будет выброшено исключение `Illuminate\Contracts\Cache\LockTimeoutException`:
 
     use Illuminate\Contracts\Cache\LockTimeoutException;
 
@@ -341,7 +341,7 @@ If the lock is not available at the moment you request it, you may instruct Lara
         optional($lock)->release();
     }
 
-The example above may be simplified by passing a closure to the `block` method. When a closure is passed to this method, Laravel will attempt to acquire the lock for the specified number of seconds and will automatically release the lock once the closure has been executed:
+Приведенный выше пример можно упростить, передав замыкание методу `block`. Когда замыкание передается этому методу, Laravel будет пытаться получить блокировку на указанное количество секунд и автоматически снимет блокировку, как только замыкание будет выполнено:
 
     Cache::lock('foo', 10)->block(5, function () {
         // Блокировка получена после ожидания максимум 5 секунд ...
@@ -350,9 +350,9 @@ The example above may be simplified by passing a closure to the `block` method. 
 <a name="managing-locks-across-processes"></a>
 ### Управление блокировками между процессами
 
-Sometimes, you may wish to acquire a lock in one process and release it in another process. For example, you may acquire a lock during a web request and wish to release the lock at the end of a queued job that is triggered by that request. In this scenario, you should pass the lock's scoped "owner token" to the queued job so that the job can re-instantiate the lock using the given token.
+Иногда может потребоваться установить блокировку в одном процессе и снять ее в другом процессе. Например, вы можете получить блокировку во время веб-запроса и захотите снять блокировку в конце задания в очереди, которое запускается этим запросом. В этом сценарии вы должны передать «токен инициатора» с областью действия блокировки в задание в очереди, чтобы задание могло повторно создать экземпляр блокировки с использованием данного токена.
 
-In the example below, we will dispatch a queued job if a lock is successfully acquired. In addition, we will pass the lock's owner token to the queued job via the lock's `owner` method:
+В приведенном ниже примере мы отправим задание в очередь, если блокировка будет успешно получена. Кроме того, мы передадим токен инициатора блокировки заданию в очереди с помощью метода `owner` блокировки:
 
     $podcast = Podcast::find($id);
 
@@ -362,11 +362,11 @@ In the example below, we will dispatch a queued job if a lock is successfully ac
         ProcessPodcast::dispatch($podcast, $lock->owner());
     }
 
-Within our application's `ProcessPodcast` job, we can restore and release the lock using the owner token:
+В рамках задания `ProcessPodcast` нашего приложения мы можем восстановить и снять блокировку с помощью токена инициатора:
 
     Cache::restoreLock('processing', $this->owner)->release();
 
-If you would like to release a lock without respecting its current owner, you may use the `forceRelease` method:
+Если вы хотите принудительно снять блокировку без учета текущего инициатора, то вы можете использовать метод `forceRelease`:
 
     Cache::lock('processing')->forceRelease();
 
@@ -376,7 +376,7 @@ If you would like to release a lock without respecting its current owner, you ma
 <a name="writing-the-driver"></a>
 ### Написание драйвера кеша
 
-To create our custom cache driver, we first need to implement the `Illuminate\Contracts\Cache\Store` [contract](contracts.md). So, a MongoDB cache implementation might look something like this:
+Чтобы создать собственный драйвер кеша, сначала нужно реализовать [контракт](contracts.md) `Illuminate\Contracts\Cache\Store`. Итак, реализация кеша MongoDB может выглядеть примерно так:
 
     <?php
 
@@ -398,18 +398,18 @@ To create our custom cache driver, we first need to implement the `Illuminate\Co
         public function getPrefix() {}
     }
 
-We just need to implement each of these methods using a MongoDB connection. For an example of how to implement each of these methods, take a look at the `Illuminate\Cache\MemcachedStore` in the [Laravel framework source code](https://github.com/laravel/framework). Once our implementation is complete, we can finish our custom driver registration by calling the `Cache` facade's `extend` method:
+Нам просто нужно реализовать каждый из этих методов, используя соединение MongoDB. Для примера того, как реализовать каждый из этих методов, взгляните на `Illuminate\Cache\MemcachedStore` в [исходном коде фреймворка Laravel](https://github.com/laravel/framework). Как только наша реализация будет завершена, мы можем завершить регистрацию своего драйвера, вызвав метод `extend` фасада `Cache`:
 
     Cache::extend('mongo', function ($app) {
         return Cache::repository(new MongoStore);
     });
 
-> {tip} If you're wondering where to put your custom cache driver code, you could create an `Extensions` namespace within your `app` directory. However, keep in mind that Laravel does not have a rigid application structure and you are free to organize your application according to your preferences.
+> {tip} Если вам интересно, где разместить свой собственный код драйвера кеша, то вы можете создать пространство имен `Extensions` в своем каталоге `app`. Однако имейте в виду, что Laravel не имеет жесткой структуры приложения, и вы можете организовать свое приложение в соответствии со своими предпочтениями.
 
 <a name="registering-the-driver"></a>
 ### Регистрация драйвера кеша
 
-To register the custom cache driver with Laravel, we will use the `extend` method on the `Cache` facade. Since other service providers may attempt to read cached values within their `boot` method, we will register our custom driver within a `booting` callback. By using the `booting` callback, we can ensure that the custom driver is registered just before the `boot` method is called on our application's service providers but after the `register` method is called on all of the service providers. We will register our `booting` callback within the `register` method of our application's `App\Providers\AppServiceProvider` class:
+Чтобы зарегистрировать свой драйвер кеша в Laravel, мы будем использовать метод `extend` фасада `Cache`. Поскольку другие поставщики служб могут попытаться прочитать кэшированные значения в рамках своего метода `boot`, значит, мы зарегистрируем свой драйвер в замыкании `booting`. Используя замыкание `booting`, мы можем гарантировать, что наш драйвер зарегистрирован непосредственно перед тем, как метод `boot` вызывается поставщиками служб нашего приложения, но после того, как метод `register` вызывается для всех поставщиков служб. Мы зарегистрируем наше замыкание `booting` в методе `register` класса `App\Providers\AppServiceProvider` нашего приложения:
 
     <?php
 
@@ -429,10 +429,10 @@ To register the custom cache driver with Laravel, we will use the `extend` metho
         public function register()
         {
             $this->app->booting(function () {
-                 Cache::extend('mongo', function ($app) {
-                     return Cache::repository(new MongoStore);
-                 });
-             });
+                Cache::extend('mongo', function ($app) {
+                    return Cache::repository(new MongoStore);
+                });
+            });
         }
 
         /**
@@ -446,14 +446,14 @@ To register the custom cache driver with Laravel, we will use the `extend` metho
         }
     }
 
-The first argument passed to the `extend` method is the name of the driver. This will correspond to your `driver` option in the `config/cache.php` configuration file. The second argument is a closure that should return an `Illuminate\Cache\Repository` instance. The closure will be passed an `$app` instance, which is an instance of the [service container](container.md).
+Первым аргументом, передаваемым методу `extend`, является имя драйвера. Это будет соответствовать вашему параметру `driver` в файле конфигурации `config/cache.php`. Второй аргумент – это замыкание, которое должно возвращать экземпляр `Illuminate\Cache\Repository`. Замыкание будет передано экземпляру `$app`, который является экземпляром [контейнера служб](container.md).
 
-Once your extension is registered, update your `config/cache.php` configuration file's `driver` option to the name of your extension.
+После регистрации расширения обновите параметр `driver` в файле конфигурации `config/cache.php`, указав имя вашего расширения.
 
 <a name="events"></a>
 ## События
 
-To execute code on every cache operation, you may listen for the [events](events.md) fired by the cache. Typically, you should place these event listeners within your application's `App\Providers\EventServiceProvider` class:
+Чтобы выполнить код для каждой операции с кешем, вы можете прослушивать [события](events.md), запускаемые кешем. Как правило, вы должны поместить эти слушатели событий в класс `App\Providers\EventServiceProvider` приложения:
 
     /**
      * Карта слушателей событий приложения.

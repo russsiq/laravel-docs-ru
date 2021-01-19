@@ -46,7 +46,7 @@
 - ## Углубленное изучение
     - [x] [Консоль Artisan](./docs/artisan.md)
     - [ ] [Широковещание](./docs/broadcasting.md)
-    - [ ] [Кеш приложения](./docs/cache.md)
+    - [x] [Кеш приложения](./docs/cache.md)
     - [x] [Коллекции](./docs/collections.md)
     - [x] [Компиляция исходников (Mix)](./docs/mix.md)
     - [x] [Контракты](./docs/contracts.md)
