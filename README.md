@@ -19,7 +19,7 @@
     - [x] [Руководство по обновлению](./docs/upgrade.md)
     - [ ] [Рекомендации по участию](./docs/contributions.md)
 - ## Начало
-    - [ ] [Установка](./docs/installation.md)
+    - [x] [Установка](./docs/installation.md)
     - [x] [Конфигурирование](./docs/configuration.md)
     - [x] [Структура каталогов](./docs/structure.md)
     - [x] [Стартовые комплекты](./docs/starter-kits.md)
