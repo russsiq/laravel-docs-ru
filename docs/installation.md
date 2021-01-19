@@ -192,11 +192,11 @@ Laravel практически не требует дополнительной 
 Теперь, когда вы создали свой проект Laravel, вам может быть интересно, чему научиться дальше. Во-первых, мы настоятельно рекомендуем ознакомиться с тем, как работает Laravel, прочитав следующие разделы документации:
 
 <!-- <div class="content-list" markdown="1"> -->
-- [Request Lifecycle](lifecycle.md)
-- [Configuration](configuration.md)
-- [Directory Structure](structure.md)
-- [Service Container](container.md)
-- [Facades](facades.md)
+- [Жизненный цикл запроса](lifecycle.md)
+- [Конфигурирование](configuration.md)
+- [Структура каталогов](structure.md)
+- [Контейнер служб](container.md)
+- [Фасады](facades.md)
 <!-- </div> -->
 
 То, как вы хотите использовать Laravel, также будет определять следующие шаги на вашем пути. Существует множество способов использования Laravel, и мы рассмотрим два основных варианта использования фреймворка ниже.
