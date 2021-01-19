@@ -106,8 +106,7 @@
     - [x] [Sanctum](./docs/sanctum.md)  
         Легкая система аутентификации для SPA (одностраничных приложений), мобильных приложений и простых API на основе токенов. Управление токенами API, аутентификация сессии. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
     - [ ] [Scout](./docs/scout.md)
-    - [x] [Socialite](./docs/socialite.md)
-        Аутентификация через провайдеров OAuth: Facebook, Twitter, LinkedIn, Google, GitHub, GitLab, и Bitbucket.
+    - [ ] [Socialite](./docs/socialite.md)
     - [ ] [Telescope](./docs/telescope.md)
     - [ ] [Valet](./docs/valet.md)
 - [Документация API](https://laravel.com/api/8.x/)
