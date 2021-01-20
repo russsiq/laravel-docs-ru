@@ -19,7 +19,7 @@
     - [Управление блокировками между процессами](#managing-locks-across-processes)
 - [Добавление собственных драйверов кеша](#adding-custom-cache-drivers)
     - [Написание драйвера кеша](#writing-the-driver)
-    - [Регистрация драйвера кеша]( кеша#registering-the-driver)
+    - [Регистрация драйвера кеша](#registering-the-driver)
 - [События](#events)
 
 <a name="introduction"></a>
