@@ -66,7 +66,7 @@
 
     Collection::macro('toLocale', function ($locale) {
         return $this->map(function ($value) use ($locale) {
-            return Lang::get($value, $locale);
+            return Lang::get($value, [], $locale);
         });
     });
 

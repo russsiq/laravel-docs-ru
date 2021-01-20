@@ -930,7 +930,7 @@ Laravel также содержит глобального помощника `o
         'email' => [
             'required',
             Rule::exists('staff')->where(function ($query) {
-                $query->where('account_id', 1);
+                return $query->where('account_id', 1);
             }),
         ],
     ]);
