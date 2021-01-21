@@ -158,6 +158,13 @@
 <a name="events"></a>
 ### События
 
+<a name="the-event-service-provider-class"></a>
+#### Класс `EventServiceProvider`
+
+**Вероятность воздействия: низкая**
+
+Если ваш класс `App\Providers\EventServiceProvider` содержит метод `register`, то вы должны убедиться, что вы вызываете `parent::register` в начале этого метода. В противном случае события вашего приложения не будут зарегистрированы.
+
 <a name="the-dispatcher-contract"></a>
 #### Контракт `Dispatcher`
 
