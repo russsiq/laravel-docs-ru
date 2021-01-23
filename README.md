@@ -17,7 +17,7 @@
 - ## Пролог
     - [x] [Примечания к релизу](./docs/releases.md)
     - [x] [Руководство по обновлению](./docs/upgrade.md)
-    - [ ] [Рекомендации по участию](./docs/contributions.md)
+    - [x] [Рекомендации по участию](./docs/contributions.md)
 - ## Начало
     - [x] [Установка](./docs/installation.md)
     - [x] [Конфигурирование](./docs/configuration.md)
