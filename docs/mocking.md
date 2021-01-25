@@ -69,7 +69,7 @@ Laravel предоставляет полезные методы для имит
 
     // ...
 
-    $spy->shouldHaveReceived('process')
+    $spy->shouldHaveReceived('process');
 
 <a name="mocking-facades"></a>
 ## Имитация фасадов

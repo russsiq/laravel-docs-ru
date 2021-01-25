@@ -209,7 +209,7 @@ DELETE    | `/photos/{photo}`      | destroy      | photos.destroy
 
 Чтобы быстро сгенерировать ресурсный API-контроллер, который не включает методы `create` или `edit`, используйте переключатель `--api` при выполнении команды `make:controller`:
 
-    php artisan make:controller API/PhotoController --api
+    php artisan make:controller PhotoController --api
 
 <a name="restful-nested-resources"></a>
 ### Вложенные ресурсы
