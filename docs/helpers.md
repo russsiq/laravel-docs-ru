@@ -165,6 +165,7 @@ Laravel содержит множество глобальных «вспомо�
 - [padBoth](#method-fluent-str-padboth)
 - [padLeft](#method-fluent-str-padleft)
 - [padRight](#method-fluent-str-padright)
+- [pipe](#method-fluent-str-pipe)
 - [plural](#method-fluent-str-plural)
 - [prepend](#method-fluent-str-prepend)
 - [replace](#method-fluent-str-replace)
@@ -181,6 +182,7 @@ Laravel содержит множество глобальных «вспомо�
 - [startsWith](#method-fluent-str-starts-with)
 - [studly](#method-fluent-str-studly)
 - [substr](#method-fluent-str-substr)
+- [tap](#method-fluent-str-tap)
 - [title](#method-fluent-str-title)
 - [trim](#method-fluent-str-trim)
 - [ucfirst](#method-fluent-str-ucfirst)
@@ -1981,6 +1983,23 @@ If no matches are found, an empty collection will be returned.
 
     // 'James     '
 
+<a name="method-fluent-str-pipe">
+#### `pipe`
+
+Метод `pipe` позволяет вам преобразовать строку, передав ее текущее значение указанной функции обратного вызова:
+
+    use Illuminate\Support\Str;
+
+    $hash = Str::of('Laravel')->pipe('md5')->prepend('Checksum: ');
+
+    // 'Checksum: a5c95b86291ea299fcbe64458ed12702'
+
+    $closure = Str::of('foo')->pipe(function ($str) {
+        return 'bar';
+    });
+
+    // 'bar'
+
 <a name="method-fluent-str-plural"></a>
 #### `plural`
 
@@ -2200,6 +2219,22 @@ If no matches are found, an empty collection will be returned.
     $string = Str::of('Laravel Framework')->substr(8, 5);
 
     // Frame
+
+<a name="method-fluent-str-tap"></a>
+#### `tap`
+
+Метод `tap` передает строку заданному замыканию, позволяя вам взаимодействовать с ней, не затрагивая при этом саму строку. Исходная строка возвращается методом `tap` независимо от того, что возвращает замыкание:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('Laravel')
+        ->append(' Framework')
+        ->tap(function ($string) {
+            dump('String after append: ' . $string);
+        })
+        ->upper();
+
+    // LARAVEL FRAMEWORK
 
 <a name="method-fluent-str-title"></a>
 #### `title`
