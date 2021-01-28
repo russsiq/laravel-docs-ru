@@ -786,6 +786,21 @@ Blade автоматически обнаружит класс, связанны
 
     <x-alert alert-type="danger" />
 
+<a name="escaping-attribute-rendering"></a>
+#### Экранирование атрибутов от синтаксического анализа
+
+Поскольку некоторые фреймворки JavaScript, такие как Alpine.js, также используют атрибуты с префиксом двоеточия, вы можете использовать префикс с двойным двоеточием (`::`), чтобы сообщить Blade, что атрибут не является выражением PHP. Например, учитывая следующий компонент:
+
+    <x-button ::class="{ danger: isDeleting }">
+        Submit
+    </x-button>
+
+Blade отобразит следующий HTML-код:
+
+    <button :class="{ danger: isDeleting }">
+        Submit
+    </button>
+
 <a name="component-methods"></a>
 #### Методы компонента
 

@@ -1121,7 +1121,7 @@ where user_id = ? and (active = 1 or votes >= 100)
     // Получить комментарии, связанные с постами с заголовком, не содержащим `code%` ...
     $comments = Comment::whereDoesntHaveMorph(
         'commentable',
-        Post::class
+        Post::class,
         function (Builder $query) {
             $query->where('title', 'like', 'code%');
         }

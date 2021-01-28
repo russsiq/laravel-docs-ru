@@ -110,6 +110,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::padLeft](#method-str-padleft)
 - [Str::padRight](#method-str-padright)
 - [Str::plural](#method-str-plural)
+- [Str::pluralStudly](#method-str-plural-studly)
 - [Str::random](#method-str-random)
 - [Str::replaceArray](#method-str-replace-array)
 - [Str::replaceFirst](#method-str-replace-first)
@@ -121,6 +122,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::startsWith](#method-starts-with)
 - [Str::studly](#method-studly-case)
 - [Str::substr](#method-str-substr)
+- [Str::substrCount](#method-str-substrcount)
 - [Str::title](#method-title-case)
 - [Str::ucfirst](#method-str-ucfirst)
 - [Str::upper](#method-str-upper)
@@ -1360,9 +1362,36 @@ Laravel содержит множество глобальных «вспомо�
 
     // children
 
-    $plural = Str::plural('child', 1);
+    $singular = Str::plural('child', 1);
 
     // child
+
+<a name="method-str-plural-studly"></a>
+#### `Str::pluralStudly()`
+
+Метод `Str::pluralStudly` преобразует строку единственного числа формата `StudlyCase` в форму множественного числа. В настоящее время этот метод поддерживает только английский язык:
+
+    use Illuminate\Support\Str;
+
+    $plural = Str::pluralStudly('VerifiedHuman');
+
+    // VerifiedHumans
+
+    $plural = Str::pluralStudly('UserFeedback');
+
+    // UserFeedback
+
+Вы можете передать целое число в качестве второго аргумента метода для получения строки в единственном или множественном числе:
+
+    use Illuminate\Support\Str;
+
+    $plural = Str::pluralStudly('VerifiedHuman', 2);
+
+    // VerifiedHumans
+
+    $singular = Str::pluralStudly('VerifiedHuman', 1);
+
+    // VerifiedHuman
 
 <a name="method-str-random"></a>
 #### `Str::random()`
@@ -1492,6 +1521,17 @@ Laravel содержит множество глобальных «вспомо�
     $converted = Str::substr('The Laravel Framework', 4, 7);
 
     // Laravel
+
+<a name="method-str-substrcount"></a>
+#### `Str::substrCount()`
+
+Метод `Str::substrCount` возвращает число вхождений подстроки в строку:
+
+    use Illuminate\Support\Str;
+
+    $count = Str::substrCount('If you like ice cream, you will like snow cones.', 'like');
+
+    // 2
 
 <a name="method-title-case"></a>
 #### `Str::title()`
@@ -1983,7 +2023,7 @@ If no matches are found, an empty collection will be returned.
 
     // 'James     '
 
-<a name="method-fluent-str-pipe">
+<a name="method-fluent-str-pipe"></a>
 #### `pipe`
 
 Метод `pipe` позволяет вам преобразовать строку, передав ее текущее значение указанной функции обратного вызова:
