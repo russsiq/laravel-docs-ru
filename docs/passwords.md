@@ -18,7 +18,7 @@
 <a name="model-preparation"></a>
 ### Подготовка модели
 
-Перед использованием функционала сброса пароля Laravel модель вашего приложения `App\Models\User` должна использовать трейт `Illuminate\Notifications\Notifiable`. Обычно этот трейт уже содержится по умолчанию в модели `App\Models\User` при создании с новых приложений Laravel.
+Перед использованием функционала сброса пароля Laravel модель вашего приложения `App\Models\User` должна использовать трейт `Illuminate\Notifications\Notifiable`. Обычно этот трейт уже содержится по умолчанию в модели `App\Models\User` при создании новых приложений Laravel.
 
 Затем убедитесь, что ваша модель `App\Models\User` реализует контракт `Illuminate\Contracts\Auth\CanResetPassword`. Модель `App\Models\User` Laravel, уже реализует этот интерфейс и использует трейт `Illuminate\Auth\Passwords\CanResetPassword`, включающий методы, необходимые для реализации интерфейса.
 
