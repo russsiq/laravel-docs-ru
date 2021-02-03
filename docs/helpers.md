@@ -105,6 +105,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::length](#method-str-length)
 - [Str::limit](#method-str-limit)
 - [Str::lower](#method-str-lower)
+- [Str::markdown](#method-str-markdown)
 - [Str::orderedUuid](#method-str-ordered-uuid)
 - [Str::padBoth](#method-str-padboth)
 - [Str::padLeft](#method-str-padleft)
@@ -162,6 +163,7 @@ Laravel содержит множество глобальных «вспомо�
 - [limit](#method-fluent-str-limit)
 - [lower](#method-fluent-str-lower)
 - [ltrim](#method-fluent-str-ltrim)
+- [markdown](#method-fluent-str-markdown)
 - [match](#method-fluent-str-match)
 - [matchAll](#method-fluent-str-match-all)
 - [padBoth](#method-fluent-str-padboth)
@@ -1285,6 +1287,23 @@ Laravel содержит множество глобальных «вспомо�
 
     // laravel
 
+<a name="method-str-markdown"></a>
+#### `Str::markdown()`
+
+Метод `Str::markdown` конвертирует текст с разметкой [GitHub flavored Markdown](https://github.github.com/gfm/) в HTML:
+
+    use Illuminate\Support\Str;
+
+    $html = Str::markdown('# Laravel');
+
+    // <h1>Laravel</h1>
+
+    $html = Str::markdown('# Taylor <b>Otwell</b>', [
+        'html_input' => 'strip',
+    ]);
+
+    // <h1>Taylor Otwell</h1>
+
 <a name="method-str-ordered-uuid"></a>
 #### `Str::orderedUuid()`
 
@@ -1941,6 +1960,23 @@ Laravel содержит множество глобальных «вспомо�
     $string = Str::of('/Laravel/')->ltrim('/');
 
     // 'Laravel/'
+
+<a name="method-fluent-str-markdown"></a>
+#### `markdown`
+
+Метод `markdown` конвертирует текст с разметкой [GitHub flavored Markdown](https://github.github.com/gfm/) в HTML:
+
+    use Illuminate\Support\Str;
+
+    $html = Str::of('# Laravel')->markdown();
+
+    // <h1>Laravel</h1>
+
+    $html = Str::of('# Taylor <b>Otwell</b>')->markdown([
+        'html_input' => 'strip',
+    ]);
+
+    // <h1>Taylor Otwell</h1>
 
 <a name="method-fluent-str-match"></a>
 #### `match`

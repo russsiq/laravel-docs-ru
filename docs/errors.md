@@ -146,7 +146,7 @@
         /**
          * Отчитаться об исключении.
          *
-         * @return void
+         * @return bool|null
          */
         public function report()
         {
@@ -170,7 +170,7 @@
     /**
      * Сообщить об исключении.
      *
-     * @return bool|void
+     * @return bool|null
      */
     public function report()
     {
