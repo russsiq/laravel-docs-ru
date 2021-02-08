@@ -173,7 +173,7 @@ Laravel включает в себя широкий спектр удобных 
 ```html
 <!-- /resources/views/post/create.blade.php -->
 
-<h1>Создание записи блога</h1>
+<h1>Создание поста блога</h1>
 
 @if ($errors->any())
     <div class="alert alert-danger">
@@ -185,7 +185,7 @@ Laravel включает в себя широкий спектр удобных 
     </div>
 @endif
 
-<!-- Форма для создания записи блога -->
+<!-- Форма для создания поста блога -->
 ```
 
 <a name="quick-customizing-the-error-messages"></a>
