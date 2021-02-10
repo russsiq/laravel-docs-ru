@@ -245,7 +245,7 @@ logger  |  регистратор  |
 logging  |  логирование  |  
 loose comparisons  |  гибкое сравнение  |  Противоположное `strict comparisons`
 <a name="dictionary-m">**M**</a>
-macro  |  макрокоманда  |  
+macro (macros)  |  макрокоманда (макрокоманды)  |  
 macroable  |  макропрограммируемый  |  
 maintenance mode  |  режим обслуживания  |  
 making  |  инициализация  |  Например, метод фабрики `make` инициализирует, но не создает запись о модели в БД.
