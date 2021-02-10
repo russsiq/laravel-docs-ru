@@ -93,7 +93,7 @@
         Легковесная реализация аутентификации Laravel для ознакомления с функционалом. Включает простые шаблоны Blade, стилизованные с помощью Tailwind CSS. Содержит маршруты для публикации.
     - [ ] [Cashier (Stripe)](./docs/billing.md)
     - [ ] [Cashier (Paddle)](./docs/cashier-paddle.md)
-    - [x] [Dusk](./docs/dusk.md)
+    - [x] [Dusk](./docs/dusk.md)  
         Автоматизация поведения браузера и тестирование с использованием ChromeDriver.
     - [ ] [Envoy](./docs/envoy.md)
     - [x] [Fortify](./docs/fortify.md)  
