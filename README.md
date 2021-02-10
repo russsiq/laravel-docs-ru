@@ -129,7 +129,7 @@
 [F](#dictionary-f)
 [G](#dictionary-g)
 [H](#dictionary-h)
-I
+[I](#dictionary-i)
 [J](#dictionary-j)
 K
 [L](#dictionary-l)
@@ -193,6 +193,7 @@ customizing  |  корректировка, изменение  |
 <a name="dictionary-d">**D**</a>
 defining  |  определение  |  
 deployment  |  развертывание  |  
+desired capabilities  |  требуемые характеристики  |  
 detaching  |  отсоединение  |  
 directory  |  каталог, директория  |  
 dispatch  |  выполнение, исполнение, запуск, направление  |  Прежде всего «постановка в очередь»
@@ -231,6 +232,8 @@ hashing  |  хеширование  |
 helpful  |  полезный  |  
 helpers  |  помощники, глобальные вспомогательные функции  |  
 hydrated  |  присоединены (включены в результирующий набор)  |  Например, в коллекцию при использовании генераторов на основе курсоров
+<a name="dictionary-i">**I**</a>
+in-memory  |  хранимые в памяти  |  
 <a name="dictionary-j">**J**</a>
 job  |  задание, задача  |  
 job batching  |  пакетная обработка заданий  |  
