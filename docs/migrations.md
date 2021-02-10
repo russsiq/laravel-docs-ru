@@ -106,6 +106,10 @@ Laravel будет использовать имя миграции, чтобы 
 
     php artisan migrate
 
+Если вы хотите узнать, какие миграции уже выполнены, то вы можете использовать команду `migrate:status` Artisan:
+
+    php artisan migrate:status
+
 <a name="forcing-migrations-to-run-in-production"></a>
 #### Принудительный запуск миграции в рабочем окружении
 
