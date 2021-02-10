@@ -19,7 +19,7 @@
 
 <!-- <div class="content-list" markdown="1"> -->
 - [Требование PHP 7.3.0](#php-7.3.0-required)
-- [Пакетная поддержка таблицы невыполненных заданий](#failed-jobs-table-batch-support)
+- [Поддержка пакетной обработки и таблица невыполненных заданий](#failed-jobs-table-batch-support)
 - [Обновления режима обслуживания](#maintenance-mode-updates)
 - [Параметр `php artisan down --message`](#artisan-down-message)
 - [Метод `assertExactJson`](#assert-exact-json-method)
@@ -274,11 +274,11 @@
 Обратите внимание, что это изменение влияет только на код, использующий метод `withChain`. В то время как методы `allOnQueue()` и `allOnConnection()` по-прежнему доступны при использовании глобального помощника `dispatch()`.
 
 <a name="failed-jobs-table-batch-support"></a>
-#### Пакетная поддержка таблицы невыполненных заданий
+#### Поддержка пакетной обработки и таблица невыполненных заданий
 
 **Вероятность воздействия: необязательно**
 
-Если вы планируете использовать функционал [пакетной обработки заданий](/docs/queues.md#job-batching) Laravel 8.x, то таблица БД `failed_jobs` должна быть обновлена. Во-первых, в эту таблицу должен быть добавлен новый столбец `uuid`:
+Если вы планируете использовать функционал [пакетной обработки заданий](/docs/queues.md#job-batching) Laravel 8.x, то таблица `failed_jobs` БД должна быть обновлена. Во-первых, в эту таблицу должен быть добавлен новый столбец `uuid`:
 
     use Illuminate\Database\Schema\Blueprint;
     use Illuminate\Support\Facades\Schema;
@@ -287,7 +287,7 @@
         $table->string('uuid')->after('id')->nullable()->unique();
     });
 
-Затем, параметр конфигурации `failed.driver` в конфигурационном файле `queue` должен быть обновлен до `database-uuids`.
+Затем, параметр конфигурации `failed.driver` в конфигурационном файле `queue.php` должен быть изменен на `database-uuids`.
 
 Кроме того, вы можете сгенерировать UUID для существующих невыполненных заданий:
 
