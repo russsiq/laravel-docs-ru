@@ -232,7 +232,7 @@ To get started, let's write a test that verifies we can log into our application
          *
          * @return void
          */
-        public function testBasicExample()
+        public function test_basic_example()
         {
             $user = User::factory()->create([
                 'email' => 'taylor@laravel.com',
@@ -449,7 +449,7 @@ Dusk selectors allow you to focus on writing effective tests rather than remembe
 <a name="retrieving-setting-values"></a>
 #### Retrieving & Setting Values
 
-Dusk provides several methods for interacting with the current display text, value, and attributes of elements on the page. For example, to get the "value" of an element that matches a given CSS or Dusk selector, use the `value` method:
+Dusk provides several methods for interacting with the current value, display text, and attributes of elements on the page. For example, to get the "value" of an element that matches a given CSS or Dusk selector, use the `value` method:
 
     // Retrieve the value...
     $value = $browser->value('selector');
@@ -552,7 +552,7 @@ The `press` method may be used to click a button element on the page. The first 
 
     $browser->press('Login');
 
-When submitting forms, many application's disable the form's submission button after it are pressed and then re-enable the button when the form submission's HTTP request is complete. To press a button and wait for the button to be re-enabled, you may use the `pressAndWaitFor` method:
+When submitting forms, many application's disable the form's submission button after it is pressed and then re-enable the button when the form submission's HTTP request is complete. To press a button and wait for the button to be re-enabled, you may use the `pressAndWaitFor` method:
 
     // Press the button and wait a maximum of 5 seconds for it to be enabled...
     $browser->pressAndWaitFor('Save');
@@ -680,12 +680,17 @@ Sometimes you may wish to perform several operations while scoping all of the op
               ->clickLink('Delete');
     });
 
-You may occasionally need to execute assertions outside of the current scope. You may use the `elsewhere` method to accomplish this:
+You may occasionally need to execute assertions outside of the current scope. You may use the `elsewhere` and `elsewhereWhenAvailable` methods to accomplish this:
 
      $browser->with('.table', function ($table) {
         // Current scope is `body .table`...
 
         $browser->elsewhere('.page-title', function ($title) {
+            // Current scope is `body .page-title`...
+            $title->assertSee('Hello World');
+        });
+
+        $browser->elsewhereWhenAvailable('.page-title', function ($title) {
             // Current scope is `body .page-title`...
             $title->assertSee('Hello World');
         });
@@ -1504,7 +1509,7 @@ Sometimes you may already be on a given page and need to "load" the page's selec
 <a name="shorthand-selectors"></a>
 ### Shorthand Selectors
 
-The `elements` method within page classes allow you to define quick, easy-to-remember shortcuts for any CSS selector on your page. For example, let's define a shortcut for the "email" input field of the application's login page:
+The `elements` method within page classes allows you to define quick, easy-to-remember shortcuts for any CSS selector on your page. For example, let's define a shortcut for the "email" input field of the application's login page:
 
     /**
      * Get the element shortcuts for the page.
@@ -1696,7 +1701,7 @@ Once the component has been defined, we can easily select a date within the date
 <a name="continuous-integration"></a>
 ## Continuous Integration
 
-> {note} Most Dusk continuous integration configurations expect your Laravel application to be served using the built-in PHP development server on port 8000. Therefore, before continuing, you should ensure that your continous integration environment has an `APP_URL` environment variable value of `http://127.0.0.1:8000`.
+> {note} Most Dusk continuous integration configurations expect your Laravel application to be served using the built-in PHP development server on port 8000. Therefore, before continuing, you should ensure that your continuous integration environment has an `APP_URL` environment variable value of `http://127.0.0.1:8000`.
 
 <a name="running-tests-on-heroku-ci"></a>
 ### Heroku CI
