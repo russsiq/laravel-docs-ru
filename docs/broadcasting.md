@@ -1,139 +1,139 @@
-# Laravel 8.x — Широковещание
+# Laravel 8.x — Трансляция событий
 
-- [Introduction](#introduction)
-- [Server Side Installation](#server-side-installation)
-    - [Configuration](#configuration)
+- [Введение](#introduction)
+- [Установка на стороне сервера](#server-side-installation)
+    - [Конфигурирование](#configuration)
     - [Pusher Channels](#pusher-channels)
     - [Ably](#ably)
-    - [Open Source Alternatives](#open-source-alternatives)
-- [Client Side Installation](#client-side-installation)
+    - [Альтернативы с открытым исходным кодом](#open-source-alternatives)
+- [Установка на стороне клиента](#client-side-installation)
     - [Pusher Channels](#client-pusher-channels)
     - [Ably](#client-ably)
-- [Concept Overview](#concept-overview)
-    - [Using An Example Application](#using-example-application)
-- [Defining Broadcast Events](#defining-broadcast-events)
-    - [Broadcast Name](#broadcast-name)
-    - [Broadcast Data](#broadcast-data)
-    - [Broadcast Queue](#broadcast-queue)
-    - [Broadcast Conditions](#broadcast-conditions)
-    - [Broadcasting & Database Transactions](#broadcasting-and-database-transactions)
-- [Authorizing Channels](#authorizing-channels)
-    - [Defining Authorization Routes](#defining-authorization-routes)
-    - [Defining Authorization Callbacks](#defining-authorization-callbacks)
-    - [Defining Channel Classes](#defining-channel-classes)
-- [Broadcasting Events](#broadcasting-events)
-    - [Only To Others](#only-to-others)
-- [Receiving Broadcasts](#receiving-broadcasts)
-    - [Listening For Events](#listening-for-events)
-    - [Leaving A Channel](#leaving-a-channel)
-    - [Namespaces](#namespaces)
-- [Presence Channels](#presence-channels)
-    - [Authorizing Presence Channels](#authorizing-presence-channels)
-    - [Joining Presence Channels](#joining-presence-channels)
-    - [Broadcasting To Presence Channels](#broadcasting-to-presence-channels)
-- [Client Events](#client-events)
-- [Notifications](#notifications)
+- [Обзор концепции](#concept-overview)
+    - [Пример использования](#using-example-application)
+- [Определение транслируемого событий](#defining-broadcast-events)
+    - [Имя транслируемого события](#broadcast-name)
+    - [Данные трансляции](#broadcast-data)
+    - [Очередь трансляции](#broadcast-queue)
+    - [Условия трансляции](#broadcast-conditions)
+    - [Трансляция и транзакции базы данных](#broadcasting-and-database-transactions)
+- [Авторизация каналов](#authorizing-channels)
+    - [Определение маршрутов авторизации](#defining-authorization-routes)
+    - [Определение авторизации канала](#defining-authorization-callbacks)
+    - [Определение класса канала](#defining-channel-classes)
+- [Трансляция событий](#broadcasting-events)
+    - [Трансляция событий только остальным пользователям](#only-to-others)
+- [Прием трансляций](#receiving-broadcasts)
+    - [Прослушивание событий](#listening-for-events)
+    - [Покидание канала](#leaving-a-channel)
+    - [Пространства имён](#namespaces)
+- [Каналы присутствия](#presence-channels)
+    - [Авторизация каналов присутствия](#authorizing-presence-channels)
+    - [Присоединение к каналам присутствия](#joining-presence-channels)
+    - [Трансляция на каналы присутствия](#broadcasting-to-presence-channels)
+- [Клиентские события](#client-events)
+- [Уведомления](#notifications)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
-In many modern web applications, WebSockets are used to implement realtime, live-updating user interfaces. When some data is updated on the server, a message is typically sent over a WebSocket connection to be handled by the client. WebSockets provide a more efficient alternative to continually polling your application's server for data changes that should be reflected in your UI.
+Во многих современных веб-приложениях веб-сокеты используются для реализации пользовательских интерфейсов, обновляемых в реальном времени. Когда некоторые данные обновляются на сервере, тогда обычно отправляется сообщение через соединение WebSocket для обработки клиентом. Вебсокеты предоставляют более эффективную альтернативу постоянному опросу сервера вашего приложения на предмет изменений данных, которые должны быть отражены в вашем пользовательском интерфейсе.
 
-For example, imagine your application is able to export a user's data to a CSV file and email it to them. However, creating this CSV file takes several minutes so you choose to create and mail the CSV within a [queued job](queues.md). When the CSV has been created and mailed to the user, we can use event broadcasting to dispatch a `App\Events\UserDataExported` event that is received by our application's JavaScript. Once the event is received, we can display a message to the user that their CSV has been emailed to them without them ever needing to refresh the page.
+Например, представьте, что ваше приложение может экспортировать данные пользователя в файл CSV и отправлять этот файл ему по электронной почте. Однако создание этого CSV-файла занимает несколько минут, поэтому вы можете создать и отправить CSV-файл по почте, поместив [задание в очередь](queues.md). Когда файл CSV будет создан и отправлен пользователю, тогда мы можем использовать **широковещание** для отправки события `App\Events\UserDataExported`, которое будет получено JavaScript нашего приложения. Как только событие будет получено, мы можем отобразить сообщение пользователю о том, что его файл CSV был отправлен ему по электронной почте, без необходимости обновлять страницу.
 
-To assist you in building these types of features, Laravel makes it easy to "broadcast" your server-side Laravel [events](events.md) over a WebSocket connection. Broadcasting your Laravel events allows you to share the same event names and data between your server-side Laravel application and your client-side JavaScript application.
+Чтобы помочь вам в создании подобного рода функционала, Laravel упрощает «вещание» серверных [событий](events.md) Laravel через соединение WebSocket. Трансляция ваших событий Laravel позволяет вам использовать одни и те же имена событий и данные между серверным приложением Laravel и клиентским JavaScript-приложением.
 
 <a name="supported-drivers"></a>
-#### Supported Drivers
+#### Поддерживаемые драйверы
 
-By default, Laravel includes two server-side broadcasting drivers for you to choose from: [Pusher Channels](https://pusher.com/channels) and [Ably](https://ably.io). However, community driven packages such as [laravel-websockets](https://beyondco.de/docs/laravel-websockets/getting-started/introduction) provide additional broadcasting drivers that do not require commercial broadcasting providers.
+По умолчанию Laravel содержит два серверных драйвера трансляции на выбор: [Pusher Channels](https://pusher.com/channels) и [Ably](https://ably.io). Однако пакеты сообщества, например, [laravel-websockets](https://beyondco.de/docs/laravel-websockets/getting-started/introduction), предлагают дополнительные драйверы трансляции, которые не требуют коммерческих провайдеров.
 
-> {tip} Before diving into event broadcasting, make sure you have read Laravel's documentation on [events and listeners](events.md).
+> {tip} Прежде чем ближе ознакомиться с трансляцией событий, убедитесь, что вы прочитали документацию Laravel о [событиях и слушателях](events.md).
 
 <a name="server-side-installation"></a>
-## Server Side Installation
+## Установка на стороне сервера
 
-To get started using Laravel's event broadcasting, we need to do some configuration within the Laravel application as well as install a few packages.
+Чтобы начать использовать трансляцию событий Laravel, нам нужно выполнить некоторую настройку в приложении Laravel, а также установить некоторые пакеты.
 
-Event broadcasting is accomplished by a server-side broadcasting driver that broadcasts your Laravel events so that Laravel Echo (a JavaScript library) can receive them within the browser client. Don't worry - we'll walk through each part of the installation process step-by-step.
+Трансляция событий осуществляется серверным драйвером трансляции, который транслирует ваши события Laravel, получаемые браузером клиента через Laravel Echo (библиотека JavaScript). Не волнуйтесь – мы рассмотрим каждую часть процесса установки шаг за шагом.
 
 <a name="configuration"></a>
-### Configuration
+### Конфигурирование
 
-All of your application's event broadcasting configuration is stored in the `config/broadcasting.php` configuration file. Laravel supports several broadcast drivers out of the box: [Pusher Channels](https://pusher.com/channels), [Redis](redis.md), and a `log` driver for local development and debugging. Additionally, a `null` driver is included which allows you to totally disable broadcasting during testing. A configuration example is included for each of these drivers in the `config/broadcasting.php` configuration file.
+Вся конфигурация трансляций событий вашего приложения хранится в конфигурационном файле `config/broadcasting.php`. Laravel из коробки поддерживает несколько драйверов трансляции: [Pusher Channels](https://pusher.com/channels), [Redis](redis.md), и драйвер `log` для локальной разработки и отладки. Кроме того, поддерживается драйвер `null`, который позволяет полностью отключить трансляцию во время тестирования. В конфигурационном файле `config/broadcasting.php` содержится пример конфигурации для каждого из этих драйверов.
 
 <a name="broadcast-service-provider"></a>
-#### Broadcast Service Provider
+#### Поставщик службы трансляции
 
-Before broadcasting any events, you will first need to register the `App\Providers\BroadcastServiceProvider`. In a new Laravel applications, you only need to uncomment this provider in the `providers` array of your `config/app.php` configuration file. This `BroadcastServiceProvider` contains the code necessary to register the broadcast authorization routes and callbacks.
+Перед трансляцией каких-либо событий, вам сначала необходимо зарегистрировать поставщика `App\Providers\BroadcastServiceProvider`. В новых приложениях Laravel вам нужно только раскомментировать этого поставщика в массиве `providers` вашего конфигурационного файла `config/app.php`. Поставщик `BroadcastServiceProvider` содержит код, необходимый для регистрации маршрутов авторизации трансляции.
 
 <a name="queue-configuration"></a>
-#### Queue Configuration
+#### Конфигурирование очереди
 
-You will also need to configure and run a [queue worker](queues.md). All event broadcasting is done via queued jobs so that the response time of your application is not seriously affected by events being broadcast.
+Вам также потребуется настроить и запустить [обработчик очереди](queues.md). Все трансляции событий выполняются через задания в очереди, так что время отклика вашего приложения не сильно зависит от транслируемых событий.
 
 <a name="pusher-channels"></a>
 ### Pusher Channels
 
-If you plan to broadcast your events using [Pusher Channels](https://pusher.com/channels), you should install the Pusher Channels PHP SDK using the Composer package manager:
+Если вы планируете транслировать свои события с помощью [Pusher Channels](https://pusher.com/channels), то вам следует установить PHP SDK Pusher Channels с помощью менеджера пакетов Composer:
 
     composer require pusher/pusher-php-server "~4.0"
 
-Next, you should configure your Pusher Channels credentials in the `config/broadcasting.php` configuration file. An example Pusher Channels configuration is already included in this file, allowing you to quickly specify your key, secret, and application ID. Typically, these values should be set via the `PUSHER_APP_KEY`, `PUSHER_APP_SECRET`, and `PUSHER_APP_ID` [environment variables](configuration.md#environment-configuration):
+Далее, вы должны настроить свои учетные данные Pusher Channels в конфигурационном файле `config/broadcasting.php`. Пример конфигурации Pusher Channels уже содержится в этом файле, что позволяет быстро указать параметры `key`, `secret`, и `app_id`. Как правило, эти значения должны быть установлены через ​​[переменные окружения](configuration.md#environment-configuration) `PUSHER_APP_KEY`, `PUSHER_APP_SECRET` и `PUSHER_APP_ID`:
 
     PUSHER_APP_ID=your-pusher-app-id
     PUSHER_APP_KEY=your-pusher-key
     PUSHER_APP_SECRET=your-pusher-secret
     PUSHER_APP_CLUSTER=mt1
 
-The `config/broadcasting.php` file's `pusher` configuration also allows you to specify additional `options` that are supported by Channels, such as the cluster.
+Конфигурация `pusher` в файле `config/broadcasting.php` также позволяет вам указывать дополнительные параметры, которые поддерживаются Pusher, например, `cluster`.
 
-Next, you will need to change your broadcast driver to `pusher` in your `.env` file:
+Далее, вам нужно будет изменить драйвер трансляции на `pusher` в файле `.env`:
 
     BROADCAST_DRIVER=pusher
 
-Finally, you are ready to install and configure [Laravel Echo](#client-side-installation), which will receive the broadcast events on the client-side.
+И, наконец, вы готовы установить и настроить [Laravel Echo](#client-side-installation), который будет получать транслируемые события на клиентской стороне.
 
-<a name="pusher-compatible-laravel-websockets"></a>
+<!-- <a name="pusher-compatible-laravel-websockets"></a>
 #### Pusher Compatible Laravel Websockets
 
-The [laravel-websockets](https://github.com/beyondcode/laravel-websockets) package is a pure PHP, Pusher compatible WebSocket package for Laravel. This package allows you to leverage the full power of Laravel broadcasting without a commercial WebSocket provider. For more information on installing and using this package, please consult its [official documentation](https://beyondco.de/docs/laravel-websockets).
+The [laravel-websockets](https://github.com/beyondcode/laravel-websockets) package is a pure PHP, Pusher compatible WebSocket package for Laravel. This package allows you to leverage the full power of Laravel broadcasting without a commercial WebSocket provider. For more information on installing and using this package, please consult its [official documentation](https://beyondco.de/docs/laravel-websockets). -->
 
 <a name="ably"></a>
 ### Ably
 
-If you plan to broadcast your events using [Ably](https://ably.io), you should install the Ably PHP SDK using the Composer package manager:
+Если вы планируете транслировать свои события с помощью [Ably](https://ably.io), то вам следует установить PHP SDK Ably с помощью менеджера пакетов Composer:
 
     composer require ably/ably-php
 
-Next, you should configure your Ably credentials in the `config/broadcasting.php` configuration file. An example Ably configuration is already included in this file, allowing you to quickly specify your key. Typically, this value should be set via the `ABLY_KEY` [environment variable](configuration.md#environment-configuration):
+Далее, вы должны настроить свои учетные данные Ably в конфигурационном файле `config/broadcasting.php`. Пример конфигурации Ably уже содержится в этом файле, что позволяет быстро указать параметр `key`. Как правило, это значение должно быть установлено через ​​[переменную окружения](configuration.md#environment-configuration) `ABLY_KEY`:
 
     ABLY_KEY=your-ably-key
 
-Next, you will need to change your broadcast driver to `ably` in your `.env` file:
+Далее, вам нужно будет изменить драйвер трансляции на `ably` в файле `.env`:
 
     BROADCAST_DRIVER=ably
 
-Finally, you are ready to install and configure [Laravel Echo](#client-side-installation), which will receive the broadcast events on the client-side.
+И, наконец, вы готовы установить и настроить [Laravel Echo](#client-side-installation), который будет получать транслируемые события на клиентской стороне.
 
 <a name="open-source-alternatives"></a>
-### Open Source Alternatives
+### Альтернативы с открытым исходным кодом
 
-The [laravel-websockets](https://github.com/beyondcode/laravel-websockets) package is a pure PHP, Pusher compatible WebSocket package for Laravel. This package allows you to leverage the full power of Laravel broadcasting without a commercial WebSocket provider. For more information on installing and using this package, please consult its [official documentation](https://beyondco.de/docs/laravel-websockets).
+Пакет [laravel-websockets](https://github.com/beyondcode/laravel-websockets) – это пакет для Laravel на «чистом» PHP, совместимый с Pusher. Этот пакет позволяет вам использовать всю мощь трансляции Laravel без использования платных провайдеров WebSocket. Для получения дополнительной информации об установке и использовании этого пакета обратитесь к его [официальной документации](https://beyondco.de/docs/laravel-websockets).
 
 <a name="client-side-installation"></a>
-## Client Side Installation
+## Установка на стороне клиента
 
 <a name="client-pusher-channels"></a>
 ### Pusher Channels
 
-Laravel Echo is a JavaScript library that makes it painless to subscribe to channels and listen for events broadcast by your server-side broadcasting driver. You may install Echo via the NPM package manager. In this example, we will also install the `pusher-js` package since we will be using the Pusher Channels broadcaster:
+Laravel Echo – это JavaScript-библиотека, которая позволяет безболезненно подписаться на каналы и прослушивать события, транслируемые вашим драйвером трансляции на стороне сервера. Вы можете установить Echo через менеджер пакетов NPM. В этом примере мы также установим пакет `pusher-js`, так как мы будем использовать вещатель Pusher Channels:
 
 ```bash
 npm install --save-dev laravel-echo pusher-js
 ```
 
-Once Echo is installed, you are ready to create a fresh Echo instance in your application's JavaScript. A great place to do this is at the bottom of the `resources/js/bootstrap.js` file that is included with the Laravel framework. By default, an example Echo configuration is already included in this file - you simply need to uncomment it:
+После установки Echo вы готовы создать новый экземпляр Echo в JavaScript вашего приложения. Отличное место для этого – окончание файла `resources/js/bootstrap.js`, который уже содержится в фреймворке Laravel. По умолчанию пример конфигурации Echo также находится в этом файле – вам просто нужно раскомментировать его:
 
 ```js
 import Echo from 'laravel-echo';
@@ -148,16 +148,16 @@ window.Echo = new Echo({
 });
 ```
 
-Once you have uncommented and adjusted the Echo configuration according to your needs, you may compile your application's assets:
+После того, как вы раскомментировали и настроили конфигурацию Echo в соответствии с вашими потребностями, вы можете скомпилировать исходники вашего приложения:
 
     npm run dev
 
-> {tip} To learn more about compiling your application's JavaScript assets, please consult the documentation on [Laravel Mix](mix.md).
+> {tip} Чтобы узнать больше о компиляции JavaScript-исходников вашего приложения, обратитесь к документации [Laravel Mix](mix.md).
 
 <a name="using-an-existing-client-instance"></a>
-#### Using An Existing Client Instance
+#### Использование существующего экземпляра клиента
 
-If you already have a pre-configured Pusher Channels client instance that you would like Echo to utilize, you may pass it to Echo via the `client` configuration option:
+Если у вас уже есть предварительно настроенный экземпляр клиента Pusher Channels, который вы бы хотели использовать в Echo, то вы можете передать его Echo с помощью свойства конфигурации `client`:
 
 ```js
 import Echo from 'laravel-echo';
@@ -174,17 +174,17 @@ window.Echo = new Echo({
 <a name="client-ably"></a>
 ### Ably
 
-Laravel Echo is a JavaScript library that makes it painless to subscribe to channels and listen for events broadcast by your server-side broadcasting driver. You may install Echo via the NPM package manager. In this example, we will also install the `pusher-js` package.
+Laravel Echo – это JavaScript-библиотека, которая позволяет безболезненно подписаться на каналы и прослушивать события, транслируемые вашим драйвером трансляции на стороне сервера. Вы можете установить Echo через менеджер пакетов NPM. В этом примере мы также установим пакет `pusher-js`.
 
-You may wonder why we would install the `pusher-js` JavaScript library even though we are using Ably to broadcast our events. Thankfully, Ably includes a Pusher compatibility mode which lets us use the Pusher protocol when listening for events in our client-side application:
+Вы можете задаться вопросом, зачем нам устанавливать библиотеку `pusher-js` JavaScript, даже если мы используем Ably для трансляции наших событий. К счастью, Ably имеет режим совместимости Pusher, который позволяет нам использовать протокол Pusher при прослушивании событий в нашем клиентском приложении:
 
 ```bash
 npm install --save-dev laravel-echo pusher-js
 ```
 
-**Before continuing, you should enable Pusher protocol support in your Ably application settings. You may enable this feature within the "Protocol Adapter Settings" portion of your Ably application's settings dashboard.**
+**Прежде чем продолжить, вы должны включить поддержку протокола Pusher в настройках вашего приложения Ably. Вы можете включить эту функцию в разделе настроек «Protocol Adapter Settings» панели вашего приложения Ably.**
 
-Once Echo is installed, you are ready to create a fresh Echo instance in your application's JavaScript. A great place to do this is at the bottom of the `resources/js/bootstrap.js` file that is included with the Laravel framework. By default, an example Echo configuration is already included in this file; however, the default configuration in the `bootstrap.js` file is intended for Pusher. You may copy the configuration below to transition your configuration to Ably:
+После установки Echo вы готовы создать новый экземпляр Echo в JavaScript вашего приложения. Отличное место для этого – окончание файла `resources/js/bootstrap.js`, который уже содержится в фреймворке Laravel. По умолчанию пример конфигурации Echo также находится в этом файле – вам просто нужно раскомментировать его; однако конфигурация по умолчанию в файле `bootstrap.js` предназначена для Pusher. Вы можете скопировать конфигурацию ниже, чтобы применить ее к Ably:
 
 ```js
 import Echo from 'laravel-echo';
@@ -201,38 +201,38 @@ window.Echo = new Echo({
 });
 ```
 
-Note that our Ably Echo configuration references a `MIX_ABLY_PUBLIC_KEY` environment variable. This variable's value should be your Ably public key. Your public key is the portion of your Ably key that occurs before the `:` character.
+Обратите внимание, что наша конфигурация Echo для Ably ссылается на переменную окружения `MIX_ABLY_PUBLIC_KEY`. Значение этой переменной должно быть вашим публичным ключом Ably. Ваш публичный ключ – это часть ключа Ably перед символом `:`.
 
-Once you have uncommented and adjusted the Echo configuration according to your needs, you may compile your application's assets:
+После того, как вы раскомментировали и настроили конфигурацию Echo в соответствии с вашими потребностями, вы можете скомпилировать исходники вашего приложения:
 
     npm run dev
 
-> {tip} To learn more about compiling your application's JavaScript assets, please consult the documentation on [Laravel Mix](mix.md).
+> {tip} Чтобы узнать больше о компиляции JavaScript-исходников вашего приложения, обратитесь к документации [Laravel Mix](mix.md).
 
 <a name="concept-overview"></a>
-## Concept Overview
+## Обзор концепции
 
-Laravel's event broadcasting allows you to broadcast your server-side Laravel events to your client-side JavaScript application using a driver-based approach to WebSockets. Currently, Laravel ships with [Pusher Channels](https://pusher.com/channels) and [Ably](https://ably.io) drivers. The events may be easily consumed on the client-side using the [Laravel Echo](#client-side-installation) JavaScript package.
+Трансляция событий Laravel позволяет транслировать серверные события Laravel в JavaScript-приложение на клиентской стороне, используя драйверный подход к WebSockets. В настоящее время Laravel поставляется с драйверами [Pusher Channels](https://pusher.com/channels) и [Ably] (https://ably.io). События могут быть легко обработаны на стороне клиента с помощью пакета [Laravel Echo](#client-side-installation) JavaScript.
 
-Events are broadcast over "channels", which may be specified as public or private. Any visitor to your application may subscribe to a public channel without any authentication or authorization; however, in order to subscribe to a private channel, a user must be authenticated and authorized to listen on that channel.
+События транслируются по «каналам», которые могут быть публичными или частными. Любой посетитель вашего приложения может подписаться на публичный канал без какой-либо аутентификации или авторизации; однако, чтобы подписаться на частный канал, пользователь должен быть аутентифицирован и авторизован для прослушивания событий на этом канале.
 
-> {tip} If you would like to use an open source, PHP driven alternative to Pusher, check out the [laravel-websockets](https://github.com/beyondcode/laravel-websockets) package.
+<!-- > {tip} If you would like to use an open source, PHP driven alternative to Pusher, check out the [laravel-websockets](https://github.com/beyondcode/laravel-websockets) package. -->
 
 <a name="using-example-application"></a>
-### Using An Example Application
+### Пример использования
 
-Before diving into each component of event broadcasting, let's take a high level overview using an e-commerce store as an example.
+Прежде чем углубляться в каждый аспект трансляции событий, давайте сделаем общий обзор на примере интернет-магазина.
 
-In our application, let's assume we have a page that allows users to view the shipping status for their orders. Let's also assume that a `OrderShipmentStatusUpdated` event is fired when a shipping status update is processed by the application:
+Предположим, что в нашем приложении у нас есть страница, которая позволяет пользователям просматривать статус доставки своих заказов. Предположим также, что событие `OrderShipmentStatusUpdated` запускается, когда приложение обрабатывает обновление статуса доставки:
 
     use App\Events\OrderShipmentStatusUpdated;
 
     OrderShipmentStatusUpdated::dispatch($order);
 
 <a name="the-shouldbroadcast-interface"></a>
-#### The `ShouldBroadcast` Interface
+#### Интерфейс `ShouldBroadcast`
 
-When a user is viewing one of their orders, we don't want them to have to refresh the page to view status updates. Instead, we want to broadcast the updates to the application as they are created. So, we need to mark the `OrderShipmentStatusUpdated` event with the `ShouldBroadcast` interface. This will instruct Laravel to broadcast the event when it is fired:
+Когда пользователь просматривает один из своих заказов, мы не хотим, чтобы ему приходилось обновлять страницу для просмотра статуса обновлений. Вместо этого мы хотим транслировать обновления в приложение по мере их создания. Итак, нам нужно пометить событие `OrderShipmentStatusUpdated` интерфейсом `ShouldBroadcast`. Это проинструктирует Laravel транслировать событие при его запуске:
 
     <?php
 
@@ -249,17 +249,17 @@ When a user is viewing one of their orders, we don't want them to have to refres
     class OrderShipmentStatusUpdated implements ShouldBroadcast
     {
         /**
-         * The order instance.
+         * Экземпляр заказа.
          *
          * @var \App\Order
          */
         public $order;
     }
 
-The `ShouldBroadcast` interface requires our event to define a `broadcastOn` method. This method is responsible for returning the channels that the event should broadcast on. An empty stub of this method is already defined on generated event classes, so we only need to fill in its details. We only want the creator of the order to be able to view status updates, so we will broadcast the event on a private channel that is tied to the order:
+Интерфейс `ShouldBroadcast` требует, чтобы в нашем классе события был определен метод `broadcastOn`. Этот метод отвечает за возврат каналов, по которым должно транслироваться событие. Пустая заглушка этого метода уже определена в сгенерированных классах событий, поэтому нам нужно только заполнить ее реализацию. Мы хотим, чтобы только создатель заказа мог просматривать статус обновления, поэтому мы будем транслировать событие на частном канале, привязанном к конкретному заказу:
 
     /**
-     * Get the channels the event should broadcast on.
+     * Получить каналы трансляции события.
      *
      * @return \Illuminate\Broadcasting\PrivateChannel
      */
@@ -269,9 +269,9 @@ The `ShouldBroadcast` interface requires our event to define a `broadcastOn` met
     }
 
 <a name="example-application-authorizing-channels"></a>
-#### Authorizing Channels
+#### Авторизация каналов
 
-Remember, users must be authorized to listen on private channels. We may define our channel authorization rules in our application's `routes/channels.php` file. In this example, we need to verify that any user attempting to listen on the private `order.1` channel is actually the creator of the order:
+Помните, что пользователи должны иметь разрешение на прослушивание частных каналов. Мы можем определить наши правила авторизации каналов в файле `routes/channels.php` нашего приложения. В этом примере нам нужно убедиться, что любой пользователь, пытающийся прослушивать частный канал `order.1`, на самом деле является создателем заказа:
 
     use App\Models\Order;
 
@@ -279,14 +279,14 @@ Remember, users must be authorized to listen on private channels. We may define 
         return $user->id === Order::findOrNew($orderId)->user_id;
     });
 
-The `channel` method accepts two arguments: the name of the channel and a callback which returns `true` or `false` indicating whether the user is authorized to listen on the channel.
+Метод `channel` принимает два аргумента: имя канала и замыкание, которое возвращает `true` или `false`, указывая тем самым, имеет ли пользователь право прослушивать канал.
 
-All authorization callbacks receive the currently authenticated user as their first argument and any additional wildcard parameters as their subsequent arguments. In this example, we are using the `{orderId}` placeholder to indicate that the "ID" portion of the channel name is a wildcard.
+Все замыкания авторизации получают текущего аутентифицированного пользователя в качестве своего первого аргумента и любые дополнительные параметры в качестве своих последующих аргументов. В этом примере мы используем заполнитель `{orderId}`, чтобы указать, что часть «ID» имени канала является параметром.
 
 <a name="listening-for-event-broadcasts"></a>
-#### Listening For Event Broadcasts
+#### Прослушивание трансляций событий
 
-Next, all that remains is to listen for the event in our JavaScript application. We can do this using Laravel Echo. First, we'll use the `private` method to subscribe to the private channel. Then, we may use the `listen` method to listen for the `OrderShipmentStatusUpdated` event. By default, all of the event's public properties will be included on the broadcast event:
+Далее все, что остается, – это прослушивать событие в нашем JavaScript-приложении. Мы можем сделать это с помощью Laravel Echo. Во-первых, мы будем использовать метод `private` для подписки на частный канал. Затем мы можем использовать метод `listen` для прослушивания события `OrderShipmentStatusUpdated`. По умолчанию все публичные свойства события будут включены в трансляцию события:
 
 ```js
 Echo.private(`orders.${orderId}`)
@@ -296,11 +296,11 @@ Echo.private(`orders.${orderId}`)
 ```
 
 <a name="defining-broadcast-events"></a>
-## Defining Broadcast Events
+## Определение транслируемых событий
 
-To inform Laravel that a given event should be broadcast, you must implement the `Illuminate\Contracts\Broadcasting\ShouldBroadcast` interface on the event class. This interface is already imported into all event classes generated by the framework so you may easily add it to any of your events.
+Чтобы сообщить Laravel, что какое-то событие должно транслироваться, вы должны реализовать интерфейс `Illuminate\Contracts\Broadcasting\ShouldBroadcast` в классе события. Этот интерфейс уже импортирован во все классы событий, сгенерированные фреймворком, поэтому вы с легкостью можете добавить его к любому из ваших событий.
 
-The `ShouldBroadcast` interface requires you to implement a single method: `broadcastOn`. The `broadcastOn` method should return a channel or array of channels that the event should broadcast on. The channels should be instances of `Channel`, `PrivateChannel`, or `PresenceChannel`. Instances of `Channel` represent public channels that any user may subscribe to, while `PrivateChannels` and `PresenceChannels` represent private channels that require [channel authorization](#authorizing-channels):
+Интерфейс `ShouldBroadcast` требует, чтобы вы реализовали единственный метод: `broadcastOn`. Метод `broadcastOn` должен возвращать канал или массив каналов, по которым должно транслироваться событие. Каналы должны быть экземплярами `Channel`, `PrivateChannel` или `PresenceChannel`. Экземпляры `Channel` представляют собой публичные каналы, на которые может подписаться любой пользователь, в то время как `PrivateChannels` и `PresenceChannels` представляют собой частные каналы, для которых требуется [авторизация канала](#authorizing-channels):
 
     <?php
 
@@ -319,14 +319,14 @@ The `ShouldBroadcast` interface requires you to implement a single method: `broa
         use SerializesModels;
 
         /**
-         * The user that created the server.
+         * Пользователь, создавший сервер.
          *
          * @var \App\Models\User
          */
         public $user;
 
         /**
-         * Create a new event instance.
+         * Создать новый экземпляр события.
          *
          * @param  \App\Models\User  $user
          * @return void
@@ -337,7 +337,7 @@ The `ShouldBroadcast` interface requires you to implement a single method: `broa
         }
 
         /**
-         * Get the channels the event should broadcast on.
+         * Получить каналы трансляции события.
          *
          * @return Channel|array
          */
@@ -347,15 +347,15 @@ The `ShouldBroadcast` interface requires you to implement a single method: `broa
         }
     }
 
-After implementing the `ShouldBroadcast` interface, you only need to [fire the event](events.md) as you normally would. Once the event has been fired, a [queued job](queues.md) will automatically broadcast the event using your specified broadcast driver.
+После реализации интерфейса `ShouldBroadcast` вам нужно только [запустить событие](events.md), как обычно. После того, как событие будет  запущено, [задание в очереди](queues.md) автоматически транслирует событие, используя указанный вами драйвер трансляции.
 
 <a name="broadcast-name"></a>
-### Broadcast Name
+### Имя транслируемого события
 
-By default, Laravel will broadcast the event using the event's class name. However, you may customize the broadcast name by defining a `broadcastAs` method on the event:
+По умолчанию Laravel будет транслировать событие, используя имя класса события. Однако вы можете изменить имя транслируемого события, определив для события метод `broadcastAs`:
 
     /**
-     * The event's broadcast name.
+     * Имя транслируемого события.
      *
      * @return string
      */
@@ -364,16 +364,16 @@ By default, Laravel will broadcast the event using the event's class name. Howev
         return 'server.created';
     }
 
-If you customize the broadcast name using the `broadcastAs` method, you should make sure to register your listener with a leading `.` character. This will instruct Echo to not prepend the application's namespace to the event:
+Если вы измените имя транслируемого события с помощью метода `broadcastAs`, то вы должны убедиться, что зарегистрировали ваш слушатель с ведущим символом `.`. Это проинструктирует Echo не добавлять пространство имен приложения к событию:
 
     .listen('.server.created', function (e) {
         ....
     });
 
 <a name="broadcast-data"></a>
-### Broadcast Data
+### Данные трансляции
 
-When an event is broadcast, all of its `public` properties are automatically serialized and broadcast as the event's payload, allowing you to access any of its public data from your JavaScript application. So, for example, if your event has a single public `$user` property that contains an Eloquent model, the event's broadcast payload would be:
+При трансляции события, все его публичные свойства автоматически сериализуются и транслируются как полезная нагрузка события, что позволяет вам получить доступ к любым его публичным данным из вашего JavaScript-приложения. Так, например, если ваше событие имеет единственное публичное свойство `$user`, представляющее собой модель Eloquent, то полезная нагрузка при трансляции события будет:
 
     {
         "user": {
@@ -383,10 +383,10 @@ When an event is broadcast, all of its `public` properties are automatically ser
         }
     }
 
-However, if you wish to have more fine-grained control over your broadcast payload, you may add a `broadcastWith` method to your event. This method should return the array of data that you wish to broadcast as the event payload:
+Однако, если вы хотите иметь более точный контроль над полезной нагрузкой трансляции, то вы можете определить метод `broadcastWith` вашего события. Этот метод должен возвращать массив данных, которые вы хотите использовать в качестве полезной нагрузки при трансляции события:
 
     /**
-     * Get the data to broadcast.
+     * Получите данные для трансляции.
      *
      * @return array
      */
@@ -396,25 +396,25 @@ However, if you wish to have more fine-grained control over your broadcast paylo
     }
 
 <a name="broadcast-queue"></a>
-### Broadcast Queue
+### Очередь трансляции
 
-By default, each broadcast event is placed on the default queue for the default queue connection specified in your `queue.php` configuration file. You may customize the queue connection and name used by the broadcaster by defining `connection` and `queue` properties on your event class:
+По умолчанию каждое транслируемое событие помещается в очередь по умолчанию и соединение очереди по умолчанию, указанные в вашем конфигурационном файле `queue.php`. Вы можете изменить соединение очереди и имя, используемое вещателем, определив свойства `connection` и `queue` в вашем классе события:
 
     /**
-     * The name of the queue connection to use when broadcasting the event.
+     * Имя соединения очереди, которое будет использоваться при трансляции события.
      *
      * @var string
      */
     public $connection = 'redis';
 
     /**
-     * The name of the queue on which to place the broadcasting job.
+     * Имя очереди, в которую нужно поместить задание трансляции.
      *
      * @var string
      */
     public $queue = 'default';
 
-If you want to broadcast your event using the `sync` queue instead of the default queue driver, you can implement the `ShouldBroadcastNow` interface instead of `ShouldBroadcast`:
+Если вы хотите транслировать свое событие с помощью очереди `sync` вместо драйвера очереди по умолчанию, то вы можете реализовать интерфейс `ShouldBroadcastNow` вместо `ShouldBroadcast`:
 
     <?php
 
@@ -426,12 +426,12 @@ If you want to broadcast your event using the `sync` queue instead of the defaul
     }
 
 <a name="broadcast-conditions"></a>
-### Broadcast Conditions
+### Условия трансляции
 
-Sometimes you want to broadcast your event only if a given condition is true. You may define these conditions by adding a `broadcastWhen` method to your event class:
+Иногда необходимо транслировать событие только в том случае, если выполняется определенное условие. Вы можете определить эти условия, добавив метод `broadcastWhen` в ваш класс события:
 
     /**
-     * Determine if this event should broadcast.
+     * Определить, условия трансляции события.
      *
      * @return bool
      */
@@ -441,11 +441,11 @@ Sometimes you want to broadcast your event only if a given condition is true. Yo
     }
 
 <a name="broadcasting-and-database-transactions"></a>
-#### Broadcasting & Database Transactions
+#### Трансляция и транзакции базы данных
 
-When broadcast events are dispatched within database transactions, they may be processed by the queue before the database transaction has committed. When this happens, any updates you have made to models or database records during the database transaction may not yet be reflected in the database. In addition, any models or database records created within the transaction may not exist in the database. If your event depends on these models, unexpected errors can occur when the job that broadcasts the event is processed.
+Когда транслируемые события отправляются в транзакциях базы данных, они могут быть обработаны очередью до того, как транзакция базы данных будет зафиксирована. Когда это происходит, любые обновления, внесенные вами в модели или записи базы данных во время транзакции базы данных, могут еще не быть отражены в базе данных. Кроме того, любые модели или записи базы данных, созданные в рамках транзакции, могут не существовать в базе данных. Если ваше событие зависит от этих моделей, могут возникнуть непредвиденные ошибки при обработке задания, транслирующего событие.
 
-If your queue connection's `after_commit` configuration option is set to `false`, you may still indicate that a particular broadcast event should be dispatched after all open database transactions have been committed by defining an `$afterCommit` property on the event class:
+Если для параметра конфигурации вашего соединения с очередью `after_commit` установлено значение `false`, то вы все равно можете указать, что конкретное транслируемое событие должно быть отправлено после того, как все открытые транзакции базы данных были зафиксированы, путем определения свойства `$afterCommit` в классе события:
 
     <?php
 
@@ -461,28 +461,28 @@ If your queue connection's `after_commit` configuration option is set to `false`
         public $afterCommit = true;
     }
 
-> {tip} To learn more about working around these issues, please review the documentation regarding [queued jobs and database transactions](queues.md#jobs-and-database-transactions).
+> {tip} Чтобы узнать больше о том, как обойти эти проблемы, просмотрите документацию, касающуюся [заданий в очереди и транзакций базы данных](queues.md#jobs-and-database-transactions).
 
 <a name="authorizing-channels"></a>
-## Authorizing Channels
+## Авторизация каналов
 
-Private channels require you to authorize that the currently authenticated user can actually listen on the channel. This is accomplished by making an HTTP request to your Laravel application with the channel name and allowing your application to determine if the user can listen on that channel. When using [Laravel Echo](#client-side-installation), the HTTP request to authorize subscriptions to private channels will be made automatically; however, you do need to define the proper routes to respond to these requests.
+Частные каналы требуют, чтобы текущий аутентифицированный пользователь был авторизован и действительно мог прослушивать канал. Это достигается путем отправки HTTP-запроса вашему приложению Laravel с именем канала, что позволит вашему приложению определить, может ли пользователь прослушивать этот канал. При использовании [Laravel Echo](#client-side-installation) HTTP-запрос на авторизацию подписок на частные каналы будет выполнен автоматически; однако вам необходимо определить верные маршруты для ответа на эти запросы.
 
 <a name="defining-authorization-routes"></a>
-### Defining Authorization Routes
+### Определение маршрутов авторизации
 
-Thankfully, Laravel makes it easy to define the routes to respond to channel authorization requests. In the `App\Providers\BroadcastServiceProvider` included with your Laravel application, you will see a call to the `Broadcast::routes` method. This method will register the `/broadcasting/auth` route to handle authorization requests:
+Laravel упрощает определение маршрутов для ответа на запросы об авторизации канала. В поставщике `App\Providers\BroadcastServiceProvider` вашего приложения, вы увидите вызов метода `Broadcast::routes`. Этот метод зарегистрирует маршрут `/broadcasting/auth` для обработки запросов авторизации:
 
     Broadcast::routes();
 
-The `Broadcast::routes` method will automatically place its routes within the `web` middleware group; however, you may pass an array of route attributes to the method if you would like to customize the assigned attributes:
+Метод `Broadcast::routes` автоматически применит посредника `web` для [группы своих маршрутов](routing.md#route-groups); однако вы можете передать в метод массив атрибутов маршрута, если хотите изменить присваиваемые им атрибуты:
 
     Broadcast::routes($attributes);
 
 <a name="customizing-the-authorization-endpoint"></a>
-#### Customizing The Authorization Endpoint
+#### Изменение конечной точки авторизации
 
-By default, Echo will use the `/broadcasting/auth` endpoint to authorize channel access. However, you may specify your own authorization endpoint by passing the `authEndpoint` configuration option to your Echo instance:
+По умолчанию Echo будет использовать конечную точку `/broadcasting/auth` для авторизации доступа к каналу. Однако вы можете указать свою собственную конечную точку авторизации, передав параметр конфигурации `authEndpoint` вашему экземпляру Echo:
 
     window.Echo = new Echo({
         broadcaster: 'pusher',
@@ -491,22 +491,22 @@ By default, Echo will use the `/broadcasting/auth` endpoint to authorize channel
     });
 
 <a name="defining-authorization-callbacks"></a>
-### Defining Authorization Callbacks
+### Определение авторизации канала
 
-Next, we need to define the logic that will actually determine if the currently authenticated user can listen to a given channel. This is done in the `routes/channels.php` file that is included with your application. In this file, you may use the `Broadcast::channel` method to register channel authorization callbacks:
+Затем нам нужно определить логику, которая фактически будет определять, может ли текущий аутентифицированный пользователь прослушивать указанный канал. Это делается в файле `routes/channels.php`, находящийся в вашем приложении. В этом файле вы можете использовать метод `Broadcast::channel` для регистрации замыканий авторизации канала:
 
     Broadcast::channel('orders.{orderId}', function ($user, $orderId) {
         return $user->id === Order::findOrNew($orderId)->user_id;
     });
 
-The `channel` method accepts two arguments: the name of the channel and a callback which returns `true` or `false` indicating whether the user is authorized to listen on the channel.
+Метод `channel` принимает два аргумента: имя канала и замыкание, которое возвращает `true` или `false`, указывая тем самым, имеет ли пользователь право прослушивать канал.
 
-All authorization callbacks receive the currently authenticated user as their first argument and any additional wildcard parameters as their subsequent arguments. In this example, we are using the `{orderId}` placeholder to indicate that the "ID" portion of the channel name is a wildcard.
+Все замыкания авторизации получают текущего аутентифицированного пользователя в качестве своего первого аргумента и любые дополнительные параметры в качестве своих последующих аргументов. В этом примере мы используем заполнитель `{orderId}`, чтобы указать, что часть «ID» имени канала является параметром.
 
 <a name="authorization-callback-model-binding"></a>
-#### Authorization Callback Model Binding
+#### Привязка модели к авторизации
 
-Just like HTTP routes, channel routes may also take advantage of implicit and explicit [route model binding](routing.md#route-model-binding). For example, instead of receiving a string or numeric order ID, you may request an actual `Order` model instance:
+Как и HTTP-маршруты, для маршрутов каналов также могут использоваться неявные и явные [привязки модели к маршруту](routing.md#route-model-binding). Например, вместо получения строкового или числового идентификатора заказа вы можете запросить фактический экземпляр модели `Order`:
 
     use App\Models\Order;
 
@@ -514,31 +514,31 @@ Just like HTTP routes, channel routes may also take advantage of implicit and ex
         return $user->id === $order->user_id;
     });
 
-> {note} Unlike HTTP route model binding, channel model binding does not support automatic [implicit model binding scoping](routing.md#implicit-model-binding-scoping). However, this is rarely a problem because most channels can be scoped based on a single model's unique, primary key.
+> {note} В отличие от привязки модели к HTTP-маршруту, привязка модели канала не поддерживает [ограничение неявной привязки модели](routing.md#implicit-model-binding-scoping). Однако это редко представляет собой проблему, потому что большинство каналов можно ограничить на основе уникального первичного ключа одной модели.
 
 <a name="authorization-callback-authentication"></a>
-#### Authorization Callback Authentication
+#### Предварительная аутентификация авторизации канала
 
-Private and presence broadcast channels authenticate the current user via your application's default authentication guard. If the user is not authenticated, channel authorization is automatically denied and the authorization callback is never executed. However, you may assign multiple, custom guards that should authenticate the incoming request if necessary:
+Частные каналы и каналы присутствия аутентифицируют текущего пользователя через стандартного охранника аутентификации вашего приложения. Если пользователь не аутентифицирован, то авторизация канала автоматически отклоняется, и обратный вызов авторизации никогда не выполняется. Однако вы можете назначить несколько своих охранников, которые должны при необходимости аутентифицировать входящий запрос:
 
     Broadcast::channel('channel', function () {
         // ...
     }, ['guards' => ['web', 'admin']]);
 
 <a name="defining-channel-classes"></a>
-### Defining Channel Classes
+### Определение класса канала
 
-If your application is consuming many different channels, your `routes/channels.php` file could become bulky. So, instead of using closures to authorize channels, you may use channel classes. To generate a channel class, use the `make:channel` Artisan command. This command will place a new channel class in the `App/Broadcasting` directory.
+Если ваше приложение использует много разных каналов, то ваш файл `routes/channels.php` может стать громоздким. Таким образом, вместо использования замыканий для авторизации каналов вы можете использовать классы каналов. Чтобы сгенерировать класс канала, используйте команду `make:channel` Artisan. Эта команда поместит новый класс канала в каталог `App/Broadcasting`.
 
     php artisan make:channel OrderChannel
 
-Next, register your channel in your `routes/channels.php` file:
+Затем зарегистрируйте свой канал в файле `routes/channels.php`:
 
     use App\Broadcasting\OrderChannel;
 
     Broadcast::channel('orders.{order}', OrderChannel::class);
 
-Finally, you may place the authorization logic for your channel in the channel class' `join` method. This `join` method will house the same logic you would have typically placed in your channel authorization closure. You may also take advantage of channel model binding:
+Наконец, вы можете поместить логику авторизации для своего канала в метод `join` класса канала. Этот метод будет содержать ту же логику, которую вы обычно использовали бы в замыкании  при авторизации вашего канала. Вы также можете воспользоваться преимуществами привязки модели канала:
 
     <?php
 
@@ -550,7 +550,7 @@ Finally, you may place the authorization logic for your channel in the channel c
     class OrderChannel
     {
         /**
-         * Create a new channel instance.
+         * Создать новый экземпляр канала.
          *
          * @return void
          */
@@ -560,7 +560,7 @@ Finally, you may place the authorization logic for your channel in the channel c
         }
 
         /**
-         * Authenticate the user's access to the channel.
+         * Подтвердить доступ пользователя к каналу.
          *
          * @param  \App\Models\User  $user
          * @param  \App\Models\Order  $order
@@ -572,53 +572,53 @@ Finally, you may place the authorization logic for your channel in the channel c
         }
     }
 
-> {tip} Like many other classes in Laravel, channel classes will automatically be resolved by the [service container](container.md). So, you may type-hint any dependencies required by your channel in its constructor.
+> {tip} Как и многие другие классы в Laravel, классы каналов будут автоматически разрешены [контейнером служб](container.md). Таким образом, вы можете указать любые зависимости, необходимые для вашего канала, в его конструкторе.
 
 <a name="broadcasting-events"></a>
-## Broadcasting Events
+## Трансляция событий
 
-Once you have defined an event and marked it with the `ShouldBroadcast` interface, you only need to fire the event using the event's dispatch method. The event dispatcher will notice that the event is marked with the `ShouldBroadcast` interface and will queue the event for broadcasting:
+После того как вы определили событие и отметили его интерфейсом `ShouldBroadcast`, вам нужно только запустить событие, используя метод отправки события. Диспетчер событий заметит, что событие помечено интерфейсом `ShouldBroadcast`, и поставит событие в очередь для дальнейшего трансляции:
 
     use App\Events\OrderShipmentStatusUpdated;
 
     OrderShipmentStatusUpdated::dispatch($order));
 
 <a name="only-to-others"></a>
-### Only To Others
+### Трансляция событий только остальным пользователям
 
-When building an application that utilizes event broadcasting, you may occasionally need to broadcast an event to all subscribers to a given channel except for the current user. You may accomplish this using the `broadcast` helper and the `toOthers` method:
+При создании приложения, использующего трансляцию событий, иногда может потребоваться трансляция события всем подписчикам канала, кроме текущего пользователя. Вы можете сделать это с помощью помощника `broadcast` и метода `toOthers`:
 
     use App\Events\OrderShipmentStatusUpdated;
 
     broadcast(new OrderShipmentStatusUpdated($update))->toOthers();
 
-To better understand when you may want to use the `toOthers` method, let's imagine a task list application where a user may create a new task by entering a task name. To create a task, your application might make a request to a `/task` URL which broadcasts the task's creation and returns a JSON representation of the new task. When your JavaScript application receives the response from the end-point, it might directly insert the new task into its task list like so:
+Чтобы лучше понять необходимость использования метода `toOthers`, давайте представим приложение со списком задач, в котором пользователь может создать новую задачу, введя имя задачи. Чтобы создать задачу, ваше приложение может сделать запрос к URL-адресу `/task`, который транслирует создание задачи и возвращает JSON-представление новой задачи. Когда ваше JavaScript-приложение получает ответ от конечной точки, оно может напрямую вставить новую задачу в свой список задач следующим образом:
 
     axios.post('/task', task)
         .then((response) => {
             this.tasks.push(response.data);
         });
 
-However, remember that we also broadcast the task's creation. If your JavaScript application is also listening for this event in order to add tasks to the task list, you will have duplicate tasks in your list: one from the end-point and one from the broadcast. You may solve this by using the `toOthers` method to instruct the broadcaster to not broadcast the event to the current user.
+Однако помните, что мы также транслируем создание задачи. Если ваше JavaScript-приложение также прослушивает это событие, чтобы добавить задачи в список задач, у вас будут дублирующиеся задачи в вашем списке: одна из конечной точки и одна из трансляции. Вы можете решить эту проблему, используя метод `toOthers`, чтобы указать вещателю не транслировать событие текущему пользователю.
 
-> {note} Your event must use the `Illuminate\Broadcasting\InteractsWithSockets` trait in order to call the `toOthers` method.
+> {note} Ваше событие должно использовать трейт `Illuminate\Broadcasting\InteractsWithSockets` для вызова метода `toOthers`.
 
 <a name="only-to-others-configuration"></a>
-#### Configuration
+#### Конфигурирование при использовании метода `toOthers`
 
-When you initialize a Laravel Echo instance, a socket ID is assigned to the connection. If you are using a global [Axios](https://github.com/mzabriskie/axios) instance to make HTTP requests from your JavaScript application, the socket ID will automatically be attached to every outgoing request as a `X-Socket-ID` header. Then, when you call the `toOthers` method, Laravel will extract the socket ID from the header and instruct the broadcaster to not broadcast to any connections with that socket ID.
+Когда вы инициализируете экземпляр Laravel Echo, соединению назначается идентификатор сокета. Если вы используете глобальный экземпляр [Axios](https://github.com/mzabriskie/axios) для выполнения HTTP-запросов из вашего JavaScript-приложения, то идентификатор сокета будет автоматически прикрепляться к каждому исходящему запросу в заголовке `X-Socket-ID`. Затем, когда вы вызываете метод `toOthers`, Laravel извлечет идентификатор сокета из заголовка и проинструктирует вещателя не транслировать никакие соединения с этим идентификатором сокета.
 
-If you are not using a global Axios instance, you will need to manually configure your JavaScript application to send the `X-Socket-ID` header with all outgoing requests. You may retrieve the socket ID using the `Echo.socketId` method:
+Если вы не используете глобальный экземпляр Axios, то вам необходимо вручную сконфигурировать JavaScript-приложение для отправки заголовка `X-Socket-ID` со всеми исходящими запросами. Вы можете получить идентификатор сокета, используя метод `Echo.socketId`:
 
     var socketId = Echo.socketId();
 
 <a name="receiving-broadcasts"></a>
-## Receiving Broadcasts
+## Прием трансляций
 
 <a name="listening-for-events"></a>
-### Listening For Events
+### Прослушивание событий
 
-Once you have [installed and instantiated Laravel Echo](#client-side-installation), you are ready to start listening for events that are broadcast from your Laravel application. First, use the `channel` method to retrieve an instance of a channel, then call the `listen` method to listen for a specified event:
+После того, как вы [установили и создали экземпляр Laravel Echo](#client-side-installation), вы готовы к прослушиванию событий, которые транслируются из вашего приложения Laravel. Сначала используйте метод `channel` для получения экземпляра канала, затем вызовите метод `listen` для прослушивания конкретного события:
 
 ```js
 Echo.channel(`orders.${this.order.id}`)
@@ -627,7 +627,7 @@ Echo.channel(`orders.${this.order.id}`)
     });
 ```
 
-If you would like to listen for events on a private channel, use the `private` method instead. You may continue to chain calls to the `listen` method to listen for multiple events on a single channel:
+Если вы хотите прослушивать события на частном канале, то используйте вместо этого метод `private`. Вы можете продолжить цепочку вызовов метода `listen` для прослушивания нескольких событий на одном канале:
 
 ```js
 Echo.private(`orders.${this.order.id}`)
@@ -637,23 +637,23 @@ Echo.private(`orders.${this.order.id}`)
 ```
 
 <a name="leaving-a-channel"></a>
-### Leaving A Channel
+### Покидание канала
 
-To leave a channel, you may call the `leaveChannel` method on your Echo instance:
+Чтобы покинуть канал, вы можете вызвать метод `leaveChannel` вашего экземпляра Echo:
 
 ```js
 Echo.leaveChannel(`orders.${this.order.id}`);
 ```
 
-If you would like to leave a channel and also its associated private and presence channels, you may call the `leave` method:
+Если вы хотите покинуть канал, а также связанные с ним частные каналы и каналы присутствия, вы можете вызвать метод `leave`:
 
 ```js
 Echo.leave(`orders.${this.order.id}`);
 ```
 <a name="namespaces"></a>
-### Namespaces
+### Пространства имён
 
-You may have noticed in the examples above that we did not specify the full `App\Events` namespace for the event classes. This is because Echo will automatically assume the events are located in the `App\Events` namespace. However, you may configure the root namespace when you instantiate Echo by passing a `namespace` configuration option:
+Вы могли заметить в приведенных выше примерах, что мы не указали полное пространство имен `App\Events` для классов событий. Это связано с тем, что Echo автоматически предполагает, что события находятся в пространстве имен `App\Events`. Однако вы можете изменить корневое пространство имен при создании экземпляра Echo, передав параметр конфигурации `namespace`:
 
 ```js
 window.Echo = new Echo({
@@ -663,7 +663,7 @@ window.Echo = new Echo({
 });
 ```
 
-Alternatively, you may prefix event classes with a `.` when subscribing to them using Echo. This will allow you to always specify the fully-qualified class name:
+В качестве альтернативы вы можете добавить к классам событий префикс `.` при подписке на них с помощью Echo. Это позволит вам всегда указывать полное имя класса:
 
 ```js
 Echo.channel('orders')
@@ -673,16 +673,16 @@ Echo.channel('orders')
 ```
 
 <a name="presence-channels"></a>
-## Presence Channels
+## Каналы присутствия
 
-Presence channels build on the security of private channels while exposing the additional feature of awareness of who is subscribed to the channel. This makes it easy to build powerful, collaborative application features such as notifying users when another user is viewing the same page or listing the inhabitants of a chat room.
+Каналы присутствия основаны на безопасности частных каналов, но в то же время предоставляя дополнительную функцию осведомленности о том, кто подписан на канал. Это упрощает создание мощных функций приложения для совместной работы, таких как уведомление пользователей, когда другой пользователь просматривает ту же страницу, или перечисление пользователей комнаты чата.
 
 <a name="authorizing-presence-channels"></a>
-### Authorizing Presence Channels
+### Авторизация каналов присутствия
 
-All presence channels are also private channels; therefore, users must be [authorized to access them](#authorizing-channels). However, when defining authorization callbacks for presence channels, you will not return `true` if the user is authorized to join the channel. Instead, you should return an array of data about the user.
+Все каналы присутствия также являются частными; следовательно, пользователи должны быть [авторизованы для доступа к ним](#authorizing-channels). Однако при определении замыканий авторизации для каналов присутствия вы не должны возвращать `true`, если пользователь авторизован для присоединения к каналу. Вместо этого вы должны вернуть массив данных о пользователе.
 
-The data returned by the authorization callback will be made available to the presence channel event listeners in your JavaScript application. If the user is not authorized to join the presence channel, you should return `false` or `null`:
+Данные, возвращаемые замыканием авторизации, будут доступны для слушателей событий канала присутствия в вашем JavaScript-приложении. Если пользователь не авторизован для присоединения к каналу присутствия, то вы должны вернуть `false` или `null`:
 
     Broadcast::channel('chat.{roomId}', function ($user, $roomId) {
         if ($user->canJoinRoom($roomId)) {
@@ -691,9 +691,9 @@ The data returned by the authorization callback will be made available to the pr
     });
 
 <a name="joining-presence-channels"></a>
-### Joining Presence Channels
+### Присоединение к каналам присутствия
 
-To join a presence channel, you may use Echo's `join` method. The `join` method will return a `PresenceChannel` implementation which, along with exposing the `listen` method, allows you to subscribe to the `here`, `joining`, and `leaving` events.
+Чтобы присоединиться к каналу присутствия, вы можете использовать метод `join` Echo. Метод `join` вернет реализацию `PresenceChannel`, которая, наряду с методом `listen`, позволяет вам подписаться на события `here`, `joining` и `leave`.
 
     Echo.join(`chat.${roomId}`)
         .here((users) => {
@@ -706,15 +706,15 @@ To join a presence channel, you may use Echo's `join` method. The `join` method 
             console.log(user.name);
         });
 
-The `here` callback will be executed immediately once the channel is joined successfully, and will receive an array containing the user information for all of the other users currently subscribed to the channel. The `joining` method will be executed when a new user joins a channel, while the `leaving` method will be executed when a user leaves the channel.
+Замыкание `here` будет выполнено сразу после успешного присоединения к канали и получит массив, содержащий информацию о пользователе для всех других пользователей, которые в настоящее время подписаны на канал. Метод `joining` будет выполняться, когда новый пользователь присоединяется к каналу, а метод `leaving` будет выполняться при покидании пользователем канала.
 
 <a name="broadcasting-to-presence-channels"></a>
-### Broadcasting To Presence Channels
+### Трансляция на каналы присутствия
 
-Presence channels may receive events just like public or private channels. Using the example of a chatroom, we may want to broadcast `NewMessage` events to the room's presence channel. To do so, we'll return an instance of `PresenceChannel` from the event's `broadcastOn` method:
+Каналы присутствия могут получать события так же, как публичные или частные каналы. Используя пример чата, мы можем захотеть транслировать события `NewMessage` на канал присутствия комнаты. Для этого мы вернем экземпляр `PresenceChannel` из метода `broadcastOn` события:
 
     /**
-     * Get the channels the event should broadcast on.
+     * Получить каналы трансляции события.
      *
      * @return Channel|array
      */
@@ -723,13 +723,13 @@ Presence channels may receive events just like public or private channels. Using
         return new PresenceChannel('room.'.$this->message->room_id);
     }
 
-As with other events, you may use the `broadcast` helper and the `toOthers` method to exclude the current user from receiving the broadcast:
+Как и в случае с другими событиями, вы можете использовать помощник `broadcast` и метод `toOthers`, чтобы исключить текущего пользователя из приема трансляции:
 
     broadcast(new NewMessage($message));
 
     broadcast(new NewMessage($message))->toOthers();
 
-As typical of other types of events, you may listen for events sent to presence channels using Echo's `listen` method:
+Как и для других типов событий, вы можете прослушивать события, отправленные в каналы присутствия, используя метод `listen` Echo:
 
     Echo.join(`chat.${roomId}`)
         .here(...)
@@ -740,20 +740,20 @@ As typical of other types of events, you may listen for events sent to presence 
         });
 
 <a name="client-events"></a>
-## Client Events
+## Клиентские события
 
-> {tip} When using [Pusher Channels](https://pusher.com/channels), you must enable the "Client Events" option in the "App Settings" section of your [application dashboard](https://dashboard.pusher.com/) in order to send client events.
+> {tip} При использовании [Pusher Channels](https://pusher.com/channels) вы должны включить опцию «Client Events» в разделе «App Settings» вашей [панели управления приложения](https://dashboard.pusher.com/) для отправки клиентских событий.
 
-Sometimes you may wish to broadcast an event to other connected clients without hitting your Laravel application at all. This can be particularly useful for things like "typing" notifications, where you want to alert users of your application that another user is typing a message on a given screen.
+По желанию можно транслировать событие другим подключенным клиентам, вообще не затрагивая ваше приложение Laravel. Это может быть особенно полезно для таких вещей, как «ввод» уведомлений, когда вы хотите предупредить пользователей вашего приложения о том, что другой пользователь печатает сообщение.
 
-To broadcast client events, you may use Echo's `whisper` method:
+Чтобы транслировать клиентские события, вы можете использовать метод `whisper` Echo:
 
     Echo.private(`chat.${roomId}`)
         .whisper('typing', {
             name: this.user.name
         });
 
-To listen for client events, you may use the `listenForWhisper` method:
+Чтобы прослушивать клиентские события, вы можете использовать метод `listenForWhisper`:
 
     Echo.private(`chat.${roomId}`)
         .listenForWhisper('typing', (e) => {
@@ -761,15 +761,15 @@ To listen for client events, you may use the `listenForWhisper` method:
         });
 
 <a name="notifications"></a>
-## Notifications
+## Уведомления
 
-By pairing event broadcasting with [notifications](notifications.md), your JavaScript application may receive new notifications as they occur without needing to refresh the page. Before getting started, be sure to read over the documentation on using [the broadcast notification channel](notifications.md#broadcast-notifications).
+Если связать трансляцию событий с [уведомлениями](notifications.md), то ваше JavaScript-приложение может получать новые уведомления по мере их появления без необходимости обновления страницы. Перед началом работы обязательно прочтите документацию по использованию [канала транслируемых уведомлений](notifications.md#broadcast-notifications).
 
-Once you have configured a notification to use the broadcast channel, you may listen for the broadcast events using Echo's `notification` method. Remember, the channel name should match the class name of the entity receiving the notifications:
+После того, как вы настроили уведомление для использования трансляции канала, вы можете прослушивать транслируемые события, используя метод `notification` Echo. Помните, что имя канала должно соответствовать имени класса объекта, получающего уведомления:
 
     Echo.private(`App.Models.User.${userId}`)
         .notification((notification) => {
             console.log(notification.type);
         });
 
-In this example, all notifications sent to `App\Models\User` instances via the `broadcast` channel would be received by the callback. A channel authorization callback for the `App.Models.User.{id}` channel is included in the default `BroadcastServiceProvider` that ships with the Laravel framework.
+В этом примере все уведомления, отправленные экземплярам `App\Models\User` через канал `broadcast`, будут получены в замыкании. Авторизация канала `App.Models.User.{id}` уже изначально содержится в `BroadcastServiceProvider` фреймворка Laravel.

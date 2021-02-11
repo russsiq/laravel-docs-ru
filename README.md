@@ -45,7 +45,7 @@
     - [x] [Логирование](./docs/logging.md)
 - ## Углубленное изучение
     - [x] [Консоль Artisan](./docs/artisan.md)
-    - [ ] [Широковещание](./docs/broadcasting.md)
+    - [x] [Трансляция событий](./docs/broadcasting.md)
     - [x] [Кеш приложения](./docs/cache.md)
     - [x] [Коллекции](./docs/collections.md)
     - [x] [Компиляция исходников (Mix)](./docs/mix.md)
@@ -170,6 +170,7 @@ backend  |  серверная часть  |
 bag, message bag, attribute bag  |  коллекция, коллекция сообщений, коллекция атрибутов  |  
 basic example  |  отвлеченный пример  |  Правильнее «пример основ» (чего-либо)
 binding  |  связывание  |  
+broadcaster  |  вещатель  |  
 <a name="dictionary-c">**C**</a>
 cache  |  кеш  |  
 casting  |  типизация  |  
