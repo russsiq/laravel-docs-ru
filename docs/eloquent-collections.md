@@ -37,7 +37,7 @@
 
 Все коллекции Eloquent расширяют базовый класс [коллекций Laravel](collections.md#available-methods); поэтому они наследуют все мощные методы, предоставляемые классом базовой коллекции.
 
-Кроме того, класс `Illuminate\Database\Eloquent\Collection` предоставляет расширенный набор методов, помогающих управлять коллекциями моделей. Большинство методов возвращают экземпляры `Illuminate\Database\Eloquent\Collection`; однако некоторые методы, такие как `modelKeys`, возвращают экземпляр `Illuminate\Support\Collection`.
+Кроме того, класс `Illuminate\Database\Eloquent\Collection` содержит расширенный набор методов, помогающих управлять коллекциями моделей. Большинство методов возвращают экземпляры `Illuminate\Database\Eloquent\Collection`; однако некоторые методы, такие как `modelKeys`, возвращают экземпляр `Illuminate\Support\Collection`.
 
 <!-- <style>
     #collection-method-list > p {
