@@ -6,7 +6,7 @@
     - [HTTP-ядро и ядро консоли](#http-console-kernels)
     - [Поставщики служб](#service-providers)
     - [Маршрутизация](#routing)
-    - [Окончание Up](#finishing-up)
+    - [Окончание](#finishing-up)
 - [Сосредоточьтесь на поставщиках служб](#focus-on-service-providers)
 
 <a name="introduction"></a>
