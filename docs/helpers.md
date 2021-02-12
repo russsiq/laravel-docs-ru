@@ -2579,7 +2579,7 @@ If no matches are found, an empty collection will be returned.
 <a name="method-cache"></a>
 #### `cache()`
 
-Функция `cache` может использоваться для получения значений из [кеша](cache.md). Если переданный ключ не существует в кеше, будет возвращено необязательное значение по умолчанию:
+Функция `cache` используется для получения значений из [кеша](cache.md). Если переданный ключ не существует в кеше, будет возвращено необязательное значение по умолчанию:
 
     $value = cache('key');
 
@@ -2866,7 +2866,7 @@ If no matches are found, an empty collection will be returned.
 <a name="method-session"></a>
 #### `session()`
 
-Функция `session` может использоваться для получения или задания значений [сессии](session.md):
+Функция `session` используется для получения или задания значений [сессии](session.md):
 
     $value = session('key');
 

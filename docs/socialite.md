@@ -1,4 +1,4 @@
-# Laravel 8.x — Пакет Laravel Socialite 
+# Laravel 8.x — Пакет Laravel Socialite
 
 - [Введение](#introduction)
 - [Установка](#installation)
@@ -140,7 +140,7 @@
 <a name="stateless-authentication"></a>
 #### Аутентификация без сохранения состояния
 
-Метод `stateless` может использоваться для отключения проверки состояния сессии. Это полезно при добавлении социальной аутентификации в API:
+Метод `stateless` используется для отключения проверки состояния сессии. Это полезно при добавлении социальной аутентификации в API:
 
     use Laravel\Socialite\Facades\Socialite;
 

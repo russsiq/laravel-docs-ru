@@ -185,7 +185,7 @@ Laravel предоставляет полезные методы для имит
 <a name="bus-job-chains"></a>
 ### Цепочка заданий
 
-Метод `assertChained` фасада `Bus` может использоваться для подтверждения отправки [цепочки заданий](queues.md#job-chaining). Метод `assertChained` принимает массив связанных заданий в качестве первого аргумента:
+Метод `assertChained` фасада `Bus` используется для подтверждения отправки [цепочки заданий](queues.md#job-chaining). Метод `assertChained` принимает массив связанных заданий в качестве первого аргумента:
 
     use App\Jobs\RecordShipment;
     use App\Jobs\ShipOrder;
@@ -209,7 +209,7 @@ Laravel предоставляет полезные методы для имит
 <a name="job-batches"></a>
 ### Пакетная обработка заданий
 
-Метод `assertBatched` фасада `Bus` может использоваться для подтверждения того, что [пакет заданий](queues.md#job-batches) был отправлен. Замыкание, переданное методу `assertBatched`, получает экземпляр `Illuminate\Bus\PendingBatch`, который может использоваться для инспектирования заданий в пакете:
+Метод `assertBatched` фасада `Bus` используется для подтверждения того, что [пакет заданий](queues.md#job-batches) был отправлен. Замыкание, переданное методу `assertBatched`, получает экземпляр `Illuminate\Bus\PendingBatch`, который может использоваться для инспектирования заданий в пакете:
 
     use Illuminate\Bus\PendingBatch;
     use Illuminate\Support\Facades\Bus;
