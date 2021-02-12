@@ -11,7 +11,7 @@
     - [Ably](#client-ably)
 - [Обзор концепции](#concept-overview)
     - [Пример использования](#using-example-application)
-- [Определение транслируемого событий](#defining-broadcast-events)
+- [Определение транслируемых событий](#defining-broadcast-events)
     - [Имя транслируемого события](#broadcast-name)
     - [Данные трансляции](#broadcast-data)
     - [Очередь трансляции](#broadcast-queue)
