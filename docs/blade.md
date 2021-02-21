@@ -17,6 +17,7 @@
     - [Отрисовка компонентов](#rendering-components)
     - [Передача данных компонентам](#passing-data-to-components)
     - [Атрибуты компонента](#component-attributes)
+    - [Зарезервированные ключевые слова](#reserved-keywords)
     - [Слоты](#slots)
     - [Встроенные шаблоны компонентов](#inline-component-views)
     - [Анонимные компоненты](#anonymous-components)
@@ -870,6 +871,34 @@ Blade отобразит следующий HTML-код:
         $this->message = $message;
     }
 
+<a name="hiding-attributes-and-methods"></a>
+#### Скрытие атрибутов / методов
+
+Если вы хотите, чтобы некоторые публичные методы или свойства не использовались как переменные в шаблоне компонента, вы можете добавить их в свойство массива `$except` в вашем компоненте:
+
+    <?php
+
+    namespace App\View\Components;
+
+    use Illuminate\View\Component;
+
+    class Alert extends Component
+    {
+        /**
+         * Тип предупреждения.
+         *
+         * @var string
+         */
+        public $type;
+
+        /**
+         * Свойства / методы, которые не должны использоваться в шаблоне компонента.
+         *
+         * @var array
+         */
+        protected $except = ['type'];
+    }
+
 <a name="component-attributes"></a>
 ### Атрибуты компонента
 
@@ -972,6 +1001,21 @@ Blade отобразит следующий HTML-код:
 Вы можете получить значение конкретного атрибута, используя метод `get`:
 
     {{ $attributes->get('class') }}
+
+<a name="reserved-keywords"></a>
+### Зарезервированные ключевые слова
+
+По умолчанию некоторые ключевые слова зарезервированы для внутреннего использования Blade при визуализации компонентов. Следующие ключевые слова не могут быть определены как публичные свойства или имена методов в ваших компонентах:
+
+<!-- <div class="content-list" markdown="1"> -->
+- `data`
+- `render`
+- `resolveView`
+- `shouldRender`
+- `view`
+- `withAttributes`
+- `withName`
+<!-- </div> -->
 
 <a name="slots"></a>
 ### Слоты

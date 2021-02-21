@@ -15,7 +15,7 @@
 <a name="laravel-breeze"></a>
 ## Laravel Breeze
 
-**Laravel Breeze** – это минимальная и простая реализация всего [функционала аутентификации](authentication.md) Laravel, включая вход в систему, регистрацию, сброс пароля, подтверждение адреса электронной почты и пароля. Слой «View» комплекта Laravel Breeze состоит из простых [шаблонов Blade](blade.md), стилизованных с помощью [Tailwind CSS](https://tailwindcss.com). Breeze является прекрасной отправной точкой для создания нового приложения Laravel.
+**Laravel Breeze** – это минимальная и простая реализация всего [функционала аутентификации](authentication.md) Laravel, включая вход в систему, регистрацию, сброс пароля, подтверждение адреса электронной почты и пароля. Слой «View» комплекта Laravel Breeze по умолчанию состоит из простых [шаблонов Blade](blade.md), стилизованных с помощью [Tailwind CSS](https://tailwindcss.com). Breeze является прекрасной отправной точкой для создания нового приложения Laravel.
 
 <a name="laravel-breeze-installation"></a>
 ### Установка
@@ -49,6 +49,17 @@ npm run dev
 Затем, вы можете перейти в своем веб-браузере по URL-адресам вашего приложения `/login` или `/register`. Все маршруты Breeze определены в файле `routes/auth.php`.
 
 > {tip} Чтобы узнать больше о компиляции CSS и JavaScript вашего приложения, ознакомьтесь с [документацией Laravel Mix](mix.md#running-mix).
+
+<a name="breeze-and-inertia"></a>
+#### Breeze и Inertia
+
+Laravel Breeze также предлагает реализацию внешнего интерфейса [Inertia.js](https://inertiajs.com) на базе Vue. Чтобы использовать стек Inertia, передайте параметр `--inertia` при выполнении команды `breeze:install` Artisan:
+
+```bash
+php artisan breeze:install --inertia
+npm install
+npm run dev
+```
 
 <a name="laravel-jetstream"></a>
 ## Laravel Jetstream

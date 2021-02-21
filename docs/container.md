@@ -225,6 +225,12 @@
         ->needs('$reports')
         ->giveTagged('reports');
 
+Если вам нужно внедрить значение из одного из конфигурационных файлов вашего приложения, то вы можете использовать метод `giveConfig`:
+
+    $this->app->when(ReportAggregator::class)
+        ->needs('$timezone')
+        ->giveConfig('app.timezone');
+
 <a name="binding-typed-variadics"></a>
 ### Связывание типизированных вариаций
 

@@ -209,6 +209,41 @@
 
     $user->update(['options->key' => 'value']);
 
+<a name="array-object-and-collection-casting"></a>
+#### Типизация ArrayObject и Collection
+
+Хотя типизации стандартного `array` достаточно для многих приложений, но у него есть некоторые недостатки. Поскольку типизация `array` возвращает примитивный тип, невозможно напрямую изменить смещение массива. Например, следующий код вызовет ошибку PHP:
+
+    $user = User::find(1);
+
+    $user->options['key'] = $value;
+
+Чтобы решить эту проблему, Laravel предлагает типизацию `AsArrayObject`, которая преобразует ваш атрибут JSON в класс [ArrayObject](https://www.php.net/manual/en/class.arrayobject.php). Эта функция реализована с использованием реализации [пользовательской типизации](#custom-casts) Laravel, которая позволяет Laravel интеллектуально кэшировать и преобразовывать измененный объект таким образом, что отдельные смещения могли быть изменены без ошибок PHP. Чтобы использовать типизацию `AsArrayObject`, просто назначьте его атрибуту:
+
+    use Illuminate\Database\Eloquent\Casts\AsArrayObject;
+
+    /**
+     * Атрибуты, которые должны быть типизированы.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'options' => AsArrayObject::class,
+    ];
+
+Точно так же Laravel предлагает типизацию `AsCollection`, которая преобразует ваш атрибут JSON в экземпляр Laravel [Collection](collections.md):
+
+    use Illuminate\Database\Eloquent\Casts\AsCollection;
+
+    /**
+     * Атрибуты, которые должны быть типизированы.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'options' => AsCollection::class,
+    ];
+
 <a name="date-casting"></a>
 ### Типизация даты
 
