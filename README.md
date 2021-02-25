@@ -56,7 +56,7 @@
     - [x] [HTTP-клиент](./docs/http-client.md)
     - [x] [Локализация](./docs/localization.md)
     - [x] [Почтовые отправления](./docs/mail.md)
-    - [ ] [Уведомления](./docs/notifications.md)
+    - [x] [Уведомления](./docs/notifications.md)
     - [x] [Разработка пакетов](./docs/packages.md)
     - [x] [Очереди](./docs/queues.md)
     - [ ] [Планирование задач](./docs/scheduling.md)
