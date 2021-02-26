@@ -94,7 +94,7 @@ Sanctum будет пытаться аутентифицироваться с п
 
 Затем, вы можете указать Sanctum использовать вашу пользовательскую модель с помощью метода `usePersonalAccessTokenModel`, предоставленного Sanctum. Обычно вы должны вызывать этот метод в методе `boot` одного из поставщиков служб вашего приложения:
 
-    use App\Models\Passport\PersonalAccessToken;
+    use App\Models\Sanctum\PersonalAccessToken;
     use Laravel\Sanctum\Sanctum;
 
     /**

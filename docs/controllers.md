@@ -78,7 +78,6 @@
         /**
          * Подготовить новый веб-сервер.
          *
-         * @param  int  $id
          * @return \Illuminate\Http\Response
          */
         public function __invoke()

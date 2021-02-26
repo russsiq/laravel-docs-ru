@@ -119,6 +119,7 @@ Laravel автоматически обрабатывает создание и 
 
     namespace App\Providers;
 
+    use Illuminate\Support\Facades\Artisan;
     use Illuminate\Support\Facades\ParallelTesting;
     use Illuminate\Support\ServiceProvider;
 
@@ -132,23 +133,31 @@ Laravel автоматически обрабатывает создание и 
         public function boot()
         {
             ParallelTesting::setUpProcess(function ($token) {
-                // ..
+                // ...
             });
 
             ParallelTesting::setUpTestCase(function ($token, $testCase) {
-                // ..
+                // ...
+            });
+
+            // Выполнится при создании тестовой базы данных ...
+            ParallelTesting::setUpTestDatabase(function ($database, $token) {
+                Artisan::call('db:seed');
             });
 
             ParallelTesting::tearDownTestCase(function ($token, $testCase) {
-                // ..
+                // ...
             });
 
             ParallelTesting::tearDownProcess(function ($token) {
-                // ..
+                // ...
             });
         }
     }
 
-Если вы хотите получить доступ к токену текущего процесса из любого другого места в коде теста вашего приложения, то вы можете использовать метод `token`:
+<a name="accessing-the-parallel-testing-token"></a>
+#### Доступ к токену процесса параллельного тестирования
+
+Если вы хотите получить доступ к «токену» текущего процесса из любого другого места в коде теста вашего приложения, то вы можете использовать метод `token`. Этот токен представляет собой уникальный целочисленный идентификатор для каждого из процессов тестирования и может использоваться для разделения [подготавливаемых ресурсов](#parallel-testing-hooks) процессов параллельного тестирования. Например, Laravel автоматически добавляет этот токен в конец тестовых баз данных, создаваемых каждым процессом параллельного тестирования:
 
     $token = ParallelTesting::token();

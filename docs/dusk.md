@@ -904,6 +904,7 @@ Dusk содержит множество утверждений, которые 
 - [assertDataAttribute](#assert-data-attribute)
 - [assertVisible](#assert-visible)
 - [assertPresent](#assert-present)
+- [assertNotPresent](#assert-not-present)
 - [assertMissing](#assert-missing)
 - [assertDialogOpened](#assert-dialog-opened)
 - [assertEnabled](#assert-enabled)
@@ -1304,6 +1305,13 @@ Dusk содержит множество утверждений, которые 
 Утверждает, что элемент с указанным селектором, присутствует:
 
     $browser->assertPresent($selector);
+
+<a name="assert-not-present"></a>
+#### assertNotPresent
+
+Утверждает, что элемент с указанным селектором, отсутствует в исходном коде страницы:
+
+    $browser->assertNotPresent($selector);
 
 <a name="assert-missing"></a>
 #### assertMissing

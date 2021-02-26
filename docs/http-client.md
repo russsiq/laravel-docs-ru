@@ -35,6 +35,7 @@ Laravel предлагает выразительный минимальный A
 
     $response->body() : string;
     $response->json() : array|mixed;
+    $response->collect() : Illuminate\Support\Collection;
     $response->status() : int;
     $response->ok() : bool;
     $response->successful() : bool;

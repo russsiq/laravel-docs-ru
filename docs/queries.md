@@ -102,11 +102,11 @@
 <a name="retrieving-a-list-of-column-values"></a>
 #### Получение списка значений столбца
 
-Если вы хотите получить экземпляр `Illuminate\Support\Collection`, содержащий значения одного столбца, вы можете использовать метод `pluck`. В этом примере мы получим коллекцию названий ролей:
+Если вы хотите получить экземпляр `Illuminate\Support\Collection`, содержащий значения одного столбца, вы можете использовать метод `pluck`. В этом примере мы получим коллекцию из названий ролей:
 
     use Illuminate\Support\Facades\DB;
 
-    $titles = DB::table('users')->pluck('title');
+    $titles = DB::table('roles')->pluck('title');
 
     foreach ($titles as $title) {
         echo $title;

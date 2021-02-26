@@ -1285,7 +1285,7 @@ Laravel также содержит глобального помощника `o
     use Illuminate\Support\Facades\Validator;
 
     $validator = Validator::make($data, [
-        'has_appointment' => 'required|bool',
+        'has_appointment' => 'required|boolean',
         'appointment_date' => 'exclude_if:has_appointment,false|required|date',
         'doctor_name' => 'exclude_if:has_appointment,false|required|string',
     ]);
@@ -1293,7 +1293,7 @@ Laravel также содержит глобального помощника `o
 В качестве альтернативы вы можете использовать правило `exclude_unless`, чтобы не проверять конкретное поле, если другое поле не имеет указанного значения:
 
     $validator = Validator::make($data, [
-        'has_appointment' => 'required|bool',
+        'has_appointment' => 'required|boolean',
         'appointment_date' => 'exclude_unless:has_appointment,true|required|date',
         'doctor_name' => 'exclude_unless:has_appointment,true|required|string',
     ]);

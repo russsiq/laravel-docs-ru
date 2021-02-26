@@ -6,6 +6,7 @@
     - [Начало работы в macOS](#getting-started-on-macos)
     - [Начало работы в Windows](#getting-started-on-windows)
     - [Начало работы в Linux](#getting-started-on-linux)
+    - [Выбор служб Sail](#choosing-your-sail-services)
     - [Установка через Composer](#installation-via-composer)
 - [Начальная конфигурация](#initial-configuration)
 - [Следующие шаги](#next-steps)
@@ -137,6 +138,19 @@ cd example-app
 После запуска контейнеров приложения Docker, вы можете получить доступ к приложению в своем веб-браузере по адресу: http://localhost.
 
 > {tip} Чтобы продолжить изучение Laravel Sail, просмотрите его [полную документацию](sail.md).
+
+<a name="choosing-your-sail-services"></a>
+### Выбор служб Sail
+
+При создании нового приложения Laravel через Sail вы можете использовать строковую переменную запроса `with`, чтобы выбрать, какие службы должны быть настроены в файле `docker-compose.yml` вашего нового приложения. Доступны следующие службы `mysql`, `pgsql`, `redis`, `memcached`, `meilisearch`, `selenium` и `mailhog`:
+
+```nothing
+curl -s "https://laravel.build/example-app?with=mysql,redis" | bash
+```
+
+Если вы не укажете желаемые службы, то будет сконфигурирован стек по умолчанию из `mysql`, `redis`, `meilisearch`, `mailhog` и `selenium`.
+
+If you do not specify which services you would like configured, a default stack of `mysql`, `redis`, `meilisearch`, `mailhog`, and `selenium` will be configured.
 
 <a name="installation-via-composer"></a>
 ### Установка через Composer

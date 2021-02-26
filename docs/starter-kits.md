@@ -44,6 +44,8 @@ php artisan breeze:install
 npm install
 
 npm run dev
+
+php artisan migrate
 ```
 
 Затем, вы можете перейти в своем веб-браузере по URL-адресам вашего приложения `/login` или `/register`. Все маршруты Breeze определены в файле `routes/auth.php`.
@@ -57,8 +59,12 @@ Laravel Breeze также предлагает реализацию внешне
 
 ```bash
 php artisan breeze:install --inertia
+
 npm install
+
 npm run dev
+
+php artisan migrate
 ```
 
 <a name="laravel-jetstream"></a>
