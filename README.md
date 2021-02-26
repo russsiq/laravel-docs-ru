@@ -142,7 +142,7 @@ K
 [R](#dictionary-r)
 [S](#dictionary-s)
 [T](#dictionary-t)
-U
+[U](#dictionary-u)
 [V](#dictionary-v)
 [W](#dictionary-w)
 X
@@ -340,6 +340,8 @@ terms of service  |  условия использования  |
 timestamp  |  временная метка  |  
 type-hinting  |  типизация (аргументов), объявление зависимостей  |  
 toggling  |  переключение  |  
+<a name="dictionary-u">**U**</a>
+user-land  |  пользовательский слой ПО  |  
 <a name="dictionary-v">**V**</a>
 valid  |  действительный, допустимый  |  
 validation  |  валидация, проверка  |  
