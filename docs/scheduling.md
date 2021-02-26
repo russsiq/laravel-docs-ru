@@ -1,32 +1,32 @@
-# Task Scheduling
+# Laravel 8.x — Планирование задач
 
-- [Introduction](#introduction)
-- [Defining Schedules](#defining-schedules)
-    - [Scheduling Artisan Commands](#scheduling-artisan-commands)
-    - [Scheduling Queued Jobs](#scheduling-queued-jobs)
-    - [Scheduling Shell Commands](#scheduling-shell-commands)
-    - [Schedule Frequency Options](#schedule-frequency-options)
-    - [Timezones](#timezones)
-    - [Preventing Task Overlaps](#preventing-task-overlaps)
-    - [Running Tasks On One Server](#running-tasks-on-one-server)
-    - [Background Tasks](#background-tasks)
-    - [Maintenance Mode](#maintenance-mode)
-- [Running The Scheduler](#running-the-scheduler)
-    - [Running The Scheduler Locally](#running-the-scheduler-locally)
-- [Task Output](#task-output)
-- [Task Hooks](#task-hooks)
+- [Введение](#introduction)
+- [Определение расписаний](#defining-schedules)
+    - [Планирование команд Artisan](#scheduling-artisan-commands)
+    - [Планирование отправки заданий в очереди](#scheduling-queued-jobs)
+    - [Планирование команд операционной системы](#scheduling-shell-commands)
+    - [Параметры периодичности расписания](#schedule-frequency-options)
+    - [Часовые пояса](#timezones)
+    - [Предотвращение дублирования задач](#preventing-task-overlaps)
+    - [Выполнение задач на одном сервере](#running-tasks-on-one-server)
+    - [Фоновые задачи](#background-tasks)
+    - [Режим технического обслуживания](#maintenance-mode)
+- [Запуск планировщика](#running-the-scheduler)
+    - [Локальный запуск планировщика](#running-the-scheduler-locally)
+- [Результат выполнения задачи](#task-output)
+- [Хуки выполнения задачи](#task-hooks)
 
 <a name="introduction"></a>
-## Introduction
+## Введение
 
-In the past, you may have written a cron configuration entry for each task you needed to schedule on your server. However, this can quickly become a pain because your task schedule is no longer in source control and you must SSH into your server to view your existing cron entries or add additional entries.
+В прошлом вы могли создавать запись конфигурации cron для каждой задачи, которую нужно было запланировать на своем сервере. Однако это может быстро стать проблемой, потому что ваше расписание задач не находится в системе управления версиями и вы должны подключаться по SSH для просмотра существующих записей cron или добавления дополнительных записей.
 
-Laravel's command scheduler offers a fresh approach to managing scheduled tasks on your server. The scheduler allows you to fluently and expressively define your command schedule within your Laravel application itself. When using the scheduler, only a single cron entry is needed on your server. Your task schedule is defined in the `app/Console/Kernel.php` file's `schedule` method. To help you get started, a simple example is defined within the method.
+Планировщик команд Laravel предлагает новый подход к управлению запланированными задачами на вашем сервере. Планировщик позволяет вам быстро и выразительно определять расписание команд в самом приложении Laravel. При использовании планировщика на вашем сервере требуется только одна запись cron. Расписание задач определяется в методе `schedule` файла `app/Console/Kernel.php`. Для начала работы в методе определен простой пример.
 
 <a name="defining-schedules"></a>
-## Defining Schedules
+## Определение расписаний
 
-You may define all of your scheduled tasks in the `schedule` method of your application's `App\Console\Kernel` class. To get started, let's take a look at an example. In this example, we will schedule a closure to be called every day at midnight. Within the closure we will execute a database query to clear a table:
+Вы можете определить все свои запланированные задачи в методе `schedule` класса `App\Console\Kernel` вашего приложения. Для начала рассмотрим пример. В этом примере мы определим замыкание, которое будет вызываться каждый день в полночь. В замыкании мы выполним запрос к базе данных для очистки таблицы:
 
     <?php
 
@@ -39,7 +39,7 @@ You may define all of your scheduled tasks in the `schedule` method of your appl
     class Kernel extends ConsoleKernel
     {
         /**
-         * The Artisan commands provided by your application.
+         * Команды Artisan вашего приложения.
          *
          * @var array
          */
@@ -48,7 +48,7 @@ You may define all of your scheduled tasks in the `schedule` method of your appl
         ];
 
         /**
-         * Define the application's command schedule.
+         * Определить расписание выполнения команд приложения.
          *
          * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
          * @return void
@@ -61,22 +61,22 @@ You may define all of your scheduled tasks in the `schedule` method of your appl
         }
     }
 
-In addition to scheduling using closures, you may also schedule [invokable objects](https://secure.php.net/manual/en/language.oop5.magic.php#object.invoke). Invokable objects are simple PHP classes that contain an `__invoke` method:
+В дополнение к планированию с использованием замыканий вы также можете использовать [вызываемые объекты](https://secure.php.net/manual/en/language.oop5.magic.php#object.invoke). Вызываемые объекты – это простые классы PHP, содержащие метод `__invoke`:
 
     $schedule->call(new DeleteRecentUsers)->daily();
 
-If you would like to view an overview of your scheduled tasks and the next time they are scheduled to run, you may use the `schedule:list` Artisan command:
+Если вы хотите просмотреть список ваших запланированных задач и их последующего запуска, то вы можете использовать команду `schedule:list` Artisan:
 
 ```nothing
 php artisan schedule:list
 ```
 
 <a name="scheduling-artisan-commands"></a>
-### Scheduling Artisan Commands
+### Планирование команд Artisan
 
-In addition to scheduling closures, you may also schedule [Artisan commands](/docs/{{version}}/artisan) and system commands. For example, you may use the `command` method to schedule an Artisan command using either the command's name or class.
+В дополнение к планированию с использованием замыканий вы также можете использовать [команды Artisan](artisan.md) и системные команды. Например, вы можете использовать метод `command` для планирования команды Artisan, используя имя команды или класс.
 
-When scheduling Artisan commands using the command's class name, you may pass an array of additional command-line arguments that should be provided to the command when it is invoked:
+При планировании команд Artisan с использованием имени класса команды вы можете передать массив дополнительных аргументов командной строки, которые должны быть переданы команде при ее вызове:
 
     use App\Console\Commands\SendEmailsCommand;
 
@@ -85,107 +85,107 @@ When scheduling Artisan commands using the command's class name, you may pass an
     $schedule->command(SendEmailsCommand::class, ['Taylor', '--force'])->daily();
 
 <a name="scheduling-queued-jobs"></a>
-### Scheduling Queued Jobs
+### Планирование отправки заданий в очереди
 
-The `job` method may be used to schedule a [queued job](/docs/{{version}}/queues). This method provides a convenient way to schedule queued jobs without using the `call` method to define closures to queue the job:
+Метод `job` используется для планирования отправки [задания в очередь](queues.md). Этот метод обеспечивает удобный способ планирования таких заданий без использования метода `call` с замыканием:
 
     use App\Jobs\Heartbeat;
 
     $schedule->job(new Heartbeat)->everyFiveMinutes();
 
-Optional second and third arguments may be provided to the `job` method which specifies the queue name and queue connection that should be used to queue the job:
+Необязательные второй и третий аргументы могут быть переданы методу `job` для указания имени очереди и соединения очереди, которые должны использоваться для постановки задания в очередь:
 
     use App\Jobs\Heartbeat;
 
-    // Dispatch the job to the "heartbeats" queue on the "sqs" connection...
+    // Отправляем задание в очередь «heartbeats» соединения «sqs» ...
     $schedule->job(new Heartbeat, 'heartbeats', 'sqs')->everyFiveMinutes();
 
 <a name="scheduling-shell-commands"></a>
-### Scheduling Shell Commands
+### Планирование команд операционной системы
 
-The `exec` method may be used to issue a command to the operating system:
+Метод `exec` используется для передачи команды операционной системе:
 
     $schedule->exec('node /home/forge/script.js')->daily();
 
 <a name="schedule-frequency-options"></a>
-### Schedule Frequency Options
+### Параметры периодичности расписания
 
-We've already seen a few examples of how you may configure a task to run at specified intervals. However, there are many more task schedule frequencies that you may assign to a task:
+Мы уже видели несколько примеров того, как можно настроить задачу на выполнение через определенные промежутки времени. Однако существует гораздо больше параметров планирования, которые можно назначить задаче:
 
-Method  | Description
+Метод  | Описание
 ------------- | -------------
-`->cron('* * * * *');`  |  Run the task on a custom cron schedule
-`->everyMinute();`  |  Run the task every minute
-`->everyTwoMinutes();`  |  Run the task every two minutes
-`->everyThreeMinutes();`  |  Run the task every three minutes
-`->everyFourMinutes();`  |  Run the task every four minutes
-`->everyFiveMinutes();`  |  Run the task every five minutes
-`->everyTenMinutes();`  |  Run the task every ten minutes
-`->everyFifteenMinutes();`  |  Run the task every fifteen minutes
-`->everyThirtyMinutes();`  |  Run the task every thirty minutes
-`->hourly();`  |  Run the task every hour
-`->hourlyAt(17);`  |  Run the task every hour at 17 minutes past the hour
-`->everyTwoHours();`  |  Run the task every two hours
-`->everyThreeHours();`  |  Run the task every three hours
-`->everyFourHours();`  |  Run the task every four hours
-`->everySixHours();`  |  Run the task every six hours
-`->daily();`  |  Run the task every day at midnight
-`->dailyAt('13:00');`  |  Run the task every day at 13:00
-`->twiceDaily(1, 13);`  |  Run the task daily at 1:00 & 13:00
-`->weekly();`  |  Run the task every Sunday at 00:00
-`->weeklyOn(1, '8:00');`  |  Run the task every week on Monday at 8:00
-`->monthly();`  |  Run the task on the first day of every month at 00:00
-`->monthlyOn(4, '15:00');`  |  Run the task every month on the 4th at 15:00
-`->twiceMonthly(1, 16, '13:00');`  |  Run the task monthly on the 1st and 16th at 13:00
-`->lastDayOfMonth('15:00');` | Run the task on the last day of the month at 15:00
-`->quarterly();` |  Run the task on the first day of every quarter at 00:00
-`->yearly();`  |  Run the task on the first day of every year at 00:00
-`->yearlyOn(6, 1, '17:00');`  |  Run the task every year on June 1st at 17:00
-`->timezone('America/New_York');` | Set the timezone for the task
+`->cron('* * * * *');`  |  Запустить задачу по расписанию с параметрами cron
+`->everyMinute();`  |  Запускать задачу ежеминутно
+`->everyTwoMinutes();`  |  – каждые 2 минуты
+`->everyThreeMinutes();`  |  – каждые 3 минуты
+`->everyFourMinutes();`  |  – каждые 4 минуты
+`->everyFiveMinutes();`  |  – каждые 5 минут
+`->everyTenMinutes();`  |  – каждые 10 минут
+`->everyFifteenMinutes();`  |  – каждые 15 минут
+`->everyThirtyMinutes();`  |  – каждые 30 минут
+`->hourly();`  |  – каждый час
+`->hourlyAt(17);`  |  – в 17 минут каждого часа
+`->everyTwoHours();`  |  – каждые 2 часа
+`->everyThreeHours();`  |  – каждые 3 часа
+`->everyFourHours();`  |  – каждые 4 часа
+`->everySixHours();`  |  – каждые 6 часов
+`->daily();`  |  – каждый день в полночь
+`->dailyAt('13:00');`  |  – ежедневно в 13:00
+`->twiceDaily(1, 13);`  |  – ежедневно дважды в день: в 1:00 и 13:00
+`->weekly();`  |  – еженедельно в воскресенье в 00:00
+`->weeklyOn(1, '8:00');`  |  – еженедельно в понедельник в 8:00
+`->monthly();`  |  – ежемесячно первого числа в 00:00
+`->monthlyOn(4, '15:00');`  |  – ежемесячно 4 числа в 15:00
+`->twiceMonthly(1, 16, '13:00');`  |  – ежемесячно дважды в месяц: 1 и 16 числа в 13:00
+`->lastDayOfMonth('15:00');` | – ежемесячно в последний день месяца в 15:00
+`->quarterly();` |  – ежеквартально в первый день в 00:00
+`->yearly();`  |  – ежегодно в первый день в 00:00
+`->yearlyOn(6, 1, '17:00');`  |  – ежегодно в июне первого числа в 17:00
+`->timezone('America/New_York');` | Установить часовой пояс для задачи
 
-These methods may be combined with additional constraints to create even more finely tuned schedules that only run on certain days of the week. For example, you may schedule a command to run weekly on Monday:
+Эти методы можно комбинировать с дополнительными ограничениями для создания еще более точных расписаний, которые выполняются только в определенные дни недели. Например, вы можете запланировать выполнение команды еженедельно в понедельник:
 
-    // Run once per week on Monday at 1 PM...
+    // Запускаем раз в неделю в понедельник в 13:00 ...
     $schedule->call(function () {
         //
     })->weekly()->mondays()->at('13:00');
 
-    // Run hourly from 8 AM to 5 PM on weekdays...
+    // Запускаем по будням ежечасно с 8 утра до 5 вечера ...
     $schedule->command('foo')
               ->weekdays()
               ->hourly()
               ->timezone('America/Chicago')
               ->between('8:00', '17:00');
 
-A list of additional schedule constraints may be found below:
+Список дополнительных ограничений расписания можно найти ниже:
 
-Method  | Description
+Метод  | Описание
 ------------- | -------------
-`->weekdays();`  |  Limit the task to weekdays
-`->weekends();`  |  Limit the task to weekends
-`->sundays();`  |  Limit the task to Sunday
-`->mondays();`  |  Limit the task to Monday
-`->tuesdays();`  |  Limit the task to Tuesday
-`->wednesdays();`  |  Limit the task to Wednesday
-`->thursdays();`  |  Limit the task to Thursday
-`->fridays();`  |  Limit the task to Friday
-`->saturdays();`  |  Limit the task to Saturday
-`->days(array|mixed);`  |  Limit the task to specific days
-`->between($startTime, $endTime);`  |  Limit the task to run between start and end times
-`->unlessBetween($startTime, $endTime);`  |  Limit the task to not run between start and end times
-`->when(Closure);`  |  Limit the task based on a truth test
-`->environments($env);`  |  Limit the task to specific environments
+`->weekdays();`  |  Ограничить выполнение задачи рабочими днями
+`->weekends();`  |  – выходными днями
+`->sundays();`  |  – воскресным днем
+`->mondays();`  |  – понедельником
+`->tuesdays();`  |  – вторником
+`->wednesdays();`  |  – средой
+`->thursdays();`  |  – четвергом
+`->fridays();`  |  – пятницей
+`->saturdays();`  |  – субботой
+`->days(array\|mixed);`  |  – определенными днями
+`->between($startTime, $endTime);`  |  – временными интервалами начала и окончания
+`->unlessBetween($startTime, $endTime);`  |  – через исключение временных интервалов начала и окончания
+`->when(Closure);`  |  – на основе истинности результата выполненного замыкания
+`->environments($env);`  |  – окружением выполнения
 
 <a name="day-constraints"></a>
-#### Day Constraints
+#### Дневные ограничения
 
-The `days` method may be used to limit the execution of a task to specific days of the week. For example, you may schedule a command to run hourly on Sundays and Wednesdays:
+Метод `days` можно использовать для ограничения выполнения задачи определенными днями недели. Например, вы можете запланировать выполнение команды ежечасно по воскресеньям и четвергам:
 
     $schedule->command('emails:send')
                     ->hourly()
                     ->days([0, 3]);
 
-Alternatively, you may use the constants available on the `Illuminate\Console\Scheduling\Schedule` class when defining the days on which a task should run:
+В качестве альтернативы вы можете использовать константы, доступные в классе `Illuminate\Console\Scheduling\Schedule`, при указании дней, в которые должна выполняться задача:
 
     use Illuminate\Console\Scheduling\Schedule;
 
@@ -194,59 +194,59 @@ Alternatively, you may use the constants available on the `Illuminate\Console\Sc
                     ->days([Schedule::SUNDAY, Schedule::WEDNESDAY]);
 
 <a name="between-time-constraints"></a>
-#### Between Time Constraints
+#### Ограничения с временными интервалами
 
-The `between` method may be used to limit the execution of a task based on the time of day:
+Метод `between` может использоваться для ограничения выполнения задачи в зависимости от времени суток:
 
     $schedule->command('emails:send')
                         ->hourly()
                         ->between('7:00', '22:00');
 
-Similarly, the `unlessBetween` method can be used to exclude the execution of a task for a period of time:
+Точно так же метод `unlessBetween` может использоваться для исключения определенных периодов времени выполнения задачи:
 
     $schedule->command('emails:send')
                         ->hourly()
                         ->unlessBetween('23:00', '4:00');
 
 <a name="truth-test-constraints"></a>
-#### Truth Test Constraints
+#### Условные ограничения
 
-The `when` method may be used to limit the execution of a task based on the result of a given truth test. In other words, if the given closure returns `true`, the task will execute as long as no other constraining conditions prevent the task from running:
+Метод `when` может использоваться для ограничения выполнения задачи на основе истинности результата выполненного замыкания. Другими словами, если переданное замыкание возвращает `true`, то задача будет выполняться до тех пор, пока никакие другие ограничивающие условия не препятствуют ее запуску:
 
     $schedule->command('emails:send')->daily()->when(function () {
         return true;
     });
 
-The `skip` method may be seen as the inverse of `when`. If the `skip` method returns `true`, the scheduled task will not be executed:
+Метод `skip` можно рассматривать как противоположный методу `when`. Если метод `skip` возвращает `true`, то запланированная задача не будет выполнена:
 
     $schedule->command('emails:send')->daily()->skip(function () {
         return true;
     });
 
-When using chained `when` methods, the scheduled command will only execute if all `when` conditions return `true`.
+При использовании цепочки методов `when`, запланированная команда будет выполняться только в том случае, если все условия `when` возвращают значение `true`.
 
 <a name="environment-constraints"></a>
-#### Environment Constraints
+#### Ограничения окружения выполнения
 
-The `environments` method may be used to execute tasks only on the given environments (as defined by the `APP_ENV` [environment variable](/docs/{{version}}/configuration#environment-configuration)):
+Метод `environment` может использоваться для выполнения задач только в указанных окружениях, согласно определению [переменной `APP_ENV` окружения](configuration.md#environment-configuration):
 
     $schedule->command('emails:send')
                 ->daily()
                 ->environments(['staging', 'production']);
 
 <a name="timezones"></a>
-### Timezones
+### Часовые пояса
 
-Using the `timezone` method, you may specify that a scheduled task's time should be interpreted within a given timezone:
+Используя метод `timezone`, вы можете указать, что время запланированной задачи должно интерпретироваться в рамках переданного часового пояса:
 
     $schedule->command('report:generate')
              ->timezone('America/New_York')
              ->at('2:00')
 
-If you are repeatedly assigning the same timezone to all of your scheduled tasks, you may wish to define a `scheduleTimezone` method in your `App\Console\Kernel` class. This method should return the default timezone that should be assigned to all scheduled tasks:
+Если вы постоянно назначаете один и тот же часовой пояс для всех запланированных задач, то вы можете определить метод `scheduleTimezone` в своем классе `App\Console\Kernel`. Этот метод должен возвращать часовой пояс, назначаемый по умолчанию для всех запланированных задач:
 
     /**
-     * Get the timezone that should be used by default for scheduled events.
+     * Получить часовой пояс, который должен использоваться по умолчанию для запланированных событий.
      *
      * @return \DateTimeZone|string|null
      */
@@ -255,29 +255,29 @@ If you are repeatedly assigning the same timezone to all of your scheduled tasks
         return 'America/Chicago';
     }
 
-> {note} Remember that some timezones utilize daylight savings time. When daylight saving time changes occur, your scheduled task may run twice or even not run at all. For this reason, we recommend avoiding timezone scheduling when possible.
+> {note} Помните, что в некоторых часовых поясах используется летнее время. Когда происходит переход на летнее время, ваша запланированная задача может запускаться дважды или даже не запускаться вообще. По этой причине мы рекомендуем по возможности избегать указаний часовых поясов при планировании.
 
 <a name="preventing-task-overlaps"></a>
-### Preventing Task Overlaps
+### Предотвращение дублирования задач
 
-By default, scheduled tasks will be run even if the previous instance of the task is still running. To prevent this, you may use the `withoutOverlapping` method:
+По умолчанию запланированные задачи будут выполняться, даже если предыдущий экземпляр задачи все еще выполняется. Чтобы предотвратить это, вы можете использовать метод `withoutOverlapping`:
 
     $schedule->command('emails:send')->withoutOverlapping();
 
-In this example, the `emails:send` [Artisan command](/docs/{{version}}/artisan) will be run every minute if it is not already running. The `withoutOverlapping` method is especially useful if you have tasks that vary drastically in their execution time, preventing you from predicting exactly how long a given task will take.
+В этом примере команда `emails:send` [Artisan](artisan.md) будет запускаться каждую минуту при условии, что она еще не запущена. Метод `withoutOverlapping` особенно полезен, если у вас есть задачи, которые разнятся по времени выполнения, что не позволяет вам точно предсказать, сколько времени займет текущая задача.
 
-If needed, you may specify how many minutes must pass before the "without overlapping" lock expires. By default, the lock will expire after 24 hours:
+При необходимости вы можете указать, сколько минут должно пройти до окончания блокировки «перекрывающихся» задач. По умолчанию срок блокировки истекает через 24 часа:
 
     $schedule->command('emails:send')->withoutOverlapping(10);
 
 <a name="running-tasks-on-one-server"></a>
-### Running Tasks On One Server
+### Выполнение задач на одном сервере
 
-> {note} To utilize this feature, your application must be using the `database`, `memcached`, `dynamodb`, or `redis` cache driver as your application's default cache driver. In addition, all servers must be communicating with the same central cache server.
+> {note} Чтобы использовать этот функционал, ваше приложение должно использовать по умолчанию один из следующих драйверов кеша: `database`, `memcached`, `dynamodb`, или `redis`. Кроме того, все серверы должны взаимодействовать с одним и тем же центральным сервером кеширования.
 
-If your application's scheduler is running on multiple servers, you may limit a scheduled job to only execute on a single server. For instance, assume you have a scheduled task that generates a new report every Friday night. If the task scheduler is running on three worker servers, the scheduled task will run on all three servers and generate the report three times. Not good!
+Если планировщик вашего приложения работает на нескольких серверах, то вы можете ограничить выполнение запланированного задания только на одном сервере. Например, предположим, что у вас есть запланированная задача, по которой каждую пятницу вечером создается новый отчет. Если планировщик задач работает на трех рабочих серверах, запланированная задача будет запущена на всех трех серверах и трижды сгенерирует отчет. Не очень хорошо!
 
-To indicate that the task should run on only one server, use the `onOneServer` method when defining the scheduled task. The first server to obtain the task will secure an atomic lock on the job to prevent other servers from running the same task at the same time:
+Чтобы указать, что задача должна выполняться только на одном сервере, используйте метод `onOneServer` при определении запланированной задачи. Первый сервер, который получит задачу, обеспечит атомарную блокировку задания, чтобы другие серверы не могли одновременно выполнять ту же задачу:
 
     $schedule->command('report:generate')
                     ->fridays()
@@ -285,131 +285,131 @@ To indicate that the task should run on only one server, use the `onOneServer` m
                     ->onOneServer();
 
 <a name="background-tasks"></a>
-### Background Tasks
+### Фоновые задачи
 
-By default, multiple tasks scheduled at the same time will execute sequentially based on the order they are defined in your `schedule` method. If you have long-running tasks, this may cause subsequent tasks to start much later than anticipated. If you would like to run tasks in the background so that they may all run simultaneously, you may use the `runInBackground` method:
+По умолчанию, несколько задач, запланированных одновременно, будут выполняться последовательно в соответствии с порядком, которым они определены в вашем методе `schedule`. Если у вас есть длительные задачи, это может привести к тому, что последующие задачи начнутся намного позже, чем ожидалось. Если вы хотите запускать задачи в фоновом режиме в соответствии с планом, то вы можете использовать метод `runInBackground`:
 
     $schedule->command('analytics:report')
              ->daily()
              ->runInBackground();
 
-> {note} The `runInBackground` method may only be used when scheduling tasks via the `command` and `exec` methods.
+> {note} Метод `runInBackground` может использоваться только при планировании задач с помощью методов `command` и `exec`.
 
 <a name="maintenance-mode"></a>
-### Maintenance Mode
+### Режим технического обслуживания
 
-Your application's scheduled tasks will not run when the application is in [maintenance mode](/docs/{{version}}/configuration#maintenance-mode), since we don't want your tasks to interfere with any unfinished maintenance you may be performing on your server. However, if you would like to force a task to run even in maintenance mode, you may call the `evenInMaintenanceMode` method when defining the task:
+Запланированные задачи вашего приложения не будут выполняться, когда приложение находится в [режиме обслуживания](configuration.md#maintenance-mode), поскольку мы не хотим, чтобы ваши задачи мешали любому незавершенному процессу обслуживания, выполняющемуся на вашем сервере. Однако, если вы хотите принудительно запустить задачу даже в режиме обслуживания, то используйте метод `evenInMaintenanceMode` при определении задачи:
 
     $schedule->command('emails:send')->evenInMaintenanceMode();
 
 <a name="running-the-scheduler"></a>
-## Running The Scheduler
+## Запуск планировщика
 
-Now that we have learned how to define scheduled tasks, let's discuss how to actually run them on our server. The `schedule:run` Artisan command will evaluate all of your scheduled tasks and determine if they need to run based on the server's current time.
+Теперь, когда мы узнали, как определять планирование задачи, давайте обсудим, как же запускать их на нашем сервере. Команда `schedule:run` Artisan проанализирует все ваши запланированные задачи и определит, нужно ли их запускать, исходя из текущего времени сервера.
 
-So, when using Laravel's scheduler, we only need to add a single cron configuration entry to our server that runs the `schedule:run` command every minute. If you do not know how to add cron entries to your server, consider using a service such as [Laravel Forge](https://forge.laravel.com) which can manage the cron entries for you:
+Итак, при использовании планировщика Laravel нам нужно добавить только одну конфигурационную запись cron на наш сервер, которая запускает команду `schedule:run` каждую минуту. Если вы не знаете, как добавить записи cron на свой сервер, то рассмотрите возможность использования такой службы, как [Laravel Forge](https://forge.laravel.com), которая может управлять записями cron за вас:
 
     * * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
 
 <a name="running-the-scheduler-locally"></a>
-## Running The Scheduler Locally
+## Локальный запуск планировщика
 
-Typically, you would not add a scheduler cron entry to your local development machine. Instead, you may use the `schedule:work` Artisan command. This command will run in the foreground and invoke the scheduler every minute until you terminate the command:
+Как правило, на локальной машине нет необходимости в добавлении записи cron планировщика. Вместо этого вы можете использовать команду `schedule:work` Artisan. Эта команда будет работать на переднем плане и вызывать планировщик каждую минуту, пока вы не завершите команду:
 
     php artisan schedule:work
 
 <a name="task-output"></a>
-## Task Output
+## Результат выполнения задачи
 
-The Laravel scheduler provides several convenient methods for working with the output generated by scheduled tasks. First, using the `sendOutputTo` method, you may send the output to a file for later inspection:
+Планировщик Laravel предлагает несколько удобных методов для работы с выводом результатов, созданных запланированными задачами. Во-первых, используя метод `sendOutputTo`, вы можете отправить результат в файл для последующей просмотра:
 
     $schedule->command('emails:send')
              ->daily()
              ->sendOutputTo($filePath);
 
-If you would like to append the output to a given file, you may use the `appendOutputTo` method:
+Если вы хотите добавить результат в указанный файл, то используйте метод `appendOutputTo`:
 
     $schedule->command('emails:send')
              ->daily()
              ->appendOutputTo($filePath);
 
-Using the `emailOutputTo` method, you may email the output to an email address of your choice. Before emailing the output of a task, you should configure Laravel's [email services](/docs/{{version}}/mail):
+Используя метод `emailOutputTo`, вы можете отправить результат по электронной почте на любой адрес. Перед отправкой результатов выполнения задачи по электронной почте вам следует настроить [почтовые службы](mail.md) Laravel:
 
     $schedule->command('report:generate')
              ->daily()
              ->sendOutputTo($filePath)
              ->emailOutputTo('taylor@example.com');
 
-If you only want to email the output if the scheduled Artisan or system command terminates with a non-zero exit code, use the `emailOutputOnFailure` method:
+Если вы хотите отправить результат по электронной почте только в том случае, если запланированная (Artisan или системная) команда завершается ненулевым кодом возврата, используйте метод `emailOutputOnFailure`:
 
     $schedule->command('report:generate')
              ->daily()
              ->emailOutputOnFailure('taylor@example.com');
 
-> {note} The `emailOutputTo`, `emailOutputOnFailure`, `sendOutputTo`, and `appendOutputTo` methods are exclusive to the `command` and `exec` methods.
+> {note} Методы `emailOutputTo`, `emailOutputOnFailure`, `sendOutputTo`, and `appendOutputTo` могут использоваться только при планировании задач с помощью методов `command` и `exec`.
 
 <a name="task-hooks"></a>
-## Task Hooks
+## Хуки выполнения задачи
 
-Using the `before` and `after` methods, you may specify code to be executed before and after the scheduled task is executed:
+Используя методы `before` и `after`, вы можете указать замыкания, которые будут выполняться до и после выполнения запланированной задачи:
 
     $schedule->command('emails:send')
              ->daily()
              ->before(function () {
-                 // The task is about to execute...
+                 // Задача готова к выполнению ...
              })
              ->after(function () {
-                 // The task has executed...
+                 // Задача выполнена ...
              });
 
-The `onSuccess` and `onFailure` methods allow you to specify code to be executed if the scheduled task succeeds or fails. A failure indicates that the scheduled Artisan or system command terminated with a non-zero exit code:
+Методы `onSuccess` и `onFailure` позволяют указать замыкания, которые будут выполняться в случае успешного или неудачного выполнения запланированной задачи. Ошибка означает, что запланированная (Artisan или системная) команда завершилась ненулевым кодом возврата:
 
     $schedule->command('emails:send')
              ->daily()
              ->onSuccess(function () {
-                 // The task succeeded...
+                 // Задача успешно выполнена ...
              })
              ->onFailure(function () {
-                 // The task failed...
+                 // Не удалось выполнить задачу ...
              });
 
-If output is available from your command, you may access it in your `after`, `onSuccess` or `onFailure` hooks by type-hinting an `Illuminate\Support\Stringable` instance as the `$output` argument of your hook's closure definition:
+Если из вашей команды доступен вывод результата, то вы можете получить к нему доступ в ваших хуках `after`, `onSuccess` или `onFailure`, указав тип экземпляра `Illuminate\Support\Stringable` в качестве аргумента `$output` замыкания при определении вашего хука:
 
     use Illuminate\Support\Stringable;
 
     $schedule->command('emails:send')
              ->daily()
              ->onSuccess(function (Stringable $output) {
-                 // The task succeeded...
+                 // Задача успешно выполнена ...
              })
              ->onFailure(function (Stringable $output) {
-                 // The task failed...
+                 // Не удалось выполнить задачу ...
              });
 
 <a name="pinging-urls"></a>
-#### Pinging URLs
+#### Пингование URL-адресов
 
-Using the `pingBefore` and `thenPing` methods, the scheduler can automatically ping a given URL before or after a task is executed. This method is useful for notifying an external service, such as [Envoyer](https://envoyer.io), that your scheduled task is beginning or has finished execution:
+Используя методы `pingBefore` и `thenPing`, планировщик может автоматически пинговать по указанному URL до или после выполнения задачи. Этот метод полезен для уведомления внешней службы, такой как [Envoyer](https://envoyer.io), о том, что ваша запланированная задача запущена или завершена:
 
     $schedule->command('emails:send')
              ->daily()
              ->pingBefore($url)
              ->thenPing($url);
 
-The `pingBeforeIf` and `thenPingIf` methods may be used to ping a given URL only if a given condition is `true`:
+Методы `pingBeforeIf` и `thenPingIf` могут использоваться для пингования по указанному URL, только если переданное условие `$condition` истинно:
 
     $schedule->command('emails:send')
              ->daily()
              ->pingBeforeIf($condition, $url)
              ->thenPingIf($condition, $url);
 
-The `pingOnSuccess` and `pingOnFailure` methods may be used to ping a given URL only if the task succeeds or fails. A failure indicates that the scheduled Artisan or system command terminated with a non-zero exit code:
+Методы `pingOnSuccess` и `pingOnFailure` могут использоваться для пингования по указанному URL только в случае успешного или неудачного выполнения задачи. Ошибка означает, что запланированная (Artisan или системная) команда завершилась ненулевым кодом возврата:
 
     $schedule->command('emails:send')
              ->daily()
              ->pingOnSuccess($successUrl)
              ->pingOnFailure($failureUrl);
 
-All of the ping methods require the Guzzle HTTP library. Guzzle is typically installed in all new Laravel projects by default, but, you may manually install Guzzle into your project using the Composer package manager if it has been accidentally removed:
+Для всех методов пингования требуется библиотека Guzzle HTTP. Guzzle обычно устанавливается во всех новых проектах Laravel по умолчанию, но вы можете вручную установить Guzzle в свой проект с помощью менеджера пакетов Composer, если он был удален:
 
     composer require guzzlehttp/guzzle
