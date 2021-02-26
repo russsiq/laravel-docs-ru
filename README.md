@@ -73,7 +73,7 @@
     - [x] [Постраничная навигация](./docs/pagination.md)
     - [x] [Миграции](./docs/migrations.md)
     - [x] [Наполнение](./docs/seeding.md)
-    - [ ] [Использование Redis](./docs/redis.md)
+    - [x] [Использование Redis](./docs/redis.md)
 - ## Eloquent ORM
     - [x] [Начало работы](./docs/eloquent.md)
     - [x] [Отношения](./docs/eloquent-relationships.md)
