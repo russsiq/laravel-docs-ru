@@ -78,13 +78,13 @@ After installing PHP, you are ready to install the [Composer package manager](ht
 
     composer global require laravel/valet
 
-Finally, you may execute Valet's `install` command. This will configure and install Valet and DnsMasq. In addition, the Valet daemon will be configured to launch when your system starts:
+Finally, you may execute Valet's `install` command. This will configure and install Valet and DnsMasq. In addition, the daemons Valet depends on will be configured to launch when your system starts:
 
     valet install
 
 Once Valet is installed, try pinging any `*.test` domain on your terminal using a command such as `ping foobar.test`. If Valet is installed correctly you should see this domain responding on `127.0.0.1`.
 
-Valet will automatically start its daemon each time your machine boots. There is no need to run `valet start` or `valet install` ever again once the initial Valet installation is complete.
+Valet will automatically start its required services each time your machine boots.
 
 <a name="php-versions"></a>
 #### PHP Versions
@@ -105,7 +105,7 @@ If your application needs a database, check out [DBngin](https://dbngin.com). DB
 <a name="resetting-your-installation"></a>
 #### Resetting Your Installation
 
-If you are having trouble getting your Valet installation to run properly, executing the `composer global update` command followed by `valet install` will reset your installation and can solve a variety of problems. In rare cases it may be necessary to "hard reset" Valet by executing `valet uninstall --force` followed by `valet install`.
+If you are having trouble getting your Valet installation to run properly, executing the `composer global update` command followed by `valet install` will reset your installation and can solve a variety of problems. In rare cases, it may be necessary to "hard reset" Valet by executing `valet uninstall --force` followed by `valet install`.
 
 <a name="upgrading-valet"></a>
 ### Upgrading Valet
@@ -126,7 +126,7 @@ The `park` command registers a directory on your machine that contains your appl
 
     valet park
 
-That's all there is to it. Now, any application you create within your "parked" directory will automatically be served using the `http://<directory-name>.test` convention. So, if your parked directory contains a directory named "laravel", the application within that directory will be accessible at `http://laravel.test`.
+That's all there is to it. Now, any application you create within your "parked" directory will automatically be served using the `http://<directory-name>.test` convention. So, if your parked directory contains a directory named "laravel", the application within that directory will be accessible at `http://laravel.test`. In addition, Valet automatically allows you to access the site using wildcard subdomains (`http://foo.laravel.test`).
 
 <a name="the-link-command"></a>
 ### The `link` Command
@@ -137,7 +137,7 @@ The `link` command can also be used to serve your Laravel applications. This com
 
     valet link
 
-Once an application has been linked to Valet using the `link` command, you may access the application using its directory name. So, the site that was linked in the example above may be accessed at `http://laravel.test`.
+Once an application has been linked to Valet using the `link` command, you may access the application using its directory name. So, the site that was linked in the example above may be accessed at `http://laravel.test`. In addition, Valet automatically allows you to access the site using wildcard sub-domains (`http://foo.laravel.test`).
 
 If you would like to serve the application at a different hostname, you may pass the hostname to the `link` command. For example, you may run the following command to make an application available at `http://application.test`:
 
@@ -258,7 +258,7 @@ Let's take a look at a sample implementation of each method your custom Valet dr
 <a name="the-serves-method"></a>
 #### The `serves` Method
 
-The `serves` method should return `true` if your driver should handle the incoming request. Otherwise, the method should return `false`. So, within this method you should attempt to determine if the given `$sitePath` contains a project of the type you are trying to serve.
+The `serves` method should return `true` if your driver should handle the incoming request. Otherwise, the method should return `false`. So, within this method, you should attempt to determine if the given `$sitePath` contains a project of the type you are trying to serve.
 
 For example, let's imagine we are writing a `WordPressValetDriver`. Our `serves` method might look something like this:
 
@@ -359,9 +359,9 @@ Command  | Description
 `valet forget` | Run this command from a "parked" directory to remove it from the parked directory list.
 `valet log` | View a list of logs which are written by Valet's services.
 `valet paths` | View all of your "parked" paths.
-`valet restart` | Restart the Valet daemon.
-`valet start` | Start the Valet daemon.
-`valet stop` | Stop the Valet daemon.
+`valet restart` | Restart the Valet daemons.
+`valet start` | Start the Valet daemons.
+`valet stop` | Stop the Valet daemons.
 `valet trust` | Add sudoers files for Brew and Valet to allow Valet commands to be run without prompting for your password.
 `valet uninstall` | Uninstall Valet: shows instructions for manual uninstall. Pass the `--force` option to aggressively delete all of Valet's resources.
 

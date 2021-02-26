@@ -78,11 +78,11 @@ In addition to scheduling closures, you may also schedule [Artisan commands](/do
 
 When scheduling Artisan commands using the command's class name, you may pass an array of additional command-line arguments that should be provided to the command when it is invoked:
 
-    use App\Console\Commands\SendEmailCommand;
+    use App\Console\Commands\SendEmailsCommand;
 
     $schedule->command('emails:send Taylor --force')->daily();
 
-    $schedule->command(EmailsCommand::class, ['Taylor', '--force'])->daily();
+    $schedule->command(SendEmailsCommand::class, ['Taylor', '--force'])->daily();
 
 <a name="scheduling-queued-jobs"></a>
 ### Scheduling Queued Jobs
@@ -93,7 +93,7 @@ The `job` method may be used to schedule a [queued job](/docs/{{version}}/queues
 
     $schedule->job(new Heartbeat)->everyFiveMinutes();
 
-Optional second and third arguments may be provided to the `job` method which specify the queue name and queue connection that should be used to queue the job:
+Optional second and third arguments may be provided to the `job` method which specifies the queue name and queue connection that should be used to queue the job:
 
     use App\Jobs\Heartbeat;
 
@@ -314,7 +314,7 @@ So, when using Laravel's scheduler, we only need to add a single cron configurat
 <a name="running-the-scheduler-locally"></a>
 ## Running The Scheduler Locally
 
-Typically, you would not add a scheduler cron entry to your local development machine. Instead you may use the `schedule:work` Artisan command. This command will run in the foreground and invoke the scheduler every minute until you terminate the command:
+Typically, you would not add a scheduler cron entry to your local development machine. Instead, you may use the `schedule:work` Artisan command. This command will run in the foreground and invoke the scheduler every minute until you terminate the command:
 
     php artisan schedule:work
 

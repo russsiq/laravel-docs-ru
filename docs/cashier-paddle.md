@@ -3,12 +3,14 @@
 - [Introduction](#introduction)
 - [Upgrading Cashier](#upgrading-cashier)
 - [Installation](#installation)
+    - [Paddle Sandbox](#paddle-sandbox)
     - [Database Migrations](#database-migrations)
 - [Configuration](#configuration)
     - [Billable Model](#billable-model)
     - [API Keys](#api-keys)
     - [Paddle JS](#paddle-js)
     - [Currency Configuration](#currency-configuration)
+    - [Overriding Default Models](#overriding-default-models)
 - [Core Concepts](#core-concepts)
     - [Pay Links](#pay-links)
     - [Inline Checkout](#inline-checkout)
@@ -23,6 +25,7 @@
     - [Updating Payment Information](#updating-payment-information)
     - [Changing Plans](#changing-plans)
     - [Subscription Quantity](#subscription-quantity)
+    - [Subscription Modifiers](#subscription-modifiers)
     - [Pausing Subscriptions](#pausing-subscriptions)
     - [Cancelling Subscriptions](#cancelling-subscriptions)
 - [Subscription Trials](#subscription-trials)
@@ -60,6 +63,13 @@ First, install the Cashier package for Paddle using the Composer package manager
     composer require laravel/cashier-paddle
 
 > {note} To ensure Cashier properly handles all Paddle events, remember to [set up Cashier's webhook handling](#handling-paddle-webhooks).
+
+<a name="paddle-sandbox"></a>
+### Paddle Sandbox
+
+During local and staging development, you should [register a Paddle Sandbox account](https://developer.paddle.com/getting-started/sandbox). This account will give you a sandboxed environment to test and develop your applications without making actual payments. You may use Paddle's [test card numbers](https://developer.paddle.com/getting-started/sandbox#test-cards) to simulate various payment scenarios.
+
+After you have finished developing your application you may [apply for a Paddle vendor account](https://paddle.com).
 
 <a name="database-migrations"></a>
 ### Database Migrations
@@ -119,6 +129,9 @@ Next, you should configure your Paddle keys in your application's `.env` file. Y
     PADDLE_VENDOR_ID=your-paddle-vendor-id
     PADDLE_VENDOR_AUTH_CODE=your-paddle-vendor-auth-code
     PADDLE_PUBLIC_KEY="your-paddle-public-key"
+    PADDLE_SANDBOX=true
+
+The `PADDLE_SANDBOX` environment variable should be set to `true` when you are using [Paddle's Sandbox environment](#paddle-sandbox). The `PADDLE_SANDBOX` variable should be set to `false` if you are deploying your application to production and are using Paddle's live vendor environment.
 
 <a name="paddle-js"></a>
 ### Paddle JS
@@ -143,6 +156,34 @@ In addition to configuring Cashier's currency, you may also specify a locale to 
     CASHIER_CURRENCY_LOCALE=nl_BE
 
 > {note} In order to use locales other than `en`, ensure the `ext-intl` PHP extension is installed and configured on your server.
+
+<a name="overriding-default-models"></a>
+### Overriding Default Models
+
+You are free to extend the models used internally by Cashier by defining your own model and extending the corresponding Cashier model:
+
+    use Laravel\Paddle\Subscription as CashierSubscription;
+
+    class Subscription extends CashierSubscription
+    {
+        // ...
+    }
+
+After defining your model, you may instruct Cashier to use your custom model via the `Laravel\Paddle\Cashier` class. Typically, you should inform Cashier about your custom models in the `boot` method of your application's `App\Providers\AppServiceProvider` class:
+
+    use App\Models\Cashier\Receipt;
+    use App\Models\Cashier\Subscription;
+
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Cashier::useReceiptModel(Receipt::class);
+        Cashier::useSubscriptionModel(Subscription::class);
+    }
 
 <a name="core-concepts"></a>
 ## Core Concepts
@@ -185,6 +226,21 @@ For more information on pay links, you may review [the Paddle API documentation 
 
 > {note} After a subscription state change, the delay for receiving the corresponding webhook is typically minimal but you should account for this in your application by considering that your user's subscription might not be immediately available after completing the checkout.
 
+<a name="manually-rendering-pay-links"></a>
+#### Manually Rendering Pay Links
+
+You may also manually render a pay link without using Laravel's built-in Blade components. To get started, generate the pay link URL as demonstrated in previous examples:
+
+    $payLink = $request->user()->newSubscription('default', $premium = 34567)
+        ->returnTo(route('home'))
+        ->create();
+
+Next, simply attach the pay link URL to an `a` element in your HTML:
+
+    <a href="#!" class="ml-4 paddle_button" data-override="{{ $payLink }}">
+        Paddle Checkout
+    </a>
+
 <a name="inline-checkout"></a>
 ### Inline Checkout
 
@@ -215,6 +271,26 @@ Alternatively, you may customize the widget with custom options instead of using
 Please consult Paddle's [guide on Inline Checkout](https://developer.paddle.com/guides/how-tos/checkout/inline-checkout) as well as their [parameter reference](https://developer.paddle.com/reference/paddle-js/parameters) for further details on the inline checkout's available options.
 
 > {note} If you would like to also use the `passthrough` option when specifying custom options, you should provide a key / value array as its value. Cashier will automatically handle converting the array to a JSON string. In addition, the `customer_id` passthrough option is reserved for internal Cashier usage.
+
+<a name="manually-rendering-an-inline-checkout"></a>
+#### Manually Rendering An Inline Checkout
+
+You may also manually render an inline checkout without using Laravel's built-in Blade components. To get started, generate the pay link URL [as demonstrated in previous examples](#pay-links).
+
+Next, you may use Paddle.js to initialize the checkout. To keep this example simple, we will demonstrate this using [Alpine.js](https://github.com/alpinejs/alpine); however, you are free to translate this example to your own frontend stack:
+
+```html
+<div class="paddle-checkout" x-data="{}" x-init="
+    Paddle.Checkout.open({
+        override: {{ $payLink }},
+        method: 'inline',
+        frameTarget: 'paddle-checkout',
+        frameInitialHeight: 366,
+        frameStyle: 'width: 100%; background-color: transparent; border: none;'
+    });
+">
+</div>
+```
 
 <a name="user-identification"></a>
 ### User Identification
@@ -324,7 +400,7 @@ You may display the original listed prices (without coupon discounts) using the 
 </ul>
 ```
 
-> {note} When using the prices API, Paddle only allows to apply coupons to one-time purchase products and not to subscription plans.
+> {note} When using the prices API, Paddle only allows applying coupons to one-time purchase products and not to subscription plans.
 
 <a name="customers"></a>
 ## Customers
@@ -468,7 +544,7 @@ The `subscribed` method also makes a great candidate for a [route middleware](/d
                 return redirect('billing');
             }
 
-            return $next($request)
+            return $next($request);
         }
     }
 
@@ -613,7 +689,7 @@ After a user has subscribed to your application, they may occasionally want to c
 
     $user->subscription('default')->swap($premium = 34567);
 
-If the user is on a trial, the trial period will be maintained. Also, if a "quantity" exists for the subscription, that quantity will also be maintained.
+If the user is on a trial, the trial period will be maintained. Additionally, if a "quantity" exists for the subscription, that quantity will also be maintained.
 
 If you would like to swap plans and cancel any trial period the user is currently on, you may use the `skipTrial` method:
 
@@ -658,6 +734,49 @@ Alternatively, you may set a specific quantity using the `updateQuantity` method
 The `noProrate` method may be used to update the subscription's quantity without prorating the charges:
 
     $user->subscription('default')->noProrate()->updateQuantity(10);
+
+<a name="subscription-modifiers"></a>
+### Subscription Modifiers
+
+Subscription modifiers allow you to implement [metered billing](https://developer.paddle.com/guides/how-tos/subscriptions/metered-billing#using-subscription-price-modifiers) or extend subscriptions with add-ons.
+
+For example, you might want to offer a "Premium Support" add-on with your standard subscription. You can create this modifier like so:
+
+    $modifier = $user->subscription('default')->newModifier(12.99)->create();
+
+The example above will add a $12.99 add-on to the subscription. By default, this charge will recur on every interval you have configured for the subscription. If you would like, you can add a readable description to the modifier using the modifier's `description` method:
+
+    $modifier = $user->subscription('default')->newModifier(12.99)
+        ->description('Premium Support')
+        ->create();
+
+To illustrate how to implement metered billing using modifiers, imagine your application charges per SMS message sent by the user. First, you should create a $0 plan in your Paddle dashboard. Once the user has been subscribed to this plan, you can add modifiers representing each individual charge to the subscription:
+
+    $modifier = $user->subscription('default')->newModifier(0.99)
+        ->description('New text message')
+        ->oneTime()
+        ->create();
+
+As you can see, we invoked the `oneTime` method when creating this modifier. This method will ensure the modifier is only charged once and does not recur every billing interval.
+
+<a name="retrieving-modifiers"></a>
+#### Retrieving Modifiers
+
+You may retrieve a list of all modifiers for a subscription via the `modifiers` method:
+
+    $modifiers = $user->subscription('default')->modifiers();
+
+    foreach ($modifiers as $modifier) {
+        $modifier->amount(); // $0.99
+        $modifier->description; // New text message.
+    }
+
+<a name="deleting-modifiers"></a>
+#### Deleting Modifiers
+
+Modifiers may be deleted by invoking the `delete` method on a `Laravel\Paddle\Modifier` instance:
+
+    $modifier->delete();
 
 <a name="pausing-subscriptions"></a>
 ### Pausing Subscriptions
@@ -830,7 +949,7 @@ Your controller's method names should correspond to Cashier's controller method 
     class WebhookController extends CashierController
     {
         /**
-         * Handle payment succeeded.
+         * Handle the payment succeeded webhook.
          *
          * @param  array  $payload
          * @return void
@@ -968,13 +1087,13 @@ You may optionally specify a specific amount to refund as well as a reason for t
 <a name="receipts"></a>
 ## Receipts
 
-You may easily retrieve an array of a billable model's receipts using the `receipts` method:
+You may easily retrieve an array of a billable model's receipts via the `receipts` property:
 
     use App\Models\User;
 
     $user = User::find(1);
 
-    $receipts = $user->receipts();
+    $receipts = $user->receipts;
 
 When listing the receipts for the customer, you may use the receipt instance's methods to display the relevant receipt information. For example, you may wish to list every receipt in a table, allowing the user to easily download any of the receipts:
 
@@ -1038,4 +1157,6 @@ Alternatively, you can perform more precise customization by catching the [`subs
 <a name="testing"></a>
 ## Testing
 
-Paddle currently lacks a proper CRUD API so you will need to manually test your billing flow. Paddle also lacks a sandboxed developer environment so any card charges you make are live charges. In order to work around this, we recommend you use coupons with a 100% discount or free products during testing.
+While testing, you should manually test your billing flow to make sure your integration works as expected.
+
+For automated tests, including those executed within a CI environment, you may use [Laravel's HTTP Client](/docs//{{version}}/http-client#testing) to fake HTTP calls made to Paddle. Although this does not test the actual responses from Paddle, it does provide a way to test your application without actually calling Paddle's API.

@@ -80,7 +80,7 @@ After running the `passport:install` command, add the `Laravel\Passport\HasApiTo
 
     namespace App\Models;
 
-    use Illuminate\Database\Eloquent\Factories\HasFactory
+    use Illuminate\Database\Eloquent\Factories\HasFactory;
     use Illuminate\Foundation\Auth\User as Authenticatable;
     use Illuminate\Notifications\Notifiable;
     use Laravel\Passport\HasApiTokens;
@@ -120,7 +120,9 @@ Next, you should call the `Passport::routes` method within the `boot` method of 
         {
             $this->registerPolicies();
 
-            Passport::routes();
+            if (! $this->app->routesAreCached()) {
+                Passport::routes();
+            }
         }
     }
 
@@ -743,7 +745,7 @@ When authenticating using the password grant, Passport will use the `password` a
 <a name="implicit-grant-tokens"></a>
 ## Implicit Grant Tokens
 
-The implicit grant is similar to the authorization code grant; however, the token is returned to the client without exchanging an authorization code. This grant is most commonly used for JavaScript or mobile applications where the client credentials can't be securely stored. To enable the grant, call the `enableImplicitGrant` method in the `boot` method of your applications's `App\Providers\AuthServiceProvider` class:
+The implicit grant is similar to the authorization code grant; however, the token is returned to the client without exchanging an authorization code. This grant is most commonly used for JavaScript or mobile applications where the client credentials can't be securely stored. To enable the grant, call the `enableImplicitGrant` method in the `boot` method of your application's `App\Providers\AuthServiceProvider` class:
 
     /**
      * Register any authentication / authorization services.
@@ -1132,7 +1134,7 @@ If needed, you can customize the `laravel_token` cookie's name using the `Passpo
 <a name="csrf-protection"></a>
 #### CSRF Protection
 
-When using this method of authentication, you will need to ensure a valid CSRF token header is included in your requests. The default Laravel JavaScript scaffolding includes an Axios instance, which will automatically use the encrypted `XSRF-TOKEN` cookie value to send a `X-XSRF-TOKEN` header on same-origin requests.
+When using this method of authentication, you will need to ensure a valid CSRF token header is included in your requests. The default Laravel JavaScript scaffolding includes an Axios instance, which will automatically use the encrypted `XSRF-TOKEN` cookie value to send an `X-XSRF-TOKEN` header on same-origin requests.
 
 > {tip} If you choose to send the `X-CSRF-TOKEN` header instead of `X-XSRF-TOKEN`, you will need to use the unencrypted token provided by `csrf_token()`.
 
