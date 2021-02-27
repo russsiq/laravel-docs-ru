@@ -290,7 +290,7 @@ _Автор: [Taylor Otwell](https://github.com/taylorotwell)_.
         //
     });
 
-Кроме того, анонимные слушатели событий теперь могут быть помечены как доступные для очереди с помощью функционала `Illuminate\Events\queueable`:
+Кроме того, анонимные слушатели событий теперь могут быть помечены как доступные для очереди с помощью функции `Illuminate\Events\queueable`:
 
     use App\Events\PodcastProcessed;
     use function Illuminate\Events\queueable;
@@ -300,7 +300,7 @@ _Автор: [Taylor Otwell](https://github.com/taylorotwell)_.
         //
     }));
 
-Как и задания в очереди, вы можете использовать методы onConnection`, `onQueue`, и `delay` для настройки выполнения слушателя в очереди:
+Как и задания в очереди, вы можете использовать методы `onConnection`, `onQueue`, и `delay` для настройки выполнения слушателя в очереди:
 
     Event::listen(queueable(function (PodcastProcessed $event) {
         //
