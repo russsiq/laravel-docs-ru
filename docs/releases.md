@@ -148,7 +148,7 @@ _Автор: [Taylor Otwell](https://github.com/taylorotwell)_.
 <a name="job-batching"></a>
 ### Пакетная обработка заданий
 
-_Авторы: by [Taylor Otwell](https://github.com/taylorotwell) и [Mohamed Said](https://github.com/themsaid)_.
+_Авторы: [Taylor Otwell](https://github.com/taylorotwell) и [Mohamed Said](https://github.com/themsaid)_.
 
 Функционал пакетной обработки заданий Laravel позволяет вам легко выполнить пакет заданий, по завершению которого дополнительно совершить определенные действия.
 
