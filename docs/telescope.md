@@ -36,7 +36,7 @@
 
 Telescope makes a wonderful companion to your local Laravel development environment. Telescope provides insight into the requests coming into your application, exceptions, log entries, database queries, queued jobs, mail, notifications, cache operations, scheduled tasks, variable dumps, and more.
 
-<img src="https://laravel.com/img/docs/telescope-example.png">
+<img src="./img/telescope-example.png">
 
 <a name="installation"></a>
 ## Installation
