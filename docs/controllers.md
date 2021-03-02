@@ -379,8 +379,8 @@ DELETE    | `/comments/{comment}`             | destroy      | comments.destroy
         /**
          * Сохранить нового пользователя.
          *
-         * @param  Request  $request
-         * @return Response
+         * @param  \Illuminate\Http\Request  $request
+         * @return \Illuminate\Http\Response
          */
         public function store(Request $request)
         {
