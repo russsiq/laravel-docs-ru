@@ -70,7 +70,7 @@
     - [x] [Построитель запросов](./docs/queries.md)
     - [x] [Постраничная навигация](./docs/pagination.md)
     - [x] [Миграции](./docs/migrations.md)
-    - [x] [Наполнение](./docs/seeding.md)
+    - [x] [Наполнение фиктивными данными](./docs/seeding.md)
     - [x] [Использование Redis](./docs/redis.md)
 - ## Eloquent ORM
     - [x] [Начало работы](./docs/eloquent.md)
