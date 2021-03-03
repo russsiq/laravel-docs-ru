@@ -125,7 +125,7 @@
 
 Хотя уведомление о подтверждении электронной почты по умолчанию должно удовлетворять требованиям большинства приложений, Laravel позволяет вам изменять сообщение подтверждения электронной почты.
 
-Для начала, передайте замыкание методу `toMailUsing` уведомления `Illuminate\Auth\Notifications\VerifyEmail`. Замыкание получит экземпляр модели, содержащий уведомление, а также подписанный URL-адрес подтверждения электронной почты, который пользователь должен посетить для проверки адреса электронной почты. Замыкание должно вернуть экземпляр `Illuminate\Notifications\Messages\MailMessage`. Как правило, вы должны вызывать метод `toMailUsing` в методе `boot` класса `App\Providers\AuthServiceProvider` вашего приложения:
+Для начала, передайте замыкание методу `toMailUsing` уведомления `Illuminate\Auth\Notifications\VerifyEmail`. Замыкание получит экземпляр модели, содержащий уведомление, а также подписанный URL-адрес подтверждения электронной почты, который пользователь должен посетить для проверки адреса электронной почты. Замыкание должно вернуть экземпляр `Illuminate\Notifications\Messages\MailMessage`. Как правило, вызов метода `toMailUsing` осуществляется в методе `boot` класса `App\Providers\AuthServiceProvider` вашего приложения:
 
     use Illuminate\Auth\Notifications\VerifyEmail;
     use Illuminate\Notifications\Messages\MailMessage;
