@@ -108,7 +108,7 @@
     - [ ] [Scout](./docs/scout.md)
     - [x] [Socialite](./docs/socialite.md)  
         Аутентификация через провайдеров OAuth: Facebook, Twitter, LinkedIn, Google, GitHub, GitLab, и Bitbucket.
-    - [ ] [Telescope](./docs/telescope.md)
+    - [x] [Telescope](./docs/telescope.md)
     - [ ] [Valet](./docs/valet.md)
 - [Документация API](https://laravel.com/api/8.x/)
 
