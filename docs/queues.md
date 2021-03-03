@@ -25,7 +25,7 @@
     - [Инспектирование пакета](#inspecting-batches)
     - [Отмена пакетов](#cancelling-batches)
     - [Отказы в пакете заданий](#batch-failures)
-    - [Сокращение пакетов](#pruning-batches)
+    - [Очистка пакетов](#pruning-batches)
 - [Анонимные очереди](#queueing-closures)
 - [Запуск обработчика очереди](#running-the-queue-worker)
     - [Команда `queue:work`](#the-queue-work-command)
@@ -1266,9 +1266,9 @@ php artisan queue:retry-batch 32dbc76c-4f82-4749-b610-a639fe0099b5
 ```
 
 <a name="pruning-batches"></a>
-### Сокращение пакетов
+### Очистка пакетов
 
-Без сокращения таблица `job_batches` может очень быстро накапливать записи. Чтобы смягчить это, вы должны [запланировать](scheduling.md) команду `queue:prune-batches` Artisan для ежедневного выполнения:
+Если не применять очистку, то таблица `job_batches` может очень быстро накапливать записи. Чтобы избежать этого, вы должны [запланировать](scheduling.md) ежедневный запуск команды `queue:prune-batches` Artisan:
 
     $schedule->command('queue:prune-batches')->daily();
 
