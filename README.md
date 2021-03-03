@@ -109,7 +109,7 @@
     - [x] [Socialite](./docs/socialite.md)  
         Аутентификация через провайдеров OAuth: Facebook, Twitter, LinkedIn, Google, GitHub, GitLab, и Bitbucket.
     - [x] [Telescope](./docs/telescope.md)  
-        Панель управления, отображающая записи о происходящих в приложении событиях.
+        Панель управления, отображающая записи о произошедших в приложении событиях.
     - [ ] [Valet](./docs/valet.md)
 - [Документация API](https://laravel.com/api/8.x/)
 
