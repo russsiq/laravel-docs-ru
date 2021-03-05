@@ -82,7 +82,7 @@
 - ## Тестирование
     - [x] [Начало работы](./docs/testing.md)
     - [x] [Тесты HTTP](./docs/http-tests.md)
-    - [x] [Консольные тесты](./docs/console-tests.md)
+    - [x] [Тесты консольных команд](./docs/console-tests.md)
     - [x] [Браузерные тесты](./docs/dusk.md)
     - [x] [База данных](./docs/database-testing.md)
     - [x] [Имитация](./docs/mocking.md)
