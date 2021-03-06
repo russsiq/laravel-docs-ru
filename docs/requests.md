@@ -1,4 +1,4 @@
-# Laravel 8.x — HTTP-запросы
+# Laravel 8 · HTTP-запросы
 
 - [Введение](#introduction)
 - [Взаимодействие с запросом](#interacting-with-the-request)

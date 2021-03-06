@@ -1,4 +1,4 @@
-# Laravel 8.x — Трансляция событий
+# Laravel 8 · Трансляция событий
 
 - [Введение](#introduction)
 - [Установка на стороне сервера](#server-side-installation)

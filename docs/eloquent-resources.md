@@ -1,4 +1,4 @@
-# Laravel 8.x — Eloquent: ресурсы API
+# Laravel 8 · Eloquent: ресурсы API
 
 - [Введение](#introduction)
 - [Генерация ресурсов](#generating-resources)

@@ -1,4 +1,4 @@
-# Laravel 8.x — События
+# Laravel 8 · События
 
 - [Введение](#introduction)
 - [Регистрация событий и слушателей](#registering-events-and-listeners)

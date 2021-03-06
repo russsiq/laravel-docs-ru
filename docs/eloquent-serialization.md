@@ -1,4 +1,4 @@
-# Laravel 8.x — Eloquent: сериализация
+# Laravel 8 · Eloquent: сериализация
 
 - [Введение](#introduction)
 - [Сериализация моделей и коллекций](#serializing-models-and-collections)

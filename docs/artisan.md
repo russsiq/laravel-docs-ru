@@ -1,4 +1,4 @@
-# Laravel 8.x — Консоль Artisan
+# Laravel 8 · Консоль Artisan
 
 - [Введение](#introduction)
     - [Tinker (REPL)](#tinker)

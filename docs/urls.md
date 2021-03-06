@@ -1,4 +1,4 @@
-# Laravel 8.x — Генерация URL-адресов
+# Laravel 8 · Генерация URL-адресов
 
 - [Введение](#introduction)
 - [Основы](#the-basics)

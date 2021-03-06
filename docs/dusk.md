@@ -1,4 +1,4 @@
-# Laravel 8.x — Пакет Laravel Dusk
+# Laravel 8 · Пакет Laravel Dusk
 
 - [Введение](#introduction)
 - [Установка](#installation)

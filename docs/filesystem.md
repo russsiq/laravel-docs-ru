@@ -1,4 +1,4 @@
-# Laravel 8.x — Файловое хранилище
+# Laravel 8 · Файловое хранилище
 
 - [Введение](#introduction)
 - [Конфигурирование](#configuration)

@@ -1,4 +1,4 @@
-# Laravel 8.x — Пакет Laravel Fortify
+# Laravel 8 · Пакет Laravel Fortify
 
 - [Введение](#introduction)
     - [Что такое Fortify?](#what-is-fortify)

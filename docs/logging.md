@@ -1,4 +1,4 @@
-# Laravel 8.x — Логирование
+# Laravel 8 · Логирование
 
 - [Введение](#introduction)
 - [Конфигурирование](#configuration)

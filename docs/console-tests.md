@@ -1,4 +1,4 @@
-# Laravel 8.x — Тесты консольных команд
+# Laravel 8 · Тесты консольных команд
 
 - [Введение](#introduction)
 - [Ожидания ввода / вывода](#input-output-expectations)

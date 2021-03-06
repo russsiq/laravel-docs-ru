@@ -1,4 +1,4 @@
-# Laravel 8.x — Eloquent: мутаторы и типизация
+# Laravel 8 · Eloquent: мутаторы и типизация
 
 - [Введение](#introduction)
 - [Аксессоры и мутаторы](#accessors-and-mutators)

@@ -1,4 +1,4 @@
-# Laravel 8.x — Использование Redis
+# Laravel 8 · Использование Redis
 
 - [Введение](#introduction)
 - [Конфигурирование](#configuration)

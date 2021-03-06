@@ -1,4 +1,4 @@
-# Laravel 8.x — Eloquent: коллекции
+# Laravel 8 · Eloquent: коллекции
 
 - [Введение](#introduction)
 - [Доступные методы](#available-methods)

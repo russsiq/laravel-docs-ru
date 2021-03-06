@@ -1,4 +1,4 @@
-# Laravel 8.x — Поставщики служб
+# Laravel 8 · Поставщики служб
 
 - [Введение](#introduction)
 - [Написание поставщиков служб](#writing-service-providers)

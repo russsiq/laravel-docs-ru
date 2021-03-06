@@ -1,4 +1,4 @@
-# Laravel 8.x — Обработка ошибок
+# Laravel 8 · Обработка ошибок
 
 - [Введение](#introduction)
 - [Конфигурирование](#configuration)

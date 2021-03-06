@@ -1,4 +1,4 @@
-# Laravel 8.x — Планирование задач
+# Laravel 8 · Планирование задач
 
 - [Введение](#introduction)
 - [Определение расписаний](#defining-schedules)

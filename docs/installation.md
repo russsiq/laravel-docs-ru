@@ -1,4 +1,4 @@
-# Laravel 8.x — Установка
+# Laravel 8 · Установка
 
 - [Встречайте Laravel](#meet-laravel)
     - [Почему именно Laravel?](#why-laravel)
