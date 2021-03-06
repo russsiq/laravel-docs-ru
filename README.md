@@ -52,7 +52,7 @@
     - [x] [Файловое хранилище](./docs/filesystem.md)
     - [x] [Глобальные помощники](./docs/helpers.md)
     - [x] [HTTP-клиент](./docs/http-client.md)
-    - [x] [Локализация](./docs/localization.md)
+    - [x] [Локализация интерфейса](./docs/localization.md)
     - [x] [Почтовые отправления](./docs/mail.md)
     - [x] [Уведомления](./docs/notifications.md)
     - [x] [Разработка пакетов](./docs/packages.md)
