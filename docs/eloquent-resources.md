@@ -22,7 +22,7 @@
 <a name="generating-resources"></a>
 ## Генерация ресурсов
 
-Чтобы сгенерировать новый ресурс, используйте команду `make:resource` [Artisan](artisan.md). Эта команда поместит новый класс ресурса в каталог `app/Http/Resources` вашего приложения. Ресурсы расширяют класс `Illuminate\Http\Resources\Json\JsonResource`:
+Ресурсы расширяют класс `Illuminate\Http\Resources\Json\JsonResource`. Чтобы сгенерировать новый ресурс, используйте команду `make:resource` [Artisan](artisan.md). Эта команда поместит новый класс ресурса в каталог `app/Http/Resources` вашего приложения:
 
     php artisan make:resource UserResource
 
