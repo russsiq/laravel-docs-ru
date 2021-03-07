@@ -615,7 +615,7 @@ Laravel также позволяет отображать шаблоны без
 
 Утверждает, что ответ содержит конкретные данные по указанному пути:
 
-    $response->assertJsonPath($path, array $data, $strict = true);
+    $response->assertJsonPath($path, $expectedValue);
 
 Например, если ответ JSON, возвращаемый вашим приложением, содержит следующие данные:
 
