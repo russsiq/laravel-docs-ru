@@ -832,7 +832,7 @@ Laravel также содержит глобального помощника `o
 <a name="rule-date-format"></a>
 #### date_format:_format_
 
-Проверяемое поле должно соответствовать переданному _format_. При валидации поля следует использовать **либо** `date`, **либо** `date_format`, а не то и другое вместе. Это правило валидации поддерживает все форматы, поддерживаемые классом [`DateTime`](https://www.php.net/manual/en/class.datetime.php) PHP.
+Проверяемое поле должно соответствовать переданному _format_. При валидации поля следует использовать **либо** `date`, **либо** `date_format`, а не то и другое вместе. Это правило валидации поддерживает все форматы, поддерживаемые классом [`DateTime`](https://www.php.net/manual/ru/class.datetime.php) PHP.
 
 <a name="rule-different"></a>
 #### different:_field_
@@ -1113,7 +1113,7 @@ Laravel также содержит глобального помощника `o
 <a name="rule-numeric"></a>
 #### numeric
 
-Проверяемое поле должно быть [числовым](https://www.php.net/manual/en/function.is-numeric.php).
+Проверяемое поле должно быть [числовым](https://www.php.net/manual/ru/function.is-numeric.php).
 
 <a name="rule-password"></a>
 #### password
