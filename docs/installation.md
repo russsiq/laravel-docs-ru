@@ -150,8 +150,6 @@ curl -s "https://laravel.build/example-app?with=mysql,redis" | bash
 
 Если вы не укажете желаемые службы, то будет сконфигурирован стек по умолчанию из `mysql`, `redis`, `meilisearch`, `mailhog` и `selenium`.
 
-If you do not specify which services you would like configured, a default stack of `mysql`, `redis`, `meilisearch`, `mailhog`, and `selenium` will be configured.
-
 <a name="installation-via-composer"></a>
 ### Установка через Composer
 
@@ -185,6 +183,28 @@ php artisan serve
 - Windows: `%USERPROFILE%\AppData\Roaming\Composer\vendor\bin`
 - GNU / Linux Distributions: `$HOME/.config/composer/vendor/bin` или `$HOME/.composer/vendor/bin`
 <!-- </div> -->
+
+Для удобства установщик Laravel также может создать репозиторий Git для вашего нового проекта. Чтобы указать, что вы хотите создать репозиторий Git, передайте флаг `--git` при создании нового проекта:
+
+```bash
+laravel new example-app --git
+```
+
+Эта команда инициализирует новый репозиторий Git для вашего проекта и автоматически зафиксирует базовый каркас Laravel. Флаг `--git` предполагает, что вы правильно установили и настроили Git.
+
+Или вместо использования флага `--git` вы можете использовать параметр `--github`, чтобы создать репозиторий Git и, соответствующий ему, частный репозиторий на GitHub:
+
+```bash
+laravel new example-app --github
+```
+
+Созданный репозиторий будет доступен по адресу `https://github.com/<your-account/example-app`. Параметр `--github` предполагает, что вы правильно установили [GitHub CLI](https://cli.github.com) и прошли аутентификацию с помощью интерфейса командной строки. Кроме того, у вас должен быть установлен и правильно настроен `git`. При необходимости вы можете передать [дополнительные параметры и флаги](https://cli.github.com/manual/gh_repo_create), поддерживаемые GitHub CLI:
+
+```bash
+laravel new example-app --github="--public"
+```
+
+> {note} У вас могут возникнуть проблемы с параметром `--github`, если для протокола Git вашей системы задано значение `https`. Если во время установки вам будет предложено ввести имя пользователя и пароль GitHub, то попробуйте указать протокол Git вашей системы `ssh`, запустив `gh config set git_protocol ssh --host github.com`.
 
 <a name="initial-configuration"></a>
 ## Начальная конфигурация

@@ -37,6 +37,7 @@
 - [Пакет Laravel Horizon](https://github.com/laravel/horizon)
 - [Пакет Laravel Jetstream](https://github.com/laravel/jetstream)
 - [Пакет Laravel Passport](https://github.com/laravel/passport)
+- [Пакет Laravel Sail](https://github.com/laravel/sail)
 - [Пакет Laravel Sanctum](https://github.com/laravel/sanctum)
 - [Пакет Laravel Scout](https://github.com/laravel/scout)
 - [Пакет Laravel Socialite](https://github.com/laravel/socialite)

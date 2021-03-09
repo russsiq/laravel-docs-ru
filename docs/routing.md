@@ -617,7 +617,7 @@ Laravel содержит мощные и настраиваемые службы
 <a name="throttling-with-redis"></a>
 #### Использование Redis для посредника `throttle`
 
-Как правило, посредник `throttle` сопоставлен классу `Illuminate\Routing\Middleware\ThrottleRequests`. Это сопоставление определено в HTTP-ядре вашего приложения (`App\Http\Kernel`). Однако, если вы используете Redis в качестве драйвера кеша вашего приложения, то вы можете изменить это сопоставление, чтобы использовать класс `Illuminate\Routing\Middleware\ThrottleRequestsWithRedis`. Этот класс более эффективен при управлении ограничениями запросов с помощью Redis:
+Как правило, посредник `throttle` сопоставлен классу `Illuminate\Routing\Middleware\ThrottleRequests`. Это сопоставление определено в `App\Http\Kernel` вашего приложения. Если вы используете Redis в качестве драйвера кеша вашего приложения, то вы можете изменить это сопоставление, чтобы использовать класс `Illuminate\Routing\Middleware\ThrottleRequestsWithRedis`. Этот класс более эффективен при управлении ограничениями запросов с помощью Redis:
 
     'throttle' => \Illuminate\Routing\Middleware\ThrottleRequestsWithRedis::class,
 

@@ -130,6 +130,10 @@
 
     $urlWithQueryString = $request->fullUrl();
 
+Если вы хотите добавить данные строки запроса к текущему URL, то вы можете вызвать метод `fullUrlWithQuery`. Этот метод объединяет переданный массив переменных строки запроса с текущей строкой запроса:
+
+    $request->fullUrlWithQuery(['type' => 'phone']);
+
 <a name="retrieving-the-request-method"></a>
 #### Получение метода запроса
 
