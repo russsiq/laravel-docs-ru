@@ -1,4 +1,4 @@
-# Laravel 8 · База данных: миграции
+# Laravel 8 · База данных · Миграции
 
 - [Введение](#introduction)
 - [Генерация миграций](#generating-migrations)

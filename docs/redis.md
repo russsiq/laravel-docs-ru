@@ -1,4 +1,4 @@
-# Laravel 8 · Использование Redis
+# Laravel 8 · База данных · Использование Redis
 
 - [Введение](#introduction)
 - [Конфигурирование](#configuration)
