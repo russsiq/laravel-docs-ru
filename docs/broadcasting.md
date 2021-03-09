@@ -79,7 +79,7 @@
 
     composer require pusher/pusher-php-server "^5.0"
 
-Далее, вы должны настроить свои учетные данные Pusher Channels в конфигурационном файле `config/broadcasting.php`. Пример конфигурации Pusher Channels уже содержится в этом файле, что позволяет быстро указать параметры `key`, `secret`, и `app_id`. Как правило, эти значения должны быть установлены через ​​[переменные окружения](configuration.md#environment-configuration) `PUSHER_APP_KEY`, `PUSHER_APP_SECRET` и `PUSHER_APP_ID`:
+Далее, вы должны настроить свои учетные данные Pusher Channels в конфигурационном файле `config/broadcasting.php`. Пример конфигурации Pusher Channels уже содержится в этом файле, что позволяет быстро указать параметры `key`, `secret`, и `app_id`. Как правило, эти значения должны быть установлены через [переменные окружения](configuration.md#environment-configuration) `PUSHER_APP_KEY`, `PUSHER_APP_SECRET` и `PUSHER_APP_ID`:
 
     PUSHER_APP_ID=your-pusher-app-id
     PUSHER_APP_KEY=your-pusher-key
@@ -106,7 +106,7 @@ The [laravel-websockets](https://github.com/beyondcode/laravel-websockets) packa
 
     composer require ably/ably-php
 
-Далее, вы должны настроить свои учетные данные Ably в конфигурационном файле `config/broadcasting.php`. Пример конфигурации Ably уже содержится в этом файле, что позволяет быстро указать параметр `key`. Как правило, это значение должно быть установлено через ​​[переменную окружения](configuration.md#environment-configuration) `ABLY_KEY`:
+Далее, вы должны настроить свои учетные данные Ably в конфигурационном файле `config/broadcasting.php`. Пример конфигурации Ably уже содержится в этом файле, что позволяет быстро указать параметр `key`. Как правило, это значение должно быть установлено через [переменную окружения](configuration.md#environment-configuration) `ABLY_KEY`:
 
     ABLY_KEY=your-ably-key
 

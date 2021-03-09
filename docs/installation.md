@@ -82,7 +82,7 @@ cd example-app
 <a name="getting-started-on-windows"></a>
 ### Начало работы в Windows
 
-Прежде чем мы создадим новое приложение Laravel на вашем компьютере с Windows, обязательно установите [Docker Desktop](https://www.docker.com/products/docker-desktop). Затем вы должны убедиться, что подсистема Windows для Linux 2 (WSL2) установлена ​​и включена. WSL позволяет запускать двоичные исполняемые файлы Linux прямо в Windows 10. Информацию о том, как установить и включить WSL2, можно найти в [документации Среда разработки](https://docs.microsoft.com/ru-ru/windows/wsl/install-win10).
+Прежде чем мы создадим новое приложение Laravel на вашем компьютере с Windows, обязательно установите [Docker Desktop](https://www.docker.com/products/docker-desktop). Затем вы должны убедиться, что подсистема Windows для Linux 2 (WSL2) установлена и включена. WSL позволяет запускать двоичные исполняемые файлы Linux прямо в Windows 10. Информацию о том, как установить и включить WSL2, можно найти в [документации Среда разработки](https://docs.microsoft.com/ru-ru/windows/wsl/install-win10).
 
 > {tip} После установки и включения WSL2 вы должны убедиться, что Docker Desktop [настроен на использование серверной части WSL2](https://docs.docker.com/docker-for-windows/wsl/).
 
