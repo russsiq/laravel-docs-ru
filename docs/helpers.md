@@ -187,6 +187,7 @@ Laravel содержит множество глобальных «вспомо�
 - [studly](#method-fluent-str-studly)
 - [substr](#method-fluent-str-substr)
 - [tap](#method-fluent-str-tap)
+- [test](#method-fluent-str-test)
 - [title](#method-fluent-str-title)
 - [trim](#method-fluent-str-trim)
 - [ucfirst](#method-fluent-str-ucfirst)
@@ -786,7 +787,7 @@ Laravel содержит множество глобальных «вспомо�
 <a name="method-array-wrap"></a>
 #### `Arr::wrap()`
 
-Метод `Arr::wrap` оборачивает переданное значение в массив. Если переданное значение уже является массивом, оно не будет изменено:
+Метод `Arr::wrap` оборачивает переданное значение в массив. Если переданное значение уже является массивом, то оно будет возвращено без изменений:
 
     use Illuminate\Support\Arr;
 
@@ -2311,6 +2312,17 @@ If no matches are found, an empty collection will be returned.
         ->upper();
 
     // LARAVEL FRAMEWORK
+
+<a name="method-fluent-str-test"></a>
+#### `test`
+
+Метод `test` определяет, соответствует ли строка переданному шаблону регулярного выражения:
+
+    use Illuminate\Support\Str;
+
+    $result = Str::of('Laravel Framework')->test('/Laravel/');
+
+    // true
 
 <a name="method-fluent-str-title"></a>
 #### `title`

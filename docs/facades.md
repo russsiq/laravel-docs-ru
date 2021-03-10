@@ -270,6 +270,7 @@ Cache (Instance)  |  [Illuminate\Cache\Repository](https://laravel.com/api/8.x/I
 Config  |  [Illuminate\Config\Repository](https://laravel.com/api/8.x/Illuminate/Config/Repository.html)  |  `config`
 Cookie  |  [Illuminate\Cookie\CookieJar](https://laravel.com/api/8.x/Illuminate/Cookie/CookieJar.html)  |  `cookie`
 Crypt  |  [Illuminate\Encryption\Encrypter](https://laravel.com/api/8.x/Illuminate/Encryption/Encrypter.html)  |  `encrypter`
+Date | [Illuminate\Support\DateFactory](https://laravel.com/api/8.x/Illuminate/Support/DateFactory.html) | `date`
 DB  |  [Illuminate\Database\DatabaseManager](https://laravel.com/api/8.x/Illuminate/Database/DatabaseManager.html)  |  `db`
 DB (Instance)  |  [Illuminate\Database\Connection](https://laravel.com/api/8.x/Illuminate/Database/Connection.html)  |  `db.connection`
 Event  |  [Illuminate\Events\Dispatcher](https://laravel.com/api/8.x/Illuminate/Events/Dispatcher.html)  |  `events`

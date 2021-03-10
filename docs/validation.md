@@ -717,6 +717,8 @@ Laravel также содержит глобального помощника `o
 - [Numeric](#rule-numeric)
 - [Password](#rule-password)
 - [Present](#rule-present)
+- [Prohibited If](#rule-prohibited-if)
+- [Prohibited Unless](#rule-prohibited-unless)
 - [Regular Expression](#rule-regex)
 - [Required](#rule-required)
 - [Required If](#rule-required-if)
@@ -1126,6 +1128,16 @@ Laravel также содержит глобального помощника `o
 #### present
 
 Проверяемое поле должно присутствовать во входных данных, но может быть пустым.
+
+<a name="rule-prohibited-if"></a>
+#### prohibited_if:_anotherfield_,_value_,...
+
+Проверяемое поле должно быть пустым или отсутствовать, если поле _anotherfield_ равно любому _value_.
+
+<a name="rule-prohibited-unless"></a>
+#### prohibited_unless:_anotherfield_,_value_,...
+
+Проверяемое поле должно быть пустым или отсутствовать, если поле _anotherfield_ не равно какому-либо _value_.
 
 <a name="rule-regex"></a>
 #### regex:_pattern_
