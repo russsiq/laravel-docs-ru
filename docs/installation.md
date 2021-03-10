@@ -164,7 +164,7 @@ curl -s "https://laravel.build/example-app?with=mysql,redis" | bash
 <a name="the-laravel-installer"></a>
 #### Установщик Laravel
 
-Или вы можете установить установщик Laravel как глобальную зависимость Composer:
+В качестве альтернативы, вы можете использовать установщик Laravel, включив его в глобальную зависимость Composer:
 
 ```nothing
 composer global require laravel/installer
@@ -176,7 +176,7 @@ cd example-app
 php artisan serve
 ```
 
-Обязательно поместите системный каталог `bin` Composer в ваш `$PATH`, чтобы исполняемый файл `laravel` мог быть обнаружен вашей системой. Этот каталог существует в разных местах в зависимости от вашей операционной системы; однако некоторыми типичными местоположениями могут быть:
+Чтобы исполняемый файл `laravel` мог быть обнаружен вашей системой, удостоверьтесь в правильном расположении каталога `bin` менеджера пакетов Composer, задаваемый системной переменной `$PATH`. Расположение каталога зависит от вашей операционной системы, но типичными могут быть:
 
 <!-- <div class="content-list" markdown="1"> -->
 - macOS: `$HOME/.composer/vendor/bin`
@@ -198,7 +198,7 @@ laravel new example-app --git
 laravel new example-app --github
 ```
 
-Созданный репозиторий будет доступен по адресу `https://github.com/<your-account/example-app`. Параметр `--github` предполагает, что вы правильно установили [GitHub CLI](https://cli.github.com) и прошли аутентификацию с помощью интерфейса командной строки. Кроме того, у вас должен быть установлен и правильно настроен `git`. При необходимости вы можете передать [дополнительные параметры и флаги](https://cli.github.com/manual/gh_repo_create), поддерживаемые GitHub CLI:
+Созданный репозиторий будет доступен по адресу `https://github.com/<your-account>/example-app`. Параметр `--github` предполагает, что вы правильно установили [GitHub CLI](https://cli.github.com) и прошли аутентификацию с помощью интерфейса командной строки. Кроме того, у вас должен быть установлен и правильно настроен `git`. При необходимости вы можете передать [дополнительные параметры и флаги](https://cli.github.com/manual/gh_repo_create), поддерживаемые GitHub CLI:
 
 ```bash
 laravel new example-app --github="--public"
