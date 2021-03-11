@@ -250,7 +250,7 @@ Laravel предлагает полезные методы для имитаци
             Event::assertDispatched(OrderShipped::class);
 
             // Утверждаем, что событие было отправлено дважды ...
-            Event::assertDispatched(OrderShipped::class, 2);
+            Event::assertDispatchedTimes(OrderShipped::class, 2);
 
             // Утверждаем, что событие не было отправлено ...
             Event::assertNotDispatched(OrderFailedToShip::class);
