@@ -719,7 +719,7 @@ Laravel также содержит глобального помощника `o
 - [Present](#rule-present)
 - [Prohibited If](#rule-prohibited-if)
 - [Prohibited Unless](#rule-prohibited-unless)
-- [Regular Expression](#rule-regex)
+- [Regex (regular expression)](#rule-regex)
 - [Required](#rule-required)
 - [Required If](#rule-required-if)
 - [Required Unless](#rule-required-unless)
