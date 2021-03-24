@@ -51,7 +51,6 @@
         root /srv/example.com/public;
 
         add_header X-Frame-Options "SAMEORIGIN";
-        add_header X-XSS-Protection "1; mode=block";
         add_header X-Content-Type-Options "nosniff";
 
         index index.php;

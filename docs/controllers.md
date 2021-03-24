@@ -165,6 +165,20 @@ GET       | `/photos/{photo}/edit` | edit         | photos.edit
 PUT/PATCH | `/photos/{photo}`      | update       | photos.update
 DELETE    | `/photos/{photo}`      | destroy      | photos.destroy
 
+<a name="customizing-missing-model-behavior"></a>
+#### Настройка поведения при отсутствии модели
+
+Обычно, если неявно связанная модель ресурса не найдена, то генерируется `404` HTTP-ответ. Однако вы можете изменить это поведение, вызвав метод `missing` при определении вашего ресурсного маршрута. Метод `missing` принимает замыкание, которое будет вызываться, если неявно связанная модель не может быть найдена для любого из маршрутов ресурса:
+
+    use App\Http\Controllers\PhotoController;
+    use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Redirect;
+
+    Route::resource('photos', PhotoController::class)
+            ->missing(function (Request $request) {
+                return Redirect::route('photos.index');
+            });
+
 <a name="specifying-the-resource-model"></a>
 #### Указание модели ресурса
 
