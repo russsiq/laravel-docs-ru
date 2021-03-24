@@ -1404,6 +1404,10 @@
 
     // [1]
 
+    $mode = collect([1, 1, 2, 2])->mode();
+
+    // [1, 2]
+
 <a name="method-nth"></a>
 #### `nth()`
 
@@ -1511,7 +1515,7 @@
         /**
          * Создать новый экземпляр ResourceCollection.
          *
-         * @param  Collection  $resource
+         * @param  Collection  $collection
          * @return void
          */
         public function __construct(Collection $collection)

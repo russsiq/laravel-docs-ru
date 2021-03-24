@@ -135,7 +135,7 @@
     /**
      * Загрузка любых служб приложения.
      *
-     * @param  \Illuminate\Contracts\Routing\ResponseFactory
+     * @param  \Illuminate\Contracts\Routing\ResponseFactory  $response
      * @return void
      */
     public function boot(ResponseFactory $response)

@@ -253,9 +253,9 @@ driver://username:password@host:port/database?options
         public function boot()
         {
             DB::listen(function ($query) {
-                // $query->sql
-                // $query->bindings
-                // $query->time
+                // $query->sql;
+                // $query->bindings;
+                // $query->time;
             });
         }
     }

@@ -146,7 +146,7 @@ Laravel находит слушателей событий, сканируя к�
         /**
          * Обработать переданное событие.
          *
-         * @param  \App\Events\PodcastProcessed
+         * @param  \App\Events\PodcastProcessed  $event
          * @return void
          */
         public function handle(PodcastProcessed $event)

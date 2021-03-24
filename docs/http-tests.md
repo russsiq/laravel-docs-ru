@@ -379,7 +379,6 @@ Laravel также предлагает прекрасный способ пос
         );
 
 Однако вместо того, чтобы делать два отдельных вызова метода `has` для утверждения в отношении коллекции `users`, вы можете сделать один вызов, обеспеченный замыканием в качестве третьего параметра. При этом автоматически вызывается замыкание, область действия которого будет ограниченно уровнем вложенности первого элемента коллекции:
-<!--  -->
 
     $response
         ->assertJson(fn (AssertableJson $json) =>
@@ -391,6 +390,28 @@ Laravel также предлагает прекрасный способ пос
                          ->etc()
                  )
         );
+
+<a name="asserting-json-types"></a>
+#### Утверждения относительно типов JSON
+
+При необходимости можно утверждать, что свойства в ответе JSON имеют определенный тип. Класс `Illuminate\Testing\Fluent\AssertableJson` содержит методы `whereType` и `whereAllType`, обеспечивающие простоту таких утверждений:
+
+    $response->assertJson(fn (AssertableJson $json) =>
+        $json->whereType('id', 'integer')
+             ->whereAllType([
+                'users.0.name' => 'string',
+                'meta' => 'array'
+            ])
+    );
+
+Можно указать несколько типов в качестве второго параметра метода `whereType`, разделив их символом `|`, или передав массив необходимых типов. Утверждение будет успешно, если значение ответа будет иметь какой-либо из перечисленных типов:
+
+    $response->assertJson(fn (AssertableJson $json) =>
+        $json->whereType('name', 'string|null')
+             ->whereType('id', ['string', 'integer'])
+    );
+
+Методы `whereType` и `whereTypeAll` применимы к следующим типам: `string`, `integer`, `double`, `boolean`, `array`, и `null`.
 
 <a name="testing-file-uploads"></a>
 ## Тестирование загрузки файлов

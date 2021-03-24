@@ -364,7 +364,7 @@
     /**
      * Создать новый экземпляр класса.
      *
-     * @param  \Illuminate\Container\Container
+     * @param  \Illuminate\Container\Container  $container
      * @return void
      */
     public function __construct(Container $container)
