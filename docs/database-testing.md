@@ -286,6 +286,7 @@ Laravel предлагает множество полезных инструм�
                         fn () => ['role' => UserRoles::all()->random()],
                     ))
                     ->create();
+
 <a name="factory-relationships"></a>
 ## Отношения
 
