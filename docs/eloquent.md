@@ -11,6 +11,7 @@
 - [Получение моделей](#retrieving-models)
     - [Коллекции](#collections)
     - [Разбиение результатов](#chunking-results)
+    - [Отложенная потоковая передача результатов](#streaming-results-lazily)
     - [Курсоры](#cursors)
     - [Расширенные подзапросы](#advanced-subqueries)
 - [Извлечение отдельных моделей](#retrieving-single-models)
@@ -318,9 +319,11 @@ $flights = $flights->reject(function ($flight) {
 
 Поскольку все коллекции Laravel реализуют итерируемые интерфейсы PHP, вы можете перебирать коллекции, как если бы они были массивом:
 
-    foreach ($flights as $flight) {
-        echo $flight->name;
-    }
+```php
+foreach ($flights as $flight) {
+    echo $flight->name;
+}
+```
 
 <a name="chunking-results"></a>
 ### Разбиение результатов
@@ -329,47 +332,82 @@ $flights = $flights->reject(function ($flight) {
 
 Метод `chunk` будет извлекать подмножество моделей Eloquent, передавая их в замыкание для обработки. Поскольку за один раз извлекается только текущая коллекция моделей Eloquent, метод `chunk` обеспечивает значительно меньшее потребление памяти при работе с большим количеством моделей:
 
-    use App\Models\Flight;
+```php
+use App\Models\Flight;
 
-    Flight::chunk(200, function ($flights) {
-        foreach ($flights as $flight) {
-            //
-        }
-    });
+Flight::chunk(200, function ($flights) {
+    foreach ($flights as $flight) {
+        //
+    }
+});
+```
 
 Первым аргументом, передаваемым методу `chunk`, является количество записей, которые вы хотите получить за «порцию». Замыкание, переданное в качестве второго аргумента, будет вызвано для каждой части записей, полученной из БД. Будет выполнен запрос к БД для получения каждой части записей, переданных замыканию.
 
 Если вы фильтруете результаты метода `chunk` на основе столбца, который вы также будете обновлять при итерации результатов, вам следует использовать метод `chunkById`. Использование метода `chunk` в этих сценариях может привести к неожиданным и противоречивым результатам. Внутренне метод `chunkById` всегда будет извлекать модели со столбцом `id`, большим, чем у последней модели в предыдущей «порции»:
 
-    Flight::where('departed', true)
-            ->chunkById(200, function ($flights) {
-                $flights->each->update(['departed' => false]);
-            }, $column = 'id');
+```php
+Flight::where('departed', true)
+    ->chunkById(200, function ($flights) {
+        $flights->each->update(['departed' => false]);
+    }, $column = 'id');
+```
+
+<a name="streaming-results-lazily"></a>
+### Отложенная потоковая передача результатов
+
+Метод `lazy` работает аналогично [методу `chunk`](#chunking-results) в том смысле, что он выполняет запрос по частям. Однако вместо передачи каждого фрагмента непосредственно в замыкание, метод `lazy()` возвращает экземпляр [`LazyCollection`](collections.md#lazy-collections) одноуровневых моделей Eloquent, что позволяет вам взаимодействовать с результатами как с единым потоком:
+
+```php
+use App\Models\Flight;
+
+foreach (Flight::lazy() as $flight) {
+    //
+}
+```
+
+Если вы фильтруете результаты метода `lazy` по столбцу, который впоследствии будет обновлен при итерации результатов, то вам следует использовать метод `lazyById`. Внутренне метод `lazyById` всегда будет извлекать модели со столбцом `id`, большим, чем у последней модели в предыдущей «порции»:
+
+```php
+Flight::where('departed', true)
+    ->lazyById(200, $column = 'id')
+    ->each->update(['departed' => false]);
+```
 
 <a name="cursors"></a>
 ### Курсоры
 
-Подобно методу `chunk`, метод `cursor` используется для значительного уменьшения потребления памяти вашим приложением при итерации десятков тысяч записей модели Eloquent.
+Подобно методу `lazy`, метод `cursor` используется для значительного уменьшения потребления памяти вашим приложением при итерации десятков тысяч записей модели Eloquent.
 
-Метод `cursor` выполнит только один запрос к БД; однако отдельные модели Eloquent не будут включены в результирующий набор, пока они не будут фактически итерированы. Следовательно, только одна модель Eloquent хранится в памяти в любой момент времени при итерации с использованием курсора. Внутри метод `cursor` использует [генераторы PHP](https://www.php.net/manual/ru/language.generators.overview.php) для реализации этого функционала:
+Метод `cursor` выполнит только один запрос к БД; однако отдельные модели Eloquent не будут включены в результирующий набор, пока они не будут фактически итерированы. Следовательно, только одна модель Eloquent хранится в памяти в любой момент времени при итерации с использованием курсора.
 
-    use App\Models\Flight;
+> {note} Поскольку метод `cursor` всегда хранит в памяти только одну модель Eloquent, то нетерпеливая загрузка отношений недопустима. Если вам нужно нетерпеливо загрузить отношения, то рассмотрите возможность использования метода [`lazy`](#streaming-results-lazily).
 
-    foreach (Flight::where('destination', 'Zurich')->cursor() as $flight) {
-        //
-    }
+Внутри метод `cursor` использует [генераторы PHP](https://www.php.net/manual/ru/language.generators.overview.php) для реализации этого функционала:
+
+```php
+use App\Models\Flight;
+
+foreach (Flight::where('destination', 'Zurich')->cursor() as $flight) {
+    //
+}
+```
 
 Курсор возвращает экземпляр `Illuminate\Support\LazyCollection`. [Отложенные коллекции](collections.md#lazy-collections) позволяют использовать многие методы коллекций, доступные в типичных коллекциях Laravel, при одновременной загрузке в память только одной модели:
 
-    use App\Models\User;
+```php
+use App\Models\User;
 
-    $users = User::cursor()->filter(function ($user) {
-        return $user->id > 500;
-    });
+$users = User::cursor()->filter(function ($user) {
+    return $user->id > 500;
+});
 
-    foreach ($users as $user) {
-        echo $user->id;
-    }
+foreach ($users as $user) {
+    echo $user->id;
+}
+```
+
+Хотя метод `cursor` использует гораздо меньше памяти, чем обычный запрос (удерживая в памяти только одну модель Eloquent), он все равно в конечном итоге может исчерпать память. Это связано с тем, что [драйвер PDO PHP внутренне кэширует все необработанные результаты запросов в своем буфере](https://www.php.net/manual/ru/mysqlinfo.concepts.buffering.php). Если вы имеете дело с очень большим количеством записей Eloquent, то рассмотрите возможность использования метода [`lazy`](#streaming-results-lazily).
 
 <a name="advanced-subqueries"></a>
 ### Расширенные подзапросы

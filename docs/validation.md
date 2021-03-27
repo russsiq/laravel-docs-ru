@@ -717,6 +717,7 @@ Laravel также содержит глобального помощника `o
 - [Numeric](#rule-numeric)
 - [Password](#rule-password)
 - [Present](#rule-present)
+- [Prohibited](#rule-prohibited)
 - [Prohibited If](#rule-prohibited-if)
 - [Prohibited Unless](#rule-prohibited-unless)
 - [Regex (regular expression)](#rule-regex)
@@ -882,6 +883,10 @@ Laravel также содержит глобального помощника `o
 При валидации массивов проверяемое поле не должно иметь повторяющихся значений:
 
     'foo.*.id' => 'distinct'
+
+По умолчанию правило `distinct` использует гибкое сравнение переменных. Чтобы использовать жесткое сравнение, вы можете добавить параметр `strict` в определение правила валидации:
+
+    'foo.*.id' => 'distinct:strict'
 
 Вы можете добавить `ignore_case` к аргументам правила валидации, чтобы правило игнорировало различия в использовании регистра букв:
 
@@ -1128,6 +1133,11 @@ Laravel также содержит глобального помощника `o
 #### present
 
 Проверяемое поле должно присутствовать во входных данных, но может быть пустым.
+
+<a name="rule-prohibited"></a>
+#### prohibited
+
+Проверяемое поле должно быть пустым или отсутствовать.
 
 <a name="rule-prohibited-if"></a>
 #### prohibited_if:_anotherfield_,_value_,...

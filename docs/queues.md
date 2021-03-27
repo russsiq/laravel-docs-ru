@@ -265,17 +265,17 @@
         public $product;
 
         /**
-        * Количество секунд, по истечении которых уникальная блокировка задания будет снята.
-        *
-        * @var int
-        */
+         * Количество секунд, по истечении которых уникальная блокировка задания будет снята.
+         *
+         * @var int
+         */
         public $uniqueFor = 3600;
 
         /**
-        * Уникальный идентификатор задания.
-        *
-        * @return string
-        */
+         * Уникальный идентификатор задания.
+         *
+         * @return string
+         */
         public function uniqueId()
         {
             return $this->product->id;
@@ -312,10 +312,10 @@
         ...
 
         /**
-        * Получить драйвер кеша для блокировки уникального задания.
-        *
-        * @return \Illuminate\Contracts\Cache\Repository
-        */
+         * Получить драйвер кеша для блокировки уникального задания.
+         *
+         * @return \Illuminate\Contracts\Cache\Repository
+         */
         public function uniqueVia()
         {
             return Cache::driver('redis');
