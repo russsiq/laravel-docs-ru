@@ -1034,21 +1034,21 @@ Dusk содержит множество утверждений, которые 
 <a name="assert-fragment-is"></a>
 #### assertFragmentIs
 
-Утверждает, что хэш-фрагмент текущего URL соответствует переданному фрагменту:
+Утверждает, что хеш-фрагмент текущего URL соответствует переданному фрагменту:
 
     $browser->assertFragmentIs('anchor');
 
 <a name="assert-fragment-begins-with"></a>
 #### assertFragmentBeginsWith
 
-Утверждает, что хэш-фрагмент текущего URL начинается с указанного фрагмента:
+Утверждает, что хеш-фрагмент текущего URL начинается с указанного фрагмента:
 
     $browser->assertFragmentBeginsWith('anchor');
 
 <a name="assert-fragment-is-not"></a>
 #### assertFragmentIsNot
 
-Утверждает, что хэш-фрагмент текущего URL не соответствует переданному фрагменту:
+Утверждает, что хеш-фрагмент текущего URL не соответствует переданному фрагменту:
 
     $browser->assertFragmentIsNot('anchor');
 

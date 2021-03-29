@@ -476,7 +476,7 @@
     class Hash implements CastsInboundAttributes
     {
         /**
-         * Алгоритм хэширования.
+         * Алгоритм хеширования.
          *
          * @var string
          */

@@ -2585,7 +2585,7 @@ If no matches are found, an empty collection will be returned.
 <a name="method-bcrypt"></a>
 #### `bcrypt()`
 
-Функция `bcrypt` [хэширует](hashing.md) переданное значение, используя Bcrypt. Вы можете использовать его как альтернативу фасаду `Hash`:
+Функция `bcrypt` [хеширует](hashing.md) переданное значение, используя Bcrypt. Вы можете использовать его как альтернативу фасаду `Hash`:
 
     $password = bcrypt('my-secret-password');
 
