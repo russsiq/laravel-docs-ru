@@ -61,7 +61,7 @@
         }
     }
 
-В дополнение к планированию с использованием замыканий вы также можете использовать [вызываемые объекты](https://secure.php.net/manual/ru/language.oop5.magic.php#language.oop5.magic.invoke). Вызываемые объекты – это простые классы PHP, содержащие метод `__invoke`:
+В дополнение к планированию с использованием замыканий вы также можете использовать [вызываемые объекты](https://www.php.net/manual/ru/language.oop5.magic.php#language.oop5.magic.invoke). Вызываемые объекты – это простые классы PHP, содержащие метод `__invoke`:
 
     $schedule->call(new DeleteRecentUsers)->daily();
 
