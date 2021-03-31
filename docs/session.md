@@ -10,7 +10,7 @@
     - [Удаление данных](#deleting-data)
     - [Пересоздание идентификатора сессии](#regenerating-the-session-id)
 - [Блокировка сессии](#session-blocking)
-- [Добавление пользовательских драйверов сессии](#adding-custom-session-drivers)
+- [Добавление собственных драйверов сессии](#adding-custom-session-drivers)
     - [Реализация пользовательского драйвера](#implementing-the-driver)
     - [Регистрация пользовательского драйвера](#registering-the-driver)
 
@@ -258,7 +258,7 @@ Laravel автоматически пересоздает идентификат
     })->block()
 
 <a name="adding-custom-session-drivers"></a>
-## Добавление пользовательских драйверов сессии
+## Добавление собственных драйверов сессии
 
 <a name="implementing-the-driver"></a>
 #### Реализация пользовательского драйвера
