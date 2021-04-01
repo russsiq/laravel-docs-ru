@@ -797,6 +797,10 @@ Blade отобразит следующий HTML-код:
 
     {{ $attributes->whereStartsWith('wire:model') }}
 
+И наоборот, метод `whereDoesntStartWith` может использоваться для исключения всех атрибутов, ключи которых начинаются с указанной строки:
+
+    {{ $attributes->whereDoesntStartWith('wire:model') }}
+
 Используя метод `first`, вы можете отобразить первый атрибут в указанной коллекции атрибутов:
 
     {{ $attributes->whereStartsWith('wire:model')->first() }}
