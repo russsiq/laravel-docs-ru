@@ -102,7 +102,8 @@
     - [ ] [Sail](./docs/sail.md)
     - [x] [Sanctum](./docs/sanctum.md)  
         Легковесная система аутентификации для SPA (одностраничных приложений), мобильных приложений и простых API на основе токенов. Управление токенами API, аутентификация сессии. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
-    - [ ] [Scout](./docs/scout.md)
+    - [x] [Scout](./docs/scout.md)  
+        «Простое» решение на основе драйверов для добавления полнотекстового поиска моделям Eloquent.
     - [x] [Socialite](./docs/socialite.md)  
         Аутентификация через провайдеров OAuth: Facebook, Twitter, LinkedIn, Google, GitHub, GitLab, и Bitbucket.
     - [x] [Telescope](./docs/telescope.md)  
