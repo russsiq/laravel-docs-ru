@@ -1471,11 +1471,11 @@
 <a name="method-partition"></a>
 #### `partition()`
 
-Метод `partition` используется в связке с функцией `list` PHP, чтобы разделить элементы, прошедшие указанную проверку истинности, от тех, которые ее не прошли:
+Метод `partition` может быть объединен с деструктуризацией массива PHP для разделения элементов, прошедших указанную проверку истинности, от тех, которые ее не прошли:
 
     $collection = collect([1, 2, 3, 4, 5, 6]);
 
-    list($underThree, $equalOrAboveThree) = $collection->partition(function ($i) {
+    [$underThree, $equalOrAboveThree] = $collection->partition(function ($i) {
         return $i < 3;
     });
 

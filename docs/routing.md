@@ -587,6 +587,14 @@ Laravel содержит мощные и настраиваемые службы
                     : Limit::perMinute(100)->by($request->ip());
     });
 
+Чтобы проиллюстрировать этот функционал на другом примере, мы можем ограничить доступ к указанному маршруту до 100 раз в минуту по идентификатору аутентифицированного пользователя или до 10 раз в минуту по IP-адресу для каждого из гостей:
+
+    RateLimiter::for('uploads', function (Request $request) {
+        return $request->user()
+                    ? Limit::perMinute(100)->by($request->user()->id)
+                    : Limit::perMinute(10)->by($request->ip());
+    });
+
 <a name="multiple-rate-limits"></a>
 #### Множественные ограничения частоты запросов
 

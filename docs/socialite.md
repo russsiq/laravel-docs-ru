@@ -2,7 +2,7 @@
 
 - [Введение](#introduction)
 - [Установка](#installation)
-    - [Обновление пакета Socialite](#upgrading-socialite)
+- [Обновление пакета Socialite](#upgrading-socialite)
 - [Конфигурирование](#configuration)
 - [Аутентификация](#authentication)
     - [Маршрутизация](#routing)
@@ -25,7 +25,7 @@
     composer require laravel/socialite
 
 <a name="upgrading-socialite"></a>
-### Обновление пакета Socialite
+## Обновление пакета Socialite
 
 При обновлении Socialite важно внимательно изучить [руководство по обновлению](https://github.com/laravel/socialite/blob/master/UPGRADE.md).
 

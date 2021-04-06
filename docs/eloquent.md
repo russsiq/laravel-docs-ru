@@ -801,7 +801,7 @@ Eloquent содержит методы `isDirty`, `isClean` и `wasChanged` дл
 Вам также следует добавить столбец `deleted_at` в таблицу БД. [Построитель схемы](migrations.md) Laravel содержит метод для создания этого столбца:
 
     use Illuminate\Database\Schema\Blueprint;
-    use Illuminate\Facades\Schema;
+    use Illuminate\Support\Facades\Schema;
 
     Schema::table('flights', function (Blueprint $table) {
         $table->softDeletes();

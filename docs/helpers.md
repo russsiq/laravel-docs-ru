@@ -237,7 +237,6 @@ Laravel содержит множество глобальных «вспомо�
 - [csrf_token](#method-csrf-token)
 - [dd](#method-dd)
 - [dispatch](#method-dispatch)
-- [dispatch_now](#method-dispatch-now)
 - [dump](#method-dump)
 - [env](#method-env)
 - [event](#method-event)
@@ -2704,13 +2703,6 @@ If no matches are found, an empty collection will be returned.
 Функция `dispatch` помещает переданное [задание](queues.md#creating-jobs) в [очередь заданий](queues.md) Laravel:
 
     dispatch(new App\Jobs\SendEmails);
-
-<a name="method-dispatch-now"></a>
-#### `dispatch_now()`
-
-Функция `dispatch_now` немедленно запускает переданное [задание](queues.md#creating-jobs), и возвращает значение метода `handle`:
-
-    $result = dispatch_now(new App\Jobs\SendEmails);
 
 <a name="method-dump"></a>
 #### `dump()`

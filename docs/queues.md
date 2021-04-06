@@ -1338,6 +1338,10 @@ php artisan queue:retry-batch 32dbc76c-4f82-4749-b610-a639fe0099b5
 
     $schedule->command('queue:prune-batches --hours=48')->daily();
 
+Иногда в вашей таблице `job_batches` могут накапливаться записи о пакетах, которые никогда не завершались успешно, например, записи о пакетах, в которых задание завершилось неудачно, и при этом, такое задание никогда не было успешно выполнено. Используя параметр `unfinished`, вы можете указать команде `queue:prune-batches` удалять записи о незаконченных пакетах:
+
+    $schedule->command('queue:prune-batches --hours=48 --unfinished=72')->daily();
+
 <a name="queueing-closures"></a>
 ## Анонимные очереди
 

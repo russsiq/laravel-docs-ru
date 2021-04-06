@@ -18,6 +18,7 @@
 - [Регистрация команд](#registering-commands)
 - [Программное выполнение команд](#programmatically-executing-commands)
     - [Вызов команд из других команд](#calling-commands-from-other-commands)
+- [Обработка сигналов](#signal-handling)
 - [Настройка заготовок](#stub-customization)
 - [События](#events)
 
@@ -586,6 +587,51 @@ Tinker использует список «разрешенных» команд
     $this->callSilently('mail:send', [
         'user' => 1, '--queue' => 'default'
     ]);
+
+<a name="signal-handling"></a>
+## Обработка сигналов
+
+Компонент Symfony Console, на котором работает консоль Artisan, позволяет вам указать, какие [сигналы процесса](https://ru.wikipedia.org/wiki/Сигнал_(Unix)) (если есть) может обрабатывать ваша команда. Например, вы можете указать, что ваша команда может обрабатывать сигналы `SIGINT` и `SIGTERM`.
+
+Для начала вы должны реализовать интерфейс `Symfony\Component\Console\Command\SignalableCommandInterface` в классе своей команды Artisan. Этот интерфейс требует от вас определения двух методов: `getSubscribedSignals` и `handleSignal`:
+
+```php
+<?php
+
+use Symfony\Component\Console\Command\SignalableCommandInterface;
+
+class StartServer extends Command implements SignalableCommandInterface
+{
+    // ...
+
+    /**
+     * Получить список сигналов, обрабатываемых командой.
+     *
+     * @return array
+     */
+    public function getSubscribedSignals(): array
+    {
+        return [SIGINT, SIGTERM];
+    }
+
+    /**
+     * Обработка входящего сигнала.
+     *
+     * @param  int  $signal
+     * @return void
+     */
+    public function handleSignal(int $signal): void
+    {
+        if ($signal === SIGINT) {
+            $this->stopServer();
+
+            return;
+        }
+    }
+}
+```
+
+Метод `getSubscribedSignals` должен возвращать массив сигналов, которые может обработать ваша команда, в то время как метод `handleSignal` принимает сигнал и может реагировать на него в соответствии с определенной вами логикой.
 
 <a name="stub-customization"></a>
 ## Настройка заготовок
