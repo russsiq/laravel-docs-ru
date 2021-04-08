@@ -167,6 +167,7 @@ auto-incrementing ID  |  автоинкрементный идентификат
 backend  |  серверная часть  |  
 bag, message bag, attribute bag  |  коллекция, коллекция сообщений, коллекция атрибутов  |  
 basic example  |  отвлеченный пример  |  Правильнее «пример основ» (чего-либо)
+box  |  образ (Vagrant)  |  
 binding  |  связывание  |  
 broadcaster  |  вещатель  |  
 <a name="dictionary-c">**C**</a>
