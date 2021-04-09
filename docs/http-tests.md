@@ -771,6 +771,37 @@ Laravel также позволяет отображать шаблоны без
         ]
     ]);
 
+Иногда ответы JSON, возвращаемые вашим приложением, могут содержать массивы объектов:
+
+```js
+{
+    "user": [
+        {
+            "name": "Steve Schoger",
+            "age": 55,
+            "location": "Earth"
+        },  
+        {
+            "name": "Mary Schoger",
+            "age": 60,
+            "location": "Earth"
+        }
+    ]
+}
+```
+
+В этой ситуации вы можете использовать метасимвол `*` для утверждения о структуре каждого объекта в массиве:
+
+    $response->assertJsonStructure([
+        'user' => [
+            '*' => [
+                 'name',
+                 'age',
+                 'location'
+            ]
+        ]
+    ]);
+
 <a name="assert-json-validation-errors"></a>
 #### assertJsonValidationErrors
 

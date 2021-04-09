@@ -70,6 +70,9 @@ php artisan make:model Flight -c
 
 # Создать модель и миграцию, фабрику, наполнитель и контроллер ...
 php artisan make:model Flight -mfsc
+
+# Создать сводную модель...
+php artisan make:model Member --pivot
 ```
 
 <a name="eloquent-model-conventions"></a>

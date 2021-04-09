@@ -141,10 +141,11 @@ You may install the application's dependencies by navigating to the application'
 
 ```nothing
 docker run --rm \
+    -u "$(id -u):$(id -g)" \
     -v $(pwd):/opt \
     -w /opt \
     laravelsail/php80-composer:latest \
-    composer install
+    composer install --ignore-platform-reqs
 ```
 
 <a name="executing-artisan-commands"></a>
