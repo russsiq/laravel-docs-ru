@@ -270,7 +270,7 @@ Laravel предлагает полезные методы для имитаци
 
     Event::assertListening(
         OrderShipped::class,
-        [SendShipmentNotification::class, 'handle']
+        SendShipmentNotification::class
     );
 
 > {note} После вызова `Event::fake()` никакие слушатели событий выполняться не будут. Итак, если в ваших тестах используются фабрики моделей, которые полагаются на события, такие как создание UUID во время события `creating` модели, вы должны вызвать `Event::fake()` **после** использования ваших фабрик.

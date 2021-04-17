@@ -136,7 +136,9 @@ php artisan migrate
      */
     public function boot()
     {
-        Fortify::loginView(fn () => view('auth.login'));
+        Fortify::loginView(function () {
+            return view('auth.login');
+        });
 
         // ...
     }
@@ -298,7 +300,9 @@ use Laravel\Fortify\Fortify;
  */
 public function boot()
 {
-    Fortify::registerView(fn () => view('auth.register'));
+    Fortify::registerView(function () {
+        return view('auth.register');
+    });
 
     // ...
 }
@@ -436,7 +440,9 @@ use Laravel\Fortify\Fortify;
  */
 public function boot()
 {
-    Fortify::verifyEmailView(fn () => view('auth.verify-email'));
+    Fortify::verifyEmailView(function () {
+        return view('auth.verify-email');
+    });
 
     // ...
 }

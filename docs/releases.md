@@ -30,6 +30,8 @@ Laravel и другие его собственные пакеты следую�
 | 6 (LTS) | September 3rd, 2019 | September 7th, 2021 | September 6rd, 2022 |
 | 7 | March 3rd, 2020 | October 6th, 2020 | March 3rd, 2021 |
 | 8 | September 8th, 2020 | April 6th, 2021 | September 8th, 2021 |
+| 9 (LTS) | September, 2021 | September, 2023 | September, 2024 |
+| 10 | September, 2022 | March, 2024 | September, 2024 |
 
 <a name="laravel-8"></a>
 ## Laravel 8
@@ -82,8 +84,8 @@ _Автор: [Taylor Otwell](https://github.com/taylorotwell)_.
         public function definition()
         {
             return [
-                'name' => $this->faker->name,
-                'email' => $this->faker->unique()->safeEmail,
+                'name' => $this->faker->name(),
+                'email' => $this->faker->unique()->safeEmail(),
                 'email_verified_at' => now(),
                 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // пароль
                 'remember_token' => Str::random(10),

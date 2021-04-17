@@ -99,6 +99,20 @@ Laravel будет использовать имя миграции, чтобы 
         }
     }
 
+<a name="anonymous-migrations"></a>
+#### Анонимные миграции
+
+Как вы могли заметить в приведенном выше примере, Laravel автоматически присваивает имя класса всем миграциям, которые вы генерируете с помощью команды `make:migration`. Однако при желании вы можете вернуть анонимный класс из файла миграции. Это в первую очередь полезно, если ваше приложение накапливает много миграций, и две из них имеют конфликт имен классов:
+
+    <?php
+
+    use Illuminate\Database\Migrations\Migration;
+
+    return new class extends Migration
+    {
+        //
+    };
+
 <a name="setting-the-migration-connection"></a>
 #### Указание соединения миграции
 
@@ -362,6 +376,7 @@ Laravel будет использовать имя миграции, чтобы 
 - [timestamps](#column-method-timestamps)
 - [tinyIncrements](#column-method-tinyIncrements)
 - [tinyInteger](#column-method-tinyInteger)
+- [tinyText](#column-method-tinyText)
 - [unsignedBigInteger](#column-method-unsignedBigInteger)
 - [unsignedDecimal](#column-method-unsignedDecimal)
 - [unsignedInteger](#column-method-unsignedInteger)
@@ -738,6 +753,13 @@ Laravel будет использовать имя миграции, чтобы 
 Метод `tinyInteger` создает эквивалент столбца `TINYINT`:
 
     $table->tinyInteger('votes');
+
+<a name="column-method-tinyText"></a>
+#### `tinyText()` {#collection-method}
+
+Метод `tinyText` создает эквивалент столбца `TINYTEXT`:
+
+    $table->tinyText('notes');
 
 <a name="column-method-unsignedBigInteger"></a>
 #### `unsignedBigInteger()`
