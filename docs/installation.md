@@ -204,7 +204,7 @@ laravel new example-app --git --branch="main"
 laravel new example-app --github
 ```
 
-Созданный репозиторий будет доступен по адресу `https://github.com/<your-account>/example-app`. Параметр `--github` предполагает, что вы правильно установили [GitHub CLI](https://cli.github.com) и прошли аутентификацию с помощью интерфейса командной строки. Кроме того, у вас должен быть установлен и правильно настроен `git`. При необходимости вы можете передать [дополнительные параметры и флаги](https://cli.github.com/manual/gh_repo_create), поддерживаемые GitHub CLI:
+Созданный репозиторий будет доступен по адресу `https://github.com/<your-account>/example-app`. Параметр `--github` предполагает, что вы правильно установили [GitHub CLI](https://cli.github.com) и прошли аутентификацию с помощью интерфейса командной строки. Кроме того, у вас должен быть установлен и правильно настроен [git](https://git-scm.com/). При необходимости вы можете передать [дополнительные параметры и флаги](https://cli.github.com/manual/gh_repo_create), поддерживаемые GitHub CLI:
 
 ```bash
 laravel new example-app --github="--public"
