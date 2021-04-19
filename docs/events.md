@@ -3,7 +3,7 @@
 - [Введение](#introduction)
 - [Регистрация событий и слушателей](#registering-events-and-listeners)
     - [Генерация событий и слушателей](#generating-events-and-listeners)
-    - [Ручная регистрация событий](#manually-registering-events)
+    - [Явная регистрация событий](#manually-registering-events)
     - [Автообнаружение событий](#event-discovery)
 - [Определение событий](#defining-events)
 - [Определение слушателей](#defining-listeners)
@@ -58,9 +58,9 @@
     php artisan make:listener SendPodcastNotification --event=PodcastProcessed
 
 <a name="manually-registering-events"></a>
-### Ручная регистрация событий
+### Явная регистрация событий
 
-Обычно события должны регистрироваться через массив `$listen` поставщика `EventServiceProvider`; но вы также можете явно зарегистрировать слушателей событий на основе классов или замыканий в методе `boot` вашего `EventServiceProvider`:
+Обычно события должны регистрироваться с помощью массива `$listen` поставщика `EventServiceProvider`; но вы также можете явно зарегистрировать слушателей событий на основе классов или замыканий в методе `boot` вашего `EventServiceProvider`:
 
     use App\Events\PodcastProcessed;
     use App\Listeners\SendPodcastNotification;
@@ -84,7 +84,7 @@
     }
 
 <a name="queuable-anonymous-event-listeners"></a>
-#### Анонимные слушатели событий в очереди
+#### Очереди анонимных слушателей событий
 
 При явной регистрации слушателей событий на основе замыкания вы можете обернуть замыкание слушателя в функцию `Illuminate\Events\queueable`, чтобы проинструктировать Laravel о выполнении слушателя с использованием [очереди](queues.md):
 
