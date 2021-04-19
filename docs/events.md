@@ -86,7 +86,7 @@
 <a name="queuable-anonymous-event-listeners"></a>
 #### Очереди анонимных слушателей событий
 
-При явной регистрации слушателей событий на основе замыкания вы можете обернуть замыкание слушателя в функцию `Illuminate\Events\queueable`, чтобы проинструктировать Laravel о выполнении слушателя с использованием [очереди](queues.md):
+При явной регистрации слушателей событий на основе замыкания вы можете обернуть замыкание слушателя в функцию `Illuminate\Events\queueable`, что укажет Laravel выполнить слушателя с использованием [очереди](queues.md):
 
     use App\Events\PodcastProcessed;
     use function Illuminate\Events\queueable;
