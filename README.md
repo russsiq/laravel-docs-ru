@@ -292,7 +292,7 @@ query builder  |  построитель запросов  |
 query constraints  |  ограничения запроса  |  
 queue  |  очередь  |  
 queue worker  |  обработчик очереди  |  
-queueable  |  поочередный, последовательный  |  
+queueable  |  очередной (?), последовательный  |  
 <a name="dictionary-r">**R**</a>
 rate limit  |  предел (лимит) частоты  |  
 rate limiting  |  ограничение частоты  |  
