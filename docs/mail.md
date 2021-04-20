@@ -521,7 +521,7 @@ composer require aws/aws-sdk-php
 <a name="customizing-the-components"></a>
 ### Изменение компонентов
 
-Вы можете экспортировать все почтовые компоненты Markdown в собственное приложение для настройки. Чтобы экспортировать компоненты, используйте команду `vendor:publish` Artisan с параметром `--tag=laravel-mail`:
+Вы можете экспортировать все почтовые компоненты Markdown в собственное приложение для их дальнейшего изменения. Чтобы экспортировать компоненты, используйте команду `vendor:publish` Artisan с параметром `--tag=laravel-mail`:
 
     php artisan vendor:publish --tag=laravel-mail
 

@@ -2466,11 +2466,11 @@ If no matches are found, an empty collection will be returned.
 <a name="method-asset"></a>
 #### `asset()`
 
-Функция `asset` генерирует URL для исходника (прим. перев.: директория `resources`), используя текущую схему запроса (HTTP или HTTPS):
+Функция `asset` генерирует URL для веб-актива, используя текущую схему запроса (HTTP или HTTPS):
 
     $url = asset('img/photo.jpg');
 
-Вы можете настроить хост URL исходников, установив переменную `ASSET_URL` в вашем файле `.env`. Это может быть полезно, если вы размещаете свои исходники на внешнем сервисе, таком как Amazon S3 или другой CDN:
+Вы можете изменить хост URL веб-актива, указав значение переменной `ASSET_URL` в вашем файле `.env`. Это может быть полезно, если вы размещаете свои веб-активы на стороннем сервисе, таком как Amazon S3 или другой CDN:
 
     // ASSET_URL=http://example.com/assets
 
@@ -2494,7 +2494,7 @@ If no matches are found, an empty collection will be returned.
 <a name="method-secure-asset"></a>
 #### `secure_asset()`
 
-Функция `secure_asset` генерирует URL для исходника, используя HTTPS:
+Функция `secure_asset` генерирует URL для веб-актива, используя HTTPS:
 
     $url = secure_asset('img/photo.jpg');
 
