@@ -199,7 +199,7 @@ mix.js('resources/js/app.js', 'public/js')
 <a name="style-of-source-mapping"></a>
 #### Стиль сопоставления исходников
 
-Webpack предлагает множество [стилей сопоставления источников](https://webpack.js.org/configuration/devtool/#devtool). По умолчанию стиль сопоставления исходников Mix установлен как `eval-source-map`, что обеспечивает быстрое время перестроения. Если вы хотите изменить стиль сопоставления, то вы можете сделать это с помощью метода `sourceMaps`:
+Webpack предлагает множество [стилей сопоставления исходников](https://webpack.js.org/configuration/devtool/#devtool). По умолчанию стиль сопоставления исходников Mix установлен как `eval-source-map`, что обеспечивает быстрое время перестроения. Если вы хотите изменить стиль сопоставления, то вы можете сделать это с помощью метода `sourceMaps`:
 
     let productionSourceMaps = false;
 
