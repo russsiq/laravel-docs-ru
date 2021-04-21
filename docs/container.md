@@ -437,7 +437,7 @@
 <a name="psr-11"></a>
 ## PSR-11
 
-Контейнер служб Laravel реализует интерфейс [PSR-11](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-11-container.md). Поэтому вы можете объявить тип интерфейса контейнера PSR-11, чтобы получить экземпляр контейнера Laravel:
+Контейнер служб Laravel реализует интерфейс [PSR-11](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-11-container.md). Следовательно, вы можете объявить тип зависимости от интерфейса контейнера, чтобы получить экземпляр контейнера Laravel:
 
     use App\Services\Transistor;
     use Psr\Container\ContainerInterface;
@@ -448,4 +448,4 @@
         //
     });
 
-Исключение выбрасывается, если переданный идентификатор не может быть получен. Исключение будет экземпляром `Psr\Container\NotFoundExceptionInterface`, если идентификатор никогда не был привязан. Если идентификатор был привязан, но не может быть извлечен, будет выброшено исключение экземпляра `Psr\Container\ContainerExceptionInterface`.
+Если переданный идентификатор не может быть получен, то будет выброшено исключение. Исключение будет экземпляром `Psr\Container\NotFoundExceptionInterface`, если идентификатор никогда не был привязан. Если идентификатор был привязан, но не может быть извлечен, то будет выброшено исключение экземпляра `Psr\Container\ContainerExceptionInterface`.
