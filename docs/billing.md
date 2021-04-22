@@ -932,7 +932,7 @@ If your application offers multiple plans on a single subscription, you may use 
 
 The `usageRecords` and `usageRecordsFor` methods return a Collection instance containing an associative array of usage records. You may iterate over this array to display a customer's total usage:
 
-    @foreach ($usageRecords as $usageRecord) {
+    @foreach ($usageRecords as $usageRecord)
         - Period Starting: {{ $usageRecord['period']['start'] }}
         - Period Ending: {{ $usageRecord['period']['end'] }}
         - Total Usage: {{ $usageRecord['total_usage'] }}
@@ -1040,6 +1040,12 @@ If you wish to cancel a subscription immediately, call the `cancelNow` method on
 If you wish to cancel a subscription immediately and invoice any remaining un-invoiced metered usage or new / pending proration invoice items, call the `cancelNowAndInvoice` method on the user's subscription:
 
     $user->subscription('default')->cancelNowAndInvoice();
+
+You may also choose to cancel the subscription at a specific moment in time:
+
+    $user->subscription('default')->cancelAt(
+        now()->addDays(10)
+    );
 
 <a name="resuming-subscriptions"></a>
 ### Resuming Subscriptions
@@ -1370,7 +1376,7 @@ You may perform a checkout for an existing product that has been created within 
 
 If needed, you may also specify a product quantity:
 
-    $checkout = $user->checkout('price_12345', 15);
+    $checkout = $user->checkout(['price_12345' => 15]);
 
 Once you have passed the Checkout session instance to your view, a button that directs the user to Stripe Checkout may be rendered using the `button` method:
 
@@ -1378,7 +1384,7 @@ Once you have passed the Checkout session instance to your view, a button that d
 
 When a customer clicks this button they will be redirected to Stripe's Checkout page. By default, when a user successfully completes a purchase or cancels a purchase they will be redirected to your `home` route location, but you may specify custom callback URLs using the `success_url` and `cancel_url` options:
 
-    $checkout = $user->checkout('price_12345', 1, [
+    $checkout = $user->checkout(['price_12345' => 1], [
         'success_url' => route('your-success-route'),
         'cancel_url' => route('your-cancel-route'),
     ]);
@@ -1521,6 +1527,8 @@ If your business is based in Europe you will need to abide by the EU's Strong Cu
 ### Payments Requiring Additional Confirmation
 
 SCA regulations often require extra verification in order to confirm and process a payment. When this happens, Cashier will throw a `Laravel\Cashier\Exceptions\PaymentActionRequired` exception that informs you that extra verification is needed. More information on how to handle these exceptions be found can be found in the documentation on [handling failed payments](#handling-failed-payments).
+
+Payment confirmation screens presented by Stripe or Cashier may be tailored to a specific bank or card issuer's payment flow and can include additional card confirmation, a temporary small charge, separate device authentication, or other forms of verification.
 
 <a name="incomplete-and-past-due-state"></a>
 #### Incomplete and Past Due State

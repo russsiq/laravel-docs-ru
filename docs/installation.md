@@ -144,7 +144,7 @@ cd example-app
 <a name="choosing-your-sail-services"></a>
 ### Выбор служб Sail
 
-При создании нового приложения Laravel через Sail вы можете использовать строковую переменную запроса `with`, чтобы выбрать, какие службы должны быть настроены в файле `docker-compose.yml` вашего нового приложения. Доступны следующие службы `mysql`, `pgsql`, `redis`, `memcached`, `meilisearch`, `selenium` и `mailhog`:
+При создании нового приложения Laravel через Sail вы можете использовать строковую переменную запроса `with`, чтобы выбрать, какие службы должны быть настроены в файле `docker-compose.yml` вашего нового приложения. Доступны следующие службы `mysql`, `pgsql`, `mariadb`, `redis`, `memcached`, `meilisearch`, `selenium` и `mailhog`:
 
 ```nothing
 curl -s "https://laravel.build/example-app?with=mysql,redis" | bash

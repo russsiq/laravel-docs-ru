@@ -517,7 +517,7 @@ Laravel будет использовать имя миграции, чтобы 
 <a name="column-method-ipAddress"></a>
 #### `ipAddress()`
 
-Метод `ipAddress` создает эквивалент столбца `INTEGER`:
+Метод `ipAddress` создает эквивалент столбца `VARCHAR`:
 
     $table->ipAddress('visitor');
 

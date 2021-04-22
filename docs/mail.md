@@ -439,6 +439,8 @@ composer require aws/aws-sdk-php
                 'Custom-Header', 'Header Value'
             );
         });
+
+        return $this;
     }
 
 <a name="markdown-mailables"></a>

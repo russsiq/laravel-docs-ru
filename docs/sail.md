@@ -253,6 +253,8 @@ Sometimes you may wish to start a Bash session within your application's contain
 
 ```nothing
 sail shell
+
+sail root-shell
 ```
 
 To start a new [Laravel Tinker](https://github.com/laravel/tinker) session, you may execute the `tinker` command:
@@ -292,6 +294,15 @@ After updating your application's `docker-compose.yml` file, you should rebuild 
 Sometimes you may need to share your site publicly in order to preview your site for a colleague or to test webhook integrations with your application. To share your site, you may use the `share` command. After executing this command, you will be issued a random `laravel-sail.site` URL that you may use to access your application:
 
     sail share
+
+When sharing your site via the `share` command, you should configure your application's trusted proxies within the `TrustProxies` middleware. Otherwise, URL generation helpers such as `url` and `route` will be unable to determine the correct HTTP host that should be used during URL generation:
+
+    /**
+     * The trusted proxies for this application.
+     *
+     * @var array|string|null
+     */
+    protected $proxies = '*';
 
 If you would like to choose the subdomain for your shared site, you may provide the `subdomain` option when executing the `share` command:
 

@@ -129,6 +129,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::ucfirst](#method-str-ucfirst)
 - [Str::upper](#method-str-upper)
 - [Str::uuid](#method-str-uuid)
+- [Str::wordCount](#method-str-word-count)
 - [Str::words](#method-str-words)
 - [trans](#method-trans)
 - [trans_choice](#method-trans-choice)
@@ -196,6 +197,7 @@ Laravel содержит множество глобальных «вспомо�
 - [upper](#method-fluent-str-upper)
 - [when](#method-fluent-str-when)
 - [whenEmpty](#method-fluent-str-when-empty)
+- [wordCount](#method-fluent-str-word-count)
 - [words](#method-fluent-str-words)
 
 <!-- </div> -->
@@ -1617,6 +1619,17 @@ Laravel содержит множество глобальных «вспомо�
 
     return (string) Str::uuid();
 
+<a name="method-str-word-count"></a>
+### `Str::wordCount`
+
+Метод `Str::wordCount` возвращает количество слов, содержащихся в строке:
+
+```php
+use Illuminate\Support\Str;
+
+Str::wordCount('Hello, world!'); // 2
+```
+
 <a name="method-str-words"></a>
 #### `Str::words()`
 
@@ -2435,6 +2448,17 @@ If no matches are found, an empty collection will be returned.
     });
 
     // 'Laravel'
+
+<a name="method-str-word-count"></a>
+### `wordCount`
+
+Метод `wordCount` возвращает количество слов, содержащихся в строке:
+
+```php
+use Illuminate\Support\Str;
+
+Str::of('Hello, world!')->wordCount(); // 2
+```
 
 <a name="method-fluent-str-words"></a>
 #### `words`

@@ -1036,7 +1036,7 @@ Laravel содержит посредника `Illuminate\Queue\Middleware\Throt
 
 По умолчанию метод `release` помещает задание обратно в очередь для немедленной обработки. Однако, передав целое число методу `release`, вы можете указать очереди не делать задание доступным для обработки, пока не истечет заданное количество секунд:
 
-    $this->release(10)
+    $this->release(10);
 
 <a name="manually-failing-a-job"></a>
 #### Manually Failing A Job
@@ -1663,6 +1663,10 @@ sudo supervisorctl start laravel-worker:*
     php artisan queue:retry 5 6 7 8 9 10
 
     php artisan queue:retry --range=5-10
+
+Вы также можете повторить все неудачные задания только для конкретной очереди:
+
+    php artisan:retry --queue=name
 
 Чтобы повторить все неудачные задания, выполните команду `queue:retry` и передайте `all` вместо идентификаторов:
 
