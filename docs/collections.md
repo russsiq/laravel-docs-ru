@@ -175,6 +175,7 @@
 - [skipUntil](#method-skipuntil)
 - [skipWhile](#method-skipwhile)
 - [slice](#method-slice)
+- [sole](#method-sole)
 - [some](#method-some)
 - [sort](#method-sort)
 - [sortBy](#method-sortby)
@@ -1936,6 +1937,40 @@
     // [5, 6]
 
 Возвращенный фрагмент по умолчанию сохранит ключи. Если вы не хотите сохранять исходные ключи, вы можете использовать метод [`values`](#method-values), чтобы переиндексировать их.
+
+<a name="method-sole"></a>
+#### `sole()`
+
+Метод `sole` возвращает первый элемент, который является единственным элементом в коллекции, прошедшим указанный тест истинности:
+
+    collect([1, 2, 3, 4])->sole(function ($value, $key) {
+        return $value === 2;
+    });
+
+    // 2
+
+Вы также можете передать пару ключ / значение методу `sole`, который вернет первый и единственный элемент коллекции, соответствующий переданной паре:
+
+    $collection = collect([
+        ['product' => 'Desk', 'price' => 200],
+        ['product' => 'Chair', 'price' => 100],
+    ]);
+
+    $collection->sole('product', 'Chair');
+
+    // ['product' => 'Chair', 'price' => 100]
+
+В качестве альтернативы вы также можете вызвать метод `sole` без аргументов, чтобы получить первый элемент, который является единственным элементом в коллекции:
+
+    $collection = collect([
+        ['product' => 'Desk', 'price' => 200],
+    ]);
+
+    $collection->sole();
+
+    // ['product' => 'Desk', 'price' => 200]
+
+Если в коллекции нет элементов, которые должны быть возвращены методом `sole`, то будет выброшено исключение `\Illuminate\Collections\ItemNotFoundException`. Если таких элементов в коллекции более одного элемента, то будет выброшено исключение `\Illuminate\Collections\MultipleItemsFoundException`.
 
 <a name="method-some"></a>
 #### `some()`

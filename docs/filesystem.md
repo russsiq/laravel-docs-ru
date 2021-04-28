@@ -71,12 +71,12 @@ Laravel обеспечивает мощную абстракцию файлов�
 
 Перед использованием драйверов S3 или SFTP вам необходимо установить соответствующий пакет с помощью менеджера пакетов Composer:
 
-- Amazon S3: `league/flysystem-aws-s3-v3 ~1.0`
-- SFTP: `league/flysystem-sftp ~1.0`
+- Amazon S3: `composer require league/flysystem-aws-s3-v3 "~1.0"`
+- SFTP: `composer require league/flysystem-sftp "~1.0"`
 
 Кроме того, вы можете установить декоратор CachedAdapter для повышения производительности:
 
-- CachedAdapter: `league/flysystem-cached-adapter ~1.0`
+- CachedAdapter: `composer require league/flysystem-cached-adapter "~1.0"`
 
 <a name="s3-driver-configuration"></a>
 #### Конфигурирование драйвера S3

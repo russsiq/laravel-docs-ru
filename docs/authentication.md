@@ -233,7 +233,7 @@ Laravel Breeze – это минимальная и простая реализ�
         /**
          * Обработка попыток аутентификации.
          *
-         * @param  \Illuminate\Http\Request $request
+         * @param  \Illuminate\Http\Request  $request
          * @return \Illuminate\Http\Response
          */
         public function authenticate(Request $request)

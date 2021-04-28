@@ -273,7 +273,7 @@ composer require aws/aws-sdk-php
         /**
          * Создать экземпляр нового сообщения.
          *
-         * @param  \App\Models\Order $order
+         * @param  \App\Models\Order  $order
          * @return void
          */
         public function __construct(Order $order)

@@ -29,7 +29,7 @@
 
 Laravel Scout предлагает простое решение на основе драйверов для добавления полнотекстового поиска вашим [моделям Eloquent](eloquent.md). Используя наблюдателей моделей, Scout будет автоматически синхронизировать ваши поисковые индексы с вашими записями Eloquent.
 
-В настоящее время Scout поставляется с драйвером [Algolia](https://www.algolia.com/); однако написать свой собственный драйвер просто, и вы можете расширить Scout собственной реализацией поиска.
+В настоящее время Scout поставляется с драйверами [Algolia](https://www.algolia.com/) и [MeiliSearch](https://www.meilisearch.com); однако написать свой собственный драйвер просто, и вы можете расширить Scout собственной реализацией поиска.
 
 <a name="installation"></a>
 ## Установка
@@ -69,7 +69,19 @@ Laravel Scout предлагает простое решение на основ
 <a name="meilisearch"></a>
 #### MeiliSearch
 
-MeiliSearch – это мощная поисковая система с открытым исходным кодом, которую можно запускать локально с помощью [Laravel Sail](sail.md). MeiliSearch предлагает [официальный драйвер MeiliSearch для Laravel Scout](https://github.com/meilisearch/meilisearch-laravel-scout). Пожалуйста, обратитесь к документации этого пакета, чтобы узнать, как использовать MeiliSearch с Laravel Scout.
+При использовании драйвера MeiliSearch вам необходимо установить PHP SDK MeiliSearch с помощью менеджера пакетов Composer:
+
+    composer require meilisearch/meilisearch-php http-interop/http-factory-guzzle
+
+Затем укажите переменную окружения `SCOUT_DRIVER`, а также ваши учетные данные `host` и `key` MeiliSearch в файле `.env` вашего приложения:
+
+    SCOUT_DRIVER=meilisearch
+    MEILISEARCH_HOST=http://127.0.0.1:7700
+    MEILISEARCH_KEY=masterKey
+
+Для получения дополнительной информации о MeiliSearch, пожалуйста, обратитесь к [документации MeiliSearch](https://docs.meilisearch.com/learn/getting_started/quick_start.html).
+
+> {tip} Если вы не знаете, как установить MeiliSearch на свой локальный компьютер, то вы можете использовать [Laravel Sail](sail.md#meilisearch), официально поддерживаемая среда разработки Docker.
 
 <a name="queueing"></a>
 ### Постановка в очередь
