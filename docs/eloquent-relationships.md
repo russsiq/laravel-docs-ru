@@ -1402,11 +1402,23 @@ select * from authors where id in (1, 2, 3, 4, 5, ...)
         {
             return $this->belongsTo(Author::class);
         }
+
+        /**
+         * Получить жанр книги.
+         */
+        public function genre()
+        {
+            return $this->belongsTo(Genre::class);
+        }
     }
 
-Если вы хотите удалить элемент из свойства `$with` для одного запроса, вы можете использовать метод `without`:
+Если вы хотите удалить элемент из свойства `$with` для одного запроса, то вы можете использовать метод `without`:
 
     $books = Book::without('author')->get();
+
+Если вы хотите переопределить все элементы свойства `$with` для одного запроса, то вы можете использовать метод `withOnly`:
+
+    $books = Book::withOnly('genre')->get();
 
 <a name="constraining-eager-loads"></a>
 ### Ограничение нетерпеливой загрузки

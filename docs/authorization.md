@@ -693,7 +693,7 @@ Laravel содержит посредника, который может авт�
      * Определить, может ли пользователь обновить пост.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\  $post
+     * @param  \App\Models\Post  $post
      * @param  int  $category
      * @return bool
      */

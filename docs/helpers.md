@@ -114,6 +114,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::pluralStudly](#method-str-plural-studly)
 - [Str::random](#method-str-random)
 - [Str::remove](#method-str-remove)
+- [Str::replace](#method-str-replace)
 - [Str::replaceArray](#method-str-replace-array)
 - [Str::replaceFirst](#method-str-replace-first)
 - [Str::replaceLast](#method-str-replace-last)
@@ -1439,6 +1440,19 @@ Laravel содержит множество глобальных «вспомо�
     // Ptr Pipr pickd a pck of pickld ppprs.
 
 Вы можете передать `false` в качестве третьего аргумента для игнорирования регистра удаляемых подстрок.
+
+<a name="method-str-replace"></a>
+#### `Str::replace()`
+
+Метод `Str::replace` заменяет указанное значение в строке:
+
+    use Illuminate\Support\Str;
+
+    $string = 'Laravel 8.x';
+
+    $replaced = Str::replace('8.x', '9.x', $string);
+
+    // Laravel 9.x
 
 <a name="method-str-replace-array"></a>
 #### `Str::replaceArray()`
