@@ -68,6 +68,9 @@ php artisan make:model Flight -s
 php artisan make:model Flight --controller
 php artisan make:model Flight -c
 
+# Ярлык для создания модели, миграции, фабрики, наполнителя и контроллера ...
+php artisan make:model Flight --all
+
 # Создать модель и миграцию, фабрику, наполнитель и контроллер ...
 php artisan make:model Flight -mfsc
 

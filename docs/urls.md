@@ -139,6 +139,25 @@ Laravel позволяет вам легко создавать «подписа
         // ...
     })->name('unsubscribe')->middleware('signed');
 
+<a name="responding-to-invalid-signed-routes"></a>
+#### Ответ на недействительные подписанные маршруты
+
+Когда кто-то посещает подписанный URL-адрес, срок действия которого истек, он получит общую страницу с `403`-им кодом ошибки состояния HTTP. Однако вы можете изменить это поведение, определив собственное замыкание метода `renderable` для исключения `InvalidSignatureException` в вашем обработчике исключений. Это замыкание должно вернуть HTTP-ответ:
+
+    use Illuminate\Routing\Exceptions\InvalidSignatureException;
+
+    /**
+     * Зарегистрировать замыкания, обрабатывающие исключения приложения.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->renderable(function (InvalidSignatureException $e) {
+            return response()->view('error.link-expired', [], 403);
+        });
+    }
+
 <a name="urls-for-controller-actions"></a>
 ## URL для действий контроллера
 

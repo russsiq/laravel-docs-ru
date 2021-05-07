@@ -1179,6 +1179,16 @@ Route::get('/tasks', function () {
 @enderror
 ```
 
+Поскольку директива `@error` компилируется в конструкцию `if`, то вы можете использовать директиву `@else` для отображения содержимого в случае отсутствия ошибки валидации атрибута:
+
+```html
+<!-- /resources/views/auth.blade.php -->
+
+<label for="email">Email address</label>
+
+<input id="email" type="email" class="@error('email') is-invalid @else is-valid @enderror">
+```
+
 Вы можете передать [имя конкретной коллекции ошибок](validation.md#named-error-bags) в качестве второго параметра директивы `@error` для получения сообщений об ошибках валидации на страницах, содержащих несколько форм:
 
 ```html

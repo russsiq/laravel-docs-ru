@@ -496,8 +496,8 @@ Laravel предлагает множество полезных инструм�
     {
         return [
             'user_id' => User::factory(),
-            'title' => $this->faker->title,
-            'content' => $this->faker->paragraph,
+            'title' => $this->faker->title(),
+            'content' => $this->faker->paragraph(),
         ];
     }
 
@@ -515,8 +515,8 @@ Laravel предлагает множество полезных инструм�
             'user_type' => function (array $attributes) {
                 return User::find($attributes['user_id'])->type;
             },
-            'title' => $this->faker->title,
-            'content' => $this->faker->paragraph,
+            'title' => $this->faker->title(),
+            'content' => $this->faker->paragraph(),
         ];
     }
 
