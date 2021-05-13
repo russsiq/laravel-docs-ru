@@ -99,6 +99,7 @@
     - [ ] [Horizon](./docs/horizon.md)
     - [ ] [Jetstream](https://jetstream.laravel.com)  
         Красиво оформленный каркас приложений. Включает в себя Fortify и Sanctum.
+    - [ ] [Octane](./docs/octane.md)
     - [ ] [Passport](./docs/passport.md)
     - [ ] [Sail](./docs/sail.md)
     - [x] [Sanctum](./docs/sanctum.md)  
@@ -161,6 +162,7 @@ attach (a relation)  |  назначить (отношение)  |
 attaching  |  прикрепление, присоединение  |  
 attempting  |  пытается  |  
 authentication  |  аутентификация  |  
+authentication pipeline  |  конвейер аутентификации  |  
 authorization  |  авторизация  |  
 auto-incrementing ID  |  автоинкрементный идентификатор  |  
 <a name="dictionary-b">**B**</a>

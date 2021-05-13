@@ -38,6 +38,7 @@
     - [Очистка после неудачных заданий](#cleaning-up-after-failed-jobs)
     - [Повторная попытка выполнения неудачных заданий](#retrying-failed-jobs)
     - [Игнорирование отсутствующих моделей](#ignoring-missing-models)
+    - [Хранение неудачных заданий в DynamoDB](#storing-failed-jobs-in-dynamodb)
     - [События неудачных заданий](#failed-job-events)
 - [Удаление заданий из очередей](#clearing-jobs-from-queues)
 - [События задания](#job-events)
@@ -1644,7 +1645,7 @@ sudo supervisorctl start laravel-worker:*
          */
         public function handle(AudioProcessor $processor)
         {
-            // Process uploaded podcast...
+            // Обработка загруженного подкаста ...
         }
 
         /**
@@ -1658,6 +1659,8 @@ sudo supervisorctl start laravel-worker:*
             // Отправляем пользователю уведомление об ошибке и т.д.
         }
     }
+
+> {note} Перед вызовом метода `failed` создается новый экземпляр задания; поэтому любые изменения свойств класса, которые могли произойти в методе `handle`, будут потеряны.
 
 <a name="retrying-failed-jobs"></a>
 ### Повторная попытка выполнения неудачных заданий
@@ -1707,6 +1710,31 @@ sudo supervisorctl start laravel-worker:*
      * @var bool
      */
     public $deleteWhenMissingModels = true;
+
+<a name="storing-failed-jobs-in-dynamodb"></a>
+### Хранение неудачных заданий в DynamoDB
+
+Laravel также поддерживает хранение записей о неудачных заданиях в [DynamoDB](https://aws.amazon.com/dynamodb) вместо таблицы реляционной базы данных. Однако необходимо создать таблицу DynamoDB для хранения всех записей о неудачных заданиях. Обычно эта таблица должна называться `failed_jobs`, но вы должны задать имя таблице в соответствии со значением `failed.table` конфигурационного файла `queue` вашего приложения.
+
+Таблица `failed_jobs` должна иметь строковый первичный ключ раздела с именем `application` и строковый первичный ключ сортировки с именем `uuid`. Часть ключа `application` будет содержать имя вашего приложения, как определено значением `name` конфигурационного файла `app` вашего приложения. Поскольку имя приложения является частью ключа таблицы DynamoDB, вы можете использовать одну и ту же таблицу для хранения неудачных заданий нескольких приложений Laravel.
+
+Кроме того, убедитесь, что вы установили AWS SDK, чтобы ваше приложение Laravel могло взаимодействовать с Amazon DynamoDB:
+
+```nothing
+composer require aws/aws-sdk-php
+```
+
+Затем установите значение `dynamodb` параметра конфигурации `queue.failed.driver`. Кроме того, вы должны определить параметры конфигурации `key`, `secret`, и `region` в массиве конфигурации неудачных заданий. Эти параметры будут использоваться для аутентификации в AWS. При использовании драйвера `dynamodb` конфигурационный параметр `queue.failed.database` не нужен:
+
+```php
+'failed' => [
+    'driver' => env('QUEUE_FAILED_DRIVER', 'dynamodb'),
+    'key' => env('AWS_ACCESS_KEY_ID'),
+    'secret' => env('AWS_SECRET_ACCESS_KEY'),
+    'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+    'table' => 'failed_jobs',
+],
+```
 
 <a name="failed-job-events"></a>
 ### События неудачных заданий

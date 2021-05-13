@@ -9,6 +9,7 @@
     - [Отключение маршрутов, возвращающих шаблоны](#disabling-views)
 - [Аутентификация](#authentication)
     - [Настройка аутентификации пользователя](#customizing-user-authentication)
+    - [Настройка конвейера аутентификации](#customizing-the-authentication-pipeline)
 - [Двухфакторная аутентификация](#two-factor-authentication)
     - [Включение двухфакторной аутентификации](#enabling-two-factor-authentication)
     - [Использование двухфакторной аутентификации](#authenticating-with-two-factor-authentication)
@@ -186,6 +187,33 @@ public function boot()
 #### Охранник аутентификации
 
 Вы можете указать охранника аутентификации, используемую Fortify, в файле конфигурации вашего приложения `fortify`. Однако, вы должны убедиться, что предоставленный охранник является реализацией `Illuminate\Contracts\Auth\StatefulGuard`. Если вы пытаетесь использовать Laravel Fortify для аутентификации SPA, то вам следует использовать стандартного охранника `web` Laravel в сочетании с [Laravel Sanctum](sanctum.md).
+
+<a name="customizing-the-authentication-pipeline"></a>
+### Настройка конвейера аутентификации
+
+Laravel Fortify аутентифицирует запросы на вход через конвейер вызываемых классов. При желании вы можете определить собственный конвейер классов, через который должны передаваться запросы на вход. Каждый класс должен иметь метод `__invoke`, который получает экземпляр `Illuminate\Http\Request` входящего запроса и, как [посредник](middleware.md), переменную `$next`, которая упорядоченно вызывается для передачи запроса следующему классу в конвейере.
+
+Чтобы определить свой собственный конвейер, вы можете использовать метод `Fortify::authenticateThrough`. Этот метод принимает замыкание, которое должно возвращать массив классов для передачи запроса входа в систему. Обычно этот метод следует вызывать в методе `boot` вашего класса `App\Providers\FortifyServiceProvider`.
+
+В приведенном ниже примере содержится определение конвейера по умолчанию, которое вы можете использовать в качестве отправной точки при внесении собственных изменений:
+
+```php
+use Laravel\Fortify\Actions\AttemptToAuthenticate;
+use Laravel\Fortify\Actions\EnsureLoginIsNotThrottled;
+use Laravel\Fortify\Actions\PrepareAuthenticatedSession;
+use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
+use Laravel\Fortify\Fortify;
+use Illuminate\Http\Request;
+
+Fortify::authenticateThrough(function (Request $request) {
+    return array_filter([
+            config('fortify.limiters.login') ? null : EnsureLoginIsNotThrottled::class,
+            Features::enabled(Features::twoFactorAuthentication()) ? RedirectIfTwoFactorAuthenticatable::class : null,
+            AttemptToAuthenticate::class,
+            PrepareAuthenticatedSession::class,
+    ]);
+});
+```
 
 <a name="two-factor-authentication"></a>
 ## Двухфакторная аутентификация

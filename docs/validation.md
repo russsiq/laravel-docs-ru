@@ -931,7 +931,7 @@ Laravel также содержит глобального помощника `o
 <a name="rule-exclude-unless"></a>
 #### exclude_unless:_anotherfield_,_value_
 
-Проверяемое поле будет исключено из данных запроса, возвращаемых методами `validate` и `validated`, если поле _anotherfield_ не равно _value_.
+Проверяемое поле будет исключено из данных запроса, возвращаемых методами `validate` и `validated`, если поле _anotherfield_ не равно _value_. Если _value_ равно `null` (т.е. `exclude_unless:name,null`), то проверяемое поле будет исключено, если поле сравнения не имеет значение `null` или поле сравнения отсутствует в данных запроса.
 
 <a name="rule-exists"></a>
 #### exists:_table_,_column_
@@ -1200,7 +1200,7 @@ Laravel также содержит глобального помощника `o
 <a name="rule-required-unless"></a>
 #### required_unless:_anotherfield_,_value_,...
 
-Проверяемое поле должно присутствовать и не быть пустым, если поле _anotherfield_ не равно какому-либо _value_.
+Проверяемое поле должно присутствовать и не быть пустым, если поле _anotherfield_ не равно какому-либо _value_. Это также означает, что в данных запроса должно присутствовать _anotherfield_, если _value_ не имеет значения `null`. Если _value_ равно `null` (т.е. `required_unless:name,null`), то проверяемое поле будет обязательным, если поле сравнения не равно `null` или поле сравнения отсутствует в данных запроса.
 
 <a name="rule-required-with"></a>
 #### required_with:_foo_,_bar_,...
