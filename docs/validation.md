@@ -791,6 +791,22 @@ Laravel также содержит глобального помощника `o
 
 Проверяемое поле должно быть массивом PHP.
 
+Когда для правила `array` предоставляются дополнительные значения, каждый ключ во входном массиве должен присутствовать в списке значений, предоставленных правилу. В следующем примере ключ `admin` во входном массиве является недействительным, так как он не содержится в списке значений, предоставленных правилу `array`:
+
+    use Illuminate\Support\Facades\Validator;
+
+    $input = [
+        'user' => [
+            'name' => 'Taylor Otwell',
+            'username' => 'taylorotwell',
+            'admin' => true,
+        ],
+    ];
+
+    Validator::make($input, [
+        'user' => 'array:username,locale',
+    ]);
+
 <a name="rule-bail"></a>
 #### bail
 
@@ -1011,6 +1027,23 @@ Laravel также содержит глобального помощника `o
         'zones' => [
             'required',
             Rule::in(['first-zone', 'second-zone']),
+        ],
+    ]);
+
+Когда правило `in` комбинируется с правилом `array`, тогда каждое значение во входном массиве должно присутствовать в списке значений, предоставленных правилу `in`. В следующем примере код аэропорта `LAS` во входном массиве является недействительным, так как он не содержится в списке аэропортов, предоставленном правилу `in`:
+
+    use Illuminate\Support\Facades\Validator;
+    use Illuminate\Validation\Rule;
+
+    $input = [
+        'airports' => ['NYC', 'LAS'],
+    ];
+
+    Validator::make($input, [
+        'airports' => [
+            'required',
+            'array',
+            Rule::in(['NYC', 'LIT']),
         ],
     ]);
 
@@ -1465,6 +1498,35 @@ Laravel также содержит глобального помощника `o
         ->numbers()
         ->symbols()
         ->uncompromised()
+
+<a name="defining-default-password-rules"></a>
+#### Определение правил валидации паролей по умолчанию
+
+Возможно, вам будет удобно указать правила валидации паролей по умолчанию в одном месте вашего приложения. Вы можете легко сделать это, используя метод `Password::defaults`, который принимает замыкание. Замыкание, переданное методу `defaults`, должно вернуть конфигурацию правила пароля по умолчанию. Обычно правило `defaults` должно вызываться в методе `boot` одного из поставщиков служб вашего приложения:
+
+```php
+use Illuminate\Validation\Rules\Password;
+
+/**
+ * Загрузка любых служб приложения.
+ *
+ * @return void
+ */
+public function boot()
+{
+    Password::defaults(function () {
+        $rule = Password::min(8);
+
+        return $this->app->isProduction()
+                    ? $rule->mixedCase()->uncompromised()
+                    : $rule;
+    });
+}
+```
+
+Затем, когда вы хотите применить правила по умолчанию к конкретному паролю, проходящему валидацию, вы можете вызвать метод `defaults` без аргументов:
+
+    'password' => ['required', Password::defaults()],
 
 <a name="custom-validation-rules"></a>
 ## Пользовательские правила валидации

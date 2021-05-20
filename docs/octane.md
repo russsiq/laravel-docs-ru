@@ -7,6 +7,7 @@
     - [Swoole](#swoole)
 - [Serving Your Application](#serving-your-application)
     - [Serving Your Application Via HTTPS](#serving-your-application-via-https)
+    - [Serving Your Application Via Nginx](#serving-your-application-via-nginx)
     - [Watching For File Changes](#watching-for-file-changes)
     - [Specifying The Worker Count](#specifying-the-worker-count)
     - [Specifying The Max Request Count](#specifying-the-max-request-count)
@@ -81,7 +82,7 @@ After installing the RoadRunner binary, you may exit your Sail shell session. Yo
 Next, update the `command` directive of your application's `docker/supervisord.conf` file so that Sail serves your application using Octane instead of the PHP development server:
 
 ```ini
-command=/usr/bin/php -d variables_order=EGPCS /var/www/html/artisan octane:start --server=roadrunner --host=0.0.0.0 --port=80
+command=/usr/bin/php -d variables_order=EGPCS /var/www/html/artisan octane:start --server=roadrunner --host=0.0.0.0 --rpc-port=6001 --port=8000
 ```
 
 Finally, ensure the `rr` binary is executable and build your Sail images:
@@ -115,7 +116,7 @@ Alternatively, you may develop your Swoole based Octane application using [Larav
 Next, update the `command` directive of your application's `docker/supervisord.conf` file so that Sail serves your application using Octane instead of the PHP development server:
 
 ```ini
-command=/usr/bin/php -d variables_order=EGPCS /var/www/html/artisan octane:start --server=swoole --host=0.0.0.0 --port=80
+command=/usr/bin/php -d variables_order=EGPCS /var/www/html/artisan octane:start --server=swoole --host=0.0.0.0 --port=8000
 ```
 
 Finally, build your Sail images:
@@ -142,6 +143,69 @@ By default, applications running via Octane generate links prefixed with `http:/
 
 ```php
 'https' => env('OCTANE_HTTPS', false),
+```
+
+<a name="serving-your-application-via-nginx"></a>
+### Serving Your Application Via Nginx
+
+> {tip} If you aren't quite ready to manage your own server configuration or aren't comfortable configuring all of the various services needed to run a robust Laravel Octane application, check out [Laravel Forge](https://forge.laravel.com).
+
+In production environments, you should serve your Octane application behind a traditional web server such as a Nginx or Apache. Doing so will allow the web server to serve your static assets such as images and stylesheets, as well as manage your SSL certificate termination.
+
+In the Nginx configuration example below file, Nginx will serve the site's static assets and proxy requests to the Octane server that is running on port 8000:
+
+```conf
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ''      close;
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name domain.com;
+    server_tokens off;
+    root /home/forge/domain.com/public;
+
+    index index.php;
+
+    charset utf-8;
+
+    location /index.php {
+        try_files /not_exists @octane;
+    }
+
+    location / {
+        try_files $uri $uri/ @octane;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    access_log off;
+    error_log  /var/log/nginx/domain.com-error.log error;
+
+    error_page 404 /index.php;
+
+    location @octane {
+        set $suffix "";
+
+        if ($uri = /index.php) {
+            set $suffix ?$query_string;
+        }
+
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_set_header Scheme $scheme;
+        proxy_set_header SERVER_PORT $server_port;
+        proxy_set_header REMOTE_ADDR $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+
+        proxy_pass http://127.0.0.1:8000$suffix;
+    }
+}
 ```
 
 <a name="watching-for-file-changes"></a>
@@ -284,7 +348,7 @@ public function register()
 
 In this example, if the `Service` instance is resolved during the application boot process, the HTTP request will be injected into the service and that same request will be held by the `Service` instance on subsequent requests. Therefore, all headers, input, and query string data will be incorrect, as well as all other request data.
 
-As a work-around, you could either stop registering the binding as a singleton, or you could inject a request resolver closure into the service that always resolves the current request instance. Or, the most recommended approach is simply to pass the specific request information your object needs to one of of the object's methods at runtime:
+As a work-around, you could either stop registering the binding as a singleton, or you could inject a request resolver closure into the service that always resolves the current request instance. Or, the most recommended approach is simply to pass the specific request information your object needs to one of the object's methods at runtime:
 
 ```php
 use App\Service;

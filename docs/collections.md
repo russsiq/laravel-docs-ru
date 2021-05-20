@@ -322,19 +322,6 @@
 
     // [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-<a name="method-combine"></a>
-#### `combine()`
-
-Метод `combine` объединяет значения коллекции в качестве ключей со значениями другого массива или коллекции:
-
-    $collection = collect(['name', 'age']);
-
-    $combined = $collection->combine(['George', 29]);
-
-    $combined->all();
-
-    // ['name' => 'George', 'age' => 29]
-
 <a name="method-collect"></a>
 #### `collect()`
 
@@ -368,6 +355,19 @@
 
 > {tip} Метод `collect` особенно полезен, когда у вас есть экземпляр `Enumerable` и вам нужен «не-отложенный» экземпляр коллекции. Так как `collect()` является частью контракта `Enumerable`, вы можете безопасно использовать его для получения экземпляра `Collection`.
 
+<a name="method-combine"></a>
+#### `combine()`
+
+Метод `combine` объединяет значения коллекции в качестве ключей со значениями другого массива или коллекции:
+
+    $collection = collect(['name', 'age']);
+
+    $combined = $collection->combine(['George', 29]);
+
+    $combined->all();
+
+    // ['name' => 'George', 'age' => 29]
+
 <a name="method-concat"></a>
 #### `concat()`
 
@@ -384,7 +384,7 @@
 <a name="method-contains"></a>
 #### `contains()`
 
-Вы также можете передать замыкание в `contains`, чтобы определить, существует ли в коллекции элемент, соответствующий указанному критерию истинности:
+Метод `contains` определяет, содержит ли коллекция переданный элемент. Вы также можете передать замыкание в `contains`, чтобы определить, существует ли в коллекции элемент, соответствующий указанному критерию истинности:
 
     $collection = collect([1, 2, 3, 4, 5]);
 
@@ -2408,7 +2408,7 @@
 
     $collection = collect([1 => ['a'], 2 => ['b']]);
 
-    $union = $collection->union([3 => ['c'], 1 => ['b']]);
+    $union = $collection->union([3 => ['c'], 1 => ['d']]);
 
     $union->all();
 

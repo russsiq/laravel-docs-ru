@@ -3,6 +3,7 @@
 - [Введение](#introduction)
 - [Laravel Breeze](#laravel-breeze)
     - [Установка](#laravel-breeze-installation)
+    - [Breeze и Inertia](#breeze-and-inertia)
 - [Laravel Jetstream](#laravel-jetstream)
 
 <a name="introduction"></a>
@@ -38,13 +39,11 @@ composer require laravel/breeze --dev
 
 После того, как Composer установит пакет Laravel Breeze, вы можете запустить команду `breeze:install` Artisan. Эта команда опубликует для вашего приложения шаблоны, маршруты, контроллеры и другие ресурсы аутентификации. Laravel Breeze опубликует весь свой код в вашем приложении, чтобы у вас был полный контроль, а также обзор всего функционала и его реализации. После установки Breeze вы также должны скомпилировать свои исходники, чтобы был доступен файл стилей вашего приложения:
 
-```bash
+```nothing
 php artisan breeze:install
 
 npm install
-
 npm run dev
-
 php artisan migrate
 ```
 
@@ -53,17 +52,19 @@ php artisan migrate
 > {tip} Чтобы узнать больше о компиляции CSS и JavaScript вашего приложения, ознакомьтесь с [документацией Laravel Mix](mix.md#running-mix).
 
 <a name="breeze-and-inertia"></a>
-#### Breeze и Inertia
+### Breeze и Inertia
 
-Laravel Breeze также предлагает реализацию внешнего интерфейса [Inertia.js](https://inertiajs.com) на базе Vue. Чтобы использовать стек Inertia, передайте параметр `--inertia` при выполнении команды `breeze:install` Artisan:
+Laravel Breeze также предлагает реализацию внешнего интерфейса [Inertia.js](https://inertiajs.com) на базе Vue или React. Чтобы использовать стек Inertia, укажите `vue` или `react` в качестве желаемого стека при выполнении команды `breeze:install` Artisan:
 
-```bash
-php artisan breeze:install --inertia
+```nothing
+php artisan breeze:install vue
+
+// Или ...
+
+php artisan breeze:install react
 
 npm install
-
 npm run dev
-
 php artisan migrate
 ```
 

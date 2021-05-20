@@ -67,7 +67,7 @@ Homestead работает в любой системе: Windows, macOS или L
 - PHP 7.0
 - PHP 5.6
 - Nginx
-- MySQL
+- MySQL (8.0)
 - lmm
 - Sqlite3
 - PostgreSQL (9.6, 10, 11, 12, 13)
@@ -104,6 +104,7 @@ Homestead работает в любой системе: Windows, macOS или L
 - Фреймворк Lucky (Crystal)
 - Docker
 - Elasticsearch
+- EventStoreDB
 - Gearman
 - Go
 - Grafana
@@ -117,8 +118,12 @@ Homestead работает в любой системе: Windows, macOS или L
 - Open Resty
 - PM2
 - Python
+- R
 - RabbitMQ
+- RVM (Менеджер версий Ruby)
 - Solr
+- TimescaleDB
+- Trader <small>(расширение PHP)</small>
 - Утилиты Webdriver и Laravel Dusk
 <!-- </div> -->
 
@@ -303,6 +308,8 @@ composer require laravel/homestead --dev
         - docker: true
         - elasticsearch:
             version: 7.9.0
+        - eventstore: true
+            version: 21.2.0
         - gearman: true
         - golang: true
         - grafana: true
@@ -316,8 +323,12 @@ composer require laravel/homestead --dev
         - openresty: true
         - pm2: true
         - python: true
+        - r-base: true
         - rabbitmq: true
+        - rvm: true
         - solr: true
+        - timescaledb: true
+        - trader: true
         - webdriver: true
 
 <a name="elasticsearch"></a>

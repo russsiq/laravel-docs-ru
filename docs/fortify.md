@@ -10,6 +10,7 @@
 - [Аутентификация](#authentication)
     - [Настройка аутентификации пользователя](#customizing-user-authentication)
     - [Настройка конвейера аутентификации](#customizing-the-authentication-pipeline)
+    - [Настройка переадресации](#customizing-authentication-redirects)
 - [Двухфакторная аутентификация](#two-factor-authentication)
     - [Включение двухфакторной аутентификации](#enabling-two-factor-authentication)
     - [Использование двухфакторной аутентификации](#authenticating-with-two-factor-authentication)
@@ -213,6 +214,32 @@ Fortify::authenticateThrough(function (Request $request) {
             PrepareAuthenticatedSession::class,
     ]);
 });
+```
+
+<a name="customizing-authentication-redirects"></a>
+### Настройка переадресации
+
+Если попытка входа в систему окажется успешной, то Fortify перенаправит вас на URI, настроенный с помощью параметра `home` конфигурации в конфигурационном файле `fortify` вашего приложения. Если запрос был запросом XHR, будет возвращен `200` HTTP-ответ. После выхода пользователя из приложения он будет перенаправлен на URI `/`.
+
+Если вам нужна расширенная настройка этого поведения, то вы можете связать реализации контрактов `LoginResponse` и `LogoutResponse` в [контейнере служб](container.md) Laravel. Обычно это должно быть сделано в методе `register` класса `App\Providers\FortifyServiceProvider` вашего приложения:
+
+```php
+use Laravel\Fortify\Contracts\LogoutResponse;
+
+/**
+ * Регистрация любых служб приложения.
+ *
+ * @return void
+ */
+public function register()
+{
+    $this->app->instance(LogoutResponse::class, new class implements LogoutResponse {
+        public function toResponse($request)
+        {
+            return redirect('/');
+        }
+    });
+}
 ```
 
 <a name="two-factor-authentication"></a>

@@ -14,6 +14,7 @@
     - [MySQL](#mysql)
     - [Redis](#redis)
     - [MeiliSearch](#meilisearch)
+- [File Storage](#file-storage)
 - [Running Tests](#running-tests)
     - [Laravel Dusk](#laravel-dusk)
 - [Previewing Emails](#previewing-emails)
@@ -193,6 +194,23 @@ To connect to your application's Redis database from your local machine, you may
 If you chose to install the [MeiliSearch](https://www.meilisearch.com) service when installing Sail, your application's `docker-compose.yml` file will contain an entry for this powerful search-engine that is [compatible](https://github.com/meilisearch/meilisearch-laravel-scout) with [Laravel Scout](/docs/{{version}}/scout). Once you have started your containers, you may connect to the MeiliSearch instance within your application by setting your `MEILISEARCH_HOST` environment variable to `http://meilisearch:7700`.
 
 From your local machine, you may access MeiliSearch's web based administration panel by navigating to `http://localhost:7700` in your web browser.
+
+<a name="file-storage"></a>
+## File Storage
+
+If you plan to use Amazon S3 to store files while running your application in its production environment, you may wish to install the [MinIO](https://min.io) service when installing Sail. MinIO provides an S3 compatible API that you may use to develop locally using Laravel's `s3` file storage driver without creating "test" storage buckets in your production S3 environment. If you choose to install MinIO while installing Sail, a MinIO configuration section will be added to your application's `docker-compose.yml` file.
+
+By default, your application's `filesystems` configuration file already contains a disk configuration for the `s3` disk. In addition to using this disk to interact with Amazon S3, you may use it to interact with any S3 compatible file storage service such as MinIO by simply modifying the associated environment variables that control its configuration. For example, when using MinIO, your filesystem environment variable configuration should be defined as follows:
+
+```ini
+FILESYSTEM_DRIVER=s3
+AWS_ACCESS_KEY_ID=sail
+AWS_SECRET_ACCESS_KEY=password
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=local
+AWS_ENDPOINT=http://minio:9000
+AWS_USE_PATH_STYLE_ENDPOINT=true
+```
 
 <a name="running-tests"></a>
 ## Running Tests
