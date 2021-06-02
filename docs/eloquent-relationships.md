@@ -31,6 +31,7 @@
 - [Нетерпеливая загрузка](#eager-loading)
     - [Ограничение нетерпеливой загрузки](#constraining-eager-loads)
     - [Нетерпеливая пост-загрузка](#lazy-eager-loading)
+    - [Предотвращение отложенной загрузки](#preventing-lazy-loading)
 - [Вставка и обновление связанных моделей](#inserting-and-updating-related-models)
     - [Метод Save](#the-save-method)
     - [Метод Create](#the-create-method)
@@ -605,7 +606,7 @@ public function currentPricing()
 <a name="filtering-queries-via-intermediate-table-columns"></a>
 ### Фильтрация запросов по столбцам сводной таблицы
 
-Вы также можете отфильтровать результаты, возвращаемые запросами отношения `belongsToMany`, используя методы `wherePivot`, `wherePivotIn`, и `wherePivotNotIn` при определении отношения:
+Вы также можете отфильтровать результаты, возвращаемые запросами отношения `belongsToMany`, используя методы `wherePivot`, `wherePivotIn`, `wherePivotNotIn`, `wherePivotBetween`, `wherePivotNotBetween`, `wherePivotNull`, и `wherePivotNotNull` при определении отношения:
 
     return $this->belongsToMany(Role::class)
                     ->wherePivot('approved', 1);
@@ -615,6 +616,22 @@ public function currentPricing()
 
     return $this->belongsToMany(Role::class)
                     ->wherePivotNotIn('priority', [1, 2]);
+
+    return $this->belongsToMany(Podcast::class)
+                    ->as('subscriptions')
+                    ->wherePivotBetween('created_at', ['2020-01-01 00:00:00', '2020-12-31 00:00:00']);
+
+    return $this->belongsToMany(Podcast::class)
+                    ->as('subscriptions')
+                    ->wherePivotNotBetween('created_at', ['2020-01-01 00:00:00', '2020-12-31 00:00:00']);
+
+    return $this->belongsToMany(Podcast::class)
+                    ->as('subscriptions')
+                    ->wherePivotNull('expired_at');
+
+    return $this->belongsToMany(Podcast::class)
+                    ->as('subscriptions')
+                    ->wherePivotNotNull('expired_at');
 
 <a name="defining-custom-intermediate-table-models"></a>
 ### Определение пользовательских моделей сводных таблиц
@@ -1338,11 +1355,17 @@ where user_id = ? and (active = 1 or votes >= 100)
         echo $post->comments_sum_votes;
     }
 
-Как и метод `loadCount`, также доступны отложенные версии этих методов. Эти дополнительные агрегированные операции могут выполняться на уже полученных моделях Eloquent:
+Как и метод `loadCount`, также доступны отложенные версии этих методов. Эти дополнительные агрегатные операции могут выполняться на уже полученных моделях Eloquent:
 
     $post = Post::first();
 
     $post->loadSum('comments', 'votes');
+
+Если вы комбинируете эти агрегатные методы с оператором `SELECT`, то убедитесь, что вы вызываете агрегатные методы после метода `select`:
+
+    $posts = Post::select(['title', 'body'])
+                    ->withExists('comments')
+                    ->get();
 
 <a name="counting-related-models-on-morph-to-relationships"></a>
 ### Подсчет связанных моделей отношений Morph To
@@ -1624,6 +1647,39 @@ select * from authors where id in (1, 2, 3, 4, 5, ...)
             Photo::class => ['tags'],
             Post::class => ['author'],
         ]);
+
+<a name="preventing-lazy-loading"></a>
+### Предотвращение отложенной загрузки
+
+Как обсуждалось ранее, нетерпеливая загрузка отношений зачастую обеспечивает значительный выигрыш в производительности вашего приложения. Поэтому, по желанию вы можете проинструктировать Laravel всегда предотвращать отложенную загрузку отношений. Для этого вы можете вызвать метод `preventLazyLoading`, предлагаемый базовым классом модели Eloquent. Обычно этот метод следует вызывать из метода `boot` класса `AppServiceProvider` вашего приложения.
+
+Метод `preventLazyLoading` принимает необязательный логический аргумент, который указывает, следует ли предотвращать отложенную загрузку. Например, вы можете предотвращать отложенную загрузку только в не эксплуатационных окружениях, чтобы ваше приложение в эксплуатационном окружении продолжало нормально функционировать, даже если в коде случайно присутствует отложенная загрузка отношения:
+
+```php
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * Загрузка любых служб приложения.
+ *
+ * @return void
+ */
+public function boot()
+{
+    Model::preventLazyLoading(! $this->app->isProduction());
+}
+```
+
+После предотвращения отложенной загрузки, Eloquent будет генерировать исключение `Illuminate\Database\LazyLoadingViolationException`, когда ваше приложение попытается отложить загрузку любого отношения Eloquent.
+
+Вы можете изменить поведение выявления отложенной загрузки, используя метод `handleLazyLoadingViolationsUsing`. Например, используя этот метод, вы можете указать, что выявленная отложенная загрузка должна быть только зарегистрирована вместо прерывания выполнения приложения с исключениями:
+
+```php
+Model::handleLazyLoadingViolationUsing(function ($model, $relation) {
+    $class = get_class($model);
+
+    info("Attempted to lazy load [{$relation}] on model [{$class}].");
+});
+```
 
 <a name="inserting-and-updating-related-models"></a>
 ## Вставка и обновление связанных моделей
