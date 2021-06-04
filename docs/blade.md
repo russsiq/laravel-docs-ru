@@ -33,6 +33,7 @@
 - [Стеки](#stacks)
 - [Внедрение служб](#service-injection)
 - [Расширение Blade](#extending-blade)
+    - [Пользовательские обработчики вывода](#custom-echo-handlers)
     - [Пользовательские операторы If](#custom-if-statements)
 
 <a name="introduction"></a>
@@ -1295,6 +1296,34 @@ Blade позволяет вам определять ваши собственн
     <?php echo ($var)->format('m/d/Y H:i'); ?>
 
 > {note} После обновления логики директивы Blade вам нужно будет удалить все кешированные шаблоны Blade. Кешированные шаблоны Blade могут быть удалены с помощью команды `view:clear` Artisan.
+
+<a name="custom-echo-handlers"></a>
+### Пользовательские обработчики вывода
+
+Если вы попытаетесь «отобразить» объект с помощью Blade, будет вызван метод объекта `__toString`. Метод [`__toString`](https://www.php.net/manual/ru/language.oop5.magic.php#language.oop5.magic.tostring) является одним из встроенных в PHP «магических методов». Однако иногда у вас может не быть контроля над методом `__toString` передаваемого класса, например, когда класс, с которым вы взаимодействуете, принадлежит сторонней библиотеке.
+
+В этих случаях Blade позволяет вам зарегистрировать собственный обработчик вывода для конкретного типа объекта. Для этого вы должны вызвать метод `stringable` Blade. Метод `stringable` принимает замыкание. Это замыкание должно получит тип объекта, за отрисовку которого оно отвечает. Обычно метод `stringable` должен вызываться в методе` boot` класса `AppServiceProvider` вашего приложения:
+
+    use Illuminate\Support\Facades\Blade;
+    use Money\Money;
+
+    /**
+     * Загрузка любых служб приложения.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Blade::stringable(function (Money $money) {
+            return $money->formatTo('en_GB');
+        });
+    }
+
+После того, как ваш обработчик был определен, вы можете просто вывести объект в своем шаблоне Blade:
+
+```html
+Cost: {{ $money }}
+```
 
 <a name="custom-if-statements"></a>
 ### Пользовательские операторы If
