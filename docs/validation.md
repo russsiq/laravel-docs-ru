@@ -735,7 +735,7 @@ Laravel также содержит глобального помощника `o
 - [Required Without All](#rule-required-without-all)
 - [Same](#rule-same)
 - [Size](#rule-size)
-- [Sometimes](#conditionally-adding-rules)
+- [Sometimes](#validating-when-present)
 - [Starts With](#rule-starts-with)
 - [String](#rule-string)
 - [Timezone](#rule-timezone)
