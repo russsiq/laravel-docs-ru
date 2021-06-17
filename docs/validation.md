@@ -686,6 +686,7 @@ Laravel также содержит глобального помощника `o
 - [Between](#rule-between)
 - [Boolean](#rule-boolean)
 - [Confirmed](#rule-confirmed)
+- [Current Password](#rule-current-password)
 - [Date](#rule-date)
 - [Date Equals](#rule-date-equals)
 - [Date Format](#rule-date-format)
@@ -842,6 +843,13 @@ Laravel также содержит глобального помощника `o
 #### confirmed
 
 Проверяемое поле должно иметь совпадающее поле `{field}_confirmation`. Например, если проверяемое поле – `password`, то поле `password_confirmation` также должно присутствовать во входящих данных.
+
+<a name="rule-current-password"></a>
+#### current_password
+
+Проверяемое поле должно соответствовать паролю аутентифицированного пользователя. Вы можете указать [охранника аутентификации](authentication.md), используя первый параметр правила:
+
+    'password' => 'current_password:api'
 
 <a name="rule-date"></a>
 #### date
@@ -1163,9 +1171,9 @@ Laravel также содержит глобального помощника `o
 <a name="rule-password"></a>
 #### password
 
-Проверяемое поле должно соответствовать паролю аутентифицированного пользователя. Вы можете указать [охранника аутентификации](authentication.md), используя первый параметр правила:
+Проверяемое поле должно соответствовать паролю аутентифицированного пользователя.
 
-    'password' => 'password:api'
+> {note} Это правило было переименовано в `current_password` с его дальнейшим удалением в Laravel 9. Вместо этого используйте правило [Current Password](#rule-current-password).
 
 <a name="rule-present"></a>
 #### present

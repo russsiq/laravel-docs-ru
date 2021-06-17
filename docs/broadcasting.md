@@ -844,6 +844,12 @@ public function broadcastOn($event)
 return [new Channel($this->user)];
 ```
 
+Если вам нужно определить имя канала модели, вы можете вызвать метод `broadcastChannel` любого экземпляра модели. Например, этот метод возвращает строку `App.Models.User.1` для модели `App\Models\User` с `id` равным `1`:
+
+```php
+$user->broadcastChannel()
+```
+
 <a name="model-broadcasting-event-conventions"></a>
 #### Соглашения о событиях
 

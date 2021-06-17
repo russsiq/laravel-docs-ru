@@ -19,6 +19,7 @@
     - [Наблюдатель Event](#event-watcher)
     - [Наблюдатель Exception](#exception-watcher)
     - [Наблюдатель Gate](#gate-watcher)
+    - [Наблюдатель HTTP Client](#http-client-watcher)
     - [Наблюдатель Job](#job-watcher)
     - [Наблюдатель Log](#log-watcher)
     - [Наблюдатель Mail](#mail-watcher)
@@ -312,6 +313,11 @@ Telescope позволяет искать записи по «метке». Ча
         ],
         ...
     ],
+
+<a name="http-client-watcher"></a>
+### Наблюдатель HTTP Client
+
+Наблюдатель HTTP Client записывает исходящие [запросы HTTP Client](http-client.md), сделанные вашим приложением.
 
 <a name="job-watcher"></a>
 ### Наблюдатель Job

@@ -150,6 +150,18 @@
         return new Transistor($app->make(PodcastParser::class));
     });
 
+<a name="binding-scoped"></a>
+#### Контекстное связывание одиночек
+
+Метод `scoped` связывает класс или интерфейс в контейнере, который должен быть извлечен только один раз в течение текущего жизненного цикла запроса / задания Laravel. Хотя этот метод похож на метод `singleton`, экземпляры, зарегистрированные с помощью метода `scoped`, будут обновлены всякий раз, когда приложение Laravel запускает новый «жизненный цикл», например, когда обработчик [Laravel Octane](octane.md) обрабатывает новый запрос или когда [обработчик очереди](queues.md) Laravel обрабатывает новое задание:
+
+    use App\Services\Transistor;
+    use App\Services\PodcastParser;
+
+    $this->app->scoped(Transistor::class, function ($app) {
+        return new Transistor($app->make(PodcastParser::class));
+    });
+
 <a name="binding-instances"></a>
 #### Связывание экземпляров
 
