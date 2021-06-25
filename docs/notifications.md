@@ -224,6 +224,12 @@
                 ->route('slack', 'https://hooks.slack.com/services/...')
                 ->notify(new InvoicePaid($invoice));
 
+Если вы хотите указать имя получателя при отправке такого уведомления на маршрут `mail`, вы можете предоставить массив, содержащий адрес электронной почты в качестве ключа и имя в качестве значения первого элемента в массиве:
+
+    Notification::route('mail', [
+        'barrett@example.com' => 'Barrett Blair',
+    ])->notify(new InvoicePaid($invoice));
+
 <a name="mail-notifications"></a>
 ## Почтовые уведомления
 

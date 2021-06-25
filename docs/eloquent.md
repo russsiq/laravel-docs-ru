@@ -901,6 +901,20 @@ Eloquent содержит методы `isDirty`, `isClean` и `wasChanged` дл
 
     $billing->save();
 
+Чтобы исключить репликацию одного или нескольких атрибутов в новую модель, можно передать массив методу `replicate`:
+
+    $flight = Flight::create([
+        'destination' => 'LAX',
+        'origin' => 'LHR',
+        'last_flown' => '2020-03-04 11:00:00',
+        'last_pilot_id' => 747,
+    ]);
+
+    $flight = $flight->replicate([
+        'last_flown',
+        'last_pilot_id'
+    ]);
+
 <a name="query-scopes"></a>
 ## Области запроса
 

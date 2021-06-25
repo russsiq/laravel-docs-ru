@@ -1526,6 +1526,10 @@ Laravel содержит множество глобальных «вспомо�
 
     // foo_bar
 
+    $converted = Str::snake('fooBar', '-');
+
+    // foo-bar
+
 <a name="method-str-start"></a>
 #### `Str::start()`
 

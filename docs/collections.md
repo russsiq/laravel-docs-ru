@@ -175,6 +175,7 @@
 - [skipUntil](#method-skipuntil)
 - [skipWhile](#method-skipwhile)
 - [slice](#method-slice)
+- [sliding](#method-sliding)
 - [sole](#method-sole)
 - [some](#method-some)
 - [sort](#method-sort)
@@ -619,7 +620,7 @@
         ['email' => 'abigail@example.com', 'position' => 'Developer'],
         ['email' => 'james@example.com', 'position' => 'Designer'],
         ['email' => 'victoria@example.com', 'position' => 'Developer'],
-    ])
+    ]);
 
     $employees->duplicates('position');
 
@@ -1857,6 +1858,35 @@
     $shuffled->all();
 
     // [3, 2, 5, 1, 4] - (generated randomly)
+
+<a name="method-sliding"></a>
+#### `sliding()`
+
+Метод `sliding` возвращает новую фрагментированную коллекцию, представляющих вид «скользящего окна» элементов:
+
+    $collection = collect([1, 2, 3, 4, 5]);
+
+    $chunks = $collection->sliding(2);
+
+    $chunks->toArray();
+
+    // [[1, 2], [2, 3], [3, 4], [4, 5]]
+
+Это особенно полезно в сочетании с методом [`eachSpread`](#method-eachspread):
+
+    $transactions->sliding(2)->eachSpread(function ($previous, $current) {
+        $current->total = $previous->total + $current->amount;
+    });
+
+При желании вы можете передать второе значение `step`, которое определяет расстояние между первым элементом каждого фрагмента:
+
+    $collection = collect([1, 2, 3, 4, 5]);
+
+    $chunks = $collection->sliding(3, step: 2);
+
+    $chunks->toArray();
+
+    // [[1, 2, 3], [3, 4, 5]]
 
 <a name="method-skip"></a>
 #### `skip()`

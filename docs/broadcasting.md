@@ -495,6 +495,31 @@ Laravel упрощает определение маршрутов для отв
         authEndpoint: '/custom/endpoint/auth'
     });
 
+<a name="customizing-the-authorization-request"></a>
+#### Настройка запроса на авторизацию
+
+Вы можете настроить, как Laravel Echo выполняет запросы авторизации, предоставив настраиваемый Авторизатор при инициализации Echo:
+
+    window.Echo = new Echo({
+        // ...
+        authorizer: (channel, options) => {
+            return {
+                authorize: (socketId, callback) => {
+                    axios.post('/api/broadcasting/auth', {
+                        socket_id: socketId,
+                        channel_name: channel.name
+                    })
+                    .then(response => {
+                        callback(false, response.data);
+                    })
+                    .catch(error => {
+                        callback(true, error);
+                    });
+                }
+            };
+        },
+    })
+
 <a name="defining-authorization-callbacks"></a>
 ### Определение авторизации канала
 
