@@ -6,6 +6,7 @@
     - [Предварительная подготовка канала](#channel-prerequisites)
 - [Построение стека журналов](#building-log-stacks)
 - [Запись сообщений журнала](#writing-log-messages)
+    - [Контекстная информация](#contextual-information)
     - [Запись в определенные каналы](#writing-to-specific-channels)
 - [Настройка канала Monolog](#monolog-channel-customization)
     - [Настройка Monolog для каналов](#customizing-monolog-for-channels)
@@ -170,11 +171,44 @@
     }
 
 <a name="contextual-information"></a>
-#### Контекстная информация
+### Контекстная информация
 
 Также, методам журнала может быть передан массив контекстных данных. Эти контекстные данные будут отформатированы и отображены в сообщении журнала:
 
+    use Illuminate\Support\Facades\Log;
+
     Log::info('User failed to login.', ['id' => $user->id]);
+
+По желанию можно указать некоторую контекстную информацию, которая должна быть включена во все последующие записи журнала. Например, логирование идентификатора запроса, связанного с каждым входящим запросом к вашему приложению. Для этого вы можете вызвать метод `withContext` фасада `Log`:
+
+    <?php
+
+    namespace App\Http\Middleware;
+
+    use Closure;
+    use Illuminate\Support\Facades\Log;
+    use Illuminate\Support\Str;
+
+    class AssignRequestId
+    {
+        /**
+         * Обработка входящего запроса.
+         *
+         * @param  \Illuminate\Http\Request  $request
+         * @param  \Closure  $next
+         * @return mixed
+         */
+        public function handle($request, Closure $next)
+        {
+            $requestId = (string) Str::uuid();
+
+            Log::withContext([
+                'request-id' => $requestId
+            ]);
+
+            return $next($request)->header('Request-Id', $requestId);
+        }
+    }
 
 <a name="writing-to-specific-channels"></a>
 ### Запись в определенные каналы

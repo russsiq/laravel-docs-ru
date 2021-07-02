@@ -39,6 +39,7 @@
     - [Повторная попытка выполнения неудачных заданий](#retrying-failed-jobs)
     - [Игнорирование отсутствующих моделей](#ignoring-missing-models)
     - [Хранение неудачных заданий в DynamoDB](#storing-failed-jobs-in-dynamodb)
+    - [Удаление неудачных заданий](#pruning-failed-jobs)
     - [События неудачных заданий](#failed-job-events)
 - [Удаление заданий из очередей](#clearing-jobs-from-queues)
 - [События задания](#job-events)
@@ -1749,6 +1750,17 @@ composer require aws/aws-sdk-php
     'table' => 'failed_jobs',
 ],
 ```
+
+<a name="pruning-failed-jobs"></a>
+### Удаление неудачных заданий
+
+Вы можете удалить все записи в таблице `failed_jobs` вашего приложения, вызвав команду `queue:prune-failed` Artisan:
+
+    php artisan queue:prune-failed
+
+Если вы укажете для команды параметр `--hours`, то будут сохранены записи о неудачных заданиях, которые были вставлены только в течение последних `N` часов. Например, следующая команда удалит все записи неудачных заданий, которые были вставлены более 48 часов назад:
+
+    php artisan queue:prune-failed --hours=48
 
 <a name="failed-job-events"></a>
 ### События неудачных заданий
