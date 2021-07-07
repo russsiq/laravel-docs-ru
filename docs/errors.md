@@ -156,6 +156,26 @@
         });
     }
 
+Вы также можете использовать метод `renderable` для переопределения поведения отображения для встроенных исключений Laravel или Symfony, таких как `NotFoundHttpException`. Если замыкание, переданное методу `renderable`, не возвращает значение, будет использовано отображение исключения Laravel по умолчанию:
+
+    use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+    /**
+     * Зарегистрировать замыкания, обрабатывающие исключения приложения.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'message' => 'Record not found.'
+                ], 404);
+            }
+        });
+    }
+
 <a name="renderable-exceptions"></a>
 ### Отчетные и отображаемые исключения
 

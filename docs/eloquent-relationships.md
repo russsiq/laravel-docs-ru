@@ -318,6 +318,8 @@ public function largestOrder()
 }
 ```
 
+> {note} Поскольку PostgreSQL не поддерживает выполнение функции `MAX` для столбцов UUID, в настоящее время невозможно использовать отношения «один-из-многих» в сочетании со столбцами UUID PostgreSQL.
+
 <a name="advanced-has-one-of-many-relationships"></a>
 #### Дополнения отношений Один из многих
 

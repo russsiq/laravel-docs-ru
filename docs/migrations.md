@@ -611,7 +611,7 @@ Laravel будет использовать имя миграции, чтобы 
 <a name="column-method-nullableTimestamps"></a>
 #### `nullableTimestamps()`
 
-Метод аналогичен методу [`timestamps`](#column-method-timestamps); тем не менее, создаваемый столбец будет иметь значение NULL:
+Метод `nullableTimestamps` является псевдонимом для [timestamps](#column-method-timestamps):
 
     $table->nullableTimestamps(0);
 
@@ -737,7 +737,7 @@ Laravel будет использовать имя миграции, чтобы 
 <a name="column-method-timestamps"></a>
 #### `timestamps()`
 
-Метод `timestamps` method creates `created_at` and `updated_at` `TIMESTAMP` с необязательной точностью (общее количество цифр):
+Метод `timestamps` создает столбцы `created_at` и `updated_at`, эквивалентные  `TIMESTAMP` с необязательной точностью (общее количество цифр):
 
     $table->timestamps($precision = 0);
 
