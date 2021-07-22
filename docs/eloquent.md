@@ -25,6 +25,7 @@
 - [Удаление моделей](#deleting-models)
     - [Программное удаление](#soft-deleting)
     - [Запросы для моделей, использующих программное удаление](#querying-soft-deleted-models)
+- [Очистка устаревших моделей](#pruning-models)
 - [Репликация (тиражирование) моделей](#replicating-models)
 - [Области запроса](#query-scopes)
     - [Глобальные области запроса](#global-scopes)
@@ -879,6 +880,93 @@ Eloquent содержит методы `isDirty`, `isClean` и `wasChanged` дл
     $flights = Flight::onlyTrashed()
                     ->where('airline_id', 1)
                     ->get();
+
+<a name="pruning-models"></a>
+## Очистка устаревших моделей
+
+Иногда может потребоваться периодически удалять ненужные модели. Для этого вы можете добавить трейт `Illuminate\Database\Eloquent\Prunable` или `Illuminate\Database\Eloquent\MassPrunable` к моделям, которые вы хотите периодически очищать. После добавления одного из трейтов к модели реализуйте метод `prunable`, который возвращает построитель запросов Eloquent, который разрешает модели, которые больше не нужны:
+
+    <?php
+
+    namespace App\Models;
+
+    use Illuminate\Database\Eloquent\Model;
+    use Illuminate\Database\Eloquent\Prunable;
+
+    class Flight extends Model
+    {
+        use Prunable;
+
+        /**
+         * Получить запрос сокращаемой модели.
+         *
+         * @return \Illuminate\Database\Eloquent\Builder
+         */
+        public function prunable()
+        {
+            return static::where('created_at', '<=', now()->subMonth());
+        }
+    }
+
+Помечая модели как `Prunable` («сокращаемой»), вы также можете определить метод `pruning` модели для «очищения». Этот метод будет вызываться перед удалением модели. Этот метод может быть полезен для удаления любых дополнительных ресурсов, связанных с моделью, таких как сохраненные файлы, перед окончательным удалением модели из базы данных:
+
+    /**
+     * Подготовить модель для очистки.
+     *
+     * @return void
+     */
+    protected function pruning()
+    {
+        //
+    }
+
+После конфигурирования сокращаемой модели вы должны запланировать команду `model:prune` Artisan в классе `App\Console\Kernel` вашего приложения. Вы можете выбрать подходящий интервал выполнения этой команды:
+
+    /**
+     * Определить расписание выполнения команд приложения.
+     *
+     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @return void
+     */
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->command('model:prune')->daily();
+    }
+
+За кулисами команда `model:prune` автоматически обнаружит «сокращаемые» модели в каталоге `app/Models` вашего приложения. Если ваши модели находятся в другом месте, вы можете использовать параметр `--model`, чтобы указать имена классов моделей:
+
+    $schedule->command('model:prune', [
+        '--model' => [Address::class, Flight::class],
+    ])->daily();
+
+> {note} Программно удаляемые модели будут удалены (`forceDelete`) без возможности восстановления, если они соответствуют запросу сокращения.
+
+<a name="mass-pruning"></a>
+#### Массовая очистка устаревших моделей
+
+Когда модели имеют трейт `Illuminate\Database\Eloquent\MassPrunable`, то они удаляются из базы данных с помощью запросов массового удаления. Следовательно, не будет вызываться метод `pruning`, а также не будут инициированы события `deleting` и `deleted` моделей. Это связано с тем, что модели никогда не извлекаются перед удалением, что делает процесс очищения более эффективным:
+
+    <?php
+
+    namespace App\Models;
+
+    use Illuminate\Database\Eloquent\Model;
+    use Illuminate\Database\Eloquent\MassPrunable;
+
+    class Flight extends Model
+    {
+        use MassPrunable;
+
+        /**
+         * Получить запрос сокращаемой модели.
+         *
+         * @return \Illuminate\Database\Eloquent\Builder
+         */
+        public function prunable()
+        {
+            return static::where('created_at', '<=', now()->subMonth());
+        }
+    }
 
 <a name="replicating-models"></a>
 ## Репликация (тиражирование) моделей

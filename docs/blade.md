@@ -9,10 +9,11 @@
     - [Операторы Switch](#switch-statements)
     - [Циклы](#loops)
     - [Переменная Loop](#the-loop-variable)
-    - [Комментарии](#comments)
+    - [Условные классы](#conditional-classes)
     - [Подключение дочерних шаблонов](#including-subviews)
     - [Директива `@once`](#the-once-directive)
     - [Необработанный PHP](#raw-php)
+    - [Комментарии](#comments)
 - [Компоненты](#components)
     - [Отрисовка компонентов](#rendering-components)
     - [Передача данных компонентам](#passing-data-to-components)
@@ -361,12 +362,24 @@ Blade – это простой, но мощный движок шаблонов
 `$loop->depth`  |  Уровень вложенности текущего цикла.
 `$loop->parent`  |  Переменная родительского цикла во вложенном цикле.
 
-<a name="comments"></a>
-### Комментарии
+<a name="conditional-classes"></a>
+### Условные классы
 
-Blade также позволяет вам определять комментарии в ваших шаблонах. Однако, в отличие от комментариев HTML, комментарии Blade не будут включены в результирующий HTML, возвращаемый вашим приложением:
+Директива `@class` условно компилирует строку класса CSS. Директива принимает массив классов, где ключ массива содержит класс или классы, которые вы хотите добавить, а значение является логическим выражением. Если элемент массива имеет числовой ключ, он всегда будет включен в отображаемый список классов:
 
-    {{-- This comment will not be present in the rendered HTML --}}
+    @php
+        $isActive = false;
+        $hasError = true;
+    @endphp
+
+    <span @class([
+        'p-4',
+        'font-bold' => $isActive,
+        'text-gray-500' => ! $isActive,
+        'bg-red' => $hasError,
+    ])></span>
+
+    <span class="p-4 text-gray-500 bg-red"></span>
 
 <a name="including-subviews"></a>
 ### Подключение дочерних шаблонов
@@ -441,6 +454,13 @@ Blade также позволяет вам определять коммента
     @php
         $counter = 1;
     @endphp
+
+<a name="comments"></a>
+### Комментарии
+
+Blade также позволяет вам определять комментарии в ваших шаблонах. Однако, в отличие от комментариев HTML, комментарии Blade не будут включены в результирующий HTML, возвращаемый вашим приложением:
+
+    {{-- This comment will not be present in the rendered HTML --}}
 
 <a name="components"></a>
 ## Компоненты
@@ -759,6 +779,8 @@ Blade отобразит следующий HTML-код:
     <button {{ $attributes->class(['p-4'])->merge(['type' => 'button']) }}>
         {{ $slot }}
     </button>
+
+> {tip} Если вам нужно условно скомпилировать классы для других элементов HTML, которые не должны получать объединенные атрибуты, вы можете использовать [директиву `@class`](#conditional-classes).
 
 <a name="non-class-attribute-merging"></a>
 #### Слияние неклассовых атрибутов

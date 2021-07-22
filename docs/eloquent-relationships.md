@@ -1357,6 +1357,14 @@ where user_id = ? and (active = 1 or votes >= 100)
         echo $post->comments_sum_votes;
     }
 
+Если вы хотите получить доступ к результату агрегатной функции, используя другое имя, то вы можете указать свой собственный псевдоним:
+
+    $posts = Post::withSum('comments as total_comments', 'votes')->get();
+
+    foreach ($posts as $post) {
+        echo $post->total_comments;
+    }
+
 Как и метод `loadCount`, также доступны отложенные версии этих методов. Эти дополнительные агрегатные операции могут выполняться на уже полученных моделях Eloquent:
 
     $post = Post::first();

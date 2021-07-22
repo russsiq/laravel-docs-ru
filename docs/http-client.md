@@ -37,6 +37,7 @@ Laravel предлагает минимальный и выразительны�
 
     $response->body() : string;
     $response->json() : array|mixed;
+    $response->object() : object;
     $response->collect() : Illuminate\Support\Collection;
     $response->status() : int;
     $response->ok() : bool;

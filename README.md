@@ -84,31 +84,31 @@
     - [x] [База данных](./docs/database-testing.md)
     - [x] [Имитация](./docs/mocking.md)
 - #### Пакеты
-    - [x] [Breeze](./docs/starter-kits.md#laravel-breeze)  
+    - [x] [Breeze](./docs/starter-kits.md#laravel-breeze)
         Легковесная реализация аутентификации Laravel для ознакомления с функционалом. Включает простые шаблоны Blade, стилизованные с помощью Tailwind CSS. Содержит маршруты для публикации.
     - [ ] [Cashier (Stripe)](./docs/billing.md)
     - [ ] [Cashier (Paddle)](./docs/cashier-paddle.md)
-    - [x] [Dusk](./docs/dusk.md)  
+    - [x] [Dusk](./docs/dusk.md)
         Автоматизация поведения браузера и тестирование с использованием ChromeDriver.
-    - [x] [Envoy](./docs/envoy.md)  
+    - [x] [Envoy](./docs/envoy.md)
         Инструмент для запуска задач, выполняемых на удаленных серверах. Задачи определяются в файле `Envoy.blade.php` в корне приложения с использованием директив шаблонизатора Blade.
-    - [x] [Fortify](./docs/fortify.md)  
+    - [x] [Fortify](./docs/fortify.md)
         Серверная реализация аутентификации Laravel. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
-    - [x] [Homestead](./docs/homestead.md)  
+    - [x] [Homestead](./docs/homestead.md)
         Официальный образ Vagrant для приложений Laravel.
     - [ ] [Horizon](./docs/horizon.md)
-    - [ ] [Jetstream](https://jetstream.laravel.com)  
+    - [ ] [Jetstream](https://jetstream.laravel.com)
         Красиво оформленный каркас приложений. Включает в себя Fortify и Sanctum.
     - [ ] [Octane](./docs/octane.md)
     - [ ] [Passport](./docs/passport.md)
     - [ ] [Sail](./docs/sail.md)
-    - [x] [Sanctum](./docs/sanctum.md)  
+    - [x] [Sanctum](./docs/sanctum.md)
         Легковесная система аутентификации для SPA (одностраничных приложений), мобильных приложений и простых API на основе токенов. Управление токенами API, аутентификация сессии. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
-    - [x] [Scout](./docs/scout.md)  
+    - [x] [Scout](./docs/scout.md)
         «Простое» решение на основе драйверов для добавления полнотекстового поиска моделям Eloquent.
-    - [x] [Socialite](./docs/socialite.md)  
+    - [x] [Socialite](./docs/socialite.md)
         Аутентификация через провайдеров OAuth: Facebook, Twitter, LinkedIn, Google, GitHub, GitLab, и Bitbucket.
-    - [x] [Telescope](./docs/telescope.md)  
+    - [x] [Telescope](./docs/telescope.md)
         Панель управления, отображающая записи о произошедших в приложении событиях.
     - [ ] [Valet](./docs/valet.md)
 - [Документация API](https://laravel.com/api/8.x/)
@@ -152,214 +152,215 @@ Z
 Исходный вариант  |  Вариации перевода  |  Замечания
 ----------------- | ------------------- | -------------
 <a name="dictionary-a">**A**</a>
-abilities  |  полномочия, компетенции  |  
-accessors  |  аксессоры  |  
-argument  |  аргумент  |  
+abilities  |  полномочия, компетенции  |
+accessors  |  аксессоры  |
+argument  |  аргумент  |
 asset  |  веб-актив  |  Префикс *веб* не используется в словосочетаниях типа *CSS/JS актив*
-asset pipeline  |  сценарий по сборки веб-актива  |  
-atomic  |  атомарный, неделимый  |  
-attach (a relation)  |  назначить (отношение)  |  
-attaching  |  прикрепление, присоединение  |  
-attempting  |  пытается  |  
-authentication  |  аутентификация  |  
-authentication pipeline  |  конвейер аутентификации  |  
-authorization  |  авторизация  |  
-auto-incrementing ID  |  автоинкрементный идентификатор  |  
+asset pipeline  |  сценарий по сборки веб-актива  |
+atomic  |  атомарный, неделимый  |
+attach (a relation)  |  назначить (отношение)  |
+attaching  |  прикрепление, присоединение  |
+attempting  |  пытается  |
+authentication  |  аутентификация  |
+authentication pipeline  |  конвейер аутентификации  |
+authorization  |  авторизация  |
+auto-incrementing ID  |  автоинкрементный идентификатор  |
 <a name="dictionary-b">**B**</a>
-backend  |  серверная часть  |  
-bag, message bag, attribute bag  |  коллекция, коллекция сообщений, коллекция атрибутов  |  
+backend  |  серверная часть  |
+bag, message bag, attribute bag  |  коллекция, коллекция сообщений, коллекция атрибутов  |
 basic example  |  отвлеченный пример  |  Правильнее «пример основ» (чего-либо)
-box  |  образ (Vagrant)  |  
-binding  |  связывание  |  
-broadcaster  |  вещатель  |  
+box  |  образ (Vagrant)  |
+binding  |  связывание  |
+broadcaster  |  вещатель  |
 <a name="dictionary-c">**C**</a>
-cache  |  кеш  |  
-casting  |  типизация  |  
-cast type  |  типизатор  |  
-chain  |  связать (например, методы)  |  
-chaining  |  цепочка (например, заданий)  |  
-chunking  |  разбиение  |  
-clauses  |  выражения  |  
-сlosure  |  замыкание  |  
-command bus  |  командная шина  |  
-command line interface (CLI)  |  интерфейс командной строки  |  
-commit  |  коммит, фиксация  |  
+cache  |  кеш  |
+casting  |  типизация  |
+cast type  |  типизатор  |
+chain  |  связать (например, методы)  |
+chaining  |  цепочка (например, заданий)  |
+chunking  |  разбиение  |
+clauses  |  выражения  |
+сlosure  |  замыкание  |
+command bus  |  командная шина  |
+command line interface (CLI)  |  интерфейс командной строки  |
+commit  |  коммит, фиксация  |
 composer  |  компоновщик, конструктор  |  Менеджер пакетов Composer не переводится
-condition  |  условие  |  
-conditional  |  кондиционный  |  
-configuration  |  конфигурация, конфигурирование  |  
-constraints  |  ограничения, условия  |  
-contract  |  контракт  |  
-cookie  |  (файл) cookie  |  
-custom  |  ваш, пользовательский, желаемый, собственный  |  
-customization  |  настройка  |  
-customizing  |  корректировка, изменение  |  
+condition  |  условие  |
+conditional  |  кондиционный  |
+configuration  |  конфигурация, конфигурирование  |
+constraints  |  ограничения, условия  |
+contract  |  контракт  |
+cookie  |  (файл) cookie  |
+custom  |  ваш, пользовательский, желаемый, собственный  |
+customization  |  настройка  |
+customizing  |  корректировка, изменение  |
 <a name="dictionary-d">**D**</a>
-defining  |  определение  |  
-deployment  |  развертывание  |  
-desired capabilities  |  требуемые характеристики  |  
-detaching  |  отсоединение  |  
-directory  |  каталог, директория  |  
+defining  |  определение  |
+deployment  |  развертывание  |
+desired capabilities  |  требуемые характеристики  |
+detaching  |  отсоединение  |
+directory  |  каталог, директория  |
 dispatch  |  выполнение, исполнение, запуск, направление  |  Прежде всего «постановка в очередь»
-dump  |  вывод, отображение  |  
+dump  |  вывод, отображение  |
 <a name="dictionary-e">**E**</a>
-eager  |  нетерпеливый  |  
-encrypter  |  шифровальщик  |  
-encryption  |  шифрование  |  
-environment  |  среда, окружение  |  
-evaluated  |  проанализированы  |  
-event  |  событие  |  
-examining  |  изучение, исследование, интерпретация  |  
-exit code  |  код выхода / возврата  |  
-experience  |  опыт / продуктивность / возможности / удобство (разработки или разработчика)  |  
+eager  |  нетерпеливый  |
+encrypter  |  шифровальщик  |
+encryption  |  шифрование  |
+environment  |  среда, окружение  |
+evaluated  |  проанализированы  |
+event  |  событие  |
+examining  |  изучение, исследование, интерпретация  |
+exit code  |  код выхода / возврата  |
+experience  |  опыт / продуктивность / возможности / удобство (разработки или разработчика)  |
 <a name="dictionary-f">**F**</a>
-facade  |  фасад  |  
-factory callbacks  |  хуки фабрики  |  
-fake  |  фальсификация, фальшивка  |  
-feature  |  функционал, особенность  |  
-filesystem  |  файловое хранилище, файловая система  |  
-fired  |  инициировано, сработано  |  
+facade  |  фасад  |
+factory callbacks  |  хуки фабрики  |
+fake  |  фальсификация, фальшивка  |
+feature  |  функционал, особенность  |
+filesystem  |  файловое хранилище, файловая система  |
+fired  |  инициировано, сработано  |
 flash data  |  кратковременные данные, флеш-данные  |  Данные, имеющие непродолжительный срок существования
-flashed to the session  |  записаны (краткосрочно) в сессию  |  
-flexibility  |  гибкость  |  
-fluent  |  текучий, гибкий, последовательный  |  
-force  |  принудительно  |  
-foreign key constraints  |  ограничения внешнего ключа  |  
+flashed to the session  |  записаны (краткосрочно) в сессию  |
+flexibility  |  гибкость  |
+fluent  |  текучий, гибкий, последовательный  |
+force  |  принудительно  |
+foreign key constraints  |  ограничения внешнего ключа  |
 <a name="dictionary-g">**G**</a>
-gate  |  шлюз (авторизации)  |  
+gate  |  шлюз (авторизации)  |
 generating  |  генерация  |  Незаменимо словом «создание». Предполагается генерация ч.-л. с использованием команд Artisan.
-given  |  переданный, указанный, конкретный  |  
-guard  |  охранник (аутентификатора)  |  
-guarding  |  защита  |  
+given  |  переданный, указанный, конкретный  |
+guard  |  охранник (аутентификатора)  |
+guarding  |  защита  |
 <a name="dictionary-h">**H**</a>
-hashing  |  хеширование  |  
-helpful  |  полезный  |  
-helpers  |  помощники, глобальные вспомогательные функции  |  
+hashing  |  хеширование  |
+helpful  |  полезный  |
+helpers  |  помощники, глобальные вспомогательные функции  |
 hydrated  |  присоединены (включены в результирующий набор)  |  Например, в коллекцию при использовании генераторов на основе курсоров
 <a name="dictionary-i">**I**</a>
-in-memory  |  хранимые в памяти  |  
+in-memory  |  хранимые в памяти  |
 <a name="dictionary-j">**J**</a>
-job  |  задание, задача  |  
-job batching  |  пакетная обработка заданий  |  
+job  |  задание, задача  |
+job batching  |  пакетная обработка заданий  |
 <a name="dictionary-l">**L**</a>
-layer over  |  обертка над  |  
-lazy  |  отложенный  |  
-listener  |  слушатель  |  
-load balancer  |  балансировщик нагрузки  |  
-localization  |  локализация  |  
-log  |  журнал  |  
-logger  |  регистратор  |  
-logging  |  логирование  |  
+layer over  |  обертка над  |
+lazy  |  отложенный  |
+listener  |  слушатель  |
+load balancer  |  балансировщик нагрузки  |
+localization  |  локализация  |
+log  |  журнал  |
+logger  |  регистратор  |
+logging  |  логирование  |
 loose comparisons  |  гибкое сравнение  |  Противоположное `strict comparisons`
 <a name="dictionary-m">**M**</a>
-macro (macros)  |  макрокоманда (макрокоманды)  |  
-macroable  |  макропрограммируемый  |  
-maintenance mode  |  режим обслуживания  |  
+macro (macros)  |  макрокоманда (макрокоманды)  |
+macroable  |  макропрограммируемый  |
+maintenance mode  |  режим обслуживания  |
 making  |  инициализация  |  Например, метод фабрики `make` инициализирует, но не создает запись о модели в БД.
-manually  |  самостоятельно, вручную, по требованию  |  
-mapping  |  сопоставление, картирование, перебор, _реже_ итерация  |  
-mass assignment  |  массовое присвоение  |  
-middleware  |  посредник  |  
-migration  |  миграция  |  
-migration squashing  |  сжатие миграций  |  
-miscellaneous  |  разное  |  
-mock  |  подставной объект  |  
-mocking  |  имитация  |  
-mutator  |  мутатор  |  
+manually  |  самостоятельно, вручную, по требованию  |
+mapping  |  сопоставление, картирование, перебор, _реже_ итерация  |
+mass assignment  |  массовое присвоение  |
+middleware  |  посредник  |
+migration  |  миграция  |
+migration squashing  |  сжатие миграций  |
+miscellaneous  |  разное  |
+mock  |  подставной объект  |
+mocking  |  имитация  |
+mutator  |  мутатор  |
 <a name="dictionary-n">**N**</a>
-named error bag  |  именованные коллекции ошибок  |  
+named error bag  |  именованные коллекции ошибок  |
 <a name="dictionary-o">**O**</a>
-observers  |  наблюдатели  |  
-old input  |  прежний ввод  |  
-on-demand  |  по требованию, по запросу  |  
-opinion  |  мнение  |  
-opinions  |  представления (о чем-либо), принципы (например, работы)  |  
-optional  |  необязательный  |  
-options  |  параметры  |  
-overriding  |  переопределение  |  
+observers  |  наблюдатели  |
+old input  |  прежний ввод  |
+on-demand  |  по требованию, по запросу  |
+opinion  |  мнение  |
+opinions  |  представления (о чем-либо), принципы (например, работы)  |
+optional  |  необязательный  |
+options  |  параметры  |
+overriding  |  переопределение  |
 <a name="dictionary-p">**P**</a>
-pagination  |  постраничная навигация, пагинация  |  
-payload  |  информационная часть данных (HTTP-запроса)  |  
-permanently  |  окончательно  |  
-pipelining commands  |  конвейерное выполнение команд  |  
-placeholder  |  заполнитель, метка-заполнитель, символ-заполнитель, заменитель  |  
-policy  |  политика  |  
+pagination  |  постраничная навигация, пагинация  |
+payload  |  информационная часть данных (HTTP-запроса)  |
+permanently  |  окончательно  |
+pipelining commands  |  конвейерное выполнение команд  |
+placeholder  |  заполнитель, метка-заполнитель, символ-заполнитель, заменитель  |
+policy  |  политика  |
 power  |  возможность  |  В контексте о функциональности
-progress bar  |  индикатор выполнения  |  
+progress bar  |  индикатор выполнения  |
 provider  |  провайдер, поставщик  |  Второй случай всегда употребим в отношении классов `ServiceProvider`.
-production  |  эксплуатация  |  
+production  |  эксплуатация  |
+pruning  |  очистка, удаление  |
 <a name="dictionary-q">**Q**</a>
-query builder  |  построитель запросов  |  
-query constraints  |  ограничения запроса  |  
-queue  |  очередь  |  
-queue worker  |  обработчик очереди  |  
-queueable  |  очередной (?), последовательный  |  
+query builder  |  построитель запросов  |
+query constraints  |  ограничения запроса  |
+queue  |  очередь  |
+queue worker  |  обработчик очереди  |
+queueable  |  очередной (?), последовательный  |
 <a name="dictionary-r">**R**</a>
-rate limit  |  предел (лимит) частоты  |  
-rate limiting  |  ограничение частоты  |  
-redirect  |  перенаправление  |  
-redirector  |  перенаправитель  |  
-refreshing  |  обновление  |  
-reflection  |  рефлексия (отражение)  |  
+rate limit  |  предел (лимит) частоты  |
+rate limiting  |  ограничение частоты  |
+redirect  |  перенаправление  |
+redirector  |  перенаправитель  |
+refreshing  |  обновление  |
+reflection  |  рефлексия (отражение)  |
 release  |  релиз, выпуск, проброс (задания в очереди)  |  Не уточнено.
-relationships  |  отношения  |  
-rendered  |  обработанный (HTML-код)  |  
-rendering  |  отображение, визуализация, рендеринг  |  
-replicating  |  репликация, тиражирование  |  
-request  |  запрос  |  
+relationships  |  отношения  |
+rendered  |  обработанный (HTML-код)  |
+rendering  |  отображение, визуализация, рендеринг  |
+replicating  |  репликация, тиражирование  |
+request  |  запрос  |
 resource  |  ресурс  |  Источник информации, например, API-ресурс
 resources  |  ресурсы  |  Директория исходных файлов проекта для фронтенда
-response  |  ответ  |  
-retrieving  |  получение, извлечение  |  
-route  |  маршрут  |  
-routing  |  маршрутизация  |  
+response  |  ответ  |
+retrieving  |  получение, извлечение  |
+route  |  маршрут  |
+routing  |  маршрутизация  |
 <a name="dictionary-s">**S**</a>
-scaffold  |  каркас  |  
+scaffold  |  каркас  |
 scaffolding  |  каркасное программирование  |  Автоматизация по написанию кода на основе заготовок
-shallow  |  упрощенный  |  
-skeleton  |  каркас  |  
+shallow  |  упрощенный  |
+skeleton  |  каркас  |
 scope  |  область, сфера, диапазон  |  То, что имеет ограничения
-search engine  |  поисковая система  |  
-seeding  |  наполнение  |  
-sequence  |  последовательность, серия  |  
-serialization  |  сериализация  |  
-service container  |  контейнер служб  |  
-service providers  |  поставщики служб  |  
-session  |  сессия  |  
-schema builder  |  построитель схемы  |  
-shortcut  |  ярлык, псевдоним  |  
-slug  |  дружественный URI (фрагмент URL-адреса)  |  
-soft deleting  |  программное удаление  |  
-Sometimes you may need, Sometimes you may wish  |  По желанию можно (может)  |  
-source maps  |  карты исходников  |  
-spy on an object  |  наблюдать за объектом  |  
-specific  |  конкретный, определенный  |  
-squashing  |  сжатие  |  
-staging  |  промежуточная (стадия разработки)  |  
-statement  |  оператор, выражение  |  
-starter kit  |  стартовый комплект  |  
+search engine  |  поисковая система  |
+seeding  |  наполнение  |
+sequence  |  последовательность, серия  |
+serialization  |  сериализация  |
+service container  |  контейнер служб  |
+service providers  |  поставщики служб  |
+session  |  сессия  |
+schema builder  |  построитель схемы  |
+shortcut  |  ярлык, псевдоним  |
+slug  |  дружественный URI (фрагмент URL-адреса)  |
+soft deleting  |  программное удаление  |
+Sometimes you may need, Sometimes you may wish  |  По желанию можно (может)  |
+source maps  |  карты исходников  |
+spy on an object  |  наблюдать за объектом  |
+specific  |  конкретный, определенный  |
+squashing  |  сжатие  |
+staging  |  промежуточная (стадия разработки)  |
+statement  |  оператор, выражение  |
+starter kit  |  стартовый комплект  |
 strict comparisons  |  жесткое сравнение  |  Противоположное `loose comparisons`
 stub  |  заглушка, заготовка  |  «Заготовка» может употребляться, например, относительно пустого класса с нереализованными методами, а «заглушка» – в контексте тестов.
 <a name="dictionary-t">**T**</a>
-terms of service  |  условия использования  |  
-timestamp  |  временная метка  |  
-type-hinting  |  типизация (аргументов), объявление зависимостей  |  
-toggling  |  переключение  |  
+terms of service  |  условия использования  |
+timestamp  |  временная метка  |
+type-hinting  |  типизация (аргументов), объявление зависимостей  |
+toggling  |  переключение  |
 <a name="dictionary-u">**U**</a>
-user-land  |  пользовательский слой ПО  |  
+user-land  |  пользовательский слой ПО  |
 <a name="dictionary-v">**V**</a>
-valid  |  действительный, допустимый  |  
-validation  |  валидация, проверка  |  
-validator  |  валидатор  |  
+valid  |  действительный, допустимый  |
+validation  |  валидация, проверка  |
+validator  |  валидатор  |
 vendor  |  поставщик  |  Директория `vendor` с библиотеками от сторонних поставщиков
-verb, HTTP  |  HTTP-метод  |  
-verification  |  подтверждение  |  
-view  |  шаблон, представление  |  
+verb, HTTP  |  HTTP-метод  |
+verification  |  подтверждение  |
+view  |  шаблон, представление  |
 <a name="dictionary-w">**W**</a>
-wildcard  |  метасимвол подстановки  |  
-work factor  |  коэффициент работы  |  
+wildcard  |  метасимвол подстановки  |
+work factor  |  коэффициент работы  |
 <a name="dictionary-y">**Y**</a>
-yield  |  дополнение, дополнять  |  
+yield  |  дополнение, дополнять  |
 
 
 <a name="license"></a>
