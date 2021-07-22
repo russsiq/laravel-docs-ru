@@ -84,33 +84,23 @@
     - [x] [База данных](./docs/database-testing.md)
     - [x] [Имитация](./docs/mocking.md)
 - #### Пакеты
-    - [x] [Breeze](./docs/starter-kits.md#laravel-breeze)
-        Легковесная реализация аутентификации Laravel для ознакомления с функционалом. Включает простые шаблоны Blade, стилизованные с помощью Tailwind CSS. Содержит маршруты для публикации.
-    - [ ] [Cashier (Stripe)](./docs/billing.md)
-    - [ ] [Cashier (Paddle)](./docs/cashier-paddle.md)
-    - [x] [Dusk](./docs/dusk.md)
-        Автоматизация поведения браузера и тестирование с использованием ChromeDriver.
-    - [x] [Envoy](./docs/envoy.md)
-        Инструмент для запуска задач, выполняемых на удаленных серверах. Задачи определяются в файле `Envoy.blade.php` в корне приложения с использованием директив шаблонизатора Blade.
-    - [x] [Fortify](./docs/fortify.md)
-        Серверная реализация аутентификации Laravel. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
-    - [x] [Homestead](./docs/homestead.md)
-        Официальный образ Vagrant для приложений Laravel.
-    - [ ] [Horizon](./docs/horizon.md)
-    - [ ] [Jetstream](https://jetstream.laravel.com)
-        Красиво оформленный каркас приложений. Включает в себя Fortify и Sanctum.
-    - [ ] [Octane](./docs/octane.md)
-    - [ ] [Passport](./docs/passport.md)
-    - [ ] [Sail](./docs/sail.md)
-    - [x] [Sanctum](./docs/sanctum.md)
-        Легковесная система аутентификации для SPA (одностраничных приложений), мобильных приложений и простых API на основе токенов. Управление токенами API, аутентификация сессии. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
-    - [x] [Scout](./docs/scout.md)
-        «Простое» решение на основе драйверов для добавления полнотекстового поиска моделям Eloquent.
-    - [x] [Socialite](./docs/socialite.md)
-        Аутентификация через провайдеров OAuth: Facebook, Twitter, LinkedIn, Google, GitHub, GitLab, и Bitbucket.
-    - [x] [Telescope](./docs/telescope.md)
-        Панель управления, отображающая записи о произошедших в приложении событиях.
-    - [ ] [Valet](./docs/valet.md)
+    - [x] [*Breeze*](./docs/starter-kits.md#laravel-breeze) – легковесная реализация аутентификации Laravel для ознакомления с функционалом. Включает простые шаблоны Blade, стилизованные с помощью Tailwind CSS. Содержит маршруты для публикации.
+    - [ ] [*Cashier (Stripe)*](./docs/billing.md)
+    - [ ] [*Cashier (Paddle)*](./docs/cashier-paddle.md)
+    - [x] [*Dusk*](./docs/dusk.md) – автоматизация поведения браузера и тестирование с использованием ChromeDriver.
+    - [x] [*Envoy*](./docs/envoy.md) – инструмент для запуска задач, выполняемых на удаленных серверах. Задачи определяются в файле `Envoy.blade.php` в корне приложения с использованием директив шаблонизатора Blade.
+    - [x] [*Fortify*](./docs/fortify.md) – серверная реализация аутентификации Laravel. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
+    - [x] [*Homestead*](./docs/homestead.md) – официальный образ Vagrant для приложений Laravel.
+    - [ ] [*Horizon*](./docs/horizon.md)
+    - [ ] [*Jetstream*](https://jetstream.laravel.com) – красиво оформленный каркас приложений. Включает в себя Fortify и Sanctum.
+    - [ ] [*Octane*](./docs/octane.md)
+    - [ ] [*Passport*](./docs/passport.md)
+    - [ ] [*Sail*](./docs/sail.md)
+    - [x] [*Sanctum*](./docs/sanctum.md) – легковесная система аутентификации для SPA (одностраничных приложений), мобильных приложений и простых API на основе токенов. Управление токенами API, аутентификация сессии. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
+    - [x] [*Scout*](./docs/scout.md) – «простое» решение на основе драйверов для добавления полнотекстового поиска моделям Eloquent.
+    - [x] [*Socialite*](./docs/socialite.md) – аутентификация через провайдеров OAuth: Facebook, Twitter, LinkedIn, Google, GitHub, GitLab, и Bitbucket.
+    - [x] [*Telescope*](./docs/telescope.md) – панель управления, отображающая записи о произошедших в приложении событиях.
+    - [ ] [*Valet*](./docs/valet.md)
 - [Документация API](https://laravel.com/api/8.x/)
 
 <a name="dictionary"></a>
