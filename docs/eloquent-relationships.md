@@ -895,7 +895,7 @@ public function currentPricing()
  */
 public function latestImage()
 {
-    return $this->morphOne(Image::class)->latestOfMany();
+    return $this->morphOne(Image::class, 'imageable')->latestOfMany();
 }
 ```
 
@@ -907,7 +907,7 @@ public function latestImage()
  */
 public function oldestImage()
 {
-    return $this->morphOne(Image::class)->oldestOfMany();
+    return $this->morphOne(Image::class, 'imageable')->oldestOfMany();
 }
 ```
 
@@ -921,7 +921,7 @@ public function oldestImage()
  */
 public function bestImage()
 {
-    return $this->morphOne(Image::class)->ofMany('likes', 'max');
+    return $this->morphOne(Image::class, 'imageable')->ofMany('likes', 'max');
 }
 ```
 

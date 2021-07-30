@@ -62,7 +62,6 @@
 
     use Illuminate\Support\Collection;
     use Illuminate\Support\Facades\Lang;
-    use Illuminate\Support\Str;
 
     Collection::macro('toLocale', function ($locale) {
         return $this->map(function ($value) use ($locale) {
@@ -1605,6 +1604,18 @@
 
     // [1, 2, 3, 4]
 
+Вы можете передать целое число методу `pop`, чтобы удалить (с возвратом) несколько элементов из конца коллекции:
+
+    $collection = collect([1, 2, 3, 4, 5]);
+
+    $collection->pop(3);
+
+    // collect([5, 4, 3])
+
+    $collection->all();
+
+    // [1, 2]
+
 <a name="method-prepend"></a>
 #### `prepend()`
 
@@ -1845,6 +1856,18 @@
     $collection->all();
 
     // [2, 3, 4, 5]
+
+Вы можете передать целое число методу `shift`, чтобы удалить (с возвратом) несколько элементов из начала коллекции:
+
+    $collection = collect([1, 2, 3, 4, 5]);
+
+    $collection->shift(3);
+
+    // collect([1, 2, 3])
+
+    $collection->all();
+
+    // [4, 5]
 
 <a name="method-shuffle"></a>
 #### `shuffle()`

@@ -141,7 +141,7 @@ composer require aws/aws-sdk-php
      */
     public function build()
     {
-        return $this->from('example@example.com')
+        return $this->from('example@example.com', 'Example')
                     ->view('emails.orders.shipped');
     }
 

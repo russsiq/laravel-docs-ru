@@ -23,6 +23,7 @@
     - [Определение класса канала](#defining-channel-classes)
 - [Трансляция событий](#broadcasting-events)
     - [Трансляция событий только остальным пользователям](#only-to-others)
+    - [Настройка соединения](#customizing-the-connection)
 - [Прием трансляций](#receiving-broadcasts)
     - [Прослушивание событий](#listening-for-events)
     - [Покидание канала](#leaving-a-channel)
@@ -360,7 +361,7 @@ Echo.private(`orders.${orderId}`)
 По умолчанию Laravel будет транслировать событие, используя имя класса события. Однако вы можете изменить имя транслируемого события, определив для события метод `broadcastAs`:
 
     /**
-     * Имя транслируемого события.
+     * Получить имя транслируемого события.
      *
      * @return string
      */
@@ -642,6 +643,41 @@ Laravel упрощает определение маршрутов для отв
 
     var socketId = Echo.socketId();
 
+<a name="customizing-the-connection"></a>
+### Настройка соединения
+
+Если ваше приложение взаимодействует с несколькими соединениями трансляции, и вы хотите транслировать событие через собственный вещатель, то, используя метод `via`, вы можете указать соединение для отправки событий:
+
+    use App\Events\OrderShipmentStatusUpdated;
+
+    broadcast(new OrderShipmentStatusUpdated($update))->via('pusher');
+
+В качестве альтернативы вы можете указать соединение транслируемого события, вызвав метод `broadcastVia` в конструкторе события:
+
+    <?php
+
+    namespace App\Events;
+
+    use Illuminate\Broadcasting\Channel;
+    use Illuminate\Broadcasting\InteractsWithSockets;
+    use Illuminate\Broadcasting\PresenceChannel;
+    use Illuminate\Broadcasting\PrivateChannel;
+    use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+    use Illuminate\Queue\SerializesModels;
+
+    class OrderShipmentStatusUpdated implements ShouldBroadcast
+    {
+        /**
+         * Create a new event instance.
+         *
+         * @return void
+         */
+        public function __construct()
+        {
+            $this->broadcastVia('pusher');
+        }
+    }
+
 <a name="receiving-broadcasts"></a>
 ## Прием трансляций
 
@@ -838,6 +874,28 @@ public function broadcastOn($event)
 }
 ```
 
+<a name="customizing-model-broadcasting-event-creation"></a>
+#### Настройка создания транслируемого события модели
+
+По желанию можно настроить, как Laravel должен создавать транслируемое событие модели. Вы можете добиться этого, определив метод `newBroadcastableEvent` в вашей модели Eloquent. Этот метод должен возвращать экземпляр `Illuminate\Database\Eloquent\BroadcastableModelEventOccurred`:
+
+```php
+use Illuminate\Database\Eloquent\BroadcastableModelEventOccurred;
+
+/**
+ * Создать новое транслируемое событие модели.
+ *
+ * @param  string  $event
+ * @return \Illuminate\Database\Eloquent\BroadcastableModelEventOccurred
+ */
+protected function newBroadcastableEvent($event)
+{
+    return (new BroadcastableModelEventOccurred(
+        $this, $event
+    ))->dontBroadcastToCurrentUser();
+}
+```
+
 <a name="model-broadcasting-conventions"></a>
 ### Соглашения трансляции событий модели
 
@@ -878,9 +936,53 @@ $user->broadcastChannel()
 <a name="model-broadcasting-event-conventions"></a>
 #### Соглашения о событиях
 
-Поскольку трансляция событий модели не связаны с «фактическим» событием в каталоге вашего приложения `App\Events`, им присваивается имя на основе соглашения. Соглашение Laravel состоит в том, чтобы транслировать событие, используя имя класса модели (не включая пространство имен) и имя события модели, которое инициировало трансляцию.
+Поскольку трансляция событий модели не связаны с «фактическим» событием в каталоге `App\Events` вашего приложения, им присваивается имя и полезная нагрузка на основе соглашений. Соглашение Laravel состоит в том, чтобы транслировать событие, используя имя класса модели (не включая пространство имен) и имя события модели, которое инициировало трансляцию.
 
-Так, например, обновление модели `App\Models\Post` будет транслировать событие в ваше клиентское приложение как `PostUpdated`, а удаление модели `App\Models\User` – с именем `UserDeleted`.
+Так, например, обновление модели `App\Models\Post` будет транслировать событие в ваше клиентское приложение как `PostUpdated` со следующей полезной нагрузкой:
+
+    {
+        "model": {
+            "id": 1,
+            "title": "My first post"
+            ...
+        },
+        ...
+        "socket": "someSocketId",
+    }
+
+Удаление модели `App\Models\User` будет транслировано событием с именем `UserDeleted`.
+
+При желании вы можете определить собственные имя и полезную нагрузку трансляции, добавив к вашей модели методы `broadcastAs` и `broadcastWith`. Эти методы получают имя происходящего события / операции модели, что позволяет настроить имя события и полезную нагрузку для каждой операции модели. Если из метода `broadcastAs` возвращается `null`, то Laravel будет использовать соглашения об именах транслируемых событий модели, обсужденные выше, при трансляции события:
+
+```php
+/**
+ * Получить имя транслируемого события модели.
+ *
+ * @param  string  $event
+ * @return string|null
+ */
+public function broadcastAs($event)
+{
+    return match ($event) {
+        'created' => 'post.created',
+        default => null,
+    };
+}
+
+/**
+ * Получить данные транслируемого события модели.
+ *
+ * @param  string  $event
+ * @return array
+ */
+public function broadcastWith($event)
+{
+    return match ($event) {
+        'created' => ['title' => $this->title],
+        default => ['model' => $this],
+    };
+}
+```
 
 <a name="listening-for-model-broadcasts"></a>
 ### Прослушивание транслируемых событий модели
