@@ -681,6 +681,7 @@ Laravel также содержит глобального помощника `o
 <!-- <div class="collection-method-list" markdown="1"> -->
 
 - [Accepted](#rule-accepted)
+- [Accepted If](#rule-accepted-if)
 - [Active URL](#rule-active-url)
 - [After (Date)](#rule-after)
 - [After Or Equal (Date)](#rule-after-or-equal)
@@ -757,7 +758,12 @@ Laravel также содержит глобального помощника `o
 <a name="rule-accepted"></a>
 #### accepted
 
-Проверяемое поле должно иметь значение `"yes"`, `"on"`, `1`, или `true`. Применяется для валидации принятия «Условий использования» или аналогичных полей.
+Проверяемое поле должно иметь значение `"yes"`, `"on"`, `1`, или `true`. Применяется для валидации принятия раздела «Условия использования» или аналогичных полей.
+
+<a name="rule-accepted-if"></a>
+#### accepted_if:anotherfield,value,...
+
+Проверяемое поле должно иметь значение `"yes"`, `"on"`, `1`, или `true`, если другое проверяемое поле равно указанному значению. Применяется для валидации принятия раздела «Условия использования» или аналогичных полей.
 
 <a name="rule-active-url"></a>
 #### active_url

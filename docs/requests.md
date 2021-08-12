@@ -477,7 +477,7 @@ Laravel также содержит глобального помощника `o
 
     namespace App\Http\Middleware;
 
-    use Fideloper\Proxy\TrustProxies as Middleware;
+    use Illuminate\Http\Middleware\TrustProxies as Middleware;
     use Illuminate\Http\Request;
 
     class TrustProxies extends Middleware

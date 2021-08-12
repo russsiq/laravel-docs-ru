@@ -269,13 +269,13 @@ Stripe allows you to credit or debit a customer's "balance". Later, this balance
 
     $balance = $user->balance();
 
-To credit a customer's balance, you may provide a positive value to the `applyBalance` method. If you wish, you may also provide a description:
+To credit a customer's balance, you may provide a negative value to the `applyBalance` method. If you wish, you may also provide a description:
 
-    $user->applyBalance(500, 'Premium customer top-up.');
+    $user->applyBalance(-500, 'Premium customer top-up.');
 
-Providing a negative value to the `applyBalance` method will debit the customer's balance:
+Providing a positive value to the `applyBalance` method will debit the customer's balance:
 
-    $user->applyBalance(-300, 'Bad usage penalty.');
+    $user->applyBalance(300, 'Bad usage penalty.');
 
 The `applyBalance` method will create new customer balance transactions for the customer. You may retrieve these transaction records using the `balanceTransactions` method, which may be useful in order to provide a log of credits and debits for the customer to review:
 
@@ -1448,7 +1448,9 @@ Sometimes you may need to make a one-time charge and offer a PDF receipt to your
 The invoice will be immediately charged against the user's default payment method. The `invoicePrice` method also accepts an array as its third argument. This array contains the billing options for the invoice item. The fourth argument accepted by the method is also an array which should contain the billing options for the invoice itself:
 
     $user->invoicePrice('price_tshirt', 5, [
-        'discounts' => ['coupon' => 'SUMMER21SALE'],
+        'discounts' => [
+            ['coupon' => 'SUMMER21SALE']
+        ],
     ], [
         'default_tax_rates' => ['txr_id'],
     ]);

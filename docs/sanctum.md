@@ -52,6 +52,8 @@ Sanctum будет пытаться аутентифицироваться с п
 <a name="installation"></a>
 ## Установка
 
+> {tip} Самые последние версии Laravel уже включают Laravel Sanctum. Однако, если файл `composer.json` вашего приложения не содержит записи о `laravel/sanctum`, то вы можете следовать приведенным ниже инструкциям по установке.
+
 Вы можете установить Laravel Sanctum через менеджер пакетов Composer:
 
     composer require laravel/sanctum

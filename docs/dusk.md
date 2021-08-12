@@ -910,6 +910,8 @@ Dusk содержит множество утверждений, которые 
 - [assertPresent](#assert-present)
 - [assertNotPresent](#assert-not-present)
 - [assertMissing](#assert-missing)
+- [assertInputPresent](#assert-input-present)
+- [assertInputMissing](#assert-input-missing)
 - [assertDialogOpened](#assert-dialog-opened)
 - [assertEnabled](#assert-enabled)
 - [assertDisabled](#assert-disabled)
@@ -1323,6 +1325,20 @@ Dusk содержит множество утверждений, которые 
 Утверждение о том, что элемент с указанным селектором, не виден:
 
     $browser->assertMissing($selector);
+
+<a name="assert-input-present"></a>
+#### assertInputPresent
+
+Утверждение о том, что поле ввода с указанным именем, присутствует:
+
+    $browser->assertInputPresent($name);
+
+<a name="assert-input-missing"></a>
+#### assertInputMissing
+
+Утверждение о том, что поле ввода с указанным именем, отсутствует в исходном коде страницы:
+
+    $browser->assertInputMissing($name);
 
 <a name="assert-dialog-opened"></a>
 #### assertDialogOpened

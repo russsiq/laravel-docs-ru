@@ -42,6 +42,7 @@
     - [Удаление неудачных заданий](#pruning-failed-jobs)
     - [События неудачных заданий](#failed-job-events)
 - [Удаление заданий из очередей](#clearing-jobs-from-queues)
+- [Мониторинг ваших очередей](#monitoring-your-queues)
 - [События задания](#job-events)
 
 <a name="introduction"></a>
@@ -401,6 +402,8 @@
     {
         return [new RateLimited];
     }
+
+> {tip} Посредник задания также можно назначить слушателям событий в очереди, почтовым отправлениям и уведомлениям.
 
 <a name="rate-limiting"></a>
 ### Ограничение частоты
@@ -1816,6 +1819,43 @@ composer require aws/aws-sdk-php
     php artisan queue:clear redis --queue=emails
 
 > {note} Удаление заданий из очередей доступно только для драйверов очереди SQS, Redis и базы данных. Кроме того, процесс удаления в SQS занимает до 60 секунд, поэтому задания, отправленные в очередь SQS в течение 60 секунд после очистки очереди, также могут быть удалены.
+
+<a name="monitoring-your-queues"></a>
+## Мониторинг ваших очередей
+
+Если ваша очередь получает внезапный приток заданий, она может быть переполнена, что приведет к длительному ожиданию завершения заданий. При желании Laravel может предупредить вас, когда количество заданий в очереди превышает указанный порог.
+
+Для начала вы должны запланировать команду `queue:monitor` на [запускать каждую минуту](scheduling.md). Команда принимает имена очередей, которые вы хотите отслеживать, а также желаемый порог количества заданий:
+
+```bash
+php artisan queue:monitor redis:default,redis:deployments --max=100
+```
+
+Одного планирования этой команды недостаточно для запуска уведомления, предупреждающего вас о переполненном состоянии очереди. Когда команда обнаруживает очередь, в которой количество заданий превышает указанный вами порог, то будет инициировано событие `Illuminate\Queue\Events\QueueBusy`. Вы можете прослушивать это событие в `EventServiceProvider` вашего приложения для дальнейшей отправки уведомления вам или вашей команде разработчиков:
+
+```php
+use App\Notifications\QueueHasLongWaitTime;
+use Illuminate\Queue\Events\QueueBusy;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
+
+/**
+ * Зарегистрировать любые события приложения.
+ *
+ * @return void
+ */
+public function boot()
+{
+    Event::listen(function (QueueBusy $event) {
+        Notification::route('mail', 'dev@example.com')
+                ->notify(new QueueHasLongWaitTime(
+                    $event->connection,
+                    $event->queue,
+                    $event->size
+                ));
+    });
+}
+```
 
 <a name="job-events"></a>
 ## События задания
