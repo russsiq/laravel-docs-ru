@@ -399,6 +399,14 @@ Laravel предлагает полезные методы для имитаци
                $mail->hasBcc('...');
     });
 
+Вы могли заметить, что есть два метода утверждения о том, что письмо не было отправлено: `assertNotSent` и `assertNotQueued`. При желании вы можете утверждать о том, что почта не была отправлена ​​**или** поставлена ​​в очередь. Для этого вы можете использовать методы `assertNothingOutgoing` и `assertNotOutgoing`:
+
+    Mail::assertNothingOutgoing();
+
+    Mail::assertNotOutgoing(function (OrderShipped $mail) use ($order) {
+        return $mail->order->id === $order->id;
+    });
+
 <a name="notification-fake"></a>
 ## Фальсификация Notification
 

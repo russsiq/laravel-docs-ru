@@ -138,13 +138,13 @@
 
 Как правило, компоновщики шаблонов регистрируются в одном из [поставщиков служб](provider.md) вашего приложения. В этом примере мы предположим, что мы создали новый `App\Providers\ViewServiceProvider` для размещения этой логики.
 
-Мы будем использовать метод `composer` фасада `View`, чтобы зарегистрировать компоновщик. Laravel по умолчанию не содержит каталог для классов компоновщиков, поэтому вы можете организовать их, как хотите. Например, вы можете создать каталог `app/Http/View/Composers` для размещения всех компоновщиков вашего приложения:
+Мы будем использовать метод `composer` фасада `View`, чтобы зарегистрировать компоновщик. Laravel по умолчанию не содержит каталог для классов компоновщиков, поэтому вы можете организовать их, как хотите. Например, вы можете создать каталог `app/View/Composers` для размещения всех компоновщиков вашего приложения:
 
     <?php
 
     namespace App\Providers;
 
-    use App\Http\View\Composers\ProfileComposer;
+    use App\View\Composers\ProfileComposer;
     use Illuminate\Support\Facades\View;
     use Illuminate\Support\ServiceProvider;
 
@@ -179,11 +179,11 @@
 
 > {note} Помните, что если вы создаете нового поставщика служб, который будет содержать регистрации вашего компоновщика, вам нужно будет добавить поставщика служб в массив `providers` в файле конфигурации `config/app.php`.
 
-Теперь, когда мы зарегистрировали компоновщик, метод `compose` класса `App\Http\View\Composers\ProfileComposer` будет выполняться каждый раз, когда отрисовывается шаблон профиля. Давайте посмотрим на пример класса компоновщика:
+Теперь, когда мы зарегистрировали компоновщик, метод `compose` класса `App\View\Composers\ProfileComposer` будет выполняться каждый раз, когда отрисовывается шаблон профиля. Давайте посмотрим на пример класса компоновщика:
 
     <?php
 
-    namespace App\Http\View\Composers;
+    namespace App\View\Composers;
 
     use App\Repositories\UserRepository;
     use Illuminate\View\View;
@@ -228,7 +228,7 @@
 
 Вы можете связать компоновщика с несколькими шаблонами одновременно, передав массив шаблонов в качестве первого аргумента методу `composer`:
 
-    use App\Http\Views\Composers\MultiComposer;
+    use App\View\Composers\MultiComposer;
 
     View::composer(
         ['profile', 'dashboard'],
@@ -246,7 +246,7 @@
 
 «Создатели» шаблонов очень похожи на компоновщиков; но, они выполняются сразу после создания экземпляра, а не ожидают отрисовки шаблона. Чтобы зарегистрировать создателя шаблона, используйте метод `creator`:
 
-    use App\Http\View\Creators\ProfileCreator;
+    use App\View\Creators\ProfileCreator;
     use Illuminate\Support\Facades\View;
 
     View::creator('profile', ProfileCreator::class);

@@ -486,7 +486,7 @@ Laravel будет использовать имя миграции, чтобы 
 
 Метод `foreignUuid` создает эквивалент столбца `UUID`:
 
-    $table->foreignUuid('id');
+    $table->foreignUuid('user_id');
 
 <a name="column-method-geometryCollection"></a>
 #### `geometryCollection()`

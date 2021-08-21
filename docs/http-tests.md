@@ -575,6 +575,7 @@ Laravel также позволяет отображать шаблоны без
 - [assertOk](#assert-ok)
 - [assertPlainCookie](#assert-plain-cookie)
 - [assertRedirect](#assert-redirect)
+- [assertRedirectToSignedRoute](#assert-redirect-to-signed-route)
 - [assertSee](#assert-see)
 - [assertSeeInOrder](#assert-see-in-order)
 - [assertSeeText](#assert-see-text)
@@ -590,6 +591,8 @@ Laravel также позволяет отображать шаблоны без
 - [assertStatus](#assert-status)
 - [assertSuccessful](#assert-successful)
 - [assertUnauthorized](#assert-unauthorized)
+- [assertValid](#assert-valid)
+- [assertInvalid](#assert-invalid)
 - [assertViewHas](#assert-view-has)
 - [assertViewHasAll](#assert-view-has-all)
 - [assertViewIs](#assert-view-is)
@@ -865,6 +868,13 @@ Laravel также позволяет отображать шаблоны без
 
     $response->assertRedirect($uri);
 
+<a name="assert-redirect-to-signed-route"></a>
+#### assertRedirectToSignedRoute
+
+Утверждение о том, что ответ является перенаправлением на указанный подписанный маршрут:
+
+    $response->assertRedirectToSignedRoute($name = null, $parameters = []);
+
 <a name="assert-see"></a>
 #### assertSee
 
@@ -988,6 +998,31 @@ Laravel также позволяет отображать шаблоны без
 Утверждение о том, что ответ имеет код `401` состояния HTTP – `unauthorized`:
 
     $response->assertUnauthorized();
+
+<a name="assert-valid"></a>
+#### assertValid
+
+Утверждение о том, что ответ не содержит ошибок валидации для переданных ключей. Этот метод может использоваться для утверждений относительно ответов, в которых ошибки валидации возвращаются в виде структуры JSON или где ошибки валидации были переданы в сессию:
+
+    // Утверждение об отсутствии ошибок валидации ...
+    $response->assertValid();
+
+    // Утверждение об отсутствии ошибок валидации для переданных ключей ...
+    $response->assertValid(['name', 'email']);
+
+<a name="assert-invalid"></a>
+#### assertInvalid
+
+Утверждение о том, что ответ содержит ошибки валидации для переданных ключей. Этот метод может использоваться для утверждений относительно ответов, в которых ошибки валидации возвращаются в виде структуры JSON или где ошибки валидации были переданы в сессию:
+
+    $response->assertInvalid(['name', 'email']);
+
+Вы также можете использовать утверждение, что переданный ключ имеет конкретное сообщение об ошибке валидации. При этом вы можете передать как сообщение полностью, так и его небольшую часть:
+
+    $response->assertInvalid([
+        'name' => 'The name field is required.',
+        'email' => 'valid email address',
+    ]);
 
 <a name="assert-view-has"></a>
 #### assertViewHas
