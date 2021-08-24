@@ -14,6 +14,7 @@
 - [Извлечение](#resolving)
     - [Метод `make`](#the-make-method)
     - [Автоматическое внедрение зависимостей](#automatic-injection)
+- [Вызов и внедрение метода](#method-invocation-and-injection)
 - [События контейнера](#container-events)
 - [PSR-11](#psr-11)
 
@@ -428,6 +429,47 @@
             //
         }
     }
+
+<a name="method-invocation-and-injection"></a>
+## Вызов и внедрение метода
+
+Иногда вам может потребоваться вызвать метод экземпляра объекта и позволить контейнеру автоматически внедрить зависимости этого метода. Например, учитывая следующий класс:
+
+    <?php
+
+    namespace App;
+
+    use App\Repositories\UserRepository;
+
+    class UserReport
+    {
+        /**
+         * Создать новый пользовательский отчет.
+         *
+         * @param  \App\Repositories\UserRepository  $repository
+         * @return array
+         */
+        public function generate(UserRepository $repository)
+        {
+            // ...
+        }
+    }
+
+Вы можете вызвать метод `generate` через контейнер следующим образом:
+
+    use App\UserReport;
+    use Illuminate\Support\Facades\App;
+
+    $report = App::call([new UserReport, 'generate']);
+
+Метод `call` принимает любой тип [callable](https://www.php.net/manual/ru/language.types.callable.php) PHP. Метод контейнера `call` может даже использоваться для вызова замыкания с автоматическим внедрением его зависимостей:
+
+    use App\Repositories\UserRepository;
+    use Illuminate\Support\Facades\App;
+
+    $result = App::call(function (UserRepository $repository) {
+        // ...
+    });
 
 <a name="container-events"></a>
 ## События контейнера

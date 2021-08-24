@@ -1475,7 +1475,7 @@ public function boot()
 
 По желанию можно выполнить валидацию поля, **только** если это поле присутствует в проверяемых данных. Чтобы этого добиться, добавьте правило `sometimes` в свой список правил:
 
-    $v = Validator::make($request->all(), [
+    $validator = Validator::make($data, [
         'email' => 'sometimes|required|email',
     ]);
 
