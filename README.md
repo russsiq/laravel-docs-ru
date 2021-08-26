@@ -54,6 +54,7 @@
     - [x] [Уведомления](./docs/notifications.md)
     - [x] [Разработка пакетов](./docs/packages.md)
     - [x] [Очереди](./docs/queues.md)
+    - [x] [Ограничители частоты](./docs/rate-limiting.md)
     - [x] [Планирование задач](./docs/scheduling.md)
 - #### Безопасность
     - [x] [Аутентификация](./docs/authentication.md)

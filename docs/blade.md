@@ -913,6 +913,46 @@ Blade отобразит следующий HTML-код:
 </x-alert>
 ```
 
+<a name="slot-attributes"></a>
+#### Атрибуты слота
+
+Подобно компонентам Blade, вы можете назначить дополнительные [атрибуты](#component-attributes) для слотов, такие как имена CSS-классов:
+
+```html
+<x-card class="shadow-sm">
+    <x-slot name="heading" class="font-bold">
+        Heading
+    </x-slot>
+
+    Content
+
+    <x-slot name="footer" class="text-sm">
+        Footer
+    </x-slot>
+</x-card>
+```
+
+Для взаимодействия с атрибутами слота вы можете получить доступ к свойству `attributes` переменной слота. Для получения дополнительной информации о том, как взаимодействовать с атрибутами, обратитесь к документации по [атрибутам компонента](#component-attributes):
+
+```php
+@props([
+    'heading',
+    'footer',
+])
+
+<div {{ $attributes->class(['border']) }}>
+    <h1 {{ $heading->attributes->class(['text-lg']) }}>
+        {{ $heading }}
+    </h1>
+
+    {{ $slot }}
+
+    <footer {{ $footer->attributes->class(['text-gray-700']) }}>
+        {{ $footer }}
+    </footer>
+</div>
+```
+
 <a name="inline-component-views"></a>
 ### Встроенные шаблоны компонентов
 
