@@ -99,6 +99,10 @@
 
     Notification::send($users, new InvoicePaid($invoice));
 
+Вы также можете немедленно отправлять уведомления, используя метод `sendNow`. Этот метод немедленно отправит уведомление, даже если оно реализует интерфейс `ShouldQueue`:
+
+    Notification::sendNow($developers, new DeploymentCompleted($deployment));
+
 <a name="specifying-delivery-channels"></a>
 ### Определение каналов доставки
 

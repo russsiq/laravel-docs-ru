@@ -1660,7 +1660,7 @@ Laravel содержит множество глобальных «вспомо�
     return (string) Str::uuid();
 
 <a name="method-str-word-count"></a>
-### `Str::wordCount`
+#### `Str::wordCount`
 
 Метод `Str::wordCount` возвращает количество слов, содержащихся в строке:
 
@@ -2505,7 +2505,7 @@ If no matches are found, an empty collection will be returned.
     // 'Laravel'
 
 <a name="method-str-word-count"></a>
-### `wordCount`
+#### `wordCount`
 
 Метод `wordCount` возвращает количество слов, содержащихся в строке:
 
@@ -2988,6 +2988,15 @@ Str::of('Hello, world!')->wordCount(); // 2
         // ...
     }, function ($attempt) {
         return $attempt * 100;
+    });
+
+<!--  -->
+Для задания определенных условий выполнения попытки, вы можете передать замыкание в качестве четвертого аргумента функции `retry`:
+
+    return retry(5, function () {
+        // ...
+    }, 100, function ($exception) {
+        return $exception instanceof RetryException;
     });
 
 <a name="method-session"></a>

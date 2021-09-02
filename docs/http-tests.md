@@ -173,7 +173,7 @@ Laravel предлагает несколько помощников для вз
 
 Вы также можете указать, какой охранник должен использоваться для аутентификации конкретного пользователя, передав имя охранника в качестве второго аргумента методу `actingAs`:
 
-    $this->actingAs($user, 'api')
+    $this->actingAs($user, 'web')
 
 <a name="debugging-responses"></a>
 ### Отладка ответов
@@ -413,7 +413,7 @@ Laravel также предлагает прекрасный способ пос
              ->whereType('id', ['string', 'integer'])
     );
 
-Методы `whereType` и `whereTypeAll` применимы к следующим типам: `string`, `integer`, `double`, `boolean`, `array`, и `null`.
+Методы `whereType` и `whereAllType` применимы к следующим типам: `string`, `integer`, `double`, `boolean`, `array`, и `null`.
 
 <a name="testing-file-uploads"></a>
 ## Тестирование загрузки файлов

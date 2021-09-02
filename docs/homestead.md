@@ -67,10 +67,10 @@ Homestead работает в любой системе: Windows, macOS или L
 - PHP 7.0
 - PHP 5.6
 - Nginx
-- MySQL (8.0)
+- MySQL 8.0
 - lmm
 - Sqlite3
-- PostgreSQL (9.6, 10, 11, 12, 13)
+- PostgreSQL 13
 - Composer
 - Node (включая Yarn, Bower, Grunt и Gulp)
 - Redis
@@ -255,7 +255,7 @@ http://homestead.test
 ```yaml
 services:
     - enabled:
-        - "postgresql@12-main"
+        - "postgresql"
     - disabled:
         - "mysql"
 ```

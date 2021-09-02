@@ -338,6 +338,7 @@ Laravel будет использовать имя миграции, чтобы 
 - [enum](#column-method-enum)
 - [float](#column-method-float)
 - [foreignId](#column-method-foreignId)
+- [foreignIdFor](#column-method-foreignIdFor)
 - [foreignUuid](#column-method-foreignUuid)
 - [geometryCollection](#column-method-geometryCollection)
 - [geometry](#column-method-geometry)
@@ -480,6 +481,13 @@ Laravel будет использовать имя миграции, чтобы 
 Метод `foreignId` создает эквивалент столбца `UNSIGNED BIGINT`:
 
     $table->foreignId('user_id');
+
+<a name="column-method-foreignIdFor"></a>
+#### `foreignIdFor()`
+
+Метод `foreignIdFor` добавляет для переданного класса модели эквивалент столбца `{column}_id UNSIGNED BIG INT`:
+
+    $table->foreignIdFor(User::class);
 
 <a name="column-method-foreignUuid"></a>
 #### `foreignUuid()`

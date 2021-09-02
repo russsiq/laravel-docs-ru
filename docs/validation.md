@@ -780,6 +780,7 @@ Laravel также содержит глобального помощника `o
 - [Prohibited](#rule-prohibited)
 - [Prohibited If](#rule-prohibited-if)
 - [Prohibited Unless](#rule-prohibited-unless)
+- [Prohibits](#rule-prohibits)
 - [Regex (regular expression)](#rule-regex)
 - [Required](#rule-required)
 - [Required If](#rule-required-if)
@@ -1272,6 +1273,11 @@ public function boot()
 
 Проверяемое поле должно быть пустым или отсутствовать, если поле _anotherfield_ не равно какому-либо _value_.
 
+<a name="rule-prohibits"></a>
+#### prohibits:_anotherfield_,...
+
+Если проверяемое поле присутствует, никакие поля в _anotherfield_ не могут присутствовать, даже если они пустые.
+
 <a name="rule-regex"></a>
 #### regex:_pattern_
 
@@ -1508,6 +1514,34 @@ public function boot()
     });
 
 > {tip} Параметр `$input`, переданный вашему замыканию, будет экземпляром `Illuminate\Support\Fluent` и может использоваться при валидации для доступа к вашим входящим данным и файлам запроса.
+
+<a name="complex-conditional-array-validation"></a>
+#### Комплексная условная валидация массива
+
+Иногда вам может потребоваться проверить поле на основе другого поля в том же вложенном массиве, индекс которого вам неизвестен. В этих ситуациях вы можете использовать второй аргумент вашего замыкания, который будет текущим отдельным элементом в проверяемом массиве:
+
+    $input = [
+        'channels' => [
+            [
+                'type' => 'email',
+                'address' => 'abigail@example.com',
+            ],
+            [
+                'type' => 'url',
+                'address' => 'https://example.com',
+            ],
+        ],
+    ];
+
+    $validator->sometimes('channels.*.address', 'email', function($input, $item) {
+        return $item->type === 'email';
+    });
+
+    $validator->sometimes('channels.*.address', 'url', function($input, $item) {
+        return $item->type !== 'email';
+    });
+
+Подобно параметру `$input`, переданному в замыкание, параметр `$item` будет являться экземпляром `Illuminate\Support\Fluent`, если атрибут данных является массивом; в противном случае – это строка.
 
 <a name="validating-arrays"></a>
 ## Валидация массивов
@@ -1749,5 +1783,9 @@ Laravel предлагает множество полезных правил в
     Validator::make($input, $rules)->passes(); // true
 
 Чтобы ваше правило было применено, даже если атрибут пуст, то правило должно подразумевать, что атрибут является обязательным. Чтобы создать «неявное» правило, реализуйте интерфейс `Illuminate\Contracts\Validation\ImplicitRule`. Это «маркерный интерфейс» для валидатора; следовательно, он не содержит никаких дополнительных методов, которые вам нужно реализовать, помимо методов, требуемых типичным интерфейсом `Rule`.
+
+Чтобы сгенерировать новый объект неявного правила, вы можете использовать команду `make:rule` Artisan с флагом `--implicit`:
+
+    php artisan make:rule Uppercase --implicit
 
 > {note} «Неявное» правило только _подразумевает_, что атрибут является обязательным к валидации. В действительности, решать только вам, будет ли пустой или отсутствующий атрибут считаться невалидным.
