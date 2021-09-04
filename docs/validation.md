@@ -751,6 +751,7 @@ Laravel также содержит глобального помощника `o
 - [Distinct](#rule-distinct)
 - [Email](#rule-email)
 - [Ends With](#rule-ends-with)
+- [Exclude](#rule-exclude)
 - [Exclude If](#rule-exclude-if)
 - [Exclude Unless](#rule-exclude-unless)
 - [Exists (Database)](#rule-exists)
@@ -1024,6 +1025,11 @@ public function boot()
 #### ends_with:_foo_,_bar_,...
 
 Проверяемое поле должно заканчиваться одним из указанных значений.
+
+<a name="rule-exclude"></a>
+#### exclude
+
+Проверяемое поле будет исключено из данных запроса, возвращаемых методами `validate` и `validated`.
 
 <a name="rule-exclude-if"></a>
 #### exclude_if:_anotherfield_,_value_

@@ -1201,6 +1201,21 @@ where user_id = ? and (active = 1 or votes >= 100)
 
 > {note} Eloquent в настоящее время не поддерживает запросы о существовании отношений между базами данных. Отношения должны существовать в одной базе данных.
 
+<a name="inline-relationship-existence-queries"></a>
+#### Однолинейная запись запроса, ограниченного наличием отношений
+
+Если вы хотите выполнить запрос, ограниченный наличием отношений, с помощью одного простого условия `where`, вам может быть удобнее использовать методы `whereRelation` и `whereMorphRelation`. Например, мы можем запросить все сообщения с неодобренными комментариями:
+
+    use App\Models\Post;
+
+    $posts = Post::whereRelation('comments', 'is_approved', false)->get();
+
+Конечно, как и при вызове метода `where` конструктора запросов, вы также можете указать оператор:
+
+    $posts = Post::whereRelation(
+        'comments', 'created_at', '>=', now()->subHour()
+    )->get();
+
 <a name="querying-relationship-absence"></a>
 ### Запросы, ограниченные отсутствием отношений
 

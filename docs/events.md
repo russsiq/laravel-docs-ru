@@ -623,7 +623,7 @@ Laravel находит слушателей событий, сканируя к�
          * Зарегистрировать слушателей для подписчика.
          *
          * @param  \Illuminate\Events\Dispatcher  $events
-         * @return void
+         * @return array
          */
         public function subscribe($events)
         {
