@@ -17,36 +17,36 @@
 <a name="introduction"></a>
 ## Введение
 
-> {tip} Before digging into Laravel Horizon, you should familiarize yourself with Laravel's base [queue services](queues.md). Horizon augments Laravel's queue with additional features that may be confusing if you are not already familiar with the basic queue features offered by Laravel.
+> {tip} Прежде чем углубиться в Laravel Horizon, вам следует ознакомиться с базовыми [службами очередей](queues.md) Laravel. Horizon дополняет очередь Laravel дополнительным функционалом, которые могут сбивать с толку, если вы еще не знакомы с основным функционалом очереди, предлагаемыми Laravel.
 
-Laravel Horizon provides a beautiful dashboard and code-driven configuration for your Laravel powered [Redis queues](queues.md). Horizon allows you to easily monitor key metrics of your queue system such as job throughput, runtime, and job failures.
+Laravel Horizon предлагает красивую панель управления и конфигурацию на основе кода для ваших [очередей Redis](queues.md), работающих на Laravel. Horizon позволяет легко отслеживать ключевые показатели вашей системы очередей, такие как пропускная способность, время выполнения и сбои заданий.
 
-When using Horizon, all of your queue worker configuration is stored in a single, simple configuration file. By defining your application's worker configuration in a version controlled file, you may easily scale or modify your application's queue workers when deploying your application.
+При использовании Horizon вся ваша конфигурация обработчика очереди хранится в одном простом файле конфигурации. Определив конфигурацию обработчиков вашего приложения в файле с контролем версий, вы можете легко масштабировать или изменять обработчики очереди вашего приложения при развертывании приложения.
 
 <img src="./img/horizon-example.png">
 
 <a name="installation"></a>
 ## Установка
 
-> {note} Laravel Horizon requires that you use [Redis](https://redis.io) to power your queue. Therefore, you should ensure that your queue connection is set to `redis` in your application's `config/queue.php` configuration file.
+> {note} Laravel Horizon требует, чтобы вы использовали [Redis](https://redis.io) для управления вашей очередью. Следовательно, вы должны убедиться, что ваше соединение с очередью установлено на `redis` в конфигурационном файле `config/queue.php` вашего приложения.
 
-You may install Horizon into your project using the Composer package manager:
+Для начала установите Horizon с помощью менеджера пакетов Composer в свой проект:
 
     composer require laravel/horizon
 
-After installing Horizon, publish its assets using the `horizon:install` Artisan command:
+После установки Horizon опубликуйте его ресурсы с помощью команды `horizon:install` Artisan:
 
     php artisan horizon:install
 
 <a name="configuration"></a>
 ### Конфигурирование
 
-After publishing Horizon's assets, its primary configuration file will be located at `config/horizon.php`. This configuration file allows you to configure the queue worker options for your application. Each configuration option includes a description of its purpose, so be sure to thoroughly explore this file.
+После публикации ресурсов Horizon его основной конфигурационный файл будет расположен по адресу `config/horizon.php`. Этот конфигурационный файл позволяет вам настроить параметры обработчика очереди для вашего приложения. Каждый параметр конфигурации включает описание своего назначения, поэтому обязательно внимательно изучите этот файл.
 
 <a name="environments"></a>
 #### Окружение
 
-After installation, the primary Horizon configuration option that you should familiarize yourself with is the `environments` configuration option. This configuration option is an array of environments that your application runs on and defines the worker process options for each environment. By default, this entry contains a `production` and `local` environment. However, you are free to add more environments as needed:
+После установки основным параметром конфигурации Horizon, с которым вы должны ознакомиться, является параметр `environments`. Этот параметр конфигурации представляет собой массив сред, в которых работает ваше приложение, и определяет параметры рабочего процесса для каждого окружения. По умолчанию эта запись содержит окружение `production` и `local`. Однако вы можете добавлять дополнительные среды по мере необходимости:
 
     'environments' => [
         'production' => [
@@ -64,32 +64,32 @@ After installation, the primary Horizon configuration option that you should fam
         ],
     ],
 
-When you start Horizon, it will use the worker process configuration options for the environment that your application is running on. Typically, the environment is determined by the value of the `APP_ENV` [environment variable](configuration.md#determining-the-current-environment). For example, the default `local` Horizon environment is configured to start three worker processes and automatically balance the number of worker processes assigned to each queue. The default `production` environment is configured to start a maximum of 10 worker processes and automatically balance the number of worker processes assigned to each queue.
+Когда вы запускаете Horizon, он будет использовать параметры конфигурации рабочего процесса для окружения, в котором работает ваше приложение. Обычно окружение определяется значением [переменной окружения](configuration.md#determining-the-current-environment) `APP_ENV`. Например, окружение `local` Horizon по умолчанию настроено на запуск трех рабочих процессов и автоматический баланс количества рабочих процессов, назначенных каждой очереди. Окружение `production` по умолчанию настроено на запуск максимум 10 рабочих процессов и автоматический баланс количества рабочих процессов, назначенных каждой очереди.
 
-> {note} You should ensure that the `environments` portion of your `horizon` configuration file contains an entry for each [environment](configuration.md#environment-configuration) on which you plan to run Horizon.
+> {note} Вы должны убедиться, что часть `environments` вашего конфигурационного файла `config/horizon.php` содержит запись для каждого [окружения](configuration.md#environment-configuration), на котором вы планируете запускать Horizon.
 
 <a name="supervisors"></a>
 #### Supervisors
 
-As you can see in Horizon's default configuration file. Each environment can contain one or more "supervisors". By default, the configuration file defines this supervisor as `supervisor-1`; however, you are free to name your supervisors whatever you want. Each supervisor is essentially responsible for "supervising" a group of worker processes and takes care of balancing worker processes across queues.
+Как вы можете видеть в конфигурационном файле Horizon по умолчанию каждое окружение может содержать один или более диспетчеров процессов. По умолчанию в конфигурационном файле этот диспетчер определяется как `supervisor-1`; однако вы можете называть своих диспетчеров процессов как хотите. Каждый диспетчер процессов, по сути, отвечает за «наблюдение» за группой рабочих процессов и заботится о балансировке рабочих процессов по очередям.
 
-You may add additional supervisors to a given environment if you would like to define a new group of worker processes that should run in that environment. You may choose to do this if you would like to define a different balancing strategy or worker process count for a given queue used by your application.
+Вы можете добавить дополнительных диспетчеров процессов в конкретное окружение, если хотите определить новую группу рабочих процессов, которые должны выполняться в этом окружении. Вы можете сделать это, если хотите определить другую стратегию балансировки или количество рабочих процессов для конкретной очереди, используемой вашим приложением.
 
 <a name="default-values"></a>
 #### Значения по умолчанию
 
-Within Horizon's default configuration file, you will notice a `defaults` configuration option. This configuration option specifies the default values for your application's [supervisors](#supervisors). The supervisor's default configuration values will be merged into the supervisor's configuration for each environment, allowing you to avoid unnecessary repetition when defining your supervisors.
+В конфигурационном файле Horizon, созданном по умолчанию, вы заметите параметр конфигурации `defaults`. Этот параметр конфигурации определяет значения по умолчанию для [диспетчеров процессов](#supervisors) вашего приложения. Значения `defaults` будут объединены с конфигурацией диспетчеров процессов для каждого окружения, что позволит вам избежать ненужного повторения при определении диспетчеров процессов.
 
 <a name="balancing-strategies"></a>
 ### Стратегии балансировки
 
-Unlike Laravel's default queue system, Horizon allows you to choose from three worker balancing strategies: `simple`, `auto`, and `false`. The `simple` strategy, which is the configuration file's default, splits incoming jobs evenly between worker processes:
+В отличие от стандартной системы очередей Laravel, Horizon позволяет вам выбирать из трех стратегий балансировки обработчиков: `simple`, `auto` и `false`. Стратегия `simple`, которая используется в конфигурационном файле по умолчанию, равномерно распределяет входящие задания между процессами обработчиков:
 
     'balance' => 'simple',
 
-The `auto` strategy adjusts the number of worker processes per queue based on the current workload of the queue. For example, if your `notifications` queue has 1,000 pending jobs while your `render` queue is empty, Horizon will allocate more workers to your `notifications` queue until the queue is empty.
+Стратегия `auto` регулирует количество процессов обработчиков в очереди на основе текущей рабочей нагрузки очереди. Например, если ваша очередь `notifications` имеет 1000 ожидающих заданий, а ваша очередь `render` пуста, то Horizon будет выделять больше обработчиков в вашу очередь `notifications`, пока она не станет пустой.
 
-When using the `auto` strategy, you may define the `minProcesses` and `maxProcesses` configuration options to control the minimum and the maximum number of worker processes Horizon should scale up and down to:
+При использовании стратегии `auto` вы можете определить параметры конфигурации `minProcesses` и `maxProcesses` для управления минимальным и максимальным количеством процессов обработчиков, которые Horizon должен погранично масштабировать:
 
     'environments' => [
         'production' => [
@@ -106,19 +106,19 @@ When using the `auto` strategy, you may define the `minProcesses` and `maxProces
         ],
     ],
 
-The `balanceMaxShift` and `balanceCooldown` configuration values to determine how quickly Horizon will scale to meet worker demand. In the example above, a maximum of one new process will be created or destroyed every three seconds. You are free to tweak these values as necessary based on your application's needs.
+Значения конфигурации `balanceMaxShift` и `balanceCooldown` определяют, насколько быстро Horizon будет масштабироваться в соответствии с требованиями обработчиков. В приведенном выше примере каждые три секунды будет создаваться или уничтожаться максимум один новый процесс. Вы можете изменять эти значения по мере необходимости в зависимости от потребностей вашего приложения.
 
-When the `balance` option is set to `false`, the default Laravel behavior will be used, which processes queues in the order they are listed in your configuration.
+Когда для параметра `balance` установлено значение `false`, то будет использоваться поведение Laravel по умолчанию, которое обрабатывает очереди в том порядке, в котором они перечислены в вашей конфигурации.
 
 <a name="dashboard-authorization"></a>
 ### Авторизация доступа к панели управления
 
-Horizon exposes a dashboard at the `/horizon` URI. By default, you will only be able to access this dashboard in the `local` environment. However, within your `app/Providers/HorizonServiceProvider.php` file, there is an [authorization gate](authorization.md#gates) definition. This authorization gate controls access to Horizon in **non-local** environments. You are free to modify this gate as needed to restrict access to your Horizon installation:
+Horizon предоставляет информационную панель по URI `/horizon`. По умолчанию вы сможете получить доступ к этой панели управления только в локальном (`local`) окружении. Однако в вашем файле `app/Providers/HorizonServiceProvider.php` есть определение [шлюза авторизации](authorization.md#gates). Этот шлюз авторизации контролирует доступ к Horizon в **нелокальных** окружениях. Вы можете изменить этот шлюз по мере необходимости, чтобы ограничить доступ к Horizon:
 
     /**
-     * Register the Horizon gate.
+     * Зарегистрировать шлюз авторизации Horizon.
      *
-     * This gate determines who can access Horizon in non-local environments.
+     * Этот шлюз определяют, кто может получить доступ к Horizon в нелокальных окружениях.
      *
      * @return void
      */
@@ -134,16 +134,16 @@ Horizon exposes a dashboard at the `/horizon` URI. By default, you will only be 
 <a name="alternative-authentication-strategies"></a>
 #### Альтернативные стратегии аутентификации
 
-Remember that Laravel automatically injects the authenticated user into the gate closure. If your application is providing Horizon security via another method, such as IP restrictions, then your Horizon users may not need to "login". Therefore, you will need to change `function ($user)` closure signature above to `function ($user = null)` in order to force Laravel to not require authentication.
+Помните, что Laravel автоматически внедрит аутентифицированного пользователя в замыкание шлюза авторизации. Если ваше приложение обеспечивает безопасность Horizon с помощью другого метода, например через ограничения по IP-адресам, то пользователям Horizon может не потребоваться «вход в систему». Следовательно, вам нужно будет изменить сигнатуру замыкания `function ($user)`, указанную выше, на `function ($user = null)`, чтобы указать Laravel не требовать аутентификации.
 
 <a name="upgrading-horizon"></a>
 ## Обновление Horizon
 
-When upgrading to a new major version of Horizon, it's important that you carefully review [the upgrade guide](https://github.com/laravel/horizon/blob/master/UPGRADE.md). In addition, when upgrading to any new Horizon version, you should re-publish Horizon's assets:
+При обновлении до новой основной версии Horizon важно внимательно изучить [руководство по обновлению](https://github.com/laravel/horizon/blob/master/UPGRADE.md). Кроме того, при обновлении до любой новой версии Horizon вам следует повторно опубликовать веб-активы Horizon:
 
     php artisan horizon:publish
 
-To keep the assets up-to-date and avoid issues in future updates, you may add the `horizon:publish` command to the `post-update-cmd` scripts in your application's `composer.json` file:
+Чтобы поддерживать веб-активы в актуальном состоянии и избежать проблем при будущих обновлениях, вы можете добавить команду `horizon:publish` в блок `post-update-cmd` раздела `scripts` в файле `composer.json` вашего приложения:
 
     {
         "scripts": {
@@ -156,52 +156,52 @@ To keep the assets up-to-date and avoid issues in future updates, you may add th
 <a name="running-horizon"></a>
 ## Запуск Horizon
 
-Once you have configured your supervisors and workers in your application's `config/horizon.php` configuration file, you may start Horizon using the `horizon` Artisan command. This single command will start all of the configured worker processes for the current environment:
+После того, как вы настроили своих диспетчеров и обработчиков процессов в конфигурационном файле `config/horizon.php` вашего приложения, то вы можете запустить Horizon, используя команду `horizon` Artisan. Эта единая команда запустит все сконфигурированные обработчики процессов для текущего окружения:
 
     php artisan horizon
 
-You may pause the Horizon process and instruct it to continue processing jobs using the `horizon:pause` and `horizon:continue` Artisan commands:
+Вы можете приостановить процесс Horizon и дать ему указание продолжить обработку заданий, используя команды `horizon:pause` и `horizon:continue` Artisan:
 
     php artisan horizon:pause
 
     php artisan horizon:continue
 
-You may also pause and continue specific Horizon [supervisors](#supervisors) using the `horizon:pause-supervisor` and `horizon:continue-supervisor` Artisan commands:
+Вы также можете приостановить и продолжить конкретные [диспетчеры](#supervisors) Horizon, используя команды `horizon:pause-supervisor` и `horizon:continue-supervisor` Artisan:
 
     php artisan horizon:pause-supervisor supervisor-1
 
     php artisan horizon:continue-supervisor supervisor-1
 
-You may check the current status of the Horizon process using the `horizon:status` Artisan command:
+Вы можете проверить текущий статус процесса Horizon, используя команду `horizon:status` Artisan:
 
     php artisan horizon:status
 
-You may gracefully terminate the Horizon process using the `horizon:terminate` Artisan command. Any jobs that are currently being processed by will be completed and then Horizon will stop executing:
+Вы можете корректно завершить процесс Horizon, используя команду `horizon:terminate` Artisan. Любые задания, которые в настоящее время обрабатываются, будут выполнены, а затем Horizon остановит свой процесс:
 
     php artisan horizon:terminate
 
 <a name="deploying-horizon"></a>
 ### Развертывание Horizon
 
-When you're ready to deploy Horizon to your application's actual server, you should configure a process monitor to monitor the `php artisan horizon` command and restart it if it exits unexpectedly. Don't worry, we'll discuss how to install a process monitor below.
+Когда вы будете готовы развернуть Horizon на производственном сервере вашего приложения, вам следует настроить монитор процесса для отслеживания команды `php artisan horizon` и перезапустить ее, если она неожиданно завершится. Не волнуйтесь, ниже мы обсудим, как установить монитор процессов.
 
-During your application's deployment process, you should instruct the Horizon process to terminate so that it will be restarted by your process monitor and receive your code changes:
+Во время процесса развертывания вашего приложения вы должны дать команду Horizon завершить процесс, чтобы он был перезапущен вашим монитором процессов и получил изменения вашего кода:
 
     php artisan horizon:terminate
 
 <a name="installing-supervisor"></a>
 #### Установка Supervisor
 
-Supervisor is a process monitor for the Linux operating system and will automatically restart your `horizon` process if it stops executing. To install Supervisor on Ubuntu, you may use the following command. If you are not using Ubuntu, you can likely install Supervisor using your operating system's package manager:
+Supervisor – это монитор процесса для операционной системы Linux, который автоматически перезапустит ваш процесс `horizon`, если он перестанет выполняться. Чтобы установить Supervisor в Ubuntu, вы можете использовать следующую команду. Если вы не используете Ubuntu, то вы, вероятно, можете установить Supervisor с помощью диспетчера пакетов вашей операционной системы:
 
     sudo apt-get install supervisor
 
-> {tip} If configuring Supervisor yourself sounds overwhelming, consider using [Laravel Forge](https://forge.laravel.com), which will automatically install and configure Supervisor for your Laravel projects.
+> {tip} Если настройка Supervisor сама по себе кажется утомительной, рассмотрите возможность использования [Laravel Forge](https://forge.laravel.com), который автоматически установит и настроит Supervisor для ваших проектов Laravel.
 
 <a name="supervisor-configuration"></a>
 #### Конфигурирование Supervisor
 
-Supervisor configuration files are typically stored within your server's `/etc/supervisor/conf.d` directory. Within this directory, you may create any number of configuration files that instruct supervisor how your processes should be monitored. For example, let's create a `horizon.conf` file that starts and monitors a `horizon` process:
+Конфигурационные файлы Supervisor обычно хранятся в каталоге `/etc/supervisor/conf.d` вашего сервера. В этом каталоге вы можете создать любое количество файлов конфигурации, которые инструктируют диспетчера процессов, как следует контролировать ваши процессы. Например, давайте создадим файл `horizon.conf`, который запускает и отслеживает процесс `horizon`:
 
     [program:horizon]
     process_name=%(program_name)s
@@ -213,12 +213,12 @@ Supervisor configuration files are typically stored within your server's `/etc/s
     stdout_logfile=/home/forge/example.com/horizon.log
     stopwaitsecs=3600
 
-> {note} You should ensure that the value of `stopwaitsecs` is greater than the number of seconds consumed by your longest running job. Otherwise, Supervisor may kill the job before it is finished processing.
+> {note} Вы должны убедиться, что значение `stopwaitsecs` больше, чем количество секунд, потребляемых вашим самым продолжительным выполняемым заданием. В противном случае Supervisor может убить задание до того, как оно завершит обработку.
 
 <a name="starting-supervisor"></a>
 #### Запуск Supervisor
 
-Once the configuration file has been created, you may update the Supervisor configuration and start the monitored processes using the following commands:
+После создания файла конфигурации вы можете обновить конфигурацию Supervisor и запустить отслеживаемые процессы, используя следующие команды:
 
     sudo supervisorctl reread
 
@@ -226,12 +226,12 @@ Once the configuration file has been created, you may update the Supervisor conf
 
     sudo supervisorctl start horizon
 
-> {tip} For more information on running Supervisor, consult the [Supervisor documentation](http://supervisord.org/index.html).
+> {tip} Для получения дополнительной информации о запуске Supervisor обратитесь к [документации Supervisor](http://supervisord.org/index.html).
 
 <a name="tags"></a>
 ## Метки
 
-Horizon allows you to assign “tags” to jobs, including mailables, broadcast events, notifications, and queued event listeners. In fact, Horizon will intelligently and automatically tag most jobs depending on the Eloquent models that are attached to the job. For example, take a look at the following job:
+Horizon позволяет назначать «метки» заданиям, включая почтовые отправления, транслируемые события, уведомления и слушатели событий в очереди. Фактически, Horizon будет интеллектуально и автоматически помечать большинство заданий в зависимости от моделей Eloquent, прикрепленных к заданию. Например, взгляните на следующее задание:
 
     <?php
 
@@ -249,14 +249,14 @@ Horizon allows you to assign “tags” to jobs, including mailables, broadcast 
         use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
         /**
-         * The video instance.
+         * Экземпляр Video.
          *
          * @var \App\Models\Video
          */
         public $video;
 
         /**
-         * Create a new job instance.
+         * Создать новый экземпляр задания.
          *
          * @param  \App\Models\Video  $video
          * @return void
@@ -267,7 +267,7 @@ Horizon allows you to assign “tags” to jobs, including mailables, broadcast 
         }
 
         /**
-         * Execute the job.
+         * Выполнить задание.
          *
          * @return void
          */
@@ -277,7 +277,7 @@ Horizon allows you to assign “tags” to jobs, including mailables, broadcast 
         }
     }
 
-If this job is queued with an `App\Models\Video` instance that has an `id` attribute of `1`, it will automatically receive the tag `App\Models\Video:1`. This is because Horizon will search the job's properties for any Eloquent models. If Eloquent models are found, Horizon will intelligently tag the job using the model's class name and primary key:
+Если это задание поставлено в очередь с экземпляром `App\Models\Video` с атрибутом `id` равным `1`, оно автоматически получит тег `App\Models\Video:1`. Это потому, что Horizon будет искать в свойствах задания любые модели Eloquent. Если модели Eloquent будут найдены, то Horizon интеллектуально пометит задание, используя имя класса и первичный ключ модели:
 
     use App\Jobs\RenderVideo;
     use App\Models\Video;
@@ -289,12 +289,12 @@ If this job is queued with an `App\Models\Video` instance that has an `id` attri
 <a name="manually-tagging-jobs"></a>
 #### Самостоятельное назначение меток заданиям
 
-If you would like to manually define the tags for one of your queueable objects, you may define a `tags` method on the class:
+Если вы хотите вручную определить метки для одного из ваших объектов в очереди, вы можете определить метод `tags` для класса:
 
     class RenderVideo implements ShouldQueue
     {
         /**
-         * Get the tags that should be assigned to the job.
+         * Получить метки, которые должны быть назначены заданию.
          *
          * @return array
          */
@@ -307,12 +307,12 @@ If you would like to manually define the tags for one of your queueable objects,
 <a name="notifications"></a>
 ## Уведомления
 
-> {note} When configuring Horizon to send Slack or SMS notifications, you should review the [prerequisites for the relevant notification channel](notifications.md).
+> {note} При настройке Horizon для отправки уведомлений Slack или SMS необходимо ознакомиться с [предварительной подготовкой для соответствующего канала уведомлений](notifications.md).
 
-If you would like to be notified when one of your queues has a long wait time, you may use the `Horizon::routeMailNotificationsTo`, `Horizon::routeSlackNotificationsTo`, and `Horizon::routeSmsNotificationsTo` methods. You may call these methods from the `boot` method of your application's `App\Providers\HorizonServiceProvider`:
+Если вы хотите получать уведомления, когда одна из ваших очередей имеет длительное время ожидания, то вы можете использовать методы `Horizon::routeMailNotificationsTo`, `Horizon::routeSlackNotificationsTo` и `Horizon::routeSmsNotificationsTo`. Вы можете вызвать эти методы из метода `boot` поставщика `App\Providers\HorizonServiceProvider` вашего приложения:
 
     /**
-     * Bootstrap any application services.
+     * Загрузка любых служб приложения.
      *
      * @return void
      */
@@ -328,7 +328,7 @@ If you would like to be notified when one of your queues has a long wait time, y
 <a name="configuring-notification-wait-time-thresholds"></a>
 #### Настройка пороговых значений времени ожидания уведомлений
 
-You may configure how many seconds are considered a "long wait" within your application's `config/horizon.php` configuration file. The `waits` configuration option within this file allows you to control the long wait threshold for each connection / queue combination:
+Вы можете определить количество секунд «долгого ожидания» в конфигурационном файле `config/horizon.php` вашего приложения. Параметр `waits` конфигурации в этом файле позволяет вам контролировать порог длительного ожидания для каждой комбинации соединение / очередь:
 
     'waits' => [
         'redis:default' => 60,
@@ -338,10 +338,10 @@ You may configure how many seconds are considered a "long wait" within your appl
 <a name="metrics"></a>
 ## Метрики
 
-Horizon includes a metrics dashboard which provides information regarding your job and queue wait times and throughput. In order to populate this dashboard, you should configure Horizon's `snapshot` Artisan command to run every five minutes via your application's [scheduler](scheduling.md):
+Horizon содержит панель показателей, которая предоставляет информацию о времени ожидания и пропускной способности вашего задания и очереди. Для заполнения информационной панели, вы должны добавить команду `snapshot` Artisan так, чтобы она запускалась, например, каждые пять минут через [планировщик](scheduling.md):
 
     /**
-     * Define the application's command schedule.
+     * Определить расписание выполнения команд приложения.
      *
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
@@ -354,17 +354,17 @@ Horizon includes a metrics dashboard which provides information regarding your j
 <a name="deleting-failed-jobs"></a>
 ## Удаление невыполненных заданий
 
-If you would like to delete a failed job, you may use the `horizon:forget` command. The `horizon:forget` command accepts the ID of the failed job as its only argument:
+Если вы хотите удалить невыполненное задание, то вы можете использовать команду `horizon:forget`. Команда `horizon:forget` принимает идентификатор неудачного задания в качестве своего единственного аргумента:
 
     php artisan horizon:forget 5
 
 <a name="clearing-jobs-from-queues"></a>
 ## Очистка заданий из очередей
 
-If you would like to delete all jobs from your application's default queue, you may do so using the `horizon:clear` Artisan command:
+Если вы хотите удалить все задания из очереди по умолчанию вашего приложения, то вы можете сделать это с помощью команды `horizon:clear` Artisan:
 
     php artisan horizon:clear
 
-You may provide the `queue` option to delete jobs from a specific queue:
+Вы можете передать параметр `queue` для удаления заданий из конкретной очереди:
 
     php artisan horizon:clear --queue=emails

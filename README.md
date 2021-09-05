@@ -92,7 +92,7 @@
     - [x] [*Envoy*](./docs/envoy.md) – инструмент для запуска задач, выполняемых на удаленных серверах. Задачи определяются в файле `Envoy.blade.php` в корне приложения с использованием директив шаблонизатора Blade.
     - [x] [*Fortify*](./docs/fortify.md) – серверная реализация аутентификации Laravel. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
     - [x] [*Homestead*](./docs/homestead.md) – официальный образ Vagrant для приложений Laravel.
-    - [ ] [*Horizon*](./docs/horizon.md)
+    - [x] [*Horizon*](./docs/horizon.md) – панель управления и конфигурация очередей, использующих Redis.
     - [ ] [*Jetstream*](https://jetstream.laravel.com) – красиво оформленный каркас приложений. Включает в себя Fortify и Sanctum.
     - [ ] [*Octane*](./docs/octane.md)
     - [ ] [*Passport*](./docs/passport.md)
