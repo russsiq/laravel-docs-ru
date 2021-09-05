@@ -55,7 +55,7 @@ Telescope станет прекрасным помощником при лока
 <a name="migration-customization"></a>
 #### Настройка миграции
 
-Если вы не собираетесь использовать миграции Telescope по умолчанию, то вам следует вызвать метод `Telescope::ignoreMigrations` в методе `register` класса `App\Providers\AppServiceProvider` вашего приложения. Вы можете экспортировать миграции по умолчанию, используя следующую команду: `php artisan vendor:publish --tag=telescope-migrations`.
+Если вы не собираетесь использовать миграции Telescope по умолчанию, то вам следует вызвать метод `Telescope::ignoreMigrations` в методе `register` поставщика `App\Providers\AppServiceProvider` вашего приложения. Вы можете экспортировать миграции по умолчанию, используя следующую команду: `php artisan vendor:publish --tag=telescope-migrations`.
 
 <a name="local-only-installation"></a>
 ### Только локальная установка
