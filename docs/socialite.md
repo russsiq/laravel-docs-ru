@@ -20,7 +20,7 @@
 <a name="installation"></a>
 ## Установка
 
-Чтобы начать работу с Socialite, используйте менеджер пакетов Composer, чтобы добавить пакет в зависимости вашего проекта:
+Для начала установите Socialite с помощью менеджера пакетов Composer в свой проект:
 
     composer require laravel/socialite
 
