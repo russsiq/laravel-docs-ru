@@ -1046,12 +1046,12 @@ public function bestImage()
 
     use Illuminate\Database\Eloquent\Relations\Relation;
 
-    Relation::morphMap([
+    Relation::enforceMorphMap([
         'post' => 'App\Models\Post',
         'video' => 'App\Models\Video',
     ]);
 
-Вы можете зарегистрировать `morphMap` в методе `boot` вашего класса `App\Providers\AppServiceProvider` или создать отдельного поставщика службы, если хотите.
+Вы можете вызвать метод `enforceMorphMap` в методе `boot` поставщика `App\Providers\AppServiceProvider` или любого другого поставщика служб.
 
 Вы можете определить псевдоним полиморфного типа конкретной модели во время выполнения, используя метод модели `getMorphClass`. И наоборот, вы можете определить полное имя класса, связанное с псевдонимом полиморфного типа, используя метод `Relation::getMorphedModel`:
 

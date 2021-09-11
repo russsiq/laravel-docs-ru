@@ -79,7 +79,7 @@ sail up
 <a name="starting-and-stopping-sail"></a>
 ## Starting & Stopping Sail
 
-Laravel Sail's `docker-compose.yml` file defines a Docker variety of containers that work together to help you build Laravel applications. Each of these containers is an entry within the `services` configuration of your `docker-compose.yml` file. The `laravel.test` container is the primary application container that will be serving your application.
+Laravel Sail's `docker-compose.yml` file defines a variety of Docker containers that work together to help you build Laravel applications. Each of these containers is an entry within the `services` configuration of your `docker-compose.yml` file. The `laravel.test` container is the primary application container that will be serving your application.
 
 Before starting Sail, you should ensure that no other web servers or databases are running on your local computer. To start all of the Docker containers defined in your application's `docker-compose.yml` file, you should execute the `up` command:
 
@@ -146,8 +146,8 @@ You may install the application's dependencies by navigating to the application'
 ```nothing
 docker run --rm \
     -u "$(id -u):$(id -g)" \
-    -v $(pwd):/opt \
-    -w /opt \
+    -v $(pwd):/var/www/html \
+    -w /var/www/html \
     laravelsail/php80-composer:latest \
     composer install --ignore-platform-reqs
 ```

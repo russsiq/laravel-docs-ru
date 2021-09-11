@@ -209,7 +209,7 @@ Laravel предлагает полезные методы для имитаци
 <a name="job-batches"></a>
 ### Пакетная обработка заданий
 
-Метод `assertBatched` фасада `Bus` используется для подтверждения того, что [пакет заданий](queues.md#job-batches) был отправлен. Замыкание, переданное методу `assertBatched`, получает экземпляр `Illuminate\Bus\PendingBatch`, который может использоваться для инспектирования заданий в пакете:
+Метод `assertBatched` фасада `Bus` используется для подтверждения того, что [пакет заданий](queues.md#job-batching) был отправлен. Замыкание, переданное методу `assertBatched`, получает экземпляр `Illuminate\Bus\PendingBatch`, который может использоваться для инспектирования заданий в пакете:
 
     use Illuminate\Bus\PendingBatch;
     use Illuminate\Support\Facades\Bus;

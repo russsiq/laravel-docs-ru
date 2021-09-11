@@ -403,7 +403,7 @@ Laravel Breeze – это минимальная и простая реализ�
     /**
      * Выход пользователя из приложения.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function logout(Request $request)
