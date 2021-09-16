@@ -639,3 +639,27 @@ Laravel содержит несколько утверждений базы да
 Метод `assertSoftDeleted` используется для утверждения того, что переданная модель Eloquent была «программно удалена»:
 
     $this->assertSoftDeleted($user);
+
+<a name="assert-model-exists"></a>
+#### assertModelExists
+
+Утверждение о том, что переданная модель существует в базе данных:
+
+    use App\Models\User;
+
+    $user = User::factory()->create();
+
+    $this->assertModelExists($user);
+
+<a name="assert-model-missing"></a>
+#### assertModelMissing
+
+Утверждение о том, что переданная модель не существует в базе данных:
+
+    use App\Models\User;
+
+    $user = User::factory()->create();
+
+    $user->delete();
+
+    $this->assertModelMissing($user);

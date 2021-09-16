@@ -812,12 +812,14 @@ where exists (
         ['email' => 'janeway@example.com', 'votes' => 0],
     ]);
 
-Метод `insertOrIgnore` будет игнорировать ошибки повторяющихся записей при вставке записей в базу данных:
+Метод `insertOrIgnore` будет игнорировать ошибки при вставке записей в базу данных:
 
     DB::table('users')->insertOrIgnore([
         ['id' => 1, 'email' => 'sisko@example.com'],
         ['id' => 2, 'email' => 'archer@example.com'],
     ]);
+
+> {note} Метод `insertOrIgnore` будет игнорировать повторяющиеся записи, а также может игнорировать другие типы ошибок в зависимости от движка базы данных. Например, `insertOrIgnore` будет [обходить строгий режим MySQL](https://dev.mysql.com/doc/refman/en/sql-mode.html#ignore-effect-on-execution).
 
 <a name="auto-incrementing-ids"></a>
 #### Автоинкрементирование идентификаторов

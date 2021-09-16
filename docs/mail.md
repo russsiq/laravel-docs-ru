@@ -101,6 +101,15 @@ composer require aws/aws-sdk-php
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+Чтобы использовать [временные учетные данные](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_use-resources.html) AWS через токен сессии, вы можете добавить ключ `token` в конфигурацию SES вашего приложения:
+
+    'ses' => [
+        'key' => env('AWS_ACCESS_KEY_ID'),
+        'secret' => env('AWS_SECRET_ACCESS_KEY'),
+        'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+        'token' => env('AWS_SESSION_TOKEN'),
+    ],
+
 Если вы хотите определить [дополнительные параметры](https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-email-2010-12-01.html#sendrawemail), которые Laravel должен передать методу `SendRawEmail` AWS SDK при отправке сообщения электронной почты, вы можете определить массив `options` в конфигурации `ses`:
 
     'ses' => [

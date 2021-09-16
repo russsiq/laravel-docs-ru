@@ -98,7 +98,7 @@ Once the application's containers have been started, you may access the project 
 To stop all of the containers, you may simply press Control + C to stop the container's execution. Or, if the containers are running in the background, you may use the `down` command:
 
 ```bash
-sail down
+sail stop
 ```
 
 <a name="executing-sail-commands"></a>
