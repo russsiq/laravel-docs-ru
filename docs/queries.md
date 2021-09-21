@@ -163,7 +163,7 @@
 ```php
 use Illuminate\Support\Facades\DB;
 
-DB::table('users')->lazy()->each(function ($user) {
+DB::table('users')->orderBy('id')->lazy()->each(function ($user) {
     //
 });
 ```
