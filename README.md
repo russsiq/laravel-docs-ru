@@ -96,7 +96,7 @@
     - [ ] [*Jetstream*](https://jetstream.laravel.com) – красиво оформленный каркас приложений. Включает в себя Fortify и Sanctum.
     - [ ] [*Octane*](./docs/octane.md)
     - [ ] [*Passport*](./docs/passport.md)
-    - [ ] [*Sail*](./docs/sail.md)
+    - [x] [*Sail*](./docs/sail.md) – CLI для взаимодействия со средой разработки Docker.
     - [x] [*Sanctum*](./docs/sanctum.md) – легковесная система аутентификации для SPA (одностраничных приложений), мобильных приложений и простых API на основе токенов. Управление токенами API, аутентификация сессии. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
     - [x] [*Scout*](./docs/scout.md) – «простое» решение на основе драйверов для добавления полнотекстового поиска моделям Eloquent.
     - [x] [*Socialite*](./docs/socialite.md) – аутентификация через провайдеров OAuth: Facebook, Twitter, LinkedIn, Google, GitHub, GitLab, и Bitbucket.
