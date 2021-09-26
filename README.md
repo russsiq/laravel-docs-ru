@@ -86,22 +86,22 @@
     - [x] [Имитация](./docs/mocking.md)
 - #### Пакеты
     - [x] [*Breeze*](./docs/starter-kits.md#laravel-breeze) – легковесная реализация аутентификации Laravel для ознакомления с функционалом. Включает простые шаблоны Blade, стилизованные с помощью Tailwind CSS. Содержит маршруты для публикации.
-    - [ ] [*Cashier (Stripe)*](./docs/billing.md)
-    - [ ] [*Cashier (Paddle)*](./docs/cashier-paddle.md)
+    <!-- - [ ] [*Cashier (Stripe)*](./docs/billing.md) -->
+    <!-- - [ ] [*Cashier (Paddle)*](./docs/cashier-paddle.md) -->
     - [x] [*Dusk*](./docs/dusk.md) – автоматизация поведения браузера и тестирование с использованием ChromeDriver.
     - [x] [*Envoy*](./docs/envoy.md) – инструмент для запуска задач, выполняемых на удаленных серверах. Задачи определяются в файле `Envoy.blade.php` в корне приложения с использованием директив шаблонизатора Blade.
     - [x] [*Fortify*](./docs/fortify.md) – серверная реализация аутентификации Laravel. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
     - [x] [*Homestead*](./docs/homestead.md) – официальный образ Vagrant для приложений Laravel.
     - [x] [*Horizon*](./docs/horizon.md) – панель управления и конфигурация очередей, использующих Redis.
     - [ ] [*Jetstream*](https://jetstream.laravel.com) – красиво оформленный каркас приложений. Включает в себя Fortify и Sanctum.
-    - [ ] [*Octane*](./docs/octane.md)
-    - [ ] [*Passport*](./docs/passport.md)
+    - [ ] [*Octane*](./docs/octane.md) – повышает производительность вашего приложения с использованием мощных серверов [Swoole](https://swoole.co.uk) и [RoadRunner](https://roadrunner.dev)
+    - [ ] [*Passport*](./docs/passport.md) – реализация сервера OAuth2 для вашего приложения Laravel на основе [League OAuth2](https://github.com/thephpleague/oauth2-server).
     - [x] [*Sail*](./docs/sail.md) – CLI для взаимодействия со средой разработки Docker.
     - [x] [*Sanctum*](./docs/sanctum.md) – легковесная система аутентификации для SPA (одностраничных приложений), мобильных приложений и простых API на основе токенов. Управление токенами API, аутентификация сессии. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
     - [x] [*Scout*](./docs/scout.md) – «простое» решение на основе драйверов для добавления полнотекстового поиска моделям Eloquent.
     - [x] [*Socialite*](./docs/socialite.md) – аутентификация через провайдеров OAuth: Facebook, Twitter, LinkedIn, Google, GitHub, GitLab, и Bitbucket.
     - [x] [*Telescope*](./docs/telescope.md) – панель управления, отображающая записи о произошедших в приложении событиях.
-    - [ ] [*Valet*](./docs/valet.md)
+    - [ ] [*Valet*](./docs/valet.md) – окружение разработки приложений Laravel для пользователей macOS.
 - [Документация API](https://laravel.com/api/8.x/)
 
 <a name="dictionary"></a>
