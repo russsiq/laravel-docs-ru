@@ -55,6 +55,13 @@ Laravel Sail автоматически устанавливается со вс
 
     ./vendor/bin/sail up
 
+<a name="using-devcontainers"></a>
+#### Использование Devcontainer
+
+Если вы хотите разработать в [Devcontainer](https://code.visualstudio.com/docs/remote/containers), то вы можете указать флаг `--devcontainer` для команды `sail:install`. Флаг `--devcontainer` проинструктирует команду `sail:install` опубликовать файл `.devcontainer/devcontainer.json` в корне вашего приложения:
+
+    php artisan sail:install --devcontainer
+
 <a name="configuring-a-bash-alias"></a>
 ### Настройка псевдонима Bash
 
