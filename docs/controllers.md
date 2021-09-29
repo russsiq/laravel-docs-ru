@@ -309,7 +309,7 @@ DELETE    | `/comments/{comment}`             | destroy      | comments.destroy
 <a name="restful-localizing-resource-uris"></a>
 ### Локализация URI ресурсов
 
-По умолчанию `Route::resource` создает URI ресурсов с использованием английских глаголов. Если вам нужно локализовать команды действия `create` и `edit`, вы можете использовать метод `Route::resourceVerbs`. Это можно сделать в начале метода `boot` поставщика `App\Providers\RouteServiceProvider` вашего приложения:
+По умолчанию `Route::resource` создает URI ресурсов с использованием английских глаголов. Если вам нужно локализовать команды действия `create` и `edit`, вы можете использовать метод `Route::resourceVerbs`. Это можно сделать в начале метода `boot` поставщика `App\Providers\RouteServiceProvider`:
 
     /**
      * Определить связывание модели и маршрута, фильтры шаблонов и т.д.

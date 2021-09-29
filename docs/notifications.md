@@ -1165,7 +1165,7 @@ Laravel позволяет отправлять уведомления, испо
 <a name="notification-events"></a>
 ## События уведомления
 
-При отправки уведомлений, система уведомлений запускает [событие](events.md) `Illuminate\Notifications\Events\NotificationSent`. Событие содержит уведомляемую сущность и сам экземпляр уведомления. Вы можете зарегистрировать слушателей этого события в поставщике `EventServiceProvider`:
+При отправки уведомлений, система уведомлений запускает [событие](events.md) `Illuminate\Notifications\Events\NotificationSent`. Событие содержит уведомляемую сущность и сам экземпляр уведомления.Как правило, регистрация слушателей этого события осуществляется в поставщике `App\Providers\EventServiceProvider`:
 
     /**
      * The event listener mappings for the application.

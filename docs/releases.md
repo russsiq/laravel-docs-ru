@@ -376,6 +376,6 @@ _Автор: [Taylor Otwell](https://github.com/taylorotwell)_.
 
     return Redirect::action([UserController::class, 'index']);
 
-Если вы предпочитаете префиксирование маршрута контроллера в стиле Laravel версии 7.x, вы можете просто добавить свойство `$namespace` поставщика `RouteServiceProvider` вашего приложения.
+Если вы предпочитаете префиксирование маршрута контроллера в стиле Laravel версии 7.x, то вы можете просто добавить свойство `$namespace` в поставщик `RouteServiceProvider` вашего приложения.
 
 > {note} Это изменение касается только новых приложений Laravel 8.x. Приложения, обновляющиеся с Laravel 7.x, по-прежнему будут иметь свойство `$namespace` в своем `RouteServiceProvider`.

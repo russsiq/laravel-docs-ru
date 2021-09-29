@@ -477,7 +477,7 @@ Echo.private(`orders.${orderId}`)
 <a name="defining-authorization-routes"></a>
 ### Определение маршрутов авторизации
 
-Laravel упрощает определение маршрутов для ответа на запросы об авторизации канала. В поставщике `App\Providers\BroadcastServiceProvider` вашего приложения, вы увидите вызов метода `Broadcast::routes`. Этот метод зарегистрирует маршрут `/broadcasting/auth` для обработки запросов авторизации:
+Laravel упрощает определение маршрутов для ответа на запросы об авторизации канала. В поставщике `App\Providers\BroadcastServiceProvider` вы увидите вызов метода `Broadcast::routes`. Этот метод зарегистрирует маршрут `/broadcasting/auth` для обработки запросов авторизации:
 
     Broadcast::routes();
 

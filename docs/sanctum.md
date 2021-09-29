@@ -77,7 +77,7 @@ Sanctum будет пытаться аутентифицироваться с п
 <a name="migration-customization"></a>
 #### Настройка миграции
 
-Если вы не собираетесь использовать миграции Sanctum по умолчанию, вам следует вызвать метод `Sanctum::ignoreMigrations` в методе `register` вашего класса `App\Providers\AppServiceProvider`. Вы можете экспортировать миграции по умолчанию, выполнив следующую команду: `php artisan vendor:publish --tag=sanctum-migrations`
+Если вы не собираетесь использовать миграции Sanctum по умолчанию, то вам следует вызвать метод `Sanctum::ignoreMigrations` в методе `register` поставщика `App\Providers\AppServiceProvider`. Вы можете экспортировать миграции по умолчанию, выполнив следующую команду: `php artisan vendor:publish --tag=sanctum-migrations`
 
 <a name="configuration"></a>
 ## Конфигурирование
@@ -94,7 +94,7 @@ Sanctum будет пытаться аутентифицироваться с п
         // ...
     }
 
-Затем, вы можете указать Sanctum использовать вашу пользовательскую модель с помощью метода `usePersonalAccessTokenModel`, предоставленного Sanctum. Обычно вы должны вызывать этот метод в методе `boot` одного из поставщиков служб вашего приложения:
+Затем, вы можете указать Sanctum использовать вашу пользовательскую модель с помощью метода `usePersonalAccessTokenModel`, предоставленного Sanctum. Как правило, вызов этого метода осуществляется в методе `boot` одного из поставщиков служб вашего приложения:
 
     use App\Models\Sanctum\PersonalAccessToken;
     use Laravel\Sanctum\Sanctum;

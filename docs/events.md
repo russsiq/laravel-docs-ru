@@ -47,7 +47,7 @@
 <a name="generating-events-and-listeners"></a>
 ### Генерация событий и слушателей
 
-Конечно, вручную создавать файлы для каждого события и слушателя сложно. Вместо этого добавьте необходимые события и их слушатели в поставщике `EventServiceProvider`, затем, используйте команду `event:generate` [Artisan](artisan.md). Эта команда сгенерирует любые события или слушатели, перечисленные в поставщике `EventServiceProvider`, но которые еще не существуют:
+Конечно, вручную создавать файлы для каждого события и слушателя сложно. Вместо этого добавьте необходимые события и их слушатели в поставщике `App\Providers\EventServiceProvider`, затем, используйте команду `event:generate` [Artisan](artisan.md). Эта команда сгенерирует любые события или слушатели, перечисленные в поставщике `EventServiceProvider`, но которые еще не существуют:
 
     php artisan event:generate
 
@@ -60,7 +60,7 @@
 <a name="manually-registering-events"></a>
 ### Явная регистрация событий
 
-Обычно события должны регистрироваться с помощью массива `$listen` поставщика `EventServiceProvider`; но вы также можете явно зарегистрировать слушателей событий на основе классов или замыканий в методе `boot` вашего `EventServiceProvider`:
+Обычно события должны регистрироваться с помощью массива `$listen` поставщика `EventServiceProvider`; но вы также можете явно зарегистрировать слушателей событий на основе классов или замыканий в методе `boot` поставщика `App\Providers\EventServiceProvider`:
 
     use App\Events\PodcastProcessed;
     use App\Listeners\SendPodcastNotification;

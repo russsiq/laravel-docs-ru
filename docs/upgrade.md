@@ -236,7 +236,7 @@
 
 **Вероятность воздействия: высокая**
 
-Пагинатор теперь использует [CSS-фреймворк Tailwind](https://tailwindcss.com) для стилизации по умолчанию. Чтобы продолжить использование Bootstrap, вы должны добавить следующий вызов метода в методе `boot` поставщика служб приложения `AppServiceProvider`:
+Пагинатор теперь использует [CSS-фреймворк Tailwind](https://tailwindcss.com) для стилизации по умолчанию. Чтобы продолжить использование Bootstrap, вы должны добавить следующий вызов метода в методе `boot` поставщика `App\Providers\AppServiceProvider`:
 
     use Illuminate\Pagination\Paginator;
 
