@@ -652,13 +652,14 @@ Laravel упрощает определение маршрутов для отв
 
     broadcast(new OrderShipmentStatusUpdated($update))->via('pusher');
 
-В качестве альтернативы вы можете указать соединение транслируемого события, вызвав метод `broadcastVia` в конструкторе события:
+В качестве альтернативы вы можете указать соединение транслируемого события, вызвав метод `broadcastVia` в конструкторе события. Однако перед этим вы должны убедиться, что класс события использует трейт `InteractsWithBroadcasting`:
 
     <?php
 
     namespace App\Events;
 
     use Illuminate\Broadcasting\Channel;
+    use Illuminate\Broadcasting\InteractsWithBroadcasting;
     use Illuminate\Broadcasting\InteractsWithSockets;
     use Illuminate\Broadcasting\PresenceChannel;
     use Illuminate\Broadcasting\PrivateChannel;
@@ -667,6 +668,8 @@ Laravel упрощает определение маршрутов для отв
 
     class OrderShipmentStatusUpdated implements ShouldBroadcast
     {
+        use InteractsWithBroadcasting;
+
         /**
          * Create a new event instance.
          *

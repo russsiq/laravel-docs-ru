@@ -990,6 +990,35 @@ Blade отобразит следующий HTML-код:
 
     <x-inputs.button/>
 
+<a name="anonymous-index-components"></a>
+#### Анонимные составные компоненты
+
+Если компонент состоит из множества шаблонов Blade, то вы можете сгруппировать шаблоны данного компонента в одном каталоге. Например, представьте себе компонент «аккордеон» со следующей структурой каталогов:
+
+```none
+/resources/views/components/accordion.blade.php
+/resources/views/components/accordion/item.blade.php
+```
+
+Эта структура каталогов позволяет отображать компонент аккордеона и его элементы следующим образом:
+
+```html
+<x-accordion>
+    <x-accordion.item>
+        ...
+    </x-accordion.item>
+</x-accordion>
+```
+
+Однако для того, чтобы отобразить данный компонент через `x-accordion`, мы были вынуждены поместить «индексный» шаблон компонента в каталог `resources/views/components` вместо того, чтобы вкладывать его вместе с другими связанными шаблонами в каталог `accordion`.
+
+К счастью, Blade позволяет вам разместить файл `index.blade.php` в каталоге шаблонов компонента. Когда для компонента существует шаблон `index.blade.php`, он будет отображаться как «корневой» узел компонента. Итак, мы можем продолжать использовать тот же синтаксис Blade, что и в примере выше, но мы изменим структуру каталогов следующим образом:
+
+```none
+/resources/views/components/accordion/index.blade.php
+/resources/views/components/accordion/item.blade.php
+```
+
 <a name="data-properties-attributes"></a>
 #### Свойства / атрибуты данных
 

@@ -782,10 +782,10 @@ Laravel содержит множество глобальных «вспомо�
 
     use Illuminate\Support\Arr;
 
-    $array = ['p-4', 'font-bold' => $isActive, 'bg-red' => $hasError];
-
     $isActive = false;
     $hasError = true;
+
+    $array = ['p-4', 'font-bold' => $isActive, 'bg-red' => $hasError];
 
     $classes = Arr::toCssClasses($array);
 
