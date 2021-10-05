@@ -2546,6 +2546,20 @@
 
     // [1, 2, 3, 5]
 
+Второе замыкание, переданное методу `unless`, будет выполнено, если первый аргумент, переданный методу, оценивается как `true`:
+
+    $collection = collect([1, 2, 3]);
+
+    $collection->unless(true, function ($collection) {
+        return $collection->push(4);
+    }, function ($collection) {
+        return $collection->push(5);
+    });
+
+    $collection->all();
+
+    // [1, 2, 3, 5]
+
 Противоположным методу `unless` является метод [`when`](#method-when).
 
 <a name="method-unlessempty"></a>
@@ -2614,6 +2628,20 @@
     $collection->all();
 
     // [1, 2, 3, 4]
+
+Второе замыкание, переданное методу `when`, будет выполнено, если первый аргумент, переданный методу, оценивается как `false`:
+
+    $collection = collect([1, 2, 3]);
+
+    $collection->when(false, function ($collection) {
+        return $collection->push(4);
+    }, function ($collection) {
+        return $collection->push(5);
+    });
+
+    $collection->all();
+
+    // [1, 2, 3, 5]
 
 Противоположным методу `when` является метод [`unless`](#method-unless).
 
