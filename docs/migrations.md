@@ -868,7 +868,7 @@ Laravel будет использовать имя миграции, чтобы 
 `->first()`  |  Поместить столбец «первым» в таблице (MySQL).
 `->from($integer)`  |  Установить начальное значение автоинкрементного поля (MySQL / PostgreSQL).
 `->nullable($value = true)`  |  Позволить (по умолчанию) значения NULL для вставки в столбец.
-`->storedAs($expression)`  |  Создать сохраненный генерируемый столбец (MySQL).
+`->storedAs($expression)`  |  Создать сохраненный генерируемый столбец (MySQL / PostgreSQL).
 `->unsigned()`  |  Установить столбцы INTEGER как UNSIGNED (MySQL).
 `->useCurrent()`  |  Установить столбцы TIMESTAMP для использования CURRENT_TIMESTAMP в качестве значения по умолчанию.
 `->useCurrentOnUpdate()`  |  Установить столбцы TIMESTAMP для использования CURRENT_TIMESTAMP при обновлении записи.
