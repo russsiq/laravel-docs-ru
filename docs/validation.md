@@ -779,6 +779,7 @@ Laravel также содержит глобального помощника `o
 - [Exclude](#rule-exclude)
 - [Exclude If](#rule-exclude-if)
 - [Exclude Unless](#rule-exclude-unless)
+- [Exclude Without](#rule-exclude-without)
 - [Exists (Database)](#rule-exists)
 - [File](#rule-file)
 - [Filled](#rule-filled)
@@ -1065,6 +1066,11 @@ public function boot()
 #### exclude_unless:_anotherfield_,_value_
 
 Проверяемое поле будет исключено из данных запроса, возвращаемых методами `validate` и `validated`, если поле _anotherfield_ не равно _value_. Если _value_ равно `null` (т.е. `exclude_unless:name,null`), то проверяемое поле будет исключено, если поле сравнения не имеет значение `null` или поле сравнения отсутствует в данных запроса.
+
+<a name="rule-exclude-without"></a>
+#### exclude_without:_anotherfield_
+
+Проверяемое поле будет исключено из данных запроса, возвращаемых методами `validate` и `validated`, если поле _anotherfield_ отсутствует.
 
 <a name="rule-exists"></a>
 #### exists:_table_,_column_
