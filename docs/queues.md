@@ -87,6 +87,10 @@
 
     php artisan migrate
 
+Наконец, не забудьте указать вашему приложению использовать драйвер `database`, обновив переменную `QUEUE_CONNECTION` в файле `.env` вашего приложения:
+
+    QUEUE_CONNECTION=database
+
 <a name="redis"></a>
 #### Redis
 
