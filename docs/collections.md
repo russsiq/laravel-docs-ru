@@ -163,6 +163,7 @@
 - [put](#method-put)
 - [random](#method-random)
 - [reduce](#method-reduce)
+- [reduceMany](#method-reduce-many)
 - [reject](#method-reject)
 - [replace](#method-replace)
 - [replaceRecursive](#method-replacerecursive)
@@ -1741,6 +1742,25 @@
     });
 
     // 4264
+
+<a name="method-reduce-many"></a>
+#### `reduceMany()`
+
+Метод `reduceMany` сокращает коллекцию до массива значений, передавая результаты каждой итерации в следующую итерацию. Этот метод похож на метод `reduce`; однако он может принимать несколько начальных значений:
+
+```php
+[$creditsRemaining, $batch] = Image::where('status', 'unprocessed')
+        ->get()
+        ->reduceMany(function ($creditsRemaining, $batch, $image) {
+            if ($creditsRemaining >= $image->creditsRequired()) {
+                $batch->push($image);
+
+                $creditsRemaining -= $image->creditsRequired();
+            }
+
+            return [$creditsRemaining, $batch];
+        }, $creditsAvailable, collect());
+```
 
 <a name="method-reject"></a>
 #### `reject()`

@@ -1038,6 +1038,36 @@ Blade отобразит следующий HTML-код:
 
     <x-alert type="error" :message="$message" class="mb-4"/>
 
+<a name="accessing-parent-data"></a>
+#### Доступ к данным родительского компонента
+
+Иногда внутри дочернего компонента может потребоваться доступ к данным родительского компонента. В этих случаях вы можете использовать директиву `@aware`. Например, представьте, что мы создаем сложный компонент меню, состоящий из родительского `<x-menu>` и дочернего `<x-menu.item>`:
+
+    <x-menu color="purple">
+        <x-menu.item>...</x-menu.item>
+        <x-menu.item>...</x-menu.item>
+    </x-menu>
+
+Компонент `<x-menu>` может иметь следующую реализацию:
+
+    <!-- /resources/views/components/menu/index.blade.php -->
+
+    @props(['color' => 'gray'])
+
+    <ul {{ $attributes->merge(['class' => 'bg-'.$color.'-200']) }}>
+        {{ $slot }}
+    </ul>
+
+Поскольку свойство `color` было передано только родительскому элементу `<x-menu>`, оно не будет доступно внутри `<x-menu.item>`. Однако, если мы воспользуемся директивой `@aware`, то мы можем сделать свойство доступным и внутри `<x-menu.item>`:
+
+    <!-- /resources/views/components/menu/item.blade.php -->
+
+    @aware(['color' => 'gray'])
+
+    <li {{ $attributes->merge(['class' => 'text-'.$color.'-800']) }}>
+        {{ $slot }}
+    </li>
+
 <a name="dynamic-components"></a>
 ### Динамические компоненты
 
