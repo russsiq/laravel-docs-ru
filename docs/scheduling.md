@@ -15,6 +15,7 @@
     - [Локальный запуск планировщика](#running-the-scheduler-locally)
 - [Результат выполнения задачи](#task-output)
 - [Хуки выполнения задачи](#task-hooks)
+- [События](#events)
 
 <a name="introduction"></a>
 ## Введение
@@ -413,3 +414,35 @@ php artisan schedule:list
 Для всех методов пингования требуется библиотека Guzzle HTTP. Guzzle обычно устанавливается во всех новых проектах Laravel по умолчанию, но вы можете вручную установить Guzzle в свой проект с помощью менеджера пакетов Composer, если он был удален:
 
     composer require guzzlehttp/guzzle
+
+<a name="events"></a>
+## События
+
+При необходимости вы можете прослушивать [события](events.md), запускаемые планировщиком. Как правило, регистрация слушателей этих событий осуществляется в поставщике `App\Providers\EventServiceProvider`:
+
+    /**
+     * Карта слушателей событий приложения.
+     *
+     * @var array
+     */
+    protected $listen = [
+        'Illuminate\Console\Events\ScheduledTaskStarting' => [
+            'App\Listeners\LogScheduledTaskStarting',
+        ],
+
+        'Illuminate\Console\Events\ScheduledTaskFinished' => [
+            'App\Listeners\LogScheduledTaskFinished',
+        ],
+
+        'Illuminate\Console\Events\ScheduledBackgroundTaskFinished' => [
+            'App\Listeners\LogScheduledBackgroundTaskFinished',
+        ],
+
+        'Illuminate\Console\Events\ScheduledTaskSkipped' => [
+            'App\Listeners\LogScheduledTaskSkipped',
+        ],
+
+        'Illuminate\Console\Events\ScheduledTaskFailed' => [
+            'App\Listeners\LogScheduledTaskFailed',
+        ],
+    ];

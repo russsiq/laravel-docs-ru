@@ -162,6 +162,7 @@
 - [push](#method-push)
 - [put](#method-put)
 - [random](#method-random)
+- [range](#method-range)
 - [reduce](#method-reduce)
 - [reduceMany](#method-reduce-many)
 - [reject](#method-reject)
@@ -1701,6 +1702,17 @@
     // [2, 4, 5] - (retrieved randomly)
 
 Если в экземпляре коллекции меньше элементов, чем запрошено, метод `random` сгенерирует исключение `InvalidArgumentException`.
+
+<a name="method-range"></a>
+#### `range()`
+
+Метод `range` возвращает коллекцию, содержащую целые числа в указанном диапазоне:
+
+    $collection = collect()->range(3, 6);
+
+    $collection->all();
+
+    // [3, 4, 5, 6]
 
 <a name="method-reduce"></a>
 #### `reduce()`

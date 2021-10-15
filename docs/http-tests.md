@@ -591,6 +591,7 @@ Laravel также позволяет отображать шаблоны без
 - [assertStatus](#assert-status)
 - [assertSuccessful](#assert-successful)
 - [assertUnauthorized](#assert-unauthorized)
+- [assertUnprocessable](#assert-unprocessable)
 - [assertValid](#assert-valid)
 - [assertInvalid](#assert-invalid)
 - [assertViewHas](#assert-view-has)
@@ -998,6 +999,13 @@ Laravel также позволяет отображать шаблоны без
 Утверждение о том, что ответ имеет код `401` состояния HTTP – `unauthorized`:
 
     $response->assertUnauthorized();
+
+<a name="assert-unprocessable"></a>
+#### assertUnprocessable
+
+Утверждение о том, что ответ имеет код `422` состояния HTTP – `Unprocessable Entity`:
+
+    $response->assertUnprocessable();
 
 <a name="assert-valid"></a>
 #### assertValid
