@@ -705,6 +705,16 @@ Echo.private(`orders.${this.order.id}`)
     .listen(...);
 ```
 
+<a name="stop-listening-for-events"></a>
+#### Прекращение прослушивание событий
+
+Если вы хотите прекратить прослушивание конкретного события, не [покидая канал](#leaving-a-channel), то используйте метод `stopListening`:
+
+```js
+Echo.private(`orders.${this.order.id}`)
+    .stopListening('OrderShipmentStatusUpdated')
+```
+
 <a name="leaving-a-channel"></a>
 ### Покидание канала
 
