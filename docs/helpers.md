@@ -99,6 +99,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::containsAll](#method-str-contains-all)
 - [Str::endsWith](#method-ends-with)
 - [Str::finish](#method-str-finish)
+- [Str::headline](#method-str-headline)
 - [Str::is](#method-str-is)
 - [Str::isAscii](#method-str-is-ascii)
 - [Str::isUuid](#method-str-is-uuid)
@@ -1216,6 +1217,21 @@ Laravel содержит множество глобальных «вспомо�
     $adjusted = Str::finish('this/string/', '/');
 
     // this/string/
+
+<a name="method-str-headline"></a>
+#### `Str::headline()`
+
+Метод `Str::headline` преобразует строки, разделенные регистром, дефисами или подчеркиванием, в строку, разделенную пробелами, с заглавной первой буквой каждого слова:
+
+    use Illuminate\Support\Str;
+
+    $headline = Str::headline('steve_jobs');
+
+    // Steve Jobs
+
+    $headline = Str::headline('EmailNotificationSent');
+
+    // Email Notification Sent
 
 <a name="method-str-is"></a>
 #### `Str::is()`

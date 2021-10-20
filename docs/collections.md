@@ -164,7 +164,7 @@
 - [random](#method-random)
 - [range](#method-range)
 - [reduce](#method-reduce)
-- [reduceMany](#method-reduce-many)
+- [reduceSpread](#method-reduce-spread)
 - [reject](#method-reject)
 - [replace](#method-replace)
 - [replaceRecursive](#method-replacerecursive)
@@ -1755,15 +1755,15 @@
 
     // 4264
 
-<a name="method-reduce-many"></a>
-#### `reduceMany()`
+<a name="method-reduce-spread"></a>
+#### `reduceSpread()`
 
-Метод `reduceMany` сокращает коллекцию до массива значений, передавая результаты каждой итерации в следующую итерацию. Этот метод похож на метод `reduce`; однако он может принимать несколько начальных значений:
+Метод `reduceSpread` сокращает коллекцию до массива значений, передавая результаты каждой итерации в следующую итерацию. Этот метод похож на метод `reduce`; однако он может принимать несколько начальных значений:
 
 ```php
 [$creditsRemaining, $batch] = Image::where('status', 'unprocessed')
         ->get()
-        ->reduceMany(function ($creditsRemaining, $batch, $image) {
+        ->reduceSpread(function ($creditsRemaining, $batch, $image) {
             if ($creditsRemaining >= $image->creditsRequired()) {
                 $batch->push($image);
 
