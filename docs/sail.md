@@ -270,6 +270,7 @@ depends_on:
 ```bash
 MAIL_HOST=mailhog
 MAIL_PORT=1025
+MAIL_ENCRYPTION=null
 ```
 
 Когда Sail запущен, вы можете получить доступ к веб-интерфейсу MailHog по адресу: http://localhost:8025

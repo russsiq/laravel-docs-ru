@@ -923,12 +923,24 @@ Laravel также позволяет отображать шаблоны без
 
     $response->assertSessionHas($key, $value = null);
 
+При необходимости в качестве второго аргумента метода `assertSessionHas` может быть передано замыкание. Утверждение будет пройдено, если замыкание вернет `true`:
+
+    $response->assertSessionHas($key, function ($value) {
+        return $value->name === 'Taylor Otwell';
+    });
+
 <a name="assert-session-has-input"></a>
 #### assertSessionHasInput
 
 Утверждение о том, что сессия имеет переданное значение в [массиве кратковременно хранящихся входных данных](responses.md#redirecting-with-flashed-session-data):
 
     $response->assertSessionHasInput($key, $value = null);
+
+При необходимости в качестве второго аргумента метода `assertSessionHasInput` может быть передано замыкание. Утверждение будет пройдено, если замыкание вернет `true`:
+
+    $response->assertSessionHasInput($key, function ($value) {
+        return Crypt::decryptString($value) === 'secret';
+    });
 
 <a name="assert-session-has-all"></a>
 #### assertSessionHasAll
