@@ -926,7 +926,7 @@ Laravel также позволяет отображать шаблоны без
 <a name="assert-session-has-input"></a>
 #### assertSessionHasInput
 
-Утверждение о том, что сессия имеет переданное значение в [массиве входящих данных кратковременного сохранения](responses.md#redirecting-with-flashed-session-data):
+Утверждение о том, что сессия имеет переданное значение в [массиве кратковременно хранящихся входных данных](responses.md#redirecting-with-flashed-session-data):
 
     $response->assertSessionHasInput($key, $value = null);
 
