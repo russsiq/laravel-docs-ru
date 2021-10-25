@@ -15,6 +15,7 @@
     - [Slack](#slack)
     - [Discord](#discord)
     - [Telegram](#telegram)
+    - [Microsoft Teams](#microsoft-teams)
 
 <a name="introduction"></a>
 ## Введение
@@ -286,4 +287,13 @@ Envoy также поддерживает отправку уведомлени�
 
     @finished
         @telegram('bot-id','chat-id')
+    @endfinished
+
+<a name="microsoft-teams"></a>
+### Microsoft Teams
+
+Envoy также поддерживает отправку уведомлений в [Microsoft Teams](https://www.microsoft.com/en-us/microsoft-teams) после выполнения каждой задачи. Директива `@microsoftTeams` принимает веб-хук Teams (обязательно), сообщение, цвет темы (по типу сообщения: успешно, информация, предупреждение, ошибка) и массив параметров. Вы можете получить веб-хук Teams, создав новый [входящий веб-хук](https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook). В Teams API есть множество других атрибутов для настройки сообщения, например заголовок, сводка и разделы. Дополнительную информацию можно найти в [документации Microsoft Teams](https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/connectors-using?tabs=cURL#example-of-connector-message). Вы должны передать полный URL-адрес веб-хука в директиву `@microsoftTeams`:
+
+    @finished
+        @microsoftTeams('webhook-url')
     @endfinished
