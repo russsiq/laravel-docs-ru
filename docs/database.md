@@ -193,7 +193,7 @@ driver://username:password@host:port/database?options
 <a name="running-an-unprepared-statement"></a>
 #### Выполнение неподготовленного запроса
 
-По желанию может потребоваться выполнить запрос SQL без привязки каких-либо значений. Для этого используйте метод `unprepared` фасада `DB`:
+Иногда требуется выполнить запрос SQL без привязки каких-либо значений. Для этого используйте метод `unprepared` фасада `DB`:
 
     DB::unprepared('update users set votes = 100 where name = "Dries"');
 
