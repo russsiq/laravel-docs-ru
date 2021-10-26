@@ -42,7 +42,7 @@
 - [Пакет Laravel Scout](https://github.com/laravel/scout)
 - [Пакет Laravel Socialite](https://github.com/laravel/socialite)
 - [Пакет Laravel Telescope](https://github.com/laravel/telescope)
-- [Исходики официального сайта Laravel](https://github.com/laravel/laravel.com-next)
+- [Исходники официального сайта Laravel](https://github.com/laravel/laravel.com-next)
 <!-- </div> -->
 
 <a name="support-questions"></a>
