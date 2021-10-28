@@ -174,6 +174,8 @@ git clone https://github.com/laravel/homestead.git ~/Homestead
 
     provider: virtualbox
 
+> {note} Если вы используете Apple Silicon, то вам следует добавить `box: laravel/homestead-arm` в ваш файл `Homstead.yaml`. Для Apple Silicon требуется провайдер Parallels.
+
 <a name="configuring-shared-folders"></a>
 #### Конфигурирование общих папок
 

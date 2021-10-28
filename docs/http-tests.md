@@ -185,8 +185,6 @@ Laravel предлагает несколько помощников для вз
 
     namespace Tests\Feature;
 
-    use Illuminate\Foundation\Testing\RefreshDatabase;
-    use Illuminate\Foundation\Testing\WithoutMiddleware;
     use Tests\TestCase;
 
     class ExampleTest extends TestCase
@@ -205,6 +203,33 @@ Laravel предлагает несколько помощников для вз
             $response->dumpSession();
 
             $response->dump();
+        }
+    }
+
+В качестве альтернативы вы можете использовать методы `dd`, `ddHeaders` и `ddSession` для вывода информации об ответе и дальнейшей остановки выполнения теста:
+
+    <?php
+
+    namespace Tests\Feature;
+
+    use Tests\TestCase;
+
+    class ExampleTest extends TestCase
+    {
+        /**
+         * Отвлеченный пример функционального теста.
+         *
+         * @return void
+         */
+        public function test_basic_test()
+        {
+            $response = $this->get('/');
+
+            $response->ddHeaders();
+
+            $response->ddSession();
+
+            $response->dd();
         }
     }
 
@@ -343,6 +368,30 @@ Laravel также предлагает прекрасный способ пос
 В приведенном выше примере вы могли заметить, что мы вызвали метод `etc` в конце нашей цепочки утверждений. Этот метод сообщает Laravel, что в объекте JSON могут присутствовать другие атрибуты. Если метод `etc` не используется, то тест завершится неудачно, если в объекте JSON существуют другие атрибуты, для которых вы не сделали утверждений.
 
 Цель такого поведения – защитить вас от непреднамеренного раскрытия конфиденциальной информации в ваших ответах JSON, заставив вас либо явно сделать утверждение относительно атрибута, либо явно разрешить дополнительные атрибуты с помощью метода `etc`.
+
+<a name="asserting-json-attribute-presence-and-absence"></a>
+#### Утверждения относительно наличия / отсутствия атрибута JSON
+
+Для утверждений, что атрибут присутствует или отсутствует, вы можете использовать методы `has` и `missing`:
+
+    $response->assertJson(fn (AssertableJson $json) =>
+        $json->has('data')
+             ->missing('message')
+    );
+
+Кроме того, методы `hasAll` и `missingAll` позволяют одновременно делать утверждения о наличии или отсутствия нескольких атрибутов:
+
+    $response->assertJson(fn (AssertableJson $json) =>
+        $json->hasAll('status', 'data')
+             ->missingAll('message', 'code')
+    );
+
+Вы можете использовать метод `hasAny`, чтобы определить, присутствует ли хотя бы один атрибут, из указанных в списке:
+
+    $response->assertJson(fn (AssertableJson $json) =>
+        $json->has('status')
+             ->hasAny('data', 'message', 'code')
+    );
 
 <a name="asserting-against-json-collections"></a>
 #### Утверждения относительно коллекций JSON

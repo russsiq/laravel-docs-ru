@@ -157,6 +157,26 @@ Sanctum позволяет вам назначать «полномочия» т
         //
     }
 
+<a name="token-ability-middleware"></a>
+#### Посредники полномочий токена
+
+Sanctum содержит два посредника, которые могут использоваться для проверки того, что входящий запрос аутентифицирован с помощью токена, которому предоставлены указанные полномочия. Для начала добавьте следующие посредники в свойство `$routeMiddleware` файла `app/Http/Kernel.php` вашего приложения:
+
+    'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
+    'ability' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
+
+Посредник `abilities` может быть назначен маршруту для проверки того, что токен входящего запроса имеет все перечисленные полномочия:
+
+    Route::get('/orders', function () {
+        // У токена есть полномочия на «проверку статуса» и «размещения заказов» ...
+    })->middleware(['auth:sanctum', 'abilities:check-status,place-orders']);
+
+Посредник `ability` может быть назначен маршруту для проверки того, что токен входящего запроса имеет *по крайней мере одно* из перечисленных полномочий:
+
+    Route::get('/orders', function () {
+        // У токена есть полномочия на «проверку статуса» или «размещения заказов» ...
+    })->middleware(['auth:sanctum', 'ability:check-status,place-orders']);
+
 <a name="first-party-ui-initiated-requests"></a>
 #### Однодоменные запросы, инициированные пользовательским интерфейсом
 

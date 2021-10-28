@@ -173,6 +173,9 @@ Laravel предлагает полезные методы для имитаци
 
             // Утверждаем, что задание не было отправлено ...
             Bus::assertNotDispatched(AnotherJob::class);
+
+            // Утверждаем, что никаких заданий не было отправлено ...
+            Bus::assertNothingDispatched();
         }
     }
 
