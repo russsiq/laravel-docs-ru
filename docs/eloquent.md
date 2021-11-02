@@ -748,8 +748,6 @@ Eloquent содержит методы `isDirty`, `isClean` и `wasChanged` дл
         ['departure' => 'Chicago', 'destination' => 'New York', 'price' => 150]
     ], ['departure', 'destination'], ['price']);
 
-> {note} Все системы БД, кроме SQL Server, требуют, чтобы столбцы во втором аргументе метода `upsert` имели «первичный» или «уникальный» индекс.
-
 <a name="deleting-models"></a>
 ## Удаление моделей
 

@@ -1423,7 +1423,7 @@ public function boot()
 Проверяемое поле должно быть допустимым идентификатором часового пояса в соответствии с функцией `timezone_identifiers_list` PHP.
 
 <a name="rule-unique"></a>
-#### unique:_table_,_column_,_except_,_idColumn_
+#### unique:_table_,_column_
 
 Проверяемое поле не должно существовать в указанной таблице базы данных.
 
