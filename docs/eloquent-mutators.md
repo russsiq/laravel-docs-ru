@@ -119,6 +119,7 @@
 
 <!-- <div class="content-list" markdown="1"> -->
 - `array`
+- `AsStringable::class`
 - `boolean`
 - `collection`
 - `date`
@@ -175,6 +176,30 @@
     ]);
 
 > {note} Атрибуты, которые имеют значение `null`, не будут преобразованы. Кроме того, вы никогда не должны определять типизацию (или атрибут), имя которого совпадает с именем отношения.
+
+<a name="stringable-casting"></a>
+#### Строковая типизация
+
+Вы можете использовать класс `Illuminate\Database\Eloquent\Casts\AsStringable` для приведения атрибута модели к объекту [класса `Illuminate\Support\Stringable`](helpers.md#fluent-strings-method-list):
+
+    <?php
+
+    namespace App\Models;
+
+    use Illuminate\Database\Eloquent\Casts\AsStringable;
+    use Illuminate\Database\Eloquent\Model;
+
+    class User extends Model
+    {
+        /**
+         * Атрибуты, которые должны быть типизированы.
+         *
+         * @var array
+         */
+        protected $casts = [
+            'directory' => AsStringable::class,
+        ];
+    }
 
 <a name="array-and-json-casting"></a>
 ### Преобразование в массив и JSON
