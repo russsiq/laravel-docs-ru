@@ -146,6 +146,9 @@
         //
     })->middleware(EnsureTokenIsValid::class);
 
+<a name="excluding-middleware"></a>
+#### Исключение посредника
+
 При назначении посредника группе маршрутов, иногда требуется запретить применение посредника к одному из маршрутов в группе. Вы можете сделать это с помощью метода `withoutMiddleware`:
 
     use App\Http\Middleware\EnsureTokenIsValid;
@@ -158,6 +161,16 @@
         Route::get('/profile', function () {
             //
         })->withoutMiddleware([EnsureTokenIsValid::class]);
+    });
+
+Вы также можете исключить переданный набор посредников из определения [группы](routing.md#route-groups) маршрутов:
+
+    use App\Http\Middleware\EnsureTokenIsValid;
+
+    Route::withoutMiddleware([EnsureTokenIsValid::class])->group(function () {
+        Route::get('/profile', function () {
+            //
+        });
     });
 
 Метод `withoutMiddleware` удаляет только посредника маршрутизации и не применим к [глобальному посреднику](#global-middleware).

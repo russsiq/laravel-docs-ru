@@ -776,6 +776,7 @@ Laravel также содержит глобального помощника `o
 - [Distinct](#rule-distinct)
 - [Email](#rule-email)
 - [Ends With](#rule-ends-with)
+- [Enum](#rule-enum)
 - [Exclude](#rule-exclude)
 - [Exclude If](#rule-exclude-if)
 - [Exclude Unless](#rule-exclude-unless)
@@ -1051,6 +1052,20 @@ public function boot()
 #### ends_with:_foo_,_bar_,...
 
 Проверяемое поле должно заканчиваться одним из указанных значений.
+
+<a name="rule-enum"></a>
+#### enum
+
+Правило `Enum` – это правило на основе класса, которое определяет, имеет ли проверяемое поле допустимое значение перечисления. Правило `Enum` принимает имя перечисления как единственный аргумент конструктора:
+
+    use App\Enums\ServerStatus;
+    use Illuminate\Validation\Rules\Enum;
+
+    $request->validate([
+        'status' => [new Enum(ServerStatus::class)],
+    ]);
+
+> {note} Перечисляемые типы доступны только в PHP 8.1+.
 
 <a name="rule-exclude"></a>
 #### exclude
