@@ -48,7 +48,7 @@ Blade – это простой, но мощный движок шаблонов
         return view('greeting', ['name' => 'Finn']);
     });
 
-> {tip} Прежде чем углубиться в Blade, обязательно прочтите Laravel [документацию по HTML-шаблонам](views.md).
+> {tip} Хотите вывести использование шаблонов Blade на новый уровень и с легкостью создавать динамические интерфейсы? Ознакомьтесь с [Laravel Livewire](https://laravel-livewire.com).
 
 <a name="displaying-data"></a>
 ## Отображение данных
