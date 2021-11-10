@@ -1203,7 +1203,56 @@ Laravel позволяет отправлять уведомления, испо
 <a name="notification-events"></a>
 ## События уведомления
 
-При отправки уведомлений, система уведомлений запускает [событие](events.md) `Illuminate\Notifications\Events\NotificationSent`. Событие содержит уведомляемую сущность и сам экземпляр уведомления.Как правило, регистрация слушателей этого события осуществляется в поставщике `App\Providers\EventServiceProvider`:
+<a name="notification-sending-event"></a>
+#### Событие отправки уведомления
+
+При отправке уведомления система уведомлений запускает [событие](events.md) `Illuminate\Notifications\Events\NotificationSending`. Событие содержит «уведомляемую» сущность и сам экземпляр уведомления. Как правило, регистрация слушателей этого события осуществляется в поставщике `App\Providers\EventServiceProvider`:
+
+    /**
+     * Карта слушателей событий приложения.
+     *
+     * @var array
+     */
+    protected $listen = [
+        'Illuminate\Notifications\Events\NotificationSending' => [
+            'App\Listeners\CheckNotificationStatus',
+        ],
+    ];
+
+Уведомление не будет отправлено, если слушатель события `NotificationSending` вернет `false` из своего метода `handle`:
+
+    use Illuminate\Notifications\Events\NotificationSending;
+
+    /**
+     * Обработать переданное событие.
+     *
+     * @param  \Illuminate\Notifications\Events\NotificationSending  $event
+     * @return void
+     */
+    public function handle(NotificationSending $event)
+    {
+        return false;
+    }
+
+В слушателе события вы можете получить доступ к свойствам `notifiable`, `notification` и `channel` события для получения сведений о получателе уведомления или о самом уведомлении:
+
+    /**
+     * Обработать переданное событие.
+     *
+     * @param  \Illuminate\Notifications\Events\NotificationSending  $event
+     * @return void
+     */
+    public function handle(NotificationSending $event)
+    {
+        // $event->channel
+        // $event->notifiable
+        // $event->notification
+    }
+
+<a name="notification-sent-event"></a>
+#### Событие отправленного уведомления
+
+После отправки уведомления система уведомлений запускает [событие](events.md) `Illuminate\Notifications\Events\NotificationSent`. Событие содержит «уведомляемую» сущность и сам экземпляр уведомления. Как правило, регистрация слушателей этого события осуществляется в поставщике `App\Providers\EventServiceProvider`:
 
     /**
      * Карта слушателей событий приложения.
