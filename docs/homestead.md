@@ -472,15 +472,8 @@ sites:
 По умолчанию в окружении Homestead перенаправляются следующие порты:
 
 <!-- <div class="content-list" markdown="1"> -->
-- **SSH:** `2222` &rarr; `22`
-- **ngrok UI:** `4040` &rarr; `4040`
 - **HTTP:** `8000` &rarr; `80`
 - **HTTPS:** `44300` &rarr; `443`
-- **MySQL:** `33060` &rarr; `3306`
-- **PostgreSQL:** `54320` &rarr; `5432`
-- **MongoDB:** `27017` &rarr; `27017`
-- **Mailhog:** `8025` &rarr; `8025`
-- **Minio:** `9600` &rarr; `9600`
 <!-- </div> -->
 
 <a name="forwarding-additional-ports"></a>
@@ -494,6 +487,18 @@ sites:
         - send: 7777
           to: 777
           protocol: udp
+
+Ниже приведен список дополнительных портов служб Homestead в образе Vagrant, которые можно сопоставить со своей хост-машины:
+
+<!-- <div class="content-list" markdown="1"> -->
+- **SSH:** 2222 &rarr; 22
+- **ngrok UI:** 4040 &rarr; 4040
+- **MySQL:** 33060 &rarr; 3306
+- **PostgreSQL:** 54320 &rarr; 5432
+- **MongoDB:** 27017 &rarr; 27017
+- **Mailhog:** 8025 &rarr; 8025
+- **Minio:** 9600 &rarr; 9600
+<!-- </div> -->
 
 <a name="php-versions"></a>
 ### Версии PHP
