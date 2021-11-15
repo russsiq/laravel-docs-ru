@@ -389,12 +389,14 @@ Laravel Dusk предлагает выразительный и простой �
 
 Вы можете использовать метод `script` для выполнения произвольных выражений JavaScript в браузере:
 
-    $output = $browser->script('document.documentElement.scrollTop = 0');
+    $browser->script('document.documentElement.scrollTop = 0');
 
-    $output = $browser->script([
+    $browser->script([
         'document.body.scrollTop = 0',
         'document.documentElement.scrollTop = 0',
     ]);
+
+    $output = $browser->script('return window.location.pathname');
 
 <a name="taking-a-screenshot"></a>
 ### Получение снимка экрана

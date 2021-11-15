@@ -184,7 +184,14 @@ DELETE    | `/photos/{photo}`      | destroy      | photos.destroy
 
 Если вы используете [привязку модели к маршруту](routing.md#route-model-binding) и хотите, чтобы методы контроллера ресурса содержали типизацию экземпляра модели, вы можете использовать параметр `--model` при создании контроллера:
 
-    php artisan make:controller PhotoController --resource --model=Photo
+    php artisan make:controller PhotoController --model=Photo --resource
+
+<a name="generating-form-requests"></a>
+#### Генерация запросов формы
+
+Вы можете указать флаг `--requests` при создании ресурсного контроллера, чтобы указать Artisan о попутном создании [классов запросов](validation.md#form-request-validation) для методов `store` и `update` контроллера:
+
+    php artisan make:controller PhotoController --model=Photo --resource --requests
 
 <a name="restful-partial-resource-routes"></a>
 ### Частичные ресурсные маршруты
