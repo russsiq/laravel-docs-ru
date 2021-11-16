@@ -769,6 +769,8 @@ Laravel также содержит глобального помощника `o
 - [Date](#rule-date)
 - [Date Equals](#rule-date-equals)
 - [Date Format](#rule-date-format)
+- [Declined](#rule-declined)
+- [Declined If](#rule-declined-if)
 - [Different](#rule-different)
 - [Digits](#rule-digits)
 - [Digits Between](#rule-digits-between)
@@ -971,6 +973,16 @@ public function boot()
 #### date_format:_format_
 
 Проверяемое поле должно соответствовать переданному _format_. При валидации поля следует использовать **либо** `date`, **либо** `date_format`, а не то и другое вместе. Это правило валидации поддерживает все форматы, поддерживаемые классом [`DateTime`](https://www.php.net/manual/ru/class.datetime.php) PHP.
+
+<a name="rule-declined"></a>
+#### declined
+
+Проверяемое поле должно иметь значение `"no"`, `"off"`, `0` или `false`.
+
+<a name="rule-declined-if"></a>
+#### declined_if:anotherfield,value,...
+
+Проверяемое поле должно иметь значение `"no"`, `"off"`, `0` или `false`, если другое проверяемое поле равно указанному значению.
 
 <a name="rule-different"></a>
 #### different:_field_
