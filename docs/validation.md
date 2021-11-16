@@ -1065,7 +1065,7 @@ public function boot()
         'status' => [new Enum(ServerStatus::class)],
     ]);
 
-> {note} Перечисляемые типы доступны только в PHP 8.1+.
+> {note} Перечисляемые типы доступны только в [PHP 8.1+](https://www.php.net/manual/ru/language.enumerations.php).
 
 <a name="rule-exclude"></a>
 #### exclude
