@@ -397,13 +397,19 @@ $disk->put('image.jpg', $content);
 <a name="other-uploaded-file-information"></a>
 #### Другая информация о загружаемом файле
 
-Если вы хотите получить оригинальное имя загружаемого файла, вы можете сделать это с помощью метода `getClientOriginalName`:
+Если вы хотите получить оригинальное имя и расширение загружаемого файла, то вы можете сделать это с помощью методов `getClientOriginalName` и `getClientOriginalExtension`:
 
-    $name = $request->file('avatar')->getClientOriginalName();
+    $file = $request->file('avatar');
 
-Метод `extension` используется для получения расширения загружаемого файла:
+    $name = $file->getClientOriginalName();
+    $extension = $file->getClientOriginalExtension();
 
-    $extension = $request->file('avatar')->extension();
+Однако имейте в виду, что методы `getClientOriginalName` и `getClientOriginalExtension` считаются небезопасными, так как имя и расширение файла могут быть подделаны злоумышленником. По этой причине вы должны предпочесть методы `hashName` и `extension`, чтобы получить имя и расширение загружаемого файла:
+
+    $file = $request->file('avatar');
+
+    $name = $file->hashName(); // Создание уникального случайного имени ...
+    $extension = $file->extension(); // Определение расширения файла на основе MIME-типа файла ...
 
 <a name="file-visibility"></a>
 ### Видимость файла

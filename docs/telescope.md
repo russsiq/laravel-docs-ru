@@ -183,6 +183,7 @@ Telescope станет прекрасным помощником при лока
             return $entry->isReportableException() ||
                 $entry->isFailedJob() ||
                 $entry->isScheduledTask() ||
+                $entry->isSlowQuery() ||
                 $entry->hasMonitoredTag();
         });
     }
@@ -213,6 +214,7 @@ Telescope станет прекрасным помощником при лока
                 return $entry->isReportableException() ||
                     $entry->isFailedJob() ||
                     $entry->isScheduledTask() ||
+                    $entry->isSlowQuery() ||
                     $entry->hasMonitoredTag();
                 });
         });
