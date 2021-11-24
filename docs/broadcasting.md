@@ -880,7 +880,7 @@ class Post extends Model
  */
 public function broadcastOn($event)
 {
-    return match($event) {
+    return match ($event) {
         'deleted' => [],
         default => [$this, $this->user],
     };

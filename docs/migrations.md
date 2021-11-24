@@ -485,7 +485,7 @@ Laravel будет использовать имя миграции, чтобы 
 <a name="column-method-foreignIdFor"></a>
 #### `foreignIdFor()`
 
-Метод `foreignIdFor` добавляет для переданного класса модели эквивалент столбца `{column}_id UNSIGNED BIG INT`:
+Метод `foreignIdFor` добавляет для переданного класса модели эквивалент столбца `{column}_id UNSIGNED BIGINT`:
 
     $table->foreignIdFor(User::class);
 

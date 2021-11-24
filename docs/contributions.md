@@ -55,7 +55,7 @@
 - [Форум Laracasts](https://laracasts.com/discuss)
 - [Форум Laravel.io](https://laravel.io/forum)
 - [StackOverflow](https://stackoverflow.com/questions/tagged/laravel)
-- [Discord](https://discordapp.com/invite/KxwQuKb)
+- [Discord](https://discordapp.com/invite/mPZNm7A)
 - [Larachat](https://larachat.co)
 - [IRC](https://web.libera.chat/?nick=artisan&channels=#laravel)
 <!-- </div> -->

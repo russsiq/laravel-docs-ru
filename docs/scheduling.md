@@ -40,15 +40,6 @@
     class Kernel extends ConsoleKernel
     {
         /**
-         * Команды Artisan вашего приложения.
-         *
-         * @var array
-         */
-        protected $commands = [
-            //
-        ];
-
-        /**
          * Определить расписание выполнения команд приложения.
          *
          * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
