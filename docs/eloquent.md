@@ -944,6 +944,12 @@ Eloquent содержит методы `isDirty`, `isClean` и `wasChanged` дл
         '--model' => [Address::class, Flight::class],
     ])->daily();
 
+Если вы хотите исключить определенные модели из числа моделей, обнаруженных для очистки, то вы можете использовать параметр `--except`:
+
+    $schedule->command('model:prune', [
+        '--except' => [Address::class, Flight::class],
+    ])->daily();
+
 Вы можете сымитировать свой запрос очистки, выполнив команду `model:prune` с флагом `--pretend`. При имитации команда `model:prune` просто сообщит, сколько записей будет удалено, если команда действительно будет запущена:
 
     php artisan model:prune --pretend
