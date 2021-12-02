@@ -51,7 +51,7 @@ Laravel позволяет вам легко «имитировать» ввод
         $this->line('Your name is '.$name.' and you prefer '.$language.'.');
     });
 
-Вы можете протестировать эту команду с помощью следующего теста, который использует методы `expectsQuestion`,` expectsOutput`, `doesntExpectOutput` и `assertExitCode`:
+Вы можете протестировать эту команду с помощью следующего теста, который использует методы `expectsQuestion`, `expectsOutput`, `doesntExpectOutput` и `assertExitCode`:
 
     /**
      * Тестирование консольной команды.

@@ -1827,7 +1827,7 @@ Str::wordCount('Hello, world!'); // 2
 <a name="method-fluent-str-camel"></a>
 #### `camel`
 
-Метод `camel` преобразует переданную строку в` camelCase`:
+Метод `camel` преобразует переданную строку в `camelCase`:
 
     use Illuminate\Support\Str;
 
