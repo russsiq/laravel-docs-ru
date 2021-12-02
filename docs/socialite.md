@@ -6,8 +6,9 @@
 - [Конфигурирование](#configuration)
 - [Аутентификация](#authentication)
     - [Маршрутизация](#routing)
-    - [Необязательные параметры](#optional-parameters)
+    - [Аутентификация и хранение пользователей](#authentication-and-storage)
     - [Права доступа](#access-scopes)
+    - [Необязательные параметры](#optional-parameters)
 - [Получение сведений о пользователе](#retrieving-user-details)
 
 <a name="introduction"></a>
@@ -64,18 +65,41 @@
 
 Метод `redirect` фасада `Socialite`, отвечает за перенаправление пользователя к провайдеру OAuth, в то время как метод `user` обрабатывает входящий запрос и получает информацию о пользователе от провайдера после его аутентификации.
 
-<a name="optional-parameters"></a>
-### Необязательные параметры
+<a name="authentication-and-storage"></a>
+### Аутентификация и хранение пользователей
 
-Некоторые провайдеры OAuth поддерживают необязательные параметры в запросе перенаправления. Чтобы включить в запрос любые необязательные параметры, вызовите метод `with` с ассоциативным массивом:
+После того, как пользователь был получен от провайдера OAuth, вы можете определить, существует ли пользователь в базе данных вашего приложения, и [аутентифицировать пользователя](authentication.md#authenticate-a-user-instance). Если пользователь не существует в базе данных вашего приложения, то вы можете создать новую запись в своей базе данных для представления пользователя:
 
+    use App\Models\User;
+    use Illuminate\Support\Facades\Auth;
     use Laravel\Socialite\Facades\Socialite;
 
-    return Socialite::driver('google')
-        ->with(['hd' => 'example.com'])
-        ->redirect();
+    Route::get('/auth/callback', function () {
+        $githubUser = Socialite::driver('github')->user();
 
-> {note} При использовании метода `with` будьте осторожны, чтобы не передавать какие-либо зарезервированные ключевые слова, такие как `state` или `response_type`.
+        $user = User::where('github_id', $githubUser->id)->first();
+
+        if ($user) {
+            $user->update([
+                'github_token' => $githubUser->token,
+                'github_refresh_token' => $githubUser->refreshToken,
+            ]);
+        } else {
+            $user = User::create([
+                'name' => $githubUser->name,
+                'email' => $githubUser->email,
+                'github_id' => $githubUser->id,
+                'github_token' => $githubUser->token,
+                'github_refresh_token' => $githubUser->refreshToken,
+            ]);
+        }
+
+        Auth::login($user);
+
+        return redirect('/dashboard');
+    });
+
+> {tip} О том, какая информация о пользователе доступна у конкретных провайдеров OAuth, ознакомьтесь с документацией по [получению сведений о пользователе](#retrieving-user-details).
 
 <a name="access-scopes"></a>
 ### Права доступа
@@ -94,10 +118,25 @@
         ->setScopes(['read:user', 'public_repo'])
         ->redirect();
 
+<a name="optional-parameters"></a>
+### Необязательные параметры
+
+Некоторые провайдеры OAuth поддерживают необязательные параметры в запросе перенаправления. Чтобы включить в запрос любые необязательные параметры, вызовите метод `with` с ассоциативным массивом:
+
+    use Laravel\Socialite\Facades\Socialite;
+
+    return Socialite::driver('google')
+        ->with(['hd' => 'example.com'])
+        ->redirect();
+
+> {note} При использовании метода `with` будьте осторожны, чтобы не передавать какие-либо зарезервированные ключевые слова, такие как `state` или `response_type`.
+
 <a name="retrieving-user-details"></a>
 ## Получение сведений о пользователе
 
 После того, как пользователь будет перенаправлен обратно на ваш маршрут `callback` аутентификации, вы можете получить данные пользователя, используя метод `user` пакета Socialite. Объект пользователя, возвращаемый методом `user`, содержит множество свойств и методов, которые вы можете использовать для сохранения информации о пользователе в вашей собственной базе данных. Различные свойства и методы могут быть доступны в зависимости от версии провайдера OAuth, с которым вы выполняете аутентификацию, OAuth 1.0 или OAuth 2.0:
+
+    use Laravel\Socialite\Facades\Socialite;
 
     Route::get('/auth/callback', function () {
         $user = Socialite::driver('github')->user();

@@ -54,6 +54,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Arr::sort](#method-array-sort)
 - [Arr::sortRecursive](#method-array-sort-recursive)
 - [Arr::toCssClasses](#method-array-to-css-classes)
+- [Arr::undot](#method-array-undot)
 - [Arr::where](#method-array-where)
 - [Arr::wrap](#method-array-wrap)
 - [data_fill](#method-data-fill)
@@ -797,6 +798,22 @@ Laravel содержит множество глобальных «вспомо�
     */
 
 Этот метод обеспечивает функциональность Laravel, позволяя [объединять классы с коллекцией атрибутов компонента Blade](blade.md#conditionally-merge-classes), а также использовать [директиву `@class` Blade](blade.md#conditional-classes).
+
+<a name="method-array-undot"></a>
+#### `Arr::undot()`
+
+Метод `Arr::undot` преобразует одноуровневый массив с «точечной нотацией» в многомерный массив:
+
+    use Illuminate\Support\Arr;
+
+    $array = [
+        'user.name' => 'Kevin Malone',
+        'user.occupation' => 'Accountant',
+    ];
+
+    $array = Arr::undot($array);
+
+    // ['user' => ['name' => 'Kevin Malone', 'occupation' => 'Accountant']]
 
 <a name="method-array-where"></a>
 #### `Arr::where()`
