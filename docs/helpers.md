@@ -2105,7 +2105,7 @@ Str::wordCount('Hello, world!'); // 2
     // <h1>Taylor Otwell</h1>
 
 <a name="method-fluent-str-mask"></a>
-#### `mask` {#collection-method}
+#### `mask`
 
 Метод `mask` маскирует часть строки повторяющимся символом и может использоваться для [обфускации](https://ru.wikipedia.org/wiki/Обфускация_(программное_обеспечение)) сегментов строк, таких как адреса электронной почты и номера телефонов:
 
