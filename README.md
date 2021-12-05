@@ -99,7 +99,7 @@
     - [x] [*Sail*](./docs/sail.md) – CLI для взаимодействия со средой разработки Docker.
     - [x] [*Sanctum*](./docs/sanctum.md) – легковесная система аутентификации для SPA (одностраничных приложений), мобильных приложений и простых API на основе токенов. Управление токенами API, аутентификация сессии. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
     - [x] [*Scout*](./docs/scout.md) – «простое» решение на основе драйверов для добавления полнотекстового поиска моделям Eloquent.
-    - [x] [*Socialite*](./docs/socialite.md) – аутентификация через провайдеров OAuth: Facebook, Twitter, LinkedIn, Google, GitHub, GitLab, и Bitbucket.
+    - [x] [*Socialite*](./docs/socialite.md) – аутентификация через провайдеров OAuth: Facebook, Twitter, LinkedIn, Google, GitHub, GitLab и Bitbucket.
     - [x] [*Telescope*](./docs/telescope.md) – панель управления, отображающая записи о произошедших в приложении событиях.
     - [ ] [*Valet*](./docs/valet.md) – окружение разработки приложений Laravel для пользователей macOS.
 - [Документация API](https://laravel.com/api/8.x/)

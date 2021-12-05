@@ -958,7 +958,7 @@ use Illuminate\Database\DBAL\TimestampType;
         $table->string('name', 50)->nullable()->change();
     });
 
-> {note} Только следующие типы столбцов могут быть изменены: `bigInteger`, `binary`, `boolean`, `date`, `dateTime`, `dateTimeTz`, `decimal`, `integer`, `json`, `longText`, `mediumText`, `smallInteger`, `string`, `text`, `time`, `unsignedBigInteger`, `unsignedInteger`, `unsignedSmallInteger`, и `uuid`.
+> {note} Только следующие типы столбцов могут быть изменены: `bigInteger`, `binary`, `boolean`, `date`, `dateTime`, `dateTimeTz`, `decimal`, `integer`, `json`, `longText`, `mediumText`, `smallInteger`, `string`, `text`, `time`, `unsignedBigInteger`, `unsignedInteger`, `unsignedSmallInteger` и `uuid`.
 
 <a name="renaming-columns"></a>
 #### Переименование столбцов

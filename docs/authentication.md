@@ -656,7 +656,7 @@ Laravel также предлагает механизм для «выхода»
 <a name="the-authenticatable-contract"></a>
 ### Контракт `Authenticatable`
 
-Теперь, когда мы изучили каждый из методов `UserProvider`, давайте взглянем на контракт `Authenticatable`. Помните, что провайдеры пользователей должны возвращать реализации этого интерфейса из методов `retrieveById`, `retrieveByToken`, и `retrieveByCredentials`:
+Теперь, когда мы изучили каждый из методов `UserProvider`, давайте взглянем на контракт `Authenticatable`. Помните, что провайдеры пользователей должны возвращать реализации этого интерфейса из методов `retrieveById`, `retrieveByToken` и `retrieveByCredentials`:
 
     <?php
 

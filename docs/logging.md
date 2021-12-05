@@ -67,7 +67,7 @@
 <a name="configuring-the-single-and-daily-channels"></a>
 #### Конфигурирование каналов Single и Daily
 
-Каналы `single` и `daily` имеют три необязательных параметра конфигурации: `bubble`, `permission`, и `locking`.
+Каналы `single` и `daily` имеют три необязательных параметра конфигурации: `bubble`, `permission` и `locking`.
 
 Имя | Описание | По умолчанию
 ------------- | ------------- | -------------

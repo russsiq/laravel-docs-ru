@@ -105,7 +105,7 @@ driver://username:password@host:port/database?options
 <a name="running-queries"></a>
 ## Выполнение SQL-запросов
 
-После того, как вы настроили соединение с базой данных, вы можете выполнять запросы, используя фасад `DB`. Фасад `DB` содержит методы для каждого типа запроса: `select`, `update`, `insert`, `delete`, и `statement`.
+После того, как вы настроили соединение с базой данных, вы можете выполнять запросы, используя фасад `DB`. Фасад `DB` содержит методы для каждого типа запроса: `select`, `update`, `insert`, `delete` и `statement`.
 
 <a name="running-a-select-query"></a>
 #### Выполнение Select-запроса

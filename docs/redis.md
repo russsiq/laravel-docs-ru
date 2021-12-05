@@ -135,7 +135,7 @@ composer require predis/predis
         // Остальная часть конфигурации Redis ...
     ],
 
-Помимо основных параметров конфигурации сервера `host`, `port`, `database`, и `password`, Predis поддерживает дополнительные [параметры подключения](https://github.com/nrk/predis/wiki/Connection-Parameters), которые могут быть определены для каждого из ваших серверов Redis. Чтобы использовать эти дополнительные параметры конфигурации, добавьте их в конфигурацию сервера Redis в конфигурационном файле `config/database.php` вашего приложения:
+Помимо основных параметров конфигурации сервера `host`, `port`, `database` и `password`, Predis поддерживает дополнительные [параметры подключения](https://github.com/nrk/predis/wiki/Connection-Parameters), которые могут быть определены для каждого из ваших серверов Redis. Чтобы использовать эти дополнительные параметры конфигурации, добавьте их в конфигурацию сервера Redis в конфигурационном файле `config/database.php` вашего приложения:
 
     'default' => [
         'host' => env('REDIS_HOST', 'localhost'),
@@ -162,7 +162,7 @@ composer require predis/predis
         // Остальная часть конфигурации Redis ...
     ],
 
-Помимо основных параметров конфигурации сервера `host`, `port`, `database`, и `password`, phpredis поддерживает дополнительные параметры подключения: `name`, `persistent`, `prefix`, `read_timeout`, `retry_interval`, `timeout`, и `context`. Чтобы использовать эти дополнительные параметры конфигурации, добавьте их в конфигурацию сервера Redis в конфигурационном файле `config/database.php` вашего приложения:
+Помимо основных параметров конфигурации сервера `host`, `port`, `database` и `password`, phpredis поддерживает дополнительные параметры подключения: `name`, `persistent`, `prefix`, `read_timeout`, `retry_interval`, `timeout` и `context`. Чтобы использовать эти дополнительные параметры конфигурации, добавьте их в конфигурацию сервера Redis в конфигурационном файле `config/database.php` вашего приложения:
 
     'default' => [
         'host' => env('REDIS_HOST', 'localhost'),

@@ -66,7 +66,7 @@
 <a name="configuration"></a>
 ### Конфигурирование
 
-Вся конфигурация трансляций событий вашего приложения хранится в конфигурационном файле `config/broadcasting.php`. Laravel из коробки поддерживает несколько драйверов трансляции: [Pusher Channels](https://pusher.com/channels), [Redis](redis.md), и драйвер `log` для локальной разработки и отладки. Кроме того, поддерживается драйвер `null`, который позволяет полностью отключить трансляцию во время тестирования. В конфигурационном файле `config/broadcasting.php` содержится пример конфигурации для каждого из этих драйверов.
+Вся конфигурация трансляций событий вашего приложения хранится в конфигурационном файле `config/broadcasting.php`. Laravel из коробки поддерживает несколько драйверов трансляции: [Pusher Channels](https://pusher.com/channels), [Redis](redis.md) и драйвер `log` для локальной разработки и отладки. Кроме того, поддерживается драйвер `null`, который позволяет полностью отключить трансляцию во время тестирования. В конфигурационном файле `config/broadcasting.php` содержится пример конфигурации для каждого из этих драйверов.
 
 <a name="broadcast-service-provider"></a>
 #### Поставщик службы трансляции
@@ -85,7 +85,7 @@
 
     composer require pusher/pusher-php-server
 
-Далее, вы должны настроить свои учетные данные Pusher Channels в конфигурационном файле `config/broadcasting.php`. Пример конфигурации Pusher Channels уже содержится в этом файле, что позволяет быстро указать параметры `key`, `secret`, и `app_id`. Как правило, эти значения должны быть установлены через [переменные окружения](configuration.md#environment-configuration) `PUSHER_APP_KEY`, `PUSHER_APP_SECRET` и `PUSHER_APP_ID`:
+Далее, вы должны настроить свои учетные данные Pusher Channels в конфигурационном файле `config/broadcasting.php`. Пример конфигурации Pusher Channels уже содержится в этом файле, что позволяет быстро указать параметры `key`, `secret` и `app_id`. Как правило, эти значения должны быть установлены через [переменные окружения](configuration.md#environment-configuration) `PUSHER_APP_KEY`, `PUSHER_APP_SECRET` и `PUSHER_APP_ID`:
 
     PUSHER_APP_ID=your-pusher-app-id
     PUSHER_APP_KEY=your-pusher-key

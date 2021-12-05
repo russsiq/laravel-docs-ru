@@ -645,4 +645,4 @@ class StartServer extends Command implements SignalableCommandInterface
 <a name="events"></a>
 ## События
 
-Artisan запускает три события при выполнении команд: `Illuminate\Console\Events\ArtisanStarting`, `Illuminate\Console\Events\CommandStarting`, и `Illuminate\Console\Events\CommandFinished`. Событие `ArtisanStarting` выполняется сразу после запуска Artisan. Затем событие `CommandStarting` выполняется непосредственно перед запуском команды. Наконец, событие `CommandFinished` выполняется после завершения команды.
+Artisan запускает три события при выполнении команд: `Illuminate\Console\Events\ArtisanStarting`, `Illuminate\Console\Events\CommandStarting` и `Illuminate\Console\Events\CommandFinished`. Событие `ArtisanStarting` выполняется сразу после запуска Artisan. Затем событие `CommandStarting` выполняется непосредственно перед запуском команды. Наконец, событие `CommandFinished` выполняется после завершения команды.
