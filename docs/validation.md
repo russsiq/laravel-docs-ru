@@ -1816,6 +1816,76 @@ Laravel предлагает множество полезных правил в
         'name' => ['required', 'string', new Uppercase],
     ]);
 
+#### Доступ к дополнительным данным
+
+Если вашему пользовательскому классу правил валидации требуется доступ к другим валидируемым данным, то ваш класс правил может реализовать интерфейс `Illuminate\Contracts\Validation\DataAwareRule`. Этот интерфейс требует, чтобы ваш класс определял метод `setData`. Этот метод будет автоматически вызван Laravel (до того, как начнется валидация) со всеми проверяемыми данными:
+
+    <?php
+
+    namespace App\Rules;
+
+    use Illuminate\Contracts\Validation\Rule;
+    use Illuminate\Contracts\Validation\DataAwareRule;
+
+    class Uppercase implements Rule, DataAwareRule
+    {
+        /**
+         * Все валидируемые данные.
+         *
+         * @var array
+         */
+        protected $data = [];
+
+        // ...
+
+        /**
+         * Установить валидируемые данные.
+         *
+         * @param  array  $data
+         * @return $this
+         */
+        public function setData($data)
+        {
+            $this->data = $data;
+
+            return $this;
+        }
+    }
+
+Или, если вашему правилу валидации требуется доступ к экземпляру текущего валидатора, то вы можете реализовать интерфейс `ValidatorAwareRule`:
+
+    <?php
+
+    namespace App\Rules;
+
+    use Illuminate\Contracts\Validation\Rule;
+    use Illuminate\Contracts\Validation\ValidatorAwareRule;
+
+    class Uppercase implements Rule, ValidatorAwareRule
+    {
+        /**
+         * Экземпляр валидатора.
+         *
+         * @var \Illuminate\Validation\Validator
+         */
+        protected $validator;
+
+        // ...
+
+        /**
+         * Установить текущий валидатор.
+         *
+         * @param  \Illuminate\Validation\Validator  $validator
+         * @return $this
+         */
+        public function setValidator($validator)
+        {
+            $this->validator = $validator;
+
+            return $this;
+        }
+    }
+
 <a name="using-closures"></a>
 ### Использование замыканий
 

@@ -33,6 +33,17 @@ Laravel и другие его собственные пакеты следую�
 | 9 (LTS) | 8.0 - 8.1 | 25 января 2022 | 30 января 2024 | 28 января 2025 |
 | 10 | 8.0 - 8.1 | 24 января 2023 | 30 июля 2024 | 28 января 2025 |
 
+<!-- <div class="sm:flex dark:text-gray-400 mb-1">
+    <div class="flex items-center mr-4">
+        <div class="w-3 h-3 mr-2 bg-red-500"></div>
+        <div>End of life</div>
+    </div>
+    <div class="flex items-center">
+        <div class="w-3 h-3 mr-2 bg-orange-600"></div>
+        <div>Security fixes only</div>
+    </div>
+</div> -->
+
 (*) Поддерживаемые версии PHP
 
 <a name="laravel-8"></a>
