@@ -132,7 +132,7 @@ composer require predis/predis
 
         'client' => env('REDIS_CLIENT', 'predis'),
 
-        // Остальная часть конфигурации Redis ...
+        //
     ],
 
 Помимо основных параметров конфигурации сервера `host`, `port`, `database` и `password`, Predis поддерживает дополнительные [параметры подключения](https://github.com/nrk/predis/wiki/Connection-Parameters), которые могут быть определены для каждого из ваших серверов Redis. Чтобы использовать эти дополнительные параметры конфигурации, добавьте их в конфигурацию сервера Redis в конфигурационном файле `config/database.php` вашего приложения:

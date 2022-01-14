@@ -127,7 +127,7 @@
 - `datetime`
 - `immutable_date`
 - `immutable_datetime`
-- `decimal:<digits>`
+- `decimal:`<code>&lt;digits&gt;</code>
 - `double`
 - `encrypted`
 - `encrypted:array`

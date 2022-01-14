@@ -6,6 +6,7 @@
     - [Авторизация действий через шлюзы](#authorizing-actions-via-gates)
     - [Ответы шлюза](#gate-responses)
     - [Хуки шлюзов](#intercepting-gate-checks)
+    - [Упрощенная авторизация](#inline-authorization)
 - [Создание политик](#creating-policies)
     - [Генерация политик](#generating-policies)
     - [Регистрация политик](#registering-policies)
@@ -218,6 +219,21 @@ Laravel предлагает два основных способа автори
     });
 
 Подобно методу `before`, если замыкание `after` возвращает результат, отличный от `null`, то этот результат и будет считаться результатом проверки авторизации.
+
+<a name="inline-authorization"></a>
+### Упрощенная авторизация
+
+Вы можете определить авторизован ли текущий аутентифицированный пользователь для выполнения конкретного действия без написания специального шлюза, соответствующего этому действию. Laravel позволяет вам выполнять такие типы «упрощенных» проверок авторизации с помощью методов `Gate::allowIf` и `Gate::denyIf`:
+
+```php
+use Illuminate\Support\Facades\Auth;
+
+Gate::allowIf(fn ($user) => $user->isAdministrator());
+
+Gate::denyIf(fn ($user) => $user->banned());
+```
+
+Если действие не авторизовано или пользователь в настоящее время не аутентифицирован, то Laravel автоматически выбросит исключение `Illuminate\Auth\Access\AuthorizationException`. Экземпляры `AuthorizationException` автоматически преобразуются в `403` HTTP-ответ обработчиком исключений Laravel.
 
 <a name="creating-policies"></a>
 ## Создание политик

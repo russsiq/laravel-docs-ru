@@ -535,6 +535,7 @@ Laravel предлагает множество полезных инструм�
     namespace Tests\Feature;
 
     use Database\Seeders\OrderStatusSeeder;
+    use Database\Seeders\TransactionStatusSeeder;
     use Illuminate\Foundation\Testing\RefreshDatabase;
     use Illuminate\Foundation\Testing\WithoutMiddleware;
     use Tests\TestCase;
@@ -557,6 +558,13 @@ Laravel предлагает множество полезных инструм�
             $this->seed(OrderStatusSeeder::class);
 
             // ...
+
+            // Запустить массив определенных наполнителей ...
+            $this->seed([
+                OrderStatusSeeder::class,
+                TransactionStatusSeeder::class,
+                // ...
+            ]);
         }
     }
 

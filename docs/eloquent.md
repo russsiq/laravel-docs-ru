@@ -388,6 +388,8 @@ Flight::where('departed', true)
     ->each->update(['departed' => false]);
 ```
 
+Вы можете фильтровать результаты по убыванию `id`, используя метод `lazyByIdDesc`.
+
 <a name="cursors"></a>
 ### Курсоры
 

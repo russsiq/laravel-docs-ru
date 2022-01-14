@@ -109,6 +109,7 @@
 - [diff](#method-diff)
 - [diffAssoc](#method-diffassoc)
 - [diffKeys](#method-diffkeys)
+- [doesntContain](#method-doesntcontain)
 - [dump](#method-dump)
 - [duplicates](#method-duplicates)
 - [duplicatesStrict](#method-duplicatesstrict)
@@ -228,11 +229,11 @@
 ## Список методов
 
 <!-- <style>
-    #collection-method code {
+    .collection-method code {
         font-size: 14px;
     }
 
-    #collection-method:not(.first-collection-method) {
+    .collection-method:not(.first-collection-method) {
         margin-top: 50px;
     }
 </style> -->
@@ -386,7 +387,7 @@
 <a name="method-contains"></a>
 #### `contains()`
 
-Метод `contains` определяет, содержит ли коллекция переданный элемент. Вы также можете передать замыкание в `contains`, чтобы определить, существует ли в коллекции элемент, соответствующий указанному критерию истинности:
+Метод `contains` определяет присутствие переданного элемента в коллекции. Вы также можете передать замыкание методу `contains`, чтобы определить присутствие элемента с указанным критерием истинности в коллекции:
 
     $collection = collect([1, 2, 3, 4, 5]);
 
@@ -396,7 +397,7 @@
 
     // false
 
-Как вариант, вы можете передать строку методу `contains`, чтобы определить, содержит ли коллекция указанное значение элемента:
+Как вариант, вы можете передать строку методу `contains`, чтобы определить присутствие элемента с указанным значением в коллекции:
 
     $collection = collect(['name' => 'Desk', 'price' => 100]);
 
@@ -408,7 +409,7 @@
 
     // false
 
-Вы также можете передать пару ключ / значение методу `contains`, который определит, существует ли данная пара в коллекции:
+Вы также можете передать пару ключ / значение методу `contains`, который определит присутствие переданной пары в коллекции:
 
     $collection = collect([
         ['product' => 'Desk', 'price' => 200],
@@ -420,6 +421,8 @@
     // false
 
 Метод `contains` использует «гибкое» сравнение при проверке значений элементов, то есть строка с целочисленным значением будет считаться равной целому числу того же значения. Используйте метод [`containsStrict`](#method-containsstrict) для фильтрации с использованием «жесткого» сравнения.
+
+Противоположным методу `contains` является метод [doesntContain](#method-doesntcontain).
 
 <a name="method-containsstrict"></a>
 #### `containsStrict()`
@@ -583,6 +586,44 @@
     $diff->all();
 
     // ['one' => 10, 'three' => 30, 'five' => 50]
+
+<a name="method-doesntcontain"></a>
+#### `doesntContain()`
+
+Метод `doesntContain` определяет отсутствие переданного элемента в коллекции. Вы также можете передать замыкание методу `doesntContain`, чтобы определить отсутствие элемента с указанным критерием истинности в коллекции:
+
+    $collection = collect([1, 2, 3, 4, 5]);
+
+    $collection->doesntContain(function ($value, $key) {
+        return $value < 5;
+    });
+
+    // false
+
+Как вариант, вы можете передать строку методу `doesntContain`, чтобы определить отсутствие элемента с указанным значением в коллекции:
+
+    $collection = collect(['name' => 'Desk', 'price' => 100]);
+
+    $collection->doesntContain('Table');
+
+    // true
+
+    $collection->doesntContain('Desk');
+
+    // false
+
+Вы также можете передать пару ключ / значение методу `doesntContain`, который определит отсутствие переданной пары в коллекции:
+
+    $collection = collect([
+        ['product' => 'Desk', 'price' => 200],
+        ['product' => 'Chair', 'price' => 100],
+    ]);
+
+    $collection->doesntContain('product', 'Bookcase');
+
+    // true
+
+Метод `doesntContain` использует «гибкое» сравнение при проверке значений элементов, то есть строка с целочисленным значением будет считаться равной целому числу того же значения.
 
 <a name="method-dump"></a>
 #### `dump()`
@@ -2102,7 +2143,7 @@
         ]
     */
 
-Метод `sort` принимает [флаги типа сортировки](https://www.php.net/manual/ru/function.sort.php) в качестве второго аргумента:
+Метод `sortBy` принимает [флаги типа сортировки](https://www.php.net/manual/ru/function.sort.php) в качестве второго аргумента:
 
     $collection = collect([
         ['title' => 'Item 1'],

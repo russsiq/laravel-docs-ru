@@ -300,7 +300,7 @@ Tinker использует список «разрешенных» команд
      */
     protected $signature = 'mail:send
                             {user : The ID of the user}
-                            {--queue= : Whether the job should be queued}';
+                            {--queue : Whether the job should be queued}';
 
 <a name="command-io"></a>
 ## Ввод/вывод команды

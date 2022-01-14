@@ -48,6 +48,14 @@
     #collection-method-list a {
         display: block;
     }
+
+    .collection-method code {
+        font-size: 14px;
+    }
+
+    .collection-method:not(.first-collection-method) {
+        margin-top: 50px;
+    }
 </style> -->
 
 <!-- <div id="collection-method-list" markdown="1"> -->

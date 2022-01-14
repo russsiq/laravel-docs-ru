@@ -56,6 +56,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Arr::toCssClasses](#method-array-to-css-classes)
 - [Arr::undot](#method-array-undot)
 - [Arr::where](#method-array-where)
+- [Arr::whereNotNull](#method-array-where-not-null)
 - [Arr::wrap](#method-array-wrap)
 - [data_fill](#method-data-fill)
 - [data_get](#method-data-get)
@@ -122,6 +123,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::replaceArray](#method-str-replace-array)
 - [Str::replaceFirst](#method-str-replace-first)
 - [Str::replaceLast](#method-str-replace-last)
+- [Str::reverse](#method-str-reverse)
 - [Str::singular](#method-str-singular)
 - [Str::slug](#method-str-slug)
 - [Str::snake](#method-snake-case)
@@ -282,11 +284,11 @@ Laravel содержит множество глобальных «вспомо�
 ## Список методов
 
 <!-- <style>
-    #collection-method code {
+    .collection-method code {
         font-size: 14px;
     }
 
-    #collection-method:not(.first-collection-method) {
+    .collection-method:not(.first-collection-method) {
         margin-top: 50px;
     }
 </style> -->
@@ -829,6 +831,19 @@ Laravel содержит множество глобальных «вспомо�
     });
 
     // [1 => '200', 3 => '400']
+
+<a name="method-array-where-not-null"></a>
+#### `Arr::whereNotNull()`
+
+Метод `Arr::whereNotNull` удаляет все `null`-значения массива:
+
+    use Illuminate\Support\Arr;
+
+    $array = [0, null];
+
+    $filtered = Arr::whereNotNull($array);
+
+    // [0 => 0]
 
 <a name="method-array-wrap"></a>
 #### `Arr::wrap()`
@@ -1562,6 +1577,18 @@ Laravel содержит множество глобальных «вспомо�
     $replaced = Str::replaceLast('the', 'a', 'the quick brown fox jumps over the lazy dog');
 
     // the quick brown fox jumps over a lazy dog
+
+<!--  -->
+<a name="method-str-reverse"></a>
+#### `Str::reverse()`
+
+Метод `Str::reverse` переворачивает переданную строку:
+
+    use Illuminate\Support\Str;
+
+    $reversed = Str::reverse('Hello World');
+
+    // dlroW olleH
 
 <a name="method-str-singular"></a>
 #### `Str::singular()`

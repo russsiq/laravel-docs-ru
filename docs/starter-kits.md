@@ -4,6 +4,7 @@
 - [Laravel Breeze](#laravel-breeze)
     - [Установка](#laravel-breeze-installation)
     - [Breeze и Inertia](#breeze-and-inertia)
+    - [Breeze и Next.js / API](#breeze-and-next)
 - [Laravel Jetstream](#laravel-jetstream)
 
 <a name="introduction"></a>
@@ -16,7 +17,7 @@
 <a name="laravel-breeze"></a>
 ## Laravel Breeze
 
-**Laravel Breeze** – это минимальная и простая реализация всего [функционала аутентификации](authentication.md) Laravel, включая вход в систему, регистрацию, сброс пароля, подтверждение адреса электронной почты и пароля. Слой «View» комплекта Laravel Breeze по умолчанию состоит из простых [шаблонов Blade](blade.md), стилизованных с помощью [Tailwind CSS](https://tailwindcss.com).
+[Laravel Breeze](https://github.com/laravel/breeze) – это минимальная и простая реализация всего [функционала аутентификации](authentication.md) Laravel, включая вход в систему, регистрацию, сброс пароля, подтверждение адреса электронной почты и пароля. Слой «View» комплекта Laravel Breeze по умолчанию состоит из простых [шаблонов Blade](blade.md), стилизованных с помощью [Tailwind CSS](https://tailwindcss.com).
 
 Breeze является прекрасной отправной точкой для создания нового приложения Laravel, а также отличный выбор для проектов, которые планируют вывести использование шаблонов Blade на новый уровень с помощью [Laravel Livewire](https://laravel-livewire.com).
 
@@ -69,6 +70,23 @@ npm install
 npm run dev
 php artisan migrate
 ```
+
+<a name="breeze-and-next"></a>
+### Breeze и Next.js / API
+
+Laravel Breeze также может создать API-интерфейс аутентификации, готовый для аутентификации современных приложений JavaScript, например, на базе [Next](https://nextjs.org), [Nuxt](https://nuxtjs.org) и других. Для начала укажите стек `api` в качестве желаемого при выполнении команды `breeze:install` Artisan:
+
+```nothing
+php artisan breeze:install api
+php artisan migrate
+```
+
+Во время установки Breeze добавит переменную среды `FRONTEND_URL` в файл `.env` вашего приложения. Этот URL-адрес должен быть URL-адресом вашего приложения JavaScript. Обычно во время локальной разработки этим адресом будет `http://localhost:3000`.
+
+<a name="next-reference-implementation"></a>
+#### Доступная реализация Next.js
+
+Теперь вы будете готовы совместить указанный выше бэкэнд с выбранным вами интерфейсом. Реализация Next внешнего интерфейса Breeze доступна на [GitHub](https://github.com/laravel/breeze-next). Этот интерфейс поддерживается Laravel и содержит тот же пользовательский интерфейс, что и традиционные стеки Blade и Inertia, предоставляемые Breeze.
 
 <a name="laravel-jetstream"></a>
 ## Laravel Jetstream
