@@ -92,13 +92,13 @@ Laravel обеспечивает мощную абстракцию файлов�
 
     'ftp' => [
         'driver' => 'ftp',
-        'host' => 'ftp.example.com',
-        'username' => 'your-username',
-        'password' => 'your-password',
+        'host' => env('FTP_HOST'),
+        'username' => env('FTP_USERNAME'),
+        'password' => env('FTP_PASSWORD'),
 
         // Optional FTP Settings...
-        // 'port' => 21,
-        // 'root' => '',
+        // 'port' => env('FTP_PORT', 21),
+        // 'root' => env('FTP_ROOT'),
         // 'passive' => true,
         // 'ssl' => true,
         // 'timeout' => 30,
@@ -111,17 +111,19 @@ Laravel обеспечивает мощную абстракцию файлов�
 
     'sftp' => [
         'driver' => 'sftp',
-        'host' => 'example.com',
-        'username' => 'your-username',
-        'password' => 'your-password',
+        'host' => env('SFTP_HOST'),
 
-        // Settings for SSH key based authentication...
-        'privateKey' => '/path/to/privateKey',
-        'password' => 'encryption-password',
+        // Settings for basic authentication...
+        'username' => env('SFTP_USERNAME'),
+        'password' => env('SFTP_PASSWORD'),
+
+        // Settings for SSH key based authentication with encryption password...
+        'privateKey' => env('SFTP_PRIVATE_KEY'),
+        'password' => env('SFTP_PASSWORD'),
 
         // Optional SFTP Settings...
-        // 'port' => 22,
-        // 'root' => '',
+        // 'port' => env('SFTP_PORT', 22),
+        // 'root' => env('SFTP_ROOT'),
         // 'timeout' => 30,
     ],
 

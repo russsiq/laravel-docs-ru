@@ -20,6 +20,7 @@
 - [Предварительный просмотр писем](#previewing-emails)
 - [Контейнер CLI](#sail-container-cli)
 - [Выбор версии PHP](#sail-php-versions)
+- [Выбор версии Node](#sail-node-versions)
 - [Совместный доступ к вашему сайту](#sharing-your-site)
 - [Отладка с помощью Xdebug](#debugging-with-xdebug)
   - [Использование Xdebug CLI](#xdebug-cli-usage)
@@ -334,6 +335,24 @@ context: ./vendor/laravel/sail/runtimes/7.4
 
 ```yaml
 image: sail-8.1/app
+```
+
+После обновления файла `docker-compose.yml` вашего приложения вы должны перестроить образы контейнеров:
+
+    sail build --no-cache
+
+    sail up
+
+<a name="sail-node-versions"></a>
+## Выбор версии Node
+
+Sail по умолчанию устанавливает Node 16. Чтобы изменить версию Node, установленную при создании образов, вы можете обновить определение `build.args` службы `laravel.test` в файле `docker-compose.yml` вашего приложения:
+
+```yaml
+build:
+    args:
+        WWWGROUP: '${WWWGROUP}'
+        NODE_VERSION: '14'
 ```
 
 После обновления файла `docker-compose.yml` вашего приложения вы должны перестроить образы контейнеров:

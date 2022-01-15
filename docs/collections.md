@@ -156,6 +156,7 @@
 - [partition](#method-partition)
 - [pipe](#method-pipe)
 - [pipeInto](#method-pipeinto)
+- [pipeThrough](#method-pipethrough)
 - [pluck](#method-pluck)
 - [pop](#method-pop)
 - [prepend](#method-prepend)
@@ -1576,6 +1577,24 @@
     $resource->collection->all();
 
     // [1, 2, 3]
+
+<a name="method-pipethrough"></a>
+#### `pipeThrough()`
+
+Метод `pipeThrough` передает коллекцию указанному массиву замыканий и возвращает результат выполненных замыканий:
+
+    $collection = collect([1, 2, 3]);
+
+    $result = $collection->pipeThrough([
+        function ($collection) {
+            return $collection->merge([4, 5]);
+        },
+        function ($collection) {
+            return $collection->sum();
+        },
+    ]);
+
+    // 15
 
 <a name="method-pluck"></a>
 #### `pluck()`

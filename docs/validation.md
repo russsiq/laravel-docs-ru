@@ -793,6 +793,7 @@ Laravel также содержит глобального помощника `o
 - [In Array](#rule-in-array)
 - [Integer](#rule-integer)
 - [IP Address](#rule-ip)
+- [MAC Address](#rule-mac)
 - [JSON](#rule-json)
 - [Less Than](#rule-lt)
 - [Less Than Or Equal](#rule-lte)
@@ -1223,6 +1224,11 @@ public function boot()
 #### ipv6
 
 Проверяемое поле должно быть адресом IPv6.
+
+<a name="rule-mac"></a>
+#### mac_address
+
+Проверяемое поле должно быть MAC-адресом.
 
 <a name="rule-json"></a>
 #### json

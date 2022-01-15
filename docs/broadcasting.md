@@ -428,6 +428,18 @@ Echo.private(`orders.${orderId}`)
      */
     public $queue = 'default';
 
+Кроме того, вы можете изменить имя очереди, определив метод `broadcastQueue` для вашего события:
+
+    /**
+     * Имя очереди, в которую нужно поместить задание трансляции.
+     *
+     * @return string
+     */
+    public function broadcastQueue()
+    {
+        return 'default';
+    }
+
 Если вы хотите транслировать свое событие с помощью очереди `sync` вместо драйвера очереди по умолчанию, то вы можете реализовать интерфейс `ShouldBroadcastNow` вместо `ShouldBroadcast`:
 
     <?php

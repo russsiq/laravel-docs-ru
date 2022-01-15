@@ -132,8 +132,9 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::studly](#method-studly-case)
 - [Str::substr](#method-str-substr)
 - [Str::substrCount](#method-str-substrcount)
+- [Str::substrReplace](#method-str-substrreplace)
 - [Str::title](#method-title-case)
-- [Str::toHtmlString](#method-to-html-string)
+- [Str::toHtmlString](#method-str-to-html-string)
 - [Str::ucfirst](#method-str-ucfirst)
 - [Str::upper](#method-str-upper)
 - [Str::uuid](#method-str-uuid)
@@ -156,6 +157,7 @@ Laravel содержит множество глобальных «вспомо�
 - [basename](#method-fluent-str-basename)
 - [before](#method-fluent-str-before)
 - [beforeLast](#method-fluent-str-before-last)
+- [between](#method-fluent-str-between)
 - [camel](#method-fluent-str-camel)
 - [contains](#method-fluent-str-contains)
 - [containsAll](#method-fluent-str-contains-all)
@@ -199,6 +201,7 @@ Laravel содержит множество глобальных «вспомо�
 - [startsWith](#method-fluent-str-starts-with)
 - [studly](#method-fluent-str-studly)
 - [substr](#method-fluent-str-substr)
+- [substrReplace](#method-fluent-str-substrreplace)
 - [tap](#method-fluent-str-tap)
 - [test](#method-fluent-str-test)
 - [title](#method-fluent-str-title)
@@ -206,7 +209,17 @@ Laravel содержит множество глобальных «вспомо�
 - [ucfirst](#method-fluent-str-ucfirst)
 - [upper](#method-fluent-str-upper)
 - [when](#method-fluent-str-when)
+- [whenContains](#method-fluent-str-when-contains)
+- [whenContainsAll](#method-fluent-str-when-contains-all)
 - [whenEmpty](#method-fluent-str-when-empty)
+- [whenNotEmpty](#method-fluent-str-when-not-empty)
+- [whenStartsWith](#method-fluent-str-when-starts-with)
+- [whenEndsWith](#method-fluent-str-when-ends-with)
+- [whenExactly](#method-fluent-str-when-exactly)
+- [whenIs](#method-fluent-str-when-is)
+- [whenIsAscii](#method-fluent-str-when-is-ascii)
+- [whenIsUuid](#method-fluent-str-when-is-uuid)
+- [whenTest](#method-fluent-str-when-test)
 - [wordCount](#method-fluent-str-word-count)
 - [words](#method-fluent-str-words)
 
@@ -1697,6 +1710,19 @@ Laravel содержит множество глобальных «вспомо�
 
     // 2
 
+<a name="method-str-substrreplace"></a>
+#### `Str::substrReplace()`
+
+Метод `Str::substrReplace` заменяет часть строки, начиная с позиции, указанной третьим аргументом, и заменяет число символов, указанное четвертым аргументом. Передача `0` в четвертый аргумент метода вставит строку в указанную позицию без замены каких-либо существующих символов в строке:
+
+    use Illuminate\Support\Str;
+
+    $result = Str::substrReplace('1300', ':', 2);
+    // 13:
+
+    $result = Str::substrReplace('1300', ':', 2, 0);
+    // 13:00
+
 <a name="method-title-case"></a>
 #### `Str::title()`
 
@@ -1877,6 +1903,17 @@ Str::wordCount('Hello, world!'); // 2
     $slice = Str::of('This is my name')->beforeLast('is');
 
     // 'This '
+
+<a name="method-fluent-str-between"></a>
+#### `between`
+
+Метод `between` возвращает часть строки между двумя значениями:
+
+    use Illuminate\Support\Str;
+
+    $converted = Str::of('This is my name')->between('This', 'name');
+
+    // ' is my '
 
 <a name="method-fluent-str-camel"></a>
 #### `camel`
@@ -2506,6 +2543,21 @@ If no matches are found, an empty collection will be returned.
 
     // Frame
 
+<a name="method-fluent-str-substrreplace"></a>
+#### `substrReplace`
+
+Метод `substrReplace` заменяет часть строки, начиная с позиции, указанной третьим аргументом, и заменяет число символов, указанное четвертым аргументом. Передача `0` в четвертый аргумент метода вставит строку в указанную позицию без замены каких-либо существующих символов в строке:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('1300')->substrReplace(':', 2);
+
+    // 13:
+
+    $string = Str::of('The Framework')->substrReplace(' Laravel', 3, 0);
+
+    // The Laravel Framework
+
 <a name="method-fluent-str-tap"></a>
 #### `tap`
 
@@ -2597,6 +2649,49 @@ If no matches are found, an empty collection will be returned.
 
 При необходимости вы можете передать другое замыкание в качестве третьего параметра методу `when`. Это замыкание будет выполнено, если параметр условия оценивается как `false`.
 
+<a name="method-fluent-str-when-contains"></a>
+#### `whenContains`
+
+Метод `whenContains` вызывает указанное замыкание, если строка содержит переданное значение. Замыкание получит экземпляр Fluent:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('tony stark')
+                ->whenContains('tony', function ($string) {
+                    return $string->title();
+                });
+
+    // 'Tony Stark'
+
+При необходимости вы можете передать другое замыкание в качестве третьего параметра метода `whenContains`. Это замыкание будет выполнено, если строка не содержит переданного значения.
+
+Вы также можете передать массив значений, чтобы определить, содержит ли переданная строка какие-либо значения в массиве:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('tony stark')
+                ->whenContains(['tony', 'hulk'], function ($string) {
+                    return $string->title();
+                });
+
+    // Tony Stark
+
+<a name="method-fluent-str-when-contains-all"></a>
+#### `whenContainsAll`
+
+Метод `whenContainsAll` вызывает указанное замыкание, если строка содержит все переданные подстроки. Замыкание получит экземпляр Fluent:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('tony stark')
+                    ->whenContainsAll(['tony', 'stark'], function ($string) {
+                        return $string->title();
+                    });
+
+    // 'Tony Stark'
+
+При необходимости вы можете передать другое замыкание в качестве третьего параметра методу `whenContainsAll`. Это замыкание будет выполнено, если параметр условия оценивается как `false`.
+
 <a name="method-fluent-str-when-empty"></a>
 #### `whenEmpty`
 
@@ -2609,6 +2704,110 @@ If no matches are found, an empty collection will be returned.
     });
 
     // 'Laravel'
+
+<a name="method-fluent-str-when-not-empty"></a>
+#### `whenNotEmpty`
+
+Метод `whenNotEmpty` вызывает переданное замыкание, если строка не пуста. Если замыкание возвращает значение, то это значение также будет возвращено методом `whenNotEmpty`. Если замыкание не возвращает значение, будет возвращен Fluent:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('Framework')->whenNotEmpty(function ($string) {
+        return $string->prepend('Laravel ');
+    });
+
+    // 'Laravel Framework'
+
+<a name="method-fluent-str-when-starts-with"></a>
+#### `whenStartsWith`
+
+Метод `whenStartsWith` вызывает переданное замыкание, если строка начинается с заданной подстроки. Замыкание получит экземпляр Fluent:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('disney world')->whenStartsWith('disney', function ($string) {
+        return $string->title();
+    });
+
+    // 'Disney World'
+
+<a name="method-fluent-str-when-ends-with"></a>
+#### `whenEndsWith`
+
+Метод `whenEndsWith` вызывает переданное замыкание, если строка заканчивается заданной подстрокой. Замыкание получит экземпляр Fluent:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('disney world')->whenEndsWith('world', function ($string) {
+        return $string->title();
+    });
+
+    // 'Disney World'
+
+<a name="method-fluent-str-when-exactly"></a>
+#### `whenExactly`
+
+Метод `whenExactly` вызывает переданное замыкание, если строка точно соответствует заданной строке. Замыкание получит экземпляр Fluent:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('laravel')->whenExactly('laravel', function ($string) {
+        return $string->title();
+    });
+
+    // 'Laravel'
+
+<a name="method-fluent-str-when-is"></a>
+#### `whenIs`
+
+Метод `whenIs` вызывает переданное замыкание, если строка соответствует заданному шаблону. Допускается использование метасимвола подстановки `*`. Замыкание получит экземпляр Fluent:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('foo/bar')->whenIs('foo/*', function ($string) {
+        return $string->append('/baz');
+    });
+
+    // 'foo/bar/baz'
+
+<a name="method-fluent-str-when-is-ascii"></a>
+#### `whenIsAscii`
+
+Метод `whenIsAscii` вызывает переданное замыкание, если строка представляет собой 7-битный ASCII. Замыкание получит экземпляр Fluent:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('foo/bar')->whenIsAscii('laravel', function ($string) {
+        return $string->title();
+    });
+
+    // 'Laravel'
+
+<a name="method-fluent-str-when-is-uuid"></a>
+#### `whenIsUuid`
+
+Метод `whenIsUuid` вызывает переданное замыкание, если строка является допустимым UUID. Замыкание получит экземпляр Fluent:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('foo/bar')->whenIsUuid('a0a2a2d2-0b87-4a18-83f2-2529882be2de', function ($string) {
+        return $string->substr(0, 8);
+    });
+
+    // 'a0a2a2d2'
+
+<a name="method-fluent-str-when-test"></a>
+#### `whenTest`
+
+Метод `whenTest` вызывает переданное замыкание, если строка соответствует заданному регулярному выражению. Замыкание получит экземпляр Fluent:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('laravel framework')->whenTest('/laravel/', function ($string) {
+        return $string->title();
+    });
+
+    // 'Laravel Framework'
 
 <a name="method-str-word-count"></a>
 #### `wordCount`
