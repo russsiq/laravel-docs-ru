@@ -52,7 +52,7 @@
 <a name="supported-drivers"></a>
 #### Поддерживаемые драйверы
 
-По умолчанию Laravel содержит два серверных драйвера трансляции на выбор: [Pusher Channels](https://pusher.com/channels) и [Ably](https://ably.io). Однако пакеты сообщества, например, [laravel-websockets](https://beyondco.de/docs/laravel-websockets/getting-started/introduction), предлагают дополнительные драйверы трансляции без использования платных провайдеров.
+По умолчанию Laravel содержит два серверных драйвера трансляции на выбор: [Pusher Channels](https://pusher.com/channels) и [Ably](https://ably.io). Однако пакеты сообщества, например, [laravel-websockets](https://beyondco.de/docs/laravel-websockets/getting-started/introduction) и [soketi](https://docs.soketi.app/) предлагают дополнительные драйверы трансляции без использования платных провайдеров.
 
 > {tip} Прежде чем ближе ознакомиться с трансляцией событий, убедитесь, что вы прочитали документацию Laravel о [событиях и слушателях](events.md).
 
@@ -100,10 +100,10 @@
 
 И, наконец, вы готовы установить и настроить [Laravel Echo](#client-side-installation), который будет получать транслируемые события на клиентской стороне.
 
-<!-- <a name="pusher-compatible-laravel-websockets"></a>
-#### Pusher Compatible Laravel Websockets
+<a name="pusher-compatible-open-source-alternatives"></a>
+#### Альтернативы Pusher с открытым исходным кодом
 
-The [laravel-websockets](https://github.com/beyondcode/laravel-websockets) package is a pure PHP, Pusher compatible WebSocket package for Laravel. This package allows you to leverage the full power of Laravel broadcasting without a commercial WebSocket provider. For more information on installing and using this package, please consult its [official documentation](https://beyondco.de/docs/laravel-websockets). -->
+Пакеты [laravel-websockets](https://github.com/beyondcode/laravel-websockets) и [soketi](https://docs.soketi.app/) предоставляют совместимые с Pusher серверы WebSocket для Laravel. Эти пакеты позволяют вам использовать всю мощь трансляции Laravel без использования коммерческого провайдера WebSocket. Для получения дополнительной информации об установке и использовании этих пакетов обратитесь к нашей документации по [альтернативам с открытым исходным кодом](#open-source-alternatives).
 
 <a name="ably"></a>
 ### Ably
@@ -125,7 +125,15 @@ The [laravel-websockets](https://github.com/beyondcode/laravel-websockets) packa
 <a name="open-source-alternatives"></a>
 ### Альтернативы с открытым исходным кодом
 
+<a name="open-source-alternatives-php"></a>
+#### PHP
+
 Пакет [laravel-websockets](https://github.com/beyondcode/laravel-websockets) – это пакет для Laravel на «чистом» PHP, совместимый с Pusher. Этот пакет позволяет вам использовать всю мощь трансляции Laravel без использования платных провайдеров WebSocket. Для получения дополнительной информации об установке и использовании этого пакета обратитесь к его [официальной документации](https://beyondco.de/docs/laravel-websockets).
+
+<a name="open-source-alternatives-node"></a>
+#### Node
+
+[Soketi] (https://github.com/soketi/soketi) – это сервер WebSocket для Laravel, совместимый с Pusher на основе Node. Под капотом Soketi использует µWebSockets.js для максимальной масштабируемости и скорости. Этот пакет позволяет вам использовать всю мощь трансляции Laravel без коммерческого провайдера WebSocket. Для получения дополнительной информации об установке и использовании этого пакета обратитесь к его [официальной документации](https://docs.soketi.app/).
 
 <a name="client-side-installation"></a>
 ## Установка на стороне клиента
@@ -222,7 +230,7 @@ window.Echo = new Echo({
 
 События транслируются по «каналам», которые могут быть публичными или частными. Любой посетитель вашего приложения может подписаться на публичный канал без какой-либо аутентификации или авторизации; однако, чтобы подписаться на частный канал, пользователь должен быть аутентифицирован и авторизован для прослушивания событий на этом канале.
 
-<!-- > {tip} If you would like to use an open source, PHP driven alternative to Pusher, check out the [laravel-websockets](https://github.com/beyondcode/laravel-websockets) package. -->
+> {tip} Если вы хотите рассмотреть альтернативы Pusher с открытым исходным кодом, то обратитесь к нашей документации по [альтернативам с открытым исходным кодом](#open-source-alternatives).
 
 <a name="using-example-application"></a>
 ### Пример использования

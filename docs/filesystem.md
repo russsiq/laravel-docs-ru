@@ -243,6 +243,35 @@ $disk->put('image.jpg', $content);
         ]
     );
 
+Если вам нужно изменить способ создания временных URL-адресов для определенного диска хранилища, то вы можете использовать метод `buildTemporaryUrlsUsing`. Например, это может быть полезно, если у вас есть контроллер, позволяющий загружать файлы, хранящиеся на диске, который обычно не поддерживает временные URL-адреса. Как правило, вызов этого метода осуществляется в методе `boot` [поставщика](providers.md):
+
+    <?php
+
+    namespace App\Providers;
+
+    use Illuminate\Support\Facades\Storage;
+    use Illuminate\Support\Facades\URL;
+    use Illuminate\Support\ServiceProvider;
+
+    class AppServiceProvider extends ServiceProvider
+    {
+        /**
+         * Загрузка любых служб приложения.
+         *
+         * @return void
+         */
+        public function boot()
+        {
+            Storage::disk('local')->buildTemporaryUrlsUsing(function ($path, $expiration, $options) {
+                return URL::temporarySignedRoute(
+                    'files.download',
+                    $expiration,
+                    array_merge($options, ['path' => $path])
+                );
+            });
+        }
+    }
+
 <a name="url-host-customization"></a>
 #### Настройка хоста URL
 

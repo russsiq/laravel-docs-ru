@@ -1753,6 +1753,16 @@ public function boot()
 
     'password' => ['required', Password::defaults()],
 
+По желанию можно добавить дополнительные правила валидации к правилам валидации пароля по умолчанию. Для этого вы можете использовать метод `rules`:
+
+    use App\Rules\ZxcvbnRule;
+
+    Password::defaults(function () {
+        $rule = Password::min(8)->rules([new ZxcvbnRule]);
+
+        // ...
+    });
+
 <a name="custom-validation-rules"></a>
 ## Пользовательские правила валидации
 

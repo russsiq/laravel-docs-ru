@@ -226,7 +226,7 @@
      *
      * Заставит неглобальных посредников всегда быть в заданном порядке.
      *
-     * @var array
+     * @var string[]
      */
     protected $middlewarePriority = [
         \Illuminate\Cookie\Middleware\EncryptCookies::class,

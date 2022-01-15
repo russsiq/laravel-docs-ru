@@ -198,6 +198,7 @@
 - [toArray](#method-toarray)
 - [toJson](#method-tojson)
 - [transform](#method-transform)
+- [undot](#method-undot)
 - [union](#method-union)
 - [unique](#method-unique)
 - [uniqueStrict](#method-uniquestrict)
@@ -2526,6 +2527,41 @@
     // [2, 4, 6, 8, 10]
 
 > {note} В отличие от большинства других методов коллекции, `transform` модифицирует коллекцию. Если вы хотите вместо этого создать новую коллекцию, используйте метод [`map`](#method-map).
+
+<a name="method-undot"></a>
+#### `undot()`
+
+Метод `undot` расширяет одноуровневую коллекцию, в которой используется «точечная нотация», в многомерную коллекцию:
+
+    $person = collect([
+        'name.first_name' => 'Marie',
+        'name.last_name' => 'Valentine',
+        'address.line_1' => '2992 Eagle Drive',
+        'address.line_2' => '',
+        'address.suburb' => 'Detroit',
+        'address.state' => 'MI',
+        'address.postcode' => '48219'
+    ])
+
+    $person = $person->undot();
+
+    $person->toArray();
+
+    /*
+        [
+            "name" => [
+                "first_name" => "Marie",
+                "last_name" => "Valentine",
+            ],
+            "address" => [
+                "line_1" => "2992 Eagle Drive",
+                "line_2" => "",
+                "suburb" => "Detroit",
+                "state" => "MI",
+                "postcode" => "48219",
+            ],
+        ]
+    */
 
 <a name="method-union"></a>
 #### `union()`

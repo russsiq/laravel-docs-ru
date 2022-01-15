@@ -133,6 +133,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::substr](#method-str-substr)
 - [Str::substrCount](#method-str-substrcount)
 - [Str::title](#method-title-case)
+- [Str::toHtmlString](#method-to-html-string)
 - [Str::ucfirst](#method-str-ucfirst)
 - [Str::upper](#method-str-upper)
 - [Str::uuid](#method-str-uuid)
@@ -1706,6 +1707,15 @@ Laravel содержит множество глобальных «вспомо�
     $converted = Str::title('a nice title uses the correct case');
 
     // A Nice Title Uses The Correct Case
+
+<a name="method-str-to-html-string"></a>
+#### `Str::toHtmlString()`
+
+Метод `Str::toHtmlString` преобразует экземпляр строки в экземпляр `Illuminate\Support\HtmlString`, который может быть отображен в шаблонах Blade:
+
+    use Illuminate\Support\Str;
+
+    $htmlString = Str::of('Nuno Maduro')->toHtmlString();
 
 <a name="method-str-ucfirst"></a>
 #### `Str::ucfirst()`
