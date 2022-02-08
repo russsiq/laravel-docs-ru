@@ -1,4 +1,4 @@
-# Laravel 8 · Валидация
+# Laravel 9 · Валидация
 
 - [Введение](#introduction)
 - [Быстрый старт](#validation-quickstart)

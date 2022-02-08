@@ -1,4 +1,4 @@
-# Laravel 8 · Eloquent · Отношения
+# Laravel 9 · Eloquent · Отношения
 
 - [Введение](#introduction)
 - [Определение отношений](#defining-relationships)

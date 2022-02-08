@@ -1,4 +1,4 @@
-# Laravel 8 · Хеширование
+# Laravel 9 · Хеширование
 
 - [Введение](#introduction)
 - [Конфигурирование](#configuration)

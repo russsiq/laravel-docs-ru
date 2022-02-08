@@ -1,4 +1,4 @@
-# Laravel 8 · Пакет Laravel Horizon
+# Laravel 9 · Пакет Laravel Horizon
 
 - [Введение](#introduction)
 - [Установка](#installation)

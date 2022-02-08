@@ -1,4 +1,4 @@
-# Laravel 8 · Пакет Laravel Sanctum
+# Laravel 9 · Пакет Laravel Sanctum
 
 - [Введение](#introduction)
     - [Как это работает](#how-it-works)

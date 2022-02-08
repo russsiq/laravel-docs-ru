@@ -1,4 +1,4 @@
-# Laravel 8 · Контейнер служб
+# Laravel 9 · Контейнер служб
 
 - [Введение](#introduction)
     - [Неконфигурируемое внедрение](#zero-configuration-resolution)

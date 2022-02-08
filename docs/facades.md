@@ -1,4 +1,4 @@
-# Laravel 8 · Фасады
+# Laravel 9 · Фасады
 
 - [Введение](#introduction)
 - [Когда использовать фасады](#when-to-use-facades)

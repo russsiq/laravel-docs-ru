@@ -1,4 +1,4 @@
-# Laravel 8 · Пакет Laravel Telescope
+# Laravel 9 · Пакет Laravel Telescope
 
 - [Введение](#introduction)
 - [Установка](#installation)

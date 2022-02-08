@@ -1,4 +1,4 @@
-# Laravel 8 · Ограничители частоты
+# Laravel 9 · Ограничители частоты
 
 - [Введение](#introduction)
     - [Конфигурация кеша](#cache-configuration)

@@ -1,4 +1,4 @@
-# Laravel 8 · Контракты
+# Laravel 9 · Контракты
 
 - [Введение](#introduction)
     - [Контракты против Фасадов](#contracts-vs-facades)

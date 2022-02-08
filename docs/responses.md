@@ -1,4 +1,4 @@
-# Laravel 8 · HTTP-ответы
+# Laravel 9 · HTTP-ответы
 
 - [Создание ответов](#creating-responses)
     - [Добавление заголовков к ответам](#attaching-headers-to-responses)

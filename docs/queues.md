@@ -1,4 +1,4 @@
-# Laravel 8 · Очереди
+# Laravel 9 · Очереди
 
 - [Введение](#introduction)
     - [Соединения и очереди](#connections-vs-queues)

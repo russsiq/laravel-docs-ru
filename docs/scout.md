@@ -1,4 +1,4 @@
-# Laravel 8 · Пакет Laravel Scout
+# Laravel 9 · Пакет Laravel Scout
 
 - [Введение](#introduction)
 - [Установка](#installation)

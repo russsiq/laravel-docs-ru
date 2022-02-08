@@ -1,4 +1,4 @@
-# Laravel 8 · Уведомления
+# Laravel 9 · Уведомления
 
 - [Введение](#introduction)
 - [Генерация уведомлений](#generating-notifications)

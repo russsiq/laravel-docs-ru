@@ -1,4 +1,4 @@
-# Laravel 8 · HTTP-клиент
+# Laravel 9 · HTTP-клиент
 
 - [Введение](#introduction)
 - [Выполнение запросов](#making-requests)

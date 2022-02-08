@@ -1,4 +1,4 @@
-# Laravel 8 · Кеш приложения
+# Laravel 9 · Кеш приложения
 
 - [Введение](#introduction)
 - [Конфигурирование](#configuration)

@@ -1,4 +1,4 @@
-# Laravel 8 · Логирование
+# Laravel 9 · Логирование
 
 - [Введение](#introduction)
 - [Конфигурирование](#configuration)

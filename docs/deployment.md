@@ -1,4 +1,4 @@
-# Laravel 8 · Развертывание
+# Laravel 9 · Развертывание
 
 - [Введение](#introduction)
 - [Требования к серверу](#server-requirements)

@@ -1,4 +1,4 @@
-# Laravel 8 · Авторизация
+# Laravel 9 · Авторизация
 
 - [Введение](#introduction)
 - [Шлюзы](#gates)

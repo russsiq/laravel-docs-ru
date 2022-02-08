@@ -1,4 +1,4 @@
-# Laravel 8 · Eloquent · Коллекции
+# Laravel 9 · Eloquent · Коллекции
 
 - [Введение](#introduction)
 - [Доступные методы](#available-methods)

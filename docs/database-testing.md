@@ -1,4 +1,4 @@
-# Laravel 8 · Тестирование · База данных
+# Laravel 9 · Тестирование · База данных
 
 - [Введение](#introduction)
     - [Сброс базы данных после каждого теста](#resetting-the-database-after-each-test)

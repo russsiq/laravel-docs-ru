@@ -1,4 +1,4 @@
-# Laravel 8 · Пакет Laravel Homestead
+# Laravel 9 · Пакет Laravel Homestead
 
 - [Введение](#introduction)
 - [Установка и настройка](#installation-and-setup)

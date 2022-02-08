@@ -1,4 +1,4 @@
-# Laravel 8 · Пакет Laravel Sail
+# Laravel 9 · Пакет Laravel Sail
 
 - [Введение](#introduction)
 - [Установка и настройка](#installation)

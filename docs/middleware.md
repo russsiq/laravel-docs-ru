@@ -1,4 +1,4 @@
-# Laravel 8 · Посредники
+# Laravel 9 · Посредники
 
 - [Введение](#introduction)
 - [Определение посредника](#defining-middleware)

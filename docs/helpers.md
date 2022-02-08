@@ -1,4 +1,4 @@
-# Laravel 8 · Глобальные помощники
+# Laravel 9 · Глобальные помощники
 
 - [Введение](#introduction)
 - [Доступные методы](#available-methods)

@@ -1,4 +1,4 @@
-# Laravel 8 · Структура каталогов
+# Laravel 9 · Структура каталогов
 
 - [Введение](#introduction)
 - [Корневой каталог](#the-root-directory)

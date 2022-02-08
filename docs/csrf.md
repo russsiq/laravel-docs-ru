@@ -1,4 +1,4 @@
-# Laravel 8 · Предотвращение атак CSRF
+# Laravel 9 · Предотвращение атак CSRF
 
 - [Введение](#csrf-introduction)
 - [Предотвращение запросов от CSRF](#preventing-csrf-requests)

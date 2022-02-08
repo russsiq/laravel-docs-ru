@@ -1,4 +1,4 @@
-# Laravel 8 · Пакет Laravel Socialite
+# Laravel 9 · Пакет Laravel Socialite
 
 - [Введение](#introduction)
 - [Установка](#installation)

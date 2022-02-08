@@ -1,4 +1,4 @@
-# Laravel 8 · Пакет Laravel Envoy
+# Laravel 9 · Пакет Laravel Envoy
 
 - [Введение](#introduction)
 - [Установка](#installation)
