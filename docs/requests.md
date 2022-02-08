@@ -201,8 +201,10 @@ Laravel содержит несколько методов для проверк
 
 [Стандарт PSR-7](https://www.php-fig.org/psr/psr-7/) определяет интерфейсы для сообщений HTTP, включая запросы и ответы. Если вы хотите получить экземпляр запроса PSR-7 вместо запроса Laravel, вам сначала необходимо установить несколько библиотек. Laravel использует компонент *Symfony HTTP Message Bridge* для преобразования типичных запросов и ответов Laravel в реализации, совместимой с PSR-7:
 
-    composer require symfony/psr-http-message-bridge
-    composer require nyholm/psr7
+```shell
+composer require symfony/psr-http-message-bridge
+composer require nyholm/psr7
+```
 
 После того, как вы установили эти библиотеки, вы можете получить запрос PSR-7, объявив тип интерфейса запроса для замыкания вашего маршрута или контроллера:
 

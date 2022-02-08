@@ -18,6 +18,7 @@
 - [Расширенные выражения Where](#advanced-where-clauses)
     - [Выражения Where Exists](#where-exists-clauses)
     - [Подзапросы выражений Where](#subquery-where-clauses)
+    - [Полнотекстовый поиск](#full-text-where-clauses)
 - [Сортировка, группировка, ограничение и смещение](#ordering-grouping-limit-and-offset)
     - [Сортировка](#ordering)
     - [Группировка](#grouping)
@@ -665,6 +666,17 @@ where exists (
     $incomes = Income::where('amount', '<', function ($query) {
         $query->selectRaw('avg(i.amount)')->from('incomes as i');
     })->get();
+
+<a name="full-text-where-clauses"></a>
+### Полнотекстовый поиск
+
+> {note} Полнотекстовый поиск в настоящее время поддерживаются MySQL и PostgreSQL.
+
+Методы `whereFullText` и `orWhereFullText` полнотекстового поиска можно использовать для добавления условий `where` в запрос для столбцов, которые имеют [полнотекстовые индексы](migrations.md#available-index-types). Эти методы будут преобразованы Laravel в соответствующий SQL базы данных. Например, предложение `MATCH AGAINST` будет создано для приложений, использующих MySQL:
+
+    $users = DB::table('users')
+               ->whereFullText('bio', 'web developer')
+               ->get();
 
 <a name="ordering-grouping-limit-and-offset"></a>
 ## Сортировка, группировка, ограничение и смещение

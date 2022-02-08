@@ -44,13 +44,17 @@
 
 Для начала установите Telescope с помощью менеджера пакетов Composer в свой проект:
 
-    composer require laravel/telescope
+```shell
+composer require laravel/telescope
+```
 
 После установки Telescope опубликуйте его ресурсы с помощью команды `telescope:install` Artisan. После установки Telescope вы также должны запустить команду `migrate`, чтобы создать таблицы, необходимые для хранения данных Telescope:
 
-    php artisan telescope:install
+```shell
+php artisan telescope:install
 
-    php artisan migrate
+php artisan migrate
+```
 
 <a name="migration-customization"></a>
 #### Настройка миграции
@@ -62,11 +66,13 @@
 
 Если вы планируете использовать Telescope только для локальной разработки, то вы можете установить Telescope с параметром `--dev`:
 
-    composer require laravel/telescope --dev
+```shell
+composer require laravel/telescope --dev
 
-    php artisan telescope:install
+php artisan telescope:install
 
-    php artisan migrate
+php artisan migrate
+```
 
 После запуска `telescope:install` вы должны удалить регистрацию поставщика `TelescopeServiceProvider` из конфигурационного файла `config/app.php` вашего приложения. Вместо этого самостоятельно зарегистрируйте поставщика службы Telescope в методе `register` поставщика `App\Providers\AppServiceProvider`. Прежде чем зарегистрировать поставщика, убедитесь, что текущее окружение является локальным:
 
@@ -85,13 +91,15 @@
 
 Наконец, вы также должны предотвратить [авто-обнаружение](packages.md#package-discovery) пакета Telescope, добавив в файл `composer.json` следующее:
 
-    "extra": {
-        "laravel": {
-            "dont-discover": [
-                "laravel/telescope"
-            ]
-        }
-    },
+```json
+"extra": {
+    "laravel": {
+        "dont-discover": [
+            "laravel/telescope"
+        ]
+    }
+},
+```
 
 <a name="configuration"></a>
 ### Конфигурирование
@@ -143,17 +151,21 @@
 
 Кроме того, при обновлении до любой новой версии Telescope вы должны повторно опубликовать ресурсы Telescope:
 
-    php artisan telescope:publish
+```shell
+php artisan telescope:publish
+```
 
 Чтобы поддерживать актуальность ресурсов и избежать проблем в будущих обновлениях, вы можете добавить команду `telescope:publish` в сценарий `post-update-cmd` файла `composer.json` вашего приложения:
 
-    {
-        "scripts": {
-            "post-update-cmd": [
-                "@php artisan telescope:publish --ansi"
-            ]
-        }
+```json
+{
+    "scripts": {
+        "post-update-cmd": [
+            "@php artisan telescope:publish --ansi"
+        ]
     }
+}
+```
 
 <a name="filtering"></a>
 ## Фильтрация

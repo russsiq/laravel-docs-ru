@@ -59,7 +59,7 @@
 
 Если вы хотите просмотреть список ваших запланированных задач и их последующего запуска, то вы можете использовать команду `schedule:list` Artisan:
 
-```nothing
+```bash
 php artisan schedule:list
 ```
 
@@ -301,14 +301,18 @@ php artisan schedule:list
 
 Итак, при использовании планировщика Laravel нам нужно добавить только одну конфигурационную запись Cron на наш сервер, которая запускает команду `schedule:run` каждую минуту. Если вы не знаете, как добавить записи Cron на свой сервер, то рассмотрите возможность использования такой службы, как [Laravel Forge](https://forge.laravel.com), которая может управлять записями Cron за вас:
 
-    * * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+```shell
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+```
 
 <a name="running-the-scheduler-locally"></a>
 ## Локальный запуск планировщика
 
 Как правило, на локальной машине нет необходимости в добавлении записи Cron планировщика. Вместо этого вы можете использовать команду `schedule:work` Artisan. Эта команда будет работать на переднем плане и вызывать планировщик каждую минуту, пока вы не завершите команду:
 
-    php artisan schedule:work
+```shell
+php artisan schedule:work
+```
 
 <a name="task-output"></a>
 ## Результат выполнения задачи
@@ -404,7 +408,9 @@ php artisan schedule:list
 
 Для всех методов пингования требуется библиотека Guzzle HTTP. Guzzle обычно устанавливается во всех новых проектах Laravel по умолчанию, но вы можете вручную установить Guzzle в свой проект с помощью менеджера пакетов Composer, если он был удален:
 
-    composer require guzzlehttp/guzzle
+```shell
+composer require guzzlehttp/guzzle
+```
 
 <a name="events"></a>
 ## События

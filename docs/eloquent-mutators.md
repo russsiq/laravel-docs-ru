@@ -28,29 +28,33 @@
 <a name="defining-an-accessor"></a>
 ### Определение аксессора
 
-Аксессор преобразует значение атрибута экземпляра Eloquent при обращении к нему. Чтобы определить метод доступа, создайте метод `get{Attribute}Attribute` в вашей модели, где `{Attribute}` – это имя столбца, к которому вы хотите получить доступ, в «верхнем» регистре.
+Аксессор преобразует значение атрибута экземпляра Eloquent при обращении к нему. Чтобы определить метод доступа, создайте в модели защищенный метод для представления доступного атрибута. Это имя метода должно соответствовать атрибуту модели / столбца базы данных в «верблюжьем регистре» , когда это применимо.
 
-В этом примере мы определим аксессор для атрибута `first_name`. Аксессор будет автоматически вызван Eloquent при попытке получить значение атрибута `first_name`:
+В этом примере мы определим аксессор для атрибута `first_name`. Аксессор будет автоматически вызван Eloquent при попытке получить значение атрибута `first_name`. Все методы атрибутов (аксессоры / мутаторы) должны возвращать тип `Illuminate\Database\Eloquent\Casts\Attribute`:
 
     <?php
 
     namespace App\Models;
 
+    use Illuminate\Database\Eloquent\Casts\Attribute;
     use Illuminate\Database\Eloquent\Model;
 
     class User extends Model
     {
         /**
-         * Получить имя пользователя.
+         * Взаимодействие с именем пользователя.
          *
-         * @param  string  $value
-         * @return string
+         * @return \Illuminate\Database\Eloquent\Casts\Attribute
          */
-        public function getFirstNameAttribute($value)
+        protected function firstName(): Attribute
         {
-            return ucfirst($value);
+            return new Attribute(
+                get: fn ($value) => ucfirst($value),
+            );
         }
     }
+
+Все методы доступа возвращают экземпляр `Attribute`, который определяет, как будет осуществляться доступ к атрибуту и, при необходимости, изменяться. В этом примере мы только определяем, как будет осуществляться доступ к атрибуту. Для этого мы передаем аргумент `get` конструктору класса `Attribute`.
 
 Как видите, исходное значение столбца передается аксессору, что позволяет вам манипулировать и возвращать значение. Чтобы получить доступ к значению аксессора, вы можете просто получить доступ к атрибуту `first_name` экземпляра модели:
 
@@ -60,48 +64,93 @@
 
     $firstName = $user->first_name;
 
-Вы не ограничены взаимодействием с одним атрибутом в вашем аксессоре. Вы также можете использовать аксессор для возврата новых вычисленных значений из существующих атрибутов:
-
-    /**
-     * Получить полное имя пользователя.
-     *
-     * @return string
-     */
-    public function getFullNameAttribute()
-    {
-        return "{$this->first_name} {$this->last_name}";
-    }
-
 > {tip} Если вы хотите, чтобы эти вычисленные значения были добавлены к представлениям массива / JSON вашей модели, [вам нужно будет добавить их](eloquent-serialization.md#appending-values-to-json).
+
+<a name="building-value-objects-from-multiple-attributes"></a>
+#### Построение объекта-значения из нескольких атрибутов
+
+Иногда аксессору может потребоваться преобразовать несколько атрибутов модели в один «объект-значение». Для этого ваше замыкание `get` может принимать второй аргумент `$attributes`, который будет автоматически передан замыканию и будет содержать массив всех текущих атрибутов модели:
+
+```php
+use App\Support\Address;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
+/**
+ * Взаимодействие с адресом пользователя.
+ *
+ * @return  \Illuminate\Database\Eloquent\Casts\Attribute
+ */
+public function address(): Attribute
+{
+    return new Attribute(
+        get: fn ($value, $attributes) => new Address(
+            $attributes['address_line_one'],
+            $attributes['address_line_two'],
+        ),
+    );
+}
+```
+
+При возврате объектов-значений из аксессоров любые изменения, внесенные в объект-значение, будут автоматически синхронизированы с моделью перед ее сохранением. Это возможно, потому что Eloquent сохраняет экземпляры, возвращаемые аксессорами, поэтому он может возвращать один и тот же экземпляр каждый раз, когда вызывается аксессор:
+
+    use App\Models\User;
+
+    $user = User::find(1);
+
+    $user->address->lineOne = 'Updated Address Line 1 Value';
+    $user->address->lineTwo = 'Updated Address Line 2 Value';
+
+    $user->save();
+
+Если вы хотите избежать кэширования объектов в атрибутах, то вы можете вызвать метод `withoutObjectCaching` при определении атрибута:
+
+```php
+/**
+ * Взаимодействие с адресом пользователя.
+ *
+ * @return  \Illuminate\Database\Eloquent\Casts\Attribute
+ */
+public function address(): Attribute
+{
+    return (new Attribute(
+        get: fn ($value, $attributes) => new Address(
+            $attributes['address_line_one'],
+            $attributes['address_line_two'],
+        ),
+    ))->withoutObjectCaching();
+}
+```
 
 <a name="defining-a-mutator"></a>
 ### Определение мутатора
 
-Мутатор преобразует значение атрибута в момент их присвоения экземпляру Eloquent. Чтобы определить мутатор, определите метод `set{Attribute}Attribute` в вашей модели, где `{Attribute}` – это имя столбца, к которому вы хотите получить доступ, в «верхнем» регистре.
-
-Определим мутатор для атрибута `first_name`. Этот мутатор будет автоматически вызываться, когда мы попытаемся присвоить значение атрибута `first_name` модели:
+Мутатор преобразует значение атрибута в момент их присвоения экземпляру Eloquent. Чтобы определить мутатор, вы можете указать аргумент `set` при определении вашего атрибута. Определим мутатор для атрибута `first_name`. Этот мутатор будет автоматически вызываться, когда мы попытаемся присвоить значение атрибута `first_name` модели:
 
     <?php
 
     namespace App\Models;
 
+    use Illuminate\Database\Eloquent\Casts\Attribute;
     use Illuminate\Database\Eloquent\Model;
 
     class User extends Model
     {
         /**
-         * Присвоить имя пользователю.
+         * Взаимодействие с именем пользователя.
          *
-         * @param  string  $value
-         * @return void
+         *
+         * @return \Illuminate\Database\Eloquent\Casts\Attribute
          */
-        public function setFirstNameAttribute($value)
+        protected function firstName(): Attribute
         {
-            $this->attributes['first_name'] = strtolower($value);
+            return new Attribute(
+                get: fn ($value) => ucfirst($value),
+                set: fn ($value) => strtolower($value),
+            );
         }
     }
 
-Мутатор получит значение, заданное для атрибута, что позволит вам манипулировать этим значением и устанавливать желаемое значение во внутреннем свойстве `$attributes` модели Eloquent. Чтобы использовать наш мутатор, нам нужно только установить атрибут `first_name` для модели Eloquent:
+Замыкание мутатора получит значение, которое устанавливается для атрибута, позволяя вам манипулировать значением и возвращать измененное значение. Чтобы использовать наш мутатор, нам нужно только установить атрибут `first_name` для модели Eloquent:
 
     use App\Models\User;
 
@@ -109,7 +158,36 @@
 
     $user->first_name = 'Sally';
 
-В этом примере метод `setFirstNameAttribute` будет вызываться со значением `Sally`. Затем, мутатор применит к имени функцию `strtolower` и установит полученное значение во внутреннем массиве `$attributes`.
+В этом примере замыкание `set` будет вызвано со значением `Sally`. Затем мутатор применит к имени функцию `strtolower` и установит полученное значение во внутреннем массиве `$attributes` модели.
+
+<a name="mutating-multiple-attributes"></a>
+#### Преобразование нескольких атрибутов
+
+Иногда мутатору может потребоваться установить несколько атрибутов модели. Для этого вы можете вернуть массив из замыкания `set`. Каждый ключ в массиве должен соответствовать атрибуту / столбцу базы данных, связанному с моделью:
+
+```php
+use App\Support\Address;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
+/**
+ * Взаимодействие с адресом пользователя.
+ *
+ * @return  \Illuminate\Database\Eloquent\Casts\Attribute
+ */
+protected function address(): Attribute
+{
+    return new Attribute(
+        get: fn ($value, $attributes) => new Address(
+            $attributes['address_line_one'],
+            $attributes['address_line_two'],
+        ),
+        set: fn (Address $value) => [
+            'address_line_one' => $value->lineOne,
+            'address_line_two' => $value->lineTwo,
+        ],
+    );
+}
+```
 
 <a name="attribute-casting"></a>
 ## Приведение атрибутов к типам

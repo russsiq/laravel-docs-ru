@@ -130,6 +130,7 @@
 
     namespace App\Models;
 
+    use Illuminate\Database\Eloquent\Casts\Attribute;
     use Illuminate\Database\Eloquent\Model;
 
     class User extends Model
@@ -137,11 +138,13 @@
         /**
          * Определить, является ли пользователь администратором.
          *
-         * @return bool
+         * @return \Illuminate\Database\Eloquent\Casts\Attribute
          */
-        public function getIsAdminAttribute()
+        protected function isAdmin(): Attribute
         {
-            return $this->attributes['admin'] === 'yes';
+            return new Attribute(
+                get: fn () => 'yes';
+            );
         }
     }
 

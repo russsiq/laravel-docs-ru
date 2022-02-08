@@ -60,9 +60,11 @@ Laravel предлагает множество различных типов х
 
 Вы можете использовать команду `session:table` Artisan для генерации этой миграции. Чтобы узнать больше о миграции баз данных, вы можете ознакомиться с полной [документацией по миграции](migrations.md):
 
-    php artisan session:table
+```shell
+php artisan session:table
 
-    php artisan migrate
+php artisan migrate
+```
 
 <a name="redis"></a>
 #### Redis

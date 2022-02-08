@@ -58,13 +58,17 @@
 
 Для начала установите [Google Chrome](https://www.google.com/chrome) и добавьте в зависимость `laravel/dusk` с помощью менеджера пакетов Composer в свой проект:
 
-    composer require --dev laravel/dusk
+```shell
+composer require --dev laravel/dusk
+```
 
 > {note} Если вы вручную регистрируете поставщика `DuskServiceProvider`, то вам **никогда** не следует регистрировать его в рабочем окружении, так как это может привести к тому, что случайные пользователи смогут пройти аутентификацию в вашем приложении.
 
 После установки пакета Dusk выполните команду `dusk:install` Artisan. Команда `dusk:install` создаст каталог `tests/Browser` и пример теста Dusk:
 
-    php artisan dusk:install
+```shell
+php artisan dusk:install
+```
 
 Затем установите переменную окружения `APP_URL` в файле `.env` вашего приложения. Это значение должно соответствовать URL-адресу, который вы используете для доступа к вашему приложению в браузере.
 
@@ -75,17 +79,19 @@
 
 Если вы хотите установить версию ChromeDriver, отличную от той, которая включена в Laravel Dusk, то вы можете использовать команду `dusk:chrome-driver`:
 
-    # Установить последнюю версию ChromeDriver для вашей ОС ...
-    php artisan dusk:chrome-driver
+```shell
+# Установить последнюю версию ChromeDriver для вашей ОС ...
+php artisan dusk:chrome-driver
 
-    # Установить конкретную версию ChromeDriver для вашей ОС ...
-    php artisan dusk:chrome-driver 86
+# Установить конкретную версию ChromeDriver для вашей ОС ...
+php artisan dusk:chrome-driver 86
 
-    # Установить конкретную версию ChromeDriver для всех поддерживаемых ОС ...
-    php artisan dusk:chrome-driver --all
+# Установить конкретную версию ChromeDriver для всех поддерживаемых ОС ...
+php artisan dusk:chrome-driver --all
 
-    # Установить версию ChromeDriver, которая соответствует обнаруженной версии Chrome / Chromium для вашей ОС ...
-    php artisan dusk:chrome-driver --detect
+# Установить версию ChromeDriver, которая соответствует обнаруженной версии Chrome / Chromium для вашей ОС ...
+php artisan dusk:chrome-driver --detect
+```
 
 > {note} Dusk требует, чтобы файлы `chromedriver` были доступны для выполнения. Если у вас возникли проблемы с запуском Dusk, то вы должны убедиться, что файлы доступны для выполнения, используя следующую команду: `chmod -R 0755 vendor/laravel/dusk/bin/`.
 
@@ -129,7 +135,9 @@
 
 Чтобы сгенерировать тест Dusk, используйте команду `dusk:make` Artisan. Сгенерированный тест будет помещен в каталог `tests/Browser`:
 
-    php artisan dusk:make LoginTest
+```shell
+php artisan dusk:make LoginTest
+```
 
 <a name="migrations"></a>
 ### Миграции базы данных
@@ -157,15 +165,21 @@
 
 Чтобы запустить браузерные тесты, выполните команду `dusk` Artisan:
 
-    php artisan dusk
+```shell
+php artisan dusk
+```
 
 Если при последнем запуске команды `dusk` у вас были ошибки тестирования, то вы можете сэкономить время, повторно запустив сначала неудачные тесты с помощью команды `dusk:fails`:
 
-    php artisan dusk:fails
+```shell
+php artisan dusk:fails
+```
 
 Команда `dusk` принимает любой аргумент, который обычно принимается тестером PHPUnit, например, позволяет вам запускать тесты только для указанной [группы](https://phpunit.de/manual/current/en/appendixes.annotations.html#appendixes.annotations.group):
 
-    php artisan dusk --group=foo
+```shell
+php artisan dusk --group=foo
+```
 
 > {tip} Если вы используете [Laravel Sail](sail.md) для управления своей локальной средой разработки, обратитесь к документации Sail по [настройке и запуску тестов Dusk](sail.md#laravel-dusk).
 
@@ -1802,69 +1816,73 @@ Dusk даже позволяет вам делать утверждения о �
 
 Чтобы запустить тесты Dusk на [Travis CI](https://travis-ci.org), используйте следующую конфигурацию `.travis.yml`. Поскольку Travis CI не является графической средой, то нам нужно будет предпринять некоторые дополнительные шаги, чтобы запустить браузер Chrome. Кроме того, мы будем использовать `php artisan serve` для запуска встроенного веб-сервера PHP:
 
-    language: php
+```yaml
+language: php
 
-    php:
-      - 7.3
+php:
+  - 7.3
 
-    addons:
-      chrome: stable
+addons:
+  chrome: stable
 
-    install:
-      - cp .env.testing .env
-      - travis_retry composer install --no-interaction --prefer-dist
-      - php artisan key:generate
-      - php artisan dusk:chrome-driver
+install:
+  - cp .env.testing .env
+  - travis_retry composer install --no-interaction --prefer-dist
+  - php artisan key:generate
+  - php artisan dusk:chrome-driver
 
-    before_script:
-      - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
-      - php artisan serve --no-reload &
+before_script:
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+  - php artisan serve --no-reload &
 
-    script:
-      - php artisan dusk
+script:
+  - php artisan dusk
+```
 
 <a name="running-tests-on-github-actions"></a>
 ### GitHub Actions
 
 Если вы используете [Github Actions](https://github.com/features/actions) для запуска тестов Dusk, то вы можете использовать следующий конфигурационный файл в качестве отправной точки. Как и в случае с TravisCI, мы будем использовать команду `php artisan serve` для запуска встроенного веб-сервера PHP:
 
-    name: CI
-    on: [push]
-    jobs:
+```yaml
+name: CI
+on: [push]
+jobs:
 
-      dusk-php:
-        runs-on: ubuntu-latest
-        steps:
-          - uses: actions/checkout@v2
-          - name: Prepare The Environment
-            run: cp .env.example .env
-          - name: Create Database
-            run: |
-              sudo systemctl start mysql
-              mysql --user="root" --password="root" -e "CREATE DATABASE 'my-database' character set UTF8mb4 collate utf8mb4_bin;"
-          - name: Install Composer Dependencies
-            run: composer install --no-progress --prefer-dist --optimize-autoloader
-          - name: Generate Application Key
-            run: php artisan key:generate
-          - name: Upgrade Chrome Driver
-            run: php artisan dusk:chrome-driver `/opt/google/chrome/chrome --version | cut -d " " -f3 | cut -d "." -f1`
-          - name: Start Chrome Driver
-            run: ./vendor/laravel/dusk/bin/chromedriver-linux &
-          - name: Run Laravel Server
-            run: php artisan serve --no-reload &
-          - name: Run Dusk Tests
-            env:
-              APP_URL: "http://127.0.0.1:8000"
-            run: php artisan dusk
-          - name: Upload Screenshots
-            if: failure()
-            uses: actions/upload-artifact@v2
-            with:
-              name: screenshots
-              path: tests/Browser/screenshots
-          - name: Upload Console Logs
-            if: failure()
-            uses: actions/upload-artifact@v2
-            with:
-              name: console
-              path: tests/Browser/console
+  dusk-php:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare The Environment
+        run: cp .env.example .env
+      - name: Create Database
+        run: |
+          sudo systemctl start mysql
+          mysql --user="root" --password="root" -e "CREATE DATABASE 'my-database' character set UTF8mb4 collate utf8mb4_bin;"
+      - name: Install Composer Dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+      - name: Generate Application Key
+        run: php artisan key:generate
+      - name: Upgrade Chrome Driver
+        run: php artisan dusk:chrome-driver `/opt/google/chrome/chrome --version | cut -d " " -f3 | cut -d "." -f1`
+      - name: Start Chrome Driver
+        run: ./vendor/laravel/dusk/bin/chromedriver-linux &
+      - name: Run Laravel Server
+        run: php artisan serve --no-reload &
+      - name: Run Dusk Tests
+        env:
+          APP_URL: "http://127.0.0.1:8000"
+        run: php artisan dusk
+      - name: Upload Screenshots
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshots
+          path: tests/Browser/screenshots
+      - name: Upload Console Logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: console
+          path: tests/Browser/console
+```

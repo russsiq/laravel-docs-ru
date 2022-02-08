@@ -94,7 +94,9 @@
 
 Вы можете сгенерировать вызываемый контроллер, используя параметр `--invokable` команды `make:controller` Artisan:
 
-    php artisan make:controller ProvisionServer --invokable
+```shell
+php artisan make:controller ProvisionServer --invokable
+```
 
 > {tip} Заготовки контроллера можно настроить с помощью [публикации заготовок](artisan.md#stub-customization).
 
@@ -135,7 +137,9 @@
 
 Благодаря такому распространенному варианту использования, маршрутизация ресурсов Laravel присвоит типичные маршруты создания, чтения, обновления и удаления («CRUD») контроллеру с помощью одной строки кода. Для начала мы можем использовать параметр `--resource` команды `make:controller` Artisan, чтобы быстро создать контроллер для обработки этих действий:
 
-    php artisan make:controller PhotoController --resource
+```shell
+php artisan make:controller PhotoController --resource
+```
 
 Эта команда поместит новый класс контроллера в каталог `app/Http/Controllers` вашего приложения. Контроллер будет содержать метод для каждого из доступных действий с ресурсами. Затем, вы можете зарегистрировать маршрут ресурса, который указывает на контроллер:
 
@@ -184,14 +188,18 @@ DELETE    | `/photos/{photo}`      | destroy      | photos.destroy
 
 Если вы используете [привязку модели к маршруту](routing.md#route-model-binding) и хотите, чтобы методы контроллера ресурса содержали типизацию экземпляра модели, вы можете использовать параметр `--model` при создании контроллера:
 
-    php artisan make:controller PhotoController --model=Photo --resource
+```shell
+php artisan make:controller PhotoController --model=Photo --resource
+```
 
 <a name="generating-form-requests"></a>
 #### Генерация запросов формы
 
 Вы можете указать флаг `--requests` при создании ресурсного контроллера, чтобы указать Artisan о попутном создании [классов запросов](validation.md#form-request-validation) для методов `store` и `update` контроллера:
 
-    php artisan make:controller PhotoController --model=Photo --resource --requests
+```shell
+php artisan make:controller PhotoController --model=Photo --resource --requests
+```
 
 <a name="restful-partial-resource-routes"></a>
 ### Частичные ресурсные маршруты
@@ -229,7 +237,9 @@ DELETE    | `/photos/{photo}`      | destroy      | photos.destroy
 
 Чтобы быстро сгенерировать ресурсный API-контроллер, который не включает методы `create` или `edit`, используйте переключатель `--api` при выполнении команды `make:controller`:
 
-    php artisan make:controller PhotoController --api
+```shell
+php artisan make:controller PhotoController --api
+```
 
 <a name="restful-nested-resources"></a>
 ### Вложенные ресурсы

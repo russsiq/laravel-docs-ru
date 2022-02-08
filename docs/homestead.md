@@ -147,23 +147,27 @@ Homestead работает в любой системе: Windows, macOS или L
 
 Вы можете установить Homestead, клонировав репозиторий Homestead на свой хост-компьютер. Рассмотрите возможность клонирования репозитория в папку `Homestead` вашего «домашнего» каталога, поскольку виртуальная машина Homestead будет служить хостом для всех ваших приложений Laravel. В этой документации мы будем называть этот каталог вашим «каталогом Homestead»:
 
-```bash
+```shell
 git clone https://github.com/laravel/homestead.git ~/Homestead
 ```
 
 После клонирования репозитория Laravel Homestead вы должны проверить ветку `release`. Эта ветка всегда содержит последний стабильный релиз Homestead:
 
-    cd ~/Homestead
+```shell
+cd ~/Homestead
 
-    git checkout release
+git checkout release
+```
 
 Затем выполните команду `bash init.sh` из каталога Homestead, чтобы создать конфигурационный файл `Homestead.yaml`. Файл `Homestead.yaml` – это то место, где вы настраиваете все параметры установки Homestead. Этот файл будет размещен в каталоге Homestead:
 
-    // macOS / Linux...
-    bash init.sh
+```shell
+# macOS / Linux...
+bash init.sh
 
-    // Windows...
-    init.bat
+# Windows...
+init.bat
+```
 
 <a name="configuring-homestead"></a>
 ### Конфигурирование Homestead
@@ -204,31 +208,37 @@ folders:
 
 Чтобы задействовать [NFS](https://www.vagrantup.com/docs/synced-folders/nfs.html), вы можете добавить параметр `type` при сопоставлении папок:
 
-    folders:
-        - map: ~/code/project1
-          to: /home/vagrant/project1
-          type: "nfs"
+```yaml
+folders:
+    - map: ~/code/project1
+      to: /home/vagrant/project1
+      type: "nfs"
+```
 
 > {note} При использовании NFS в Windows вам следует рассмотреть возможность установки плагина [vagrant-winnfsd](https://github.com/winnfsd/vagrant-winnfsd). Этот плагин будет поддерживать корректные разрешения пользователя / группы для файлов и каталогов виртуальной машины Homestead.
 
 Вы также можете передать любые параметры, поддерживаемые [синхронизируемыми папками](https://www.vagrantup.com/docs/synced-folders/basic_usage.html) Vagrant, указав их под параметром `options`:
 
-    folders:
-        - map: ~/code/project1
-          to: /home/vagrant/project1
-          type: "rsync"
-          options:
-              rsync__args: ["--verbose", "--archive", "--delete", "-zz"]
-              rsync__exclude: ["node_modules"]
+```yaml
+folders:
+    - map: ~/code/project1
+      to: /home/vagrant/project1
+      type: "rsync"
+      options:
+          rsync__args: ["--verbose", "--archive", "--delete", "-zz"]
+          rsync__exclude: ["node_modules"]
+```
 
 <a name="configuring-nginx-sites"></a>
 ### Конфигурирование сайтов Nginx
 
 Не знакомы с Nginx? Без проблем. Параметр `sites` вашего файла `Homestead.yaml` позволяет вам легко сопоставить «домен» с папкой в ​​окружении Homestead. Пример конфигурации сайта содержится в файле `Homestead.yaml`. Опять же, вы можете добавить столько сайтов в ​​окружение Homestead, сколько необходимо. Homestead может служить удобной виртуализированной средой для каждого приложения Laravel, над которым вы работаете:
 
-    sites:
-        - map: homestead.test
-          to: /home/vagrant/project1/public
+```yaml
+sites:
+    - map: homestead.test
+      to: /home/vagrant/project1/public
+```
 
 Если вы измените параметр `sites` после подготовки виртуальной машины Homestead, то вы должны выполнить команду `vagrant reload --provision` в своем терминале, чтобы обновить конфигурацию Nginx на виртуальной машине.
 
@@ -245,7 +255,7 @@ Homestead публикует имена хостов, используя `mDNS` 
 
 Убедитесь, что в списке указан IP-адрес, указанный в вашем файле `Homestead.yaml`. После того, как вы добавили домен в свой файл `hosts` и запустили окно Vagrant, вы сможете получить доступ к сайту через свой веб-браузер:
 
-```bash
+```shell
 http://homestead.test
 ```
 
@@ -278,17 +288,19 @@ services:
 
 Для начала установите Homestead с помощью менеджера пакетов Composer в свой проект:
 
-```bash
+```shell
 composer require laravel/homestead --dev
 ```
 
 Как только Homestead будет установлен, вызовите команду `make` Homestead, чтобы сгенерировать файлы `Vagrantfile` и `Homestead.yaml` для вашего проекта. Эти файлы будут помещены в корень вашего проекта. Команда `make` автоматически настроит параметры `sites` и `folder` в файле `Homestead.yaml`:
 
-    // macOS / Linux...
-    php vendor/bin/homestead make
+```shell
+# macOS / Linux...
+php vendor/bin/homestead make
 
-    // Windows...
-    vendor\\bin\\homestead make
+# Windows...
+vendor\\bin\\homestead make
+```
 
 Запустите команду `vagrant up` в терминале и перейдите по адресу `http://homestead.test` в вашем браузере. Помните, что вам также нужно будет добавить запись в файле `/etc/hosts` для домена `homestead.test` или любого другого необходимого домена, если вы не используете автоматическое [разрешение имени хоста](#hostname-resolution).
 
@@ -297,41 +309,43 @@ composer require laravel/homestead --dev
 
 Дополнительное программное обеспечение устанавливается с помощью параметра `features` в вашем файле `Homestead.yaml`. Большую часть ПО можно включить или отключить с помощью логического значения, но существует ПО, позволяющее использовать несколько параметров конфигурации:
 
-    features:
-        - blackfire:
-            server_id: "server_id"
-            server_token: "server_value"
-            client_id: "client_id"
-            client_token: "client_value"
-        - cassandra: true
-        - chronograf: true
-        - couchdb: true
-        - crystal: true
-        - docker: true
-        - elasticsearch:
-            version: 7.9.0
-        - eventstore: true
-            version: 21.2.0
-        - gearman: true
-        - golang: true
-        - grafana: true
-        - influxdb: true
-        - mariadb: true
-        - meilisearch: true
-        - minio: true
-        - mongodb: true
-        - neo4j: true
-        - ohmyzsh: true
-        - openresty: true
-        - pm2: true
-        - python: true
-        - r-base: true
-        - rabbitmq: true
-        - rvm: true
-        - solr: true
-        - timescaledb: true
-        - trader: true
-        - webdriver: true
+```yaml
+features:
+    - blackfire:
+        server_id: "server_id"
+        server_token: "server_value"
+        client_id: "client_id"
+        client_token: "client_value"
+    - cassandra: true
+    - chronograf: true
+    - couchdb: true
+    - crystal: true
+    - docker: true
+    - elasticsearch:
+        version: 7.9.0
+    - eventstore: true
+        version: 21.2.0
+    - gearman: true
+    - golang: true
+    - grafana: true
+    - influxdb: true
+    - mariadb: true
+    - meilisearch: true
+    - minio: true
+    - mongodb: true
+    - neo4j: true
+    - ohmyzsh: true
+    - openresty: true
+    - pm2: true
+    - python: true
+    - r-base: true
+    - rabbitmq: true
+    - rvm: true
+    - solr: true
+    - timescaledb: true
+    - trader: true
+    - webdriver: true
+```
 
 <a name="elasticsearch"></a>
 #### Elasticsearch
@@ -360,8 +374,10 @@ composer require laravel/homestead --dev
 
 Вы можете добавить псевдонимы Bash для своей виртуальной машины Homestead, изменив файл `aliases` в каталоге Homestead:
 
-    alias c='clear'
-    alias ..='cd ..'
+```shell
+alias c='clear'
+alias ..='cd ..'
+```
 
 После обновления файла `aliases` вы должны повторно подготовить виртуальную машину Homestead с помощью команды `vagrant reload --provision`. Это обеспечит доступность ваших новых псевдонимов на машине.
 
@@ -370,35 +386,47 @@ composer require laravel/homestead --dev
 
 Перед обновлением Homestead, убедитесь, что вы уничтожили текущую виртуальную машину, выполнив следующую команду в каталоге Homestead:
 
-    vagrant destroy
+```shell
+vagrant destroy
+```
 
 Затем вам нужно обновить исходный код Homestead. Если вы клонировали репозиторий, то вы можете выполнить следующие команды в том месте, где вы изначально клонировали репозиторий:
 
-    git fetch
+```shell
+git fetch
 
-    git pull origin release
+git pull origin release
+```
 
 С помощью этих команд будет подтянут последний код Homestead из репозитория GitHub, извлечены последние теги и будет выполнена проверка последнего релиза по тегам. Вы можете найти последнюю стабильную версию релиза Homestead на [странице GitHub](https://github.com/laravel/homestead/releases).
 
 Если вы установили Homestead в свой проект с помощью Composer, то необходимо убедиться, что ваш файл `composer.json` содержит запись `"laravel/homestead": "^12"` с последующим обновлением ваших зависимостей:
 
-    composer update
+```shell
+composer update
+```
 
 Затем вы должны обновить образ Vagrant с помощью команды:
 
-    vagrant box update
+```shell
+vagrant box update
+```
 
 После обновления образа Vagrant вы должны запустить команду `bash init.sh` из каталога Homestead, чтобы обновить дополнительные файлы конфигурации Homestead. При этом вас спросят, хотите ли вы перезаписать существующие файлы `Homestead.yaml`, `after.sh` и `aliases`:
 
-    // macOS / Linux...
-    bash init.sh
+```shell
+# macOS / Linux...
+bash init.sh
 
-    // Windows...
-    init.bat
+# Windows...
+init.bat
+```
 
 Наконец, вам нужно будет пересоздать вашу виртуальную машину Homestead, чтобы использовать последнюю установку Vagrant:
 
-    vagrant up
+```shell
+vagrant up
+```
 
 <a name="daily-usage"></a>
 ## Повседневное использование
@@ -413,11 +441,13 @@ composer require laravel/homestead --dev
 
 После того, как ваша среда Homestead подготовлена ​​и запущена, вы можете добавить дополнительные сайты Nginx для других ваших проектов Laravel. Вы можете запускать столько проектов Laravel, сколько хотите, в одном окружении Homestead. Чтобы добавить дополнительный сайт, добавьте его в свой файл `Homestead.yaml`.
 
-    sites:
-        - map: homestead.test
-          to: /home/vagrant/project1/public
-        - map: another.test
-          to: /home/vagrant/project2/public
+```yaml
+sites:
+    - map: homestead.test
+      to: /home/vagrant/project1/public
+    - map: another.test
+      to: /home/vagrant/project2/public
+```
 
 > {note} Перед добавлением сайта убедитесь, что вы настроили [сопоставление папок](#configuring-shared-folders) для каталога проекта.
 
@@ -447,23 +477,27 @@ sites:
 
 Вы можете добавить дополнительные значения параметра `fastcgi_param` Nginx на свой сайт с помощью директивы сайта `params`:
 
-    sites:
-        - map: homestead.test
-          to: /home/vagrant/project1/public
-          params:
-              - key: FOO
-                value: BAR
+```yaml
+sites:
+    - map: homestead.test
+      to: /home/vagrant/project1/public
+      params:
+          - key: FOO
+            value: BAR
+```
 
 <a name="environment-variables"></a>
 ### Переменные окружения
 
 Вы можете определить глобальные переменные окружения, добавив их в свой файл `Homestead.yaml`:
 
-    variables:
-        - key: APP_ENV
-          value: local
-        - key: FOO
-          value: bar
+```yaml
+variables:
+    - key: APP_ENV
+      value: local
+    - key: FOO
+      value: bar
+```
 
 После обновления файла `Homestead.yaml` не забудьте повторно подготовить машину, выполнив команду `vagrant reload --provision`. Это обновит конфигурацию PHP-FPM для всех установленных версий PHP, а также обновит окружение для пользователя `vagrant`.
 
@@ -484,12 +518,14 @@ sites:
 
 По желанию можно перенаправить дополнительные порты в образе Vagrant, указав конфигурационную запись `ports` в вашем файле `Homestead.yaml`. После обновления файла `Homestead.yaml` не забудьте повторно подготовить машину, выполнив команду `vagrant reload --provision`:
 
-    ports:
-        - send: 50000
-          to: 5000
-        - send: 7777
-          to: 777
-          protocol: udp
+```yaml
+ports:
+    - send: 50000
+      to: 5000
+    - send: 7777
+      to: 777
+      protocol: udp
+```
 
 Ниже приведен список дополнительных портов служб Homestead в образе Vagrant, которые можно сопоставить со своей хост-машины:
 
@@ -510,32 +546,38 @@ sites:
 
 В Homestead 6 появилась поддержка запуска нескольких версий PHP на одной виртуальной машине. Вы можете указать, какую версию PHP использовать для конкретного сайта в файле `Homestead.yaml`. Доступные версии PHP: «5.6», «7.0», «7.1», «7.2», «7.3», «7.4», «8.0» (по умолчанию) и «8.1»:
 
-    sites:
-        - map: homestead.test
-          to: /home/vagrant/project1/public
-          php: "7.1"
+```yaml
+sites:
+    - map: homestead.test
+      to: /home/vagrant/project1/public
+      php: "7.1"
+```
 
 [На виртуальной машине Homestead](#connecting-via-ssh) вы можете использовать любую из поддерживаемых версий PHP через интерфейс командной строки:
 
-    php5.6 artisan list
-    php7.0 artisan list
-    php7.1 artisan list
-    php7.2 artisan list
-    php7.3 artisan list
-    php7.4 artisan list
-    php8.0 artisan list
-    php8.1 artisan list
+```shell
+php5.6 artisan list
+php7.0 artisan list
+php7.1 artisan list
+php7.2 artisan list
+php7.3 artisan list
+php7.4 artisan list
+php8.0 artisan list
+php8.1 artisan list
+```
 
 Вы можете изменить версию PHP, используемую по умолчанию в CLI, выполнив следующие команды на своей виртуальной машине Homestead:
 
-    php56
-    php70
-    php71
-    php72
-    php73
-    php74
-    php80
-    php81
+```shell
+php56
+php70
+php71
+php72
+php73
+php74
+php80
+php81
+```
 
 <a name="connecting-to-databases"></a>
 ### Подключение к базам данных
@@ -574,12 +616,14 @@ sites:
 
 [MailHog](https://github.com/mailhog/MailHog) позволяет вам перехватывать исходящую электронную почту без отправки ее получателям. Для начала обновите файл `.env` вашего приложения, чтобы использовать следующие настройки почты:
 
-    MAIL_MAILER=smtp
-    MAIL_HOST=localhost
-    MAIL_PORT=1025
-    MAIL_USERNAME=null
-    MAIL_PASSWORD=null
-    MAIL_ENCRYPTION=null
+```ini
+MAIL_MAILER=smtp
+MAIL_HOST=localhost
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+```
 
 После этой настройки вы можете получить доступ к панели управления MailHog по адресу `http://localhost:8025`.
 
@@ -606,7 +650,7 @@ sites:
 
 Наконец, убедитесь, что в вашем файле `.env` прописаны следующие параметры:
 
-```bash
+```ini
 AWS_ACCESS_KEY_ID=homestead
 AWS_SECRET_ACCESS_KEY=secretkey
 AWS_DEFAULT_REGION=us-east-1
@@ -644,11 +688,15 @@ features:
 
 Чтобы решить эту проблему, Homestead содержит собственную команду `share`. Для начала [подключитесь к вашей виртуальной машине](#connecting-via-ssh) через `vagrant ssh` и выполните команду `share homestead.test`. Эта команда предоставит общий доступ к сайту `homestead.test` из вашего конфигурационного файла `Homestead.yaml`. Вы можете заменить `homestead.test` на любой из других сконфигурированных вами сайтов:
 
-    share homestead.test
+```shell
+share homestead.test
+```
 
 После выполнения команды вы увидите экран Ngrok, который содержит журнал активности и общедоступные URL-адреса для вашего сайта. Если вы хотите указать регион, поддомен или другой параметр во время выполнения Ngrok, то вы можете добавить их в команду `share`:
 
-    share homestead.test -region=eu -subdomain=laravel
+```shell
+share homestead.test -region=eu -subdomain=laravel
+```
 
 > {note} Помните, что Vagrant по своей сути небезопасен, и вы открываете свою виртуальную машину для доступа в Интернет, выполняя команду `share`.
 
@@ -737,10 +785,12 @@ networks:
 
 Настраивая Homestead, Ubuntu может спросить вас, хотите ли вы сохранить исходную конфигурацию пакета или перезаписать ее новым файлом конфигурации. Чтобы избежать этого, вы должны использовать следующую команду при установке пакетов, чтобы избежать перезаписи любой конфигурации, ранее созданной Homestead:
 
-    sudo apt-get -y \
-        -o Dpkg::Options::="--force-confdef" \
-        -o Dpkg::Options::="--force-confold" \
-        install package-name
+```shell
+sudo apt-get -y \
+    -o Dpkg::Options::="--force-confdef" \
+    -o Dpkg::Options::="--force-confold" \
+    install package-name
+```
 
 <a name="user-customizations"></a>
 ### Пользовательские настройки

@@ -23,7 +23,9 @@
 
 Для начала установите Socialite с помощью менеджера пакетов Composer в свой проект:
 
-    composer require laravel/socialite
+```shell
+composer require laravel/socialite
+```
 
 <a name="upgrading-socialite"></a>
 ## Обновление пакета Socialite

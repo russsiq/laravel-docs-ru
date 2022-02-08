@@ -24,13 +24,15 @@
 
 <!-- <div class="content-list" markdown="1"> -->
 
-- PHP >= 7.3
+- PHP >= 8.0
 - Расширение PHP BCMath
 - Расширение PHP Ctype
+- Расширение PHP DOM
 - Расширение PHP Fileinfo
 - Расширение PHP JSON
 - Расширение PHP Mbstring
 - Расширение PHP OpenSSL
+- Расширение PHP PCRE
 - Расширение PHP PDO
 - Расширение PHP Tokenizer
 - Расширение PHP XML
@@ -47,38 +49,40 @@
 
 Убедитесь, что, как и в конфигурации ниже, ваш веб-сервер направляет все запросы в файл `public/index.php` вашего приложения. Вы никогда не должны пытаться переместить файл `index.php` в корень вашего проекта, поскольку обслуживание приложения из корня проекта откроет доступ ко многим конфиденциальным файлам конфигурации из общедоступной сети Интернет:
 
-    server {
-        listen 80;
-        listen [::]:80;
-        server_name example.com;
-        root /srv/example.com/public;
+```nginx
+server {
+    listen 80;
+    listen [::]:80;
+    server_name example.com;
+    root /srv/example.com/public;
 
-        add_header X-Frame-Options "SAMEORIGIN";
-        add_header X-Content-Type-Options "nosniff";
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
 
-        index index.php;
+    index index.php;
 
-        charset utf-8;
+    charset utf-8;
 
-        location / {
-            try_files $uri $uri/ /index.php?$query_string;
-        }
-
-        location = /favicon.ico { access_log off; log_not_found off; }
-        location = /robots.txt  { access_log off; log_not_found off; }
-
-        error_page 404 /index.php;
-
-        location ~ \.php$ {
-            fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
-            fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-            include fastcgi_params;
-        }
-
-        location ~ /\.(?!well-known).* {
-            deny all;
-        }
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
     }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    error_page 404 /index.php;
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
+```
 
 <a name="optimization"></a>
 ## Оптимизация
@@ -88,7 +92,9 @@
 
 При развертывании в эксплуатационном окружении, убедитесь, что вы оптимизировали файл автозагрузчика классов Composer, чтобы он мог быстро найти нужный файл для загрузки конкретного класса:
 
-    composer install --optimize-autoloader --no-dev
+```shell
+composer install --optimize-autoloader --no-dev
+```
 
 > {tip} Помимо оптимизации автозагрузчика, вы всегда должны обязательно включать файл `composer.lock` в репозиторий системы управления версиями вашего проекта. Зависимости вашего проекта могут быть установлены намного быстрее, если присутствует файл `composer.lock`.
 
@@ -97,7 +103,9 @@
 
 При развертывании вашего приложения в эксплуатационном окружении, вы должны убедиться, что вы выполнили команду `config:cache` Artisan в процессе развертывания:
 
-    php artisan config:cache
+```shell
+php artisan config:cache
+```
 
 Эта команда объединит все файлы конфигурации Laravel в один кешированный файл, что значительно сократит количество обращений, которые фреймворк должен совершить к файловой системе при загрузке значений вашей конфигурации.
 
@@ -108,7 +116,9 @@
 
 Если вы создаете большое приложение с множеством маршрутов, вам следует убедиться, что вы выполнили команду `route:cache` Artisan в процессе развертывания:
 
-    php artisan route:cache
+```shell
+php artisan route:cache
+```
 
 Эта команда сокращает регистрации всех маршрутов до одного вызова метода в кешированном файле, повышая производительность при регистрации сотен маршрутов.
 
@@ -117,7 +127,9 @@
 
 При развертывании вашего приложения в эксплуатационном окружении, вы должны убедиться, что вы выполнили команду `view:cache` Artisan в процессе развертывания:
 
-    php artisan view:cache
+```shell
+php artisan view:cache
+```
 
 Эта команда предварительно скомпилирует все ваши шаблоны Blade, чтобы они не компилировались во время запроса, повышая производительность каждого запроса, возвращающего шаблоном.
 

@@ -56,15 +56,21 @@ Sanctum будет пытаться аутентифицироваться с п
 
 Для начала установите Sanctum с помощью менеджера пакетов Composer в свой проект:
 
-    composer require laravel/sanctum
+```shell
+composer require laravel/sanctum
+```
 
 Затем, вы должны опубликовать файлы конфигурации и миграции Sanctum с помощью команды `vendor:publish` Artisan. Файл конфигурации `sanctum` будет помещен в каталог `config` вашего приложения:
 
-    php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+```shell
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+```
 
 Наконец, вы должны запустить миграцию базы данных. Sanctum создаст одну таблицу базы данных, в которой будут храниться токены API:
 
-    php artisan migrate
+```shell
+php artisan migrate
+```
 
 Затем, если вы планируете использовать Sanctum для аутентификации SPA, то вам следует добавить посредника Sanctum в вашу группу посредников `api` в файле `app/Http/Kernel.php`:
 
@@ -260,7 +266,9 @@ Sanctum также обеспечивает простой метод аутен
 
 Кроме того, вы должны задействовать параметр `withCredentials` в глобальном экземпляре `axios` вашего приложения. Обычно это нужно делать в вашем файле `resources/js/bootstrap.js`. Если вы на клиентской стороне не используете Axios для выполнения HTTP-запросов, то вам следует выполнить аналогичную настройку своего HTTP-клиента:
 
-    axios.defaults.withCredentials = true;
+```js
+axios.defaults.withCredentials = true;
+```
 
 Наконец, вы должны убедиться, что конфигурация домена cookie сессии вашего приложения поддерживает любой поддомен вашего корневого домена. Вы можете сделать это, добавив к домену префикс `.` в конфигурационном файле `config/session.php` вашего приложения:
 
@@ -274,9 +282,11 @@ Sanctum также обеспечивает простой метод аутен
 
 Для аутентификации вашего SPA страница «входа» вашего SPA должна сначала сделать запрос к конечной точке `/sanctum/csrf-cookie` для инициализации защиты от CSRF для приложения:
 
-    axios.get('/sanctum/csrf-cookie').then(response => {
-        // Login...
-    });
+```js
+axios.get('/sanctum/csrf-cookie').then(response => {
+    // Login...
+});
+```
 
 Во время этого запроса Laravel установит cookie `XSRF-TOKEN`, содержащий текущий токен CSRF. Этот токен следует передавать в заголовке `X-XSRF-TOKEN` при последующих запросах, что некоторые клиентские библиотеки HTTP, такие как Axios и Angular HttpClient, будут делать автоматически за вас. Если ваша HTTP-библиотека JavaScript не задает автоматически значение, то вам нужно будет вручную установить заголовок `X-XSRF-TOKEN`, чтобы он соответствовал значению `XSRF-TOKEN` cookie, установленному этим маршрутом.
 
@@ -311,28 +321,30 @@ Sanctum также обеспечивает простой метод аутен
 
 Затем, чтобы запросы авторизации Pusher были успешными, вам нужно будет предоставить определение `authorizer` Pusher при инициализации [Laravel Echo](broadcasting.md#client-side-installation). Это позволит вашему приложению настроить Pusher для использования экземпляра `axios`, [ориентированного на междоменные запросы](#cors-and-cookies):
 
-    window.Echo = new Echo({
-        broadcaster: "pusher",
-        cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-        encrypted: true,
-        key: process.env.MIX_PUSHER_APP_KEY,
-        authorizer: (channel, options) => {
-            return {
-                authorize: (socketId, callback) => {
-                    axios.post('/api/broadcasting/auth', {
-                        socket_id: socketId,
-                        channel_name: channel.name
-                    })
-                    .then(response => {
-                        callback(false, response.data);
-                    })
-                    .catch(error => {
-                        callback(true, error);
-                    });
-                }
-            };
-        },
-    })
+```js
+window.Echo = new Echo({
+    broadcaster: "pusher",
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    encrypted: true,
+    key: process.env.MIX_PUSHER_APP_KEY,
+    authorizer: (channel, options) => {
+        return {
+            authorize: (socketId, callback) => {
+                axios.post('/api/broadcasting/auth', {
+                    socket_id: socketId,
+                    channel_name: channel.name
+                })
+                .then(response => {
+                    callback(false, response.data);
+                })
+                .catch(error => {
+                    callback(true, error);
+                });
+            }
+        };
+    },
+})
+```
 
 <a name="mobile-application-authentication"></a>
 ## Аутентификация мобильного приложения

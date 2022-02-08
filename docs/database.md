@@ -16,7 +16,6 @@
 
 <!-- <div class="content-list" markdown="1"> -->
 
-- MariaDB 10.2+ ([Политика версий](https://mariadb.org/about/#maintenance-policy))
 - MySQL 5.7+ ([Политика версий](https://en.wikipedia.org/wiki/MySQL#Release_history))
 - PostgreSQL 9.6+ ([Политика версий](https://www.postgresql.org/support/versioning/))
 - SQLite 3.8.8+
@@ -36,12 +35,16 @@
 
 Базы данных SQLite содержатся в одном файле вашей файловой системы. Вы можете создать новую базу данных SQLite, используя команду `touch` в консоли: `touch database/database.sqlite`. После создания базы данных вы можете легко настроить переменные окружения так, чтобы они указывали на эту базу данных, указав абсолютный путь к базе данных в переменной `DB_DATABASE` окружения:
 
-    DB_CONNECTION=sqlite
-    DB_DATABASE=/absolute/path/to/database.sqlite
+```ini
+DB_CONNECTION=sqlite
+DB_DATABASE=/absolute/path/to/database.sqlite
+```
 
 Чтобы включить ограничения внешнего ключа для соединений SQLite, установите переменную `DB_FOREIGN_KEYS` окружения в `true`:
 
-    DB_FOREIGN_KEYS=true
+```ini
+DB_FOREIGN_KEYS=true
+```
 
 <a name="mssql-configuration"></a>
 #### Конфигурация Microsoft SQL Server
@@ -313,8 +316,12 @@ driver://username:password@host:port/database?options
 
 Если вы хотите подключиться к своей базе данных с помощью интерфейса командной строки, то вы можете использовать команду `db` Artisan:
 
-    php artisan db
+```shell
+php artisan db
+```
 
 При необходимости, вы можете указать имя соединения для подключения к базе данных, не являющееся соединением по умолчанию:
 
-    php artisan db mysql
+```shell
+php artisan db mysql
+```

@@ -46,41 +46,49 @@ Laravel Sail автоматически устанавливается со вс
 
 Если вы заинтересованы в использовании Sail в существующем приложением Laravel, то вы можете просто установить Sail с помощью менеджера пакетов Composer. Конечно, эти шаги предполагают, что ваша существующая локальная среда разработки позволяет вам устанавливать зависимости Composer:
 
-    composer require laravel/sail --dev
+```shell
+composer require laravel/sail --dev
+```
 
 После установки Sail вы можете запустить команду `sail:install` Artisan. Эта команда опубликует файл `docker-compose.yml` Sail в корне вашего приложения:
 
-    php artisan sail:install
+```shell
+php artisan sail:install
+```
 
 Наконец, вы можете запустить Sail. Чтобы продолжить изучение использования Sail, продолжайте читать оставшуюся часть этой документации:
 
-    ./vendor/bin/sail up
+```shell
+./vendor/bin/sail up
+```
 
 <a name="using-devcontainers"></a>
 #### Использование Devcontainer
 
 Если вы хотите разработать в [Devcontainer](https://code.visualstudio.com/docs/remote/containers), то вы можете указать флаг `--devcontainer` для команды `sail:install`. Флаг `--devcontainer` проинструктирует команду `sail:install` опубликовать файл `.devcontainer/devcontainer.json` в корне вашего приложения:
 
-    php artisan sail:install --devcontainer
+```shell
+php artisan sail:install --devcontainer
+```
 
 <a name="configuring-a-bash-alias"></a>
 ### Настройка псевдонима Bash
 
 По умолчанию команды Sail вызываются с помощью скрипта `vendor/bin/sail`, который включен во все новые приложения Laravel:
 
-```bash
+```shell
 ./vendor/bin/sail up
 ```
 
 Но вместо многократно повторяющегося набора `vendor/bin/sail` для выполнения команд Sail, вы можете задать псевдоним Bash, который позволит вам легче выполнять команды Sail:
 
-```bash
+```shell
 alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
 ```
 
 После задания псевдонима Bash вы можете выполнять команды Sail, просто набрав `sail`. В остальных примерах документации предполагается, что вы настроили этот псевдоним:
 
-```bash
+```shell
 sail up
 ```
 
@@ -91,13 +99,13 @@ sail up
 
 Перед запуском Sail вы должны убедиться, что на вашем локальном компьютере не работают другие веб-серверы или базы данных. Чтобы запустить все контейнеры Docker, определенные в файле `docker-compose.yml` вашего приложения, вы должны выполнить команду `up`:
 
-```bash
+```shell
 sail up
 ```
 
 Чтобы запустить все контейнеры Docker в фоновом режиме, вы можете запустить Sail в режиме `detached`:
 
-```bash
+```shell
 sail up -d
 ```
 
@@ -105,7 +113,7 @@ sail up -d
 
 Чтобы остановить все контейнеры, вы можете просто нажать <kbd>Control + C</kbd>, чтобы остановить их выполнение. Или, если контейнеры работают в фоновом режиме, вы можете использовать команду `down`:
 
-```bash
+```shell
 sail stop
 ```
 
@@ -116,7 +124,7 @@ sail stop
 
 **При чтении документации Laravel вы часто увидите ссылки на команды Composer, Artisan и Node / NPM, которые не ссылаются на Sail**. В этих примерах предполагается, что эти инструменты установлены на вашем локальном компьютере. Если вы используете Sail для своей локальной среды разработки Laravel, то вам следует выполнить эти команды с помощью Sail:
 
-```bash
+```shell
 # Локальный запуск команд Artisan ...
 php artisan queue:work
 
@@ -129,7 +137,7 @@ sail artisan queue:work
 
 Команды PHP могут быть выполнены с помощью команды `php`. Конечно, эти команды будут выполняться с использованием версии PHP вашего приложения. Чтобы узнать больше о версиях PHP, доступных для Laravel Sail, обратитесь к разделу [Выбор версии PHP](#sail-php-versions):
 
-```bash
+```shell
 sail php --version
 
 sail php script.php
@@ -140,7 +148,7 @@ sail php script.php
 
 Команды Composer могут быть выполнены с помощью команды `composer`. Контейнер приложения Laravel Sail содержит Composer 2.x:
 
-```nothing
+```shell
 sail composer require laravel/sanctum
 ```
 
@@ -151,7 +159,7 @@ sail composer require laravel/sanctum
 
 Вы можете установить зависимости приложения, перейдя в каталог приложения и выполнив следующую команду. Эта команда использует небольшой контейнер Docker, содержащий PHP и Composer, для установки зависимостей приложения:
 
-```nothing
+```shell
 docker run --rm \
     -u "$(id -u):$(id -g)" \
     -v $(pwd):/var/www/html \
@@ -167,7 +175,7 @@ docker run --rm \
 
 Команды Artisan могут быть выполнены с помощью команды `artisan`:
 
-```bash
+```shell
 sail artisan queue:work
 ```
 
@@ -176,7 +184,7 @@ sail artisan queue:work
 
 Команды Node могут быть выполнены с помощью команды `node`, в то время как команды NPM могут быть выполнены с помощью команды `npm`:
 
-```nothing
+```shell
 sail node --version
 
 sail npm run prod
@@ -184,7 +192,7 @@ sail npm run prod
 
 Если вы хотите, то можете использовать Yarn вместо NPM:
 
-```nothing
+```shell
 sail yarn
 ```
 
@@ -236,13 +244,17 @@ AWS_USE_PATH_STYLE_ENDPOINT=true
 
 Laravel provides amazing testing support out of the box, and you may use Sail's `test` command to run your applications [feature and unit tests](testing.md). Any CLI options that are accepted by PHPUnit may also be passed to the `test` command:
 
-    sail test
+```shell
+sail test
 
-    sail test --group orders
+sail test --group orders
+```
 
 The Sail `test` command is equivalent to running the `test` Artisan command:
 
-    sail artisan test
+```shell
+sail artisan test
+```
 
 <a name="laravel-dusk"></a>
 ### Использование Laravel Dusk в Sail
@@ -269,7 +281,9 @@ depends_on:
 
 Наконец, вы можете запустить свой набор тестов Dusk, запустив Sail с командой `dusk`:
 
-    sail dusk
+```shell
+sail dusk
+```
 
 <a name="selenium-on-apple-silicon"></a>
 #### Selenium на Apple Silicon
@@ -290,7 +304,7 @@ selenium:
 
 По умолчанию файл `docker-compose.yml` Laravel Sail содержит служебную запись для [MailHog](https://github.com/mailhog/MailHog). MailHog перехватывает электронные письма, отправляемые вашим приложением во время локальной разработки, и предоставляет удобный веб-интерфейс, чтобы вы могли просматривать свои электронные письма в браузере. При использовании Sail хостом по умолчанию для MailHog является `mailhog` и он доступен через порт `1025`:
 
-```bash
+```ini
 MAIL_HOST=mailhog
 MAIL_PORT=1025
 MAIL_ENCRYPTION=null
@@ -303,7 +317,7 @@ MAIL_ENCRYPTION=null
 
 По желанию можно запустить сеанс Bash в контейнере вашего приложения. Вы можете использовать команду `shell` для подключения к контейнеру вашего приложения, что позволяет проверять файлы и установленные службы, а также выполнять произвольные команды оболочки внутри контейнера:
 
-```nothing
+```shell
 sail shell
 
 sail root-shell
@@ -311,7 +325,7 @@ sail root-shell
 
 Чтобы начать новый сеанс [Laravel Tinker](https://github.com/laravel/tinker), вы можете выполнить команду `tinker`:
 
-```bash
+```shell
 sail tinker
 ```
 
@@ -339,9 +353,11 @@ image: sail-8.1/app
 
 После обновления файла `docker-compose.yml` вашего приложения вы должны перестроить образы контейнеров:
 
-    sail build --no-cache
+```shell
+sail build --no-cache
 
-    sail up
+sail up
+```
 
 <a name="sail-node-versions"></a>
 ## Выбор версии Node
@@ -357,16 +373,20 @@ build:
 
 После обновления файла `docker-compose.yml` вашего приложения вы должны перестроить образы контейнеров:
 
-    sail build --no-cache
+```shell
+sail build --no-cache
 
-    sail up
+sail up
+```
 
 <a name="sharing-your-site"></a>
 ## Совместный доступ к вашему сайту
 
 Иногда требуется предоставить общий доступ к своему сайту для его предварительного просмотра коллеге или для проверки интеграции веб-перехватчиков с вашим приложением. Чтобы поделиться своим сайтом, вы можете использовать команду `share`. После выполнения этой команды вам будет выдан случайный URL-адрес `laravel-sail.site`, который вы можете использовать для доступа к своему приложению:
 
-    sail share
+```shell
+sail share
+```
 
 При совместном доступе к вашему сайту с помощью команды `share` вы должны настроить доверенные прокси вашего приложения в посреднике `TrustProxies`. В противном случае глобальные помощники генерации URL, такие как `url` ​​и `route`, не смогут определить правильный хост HTTP, который следует использовать во время генерации URL:
 
@@ -379,7 +399,9 @@ build:
 
 Если вы хотите выбрать поддомен для вашего сайта, то вы можете указать опцию `subdomain` при выполнении команды `share`:
 
-    sail share --subdomain=my-sail-site
+```shell
+sail share --subdomain=my-sail-site
+```
 
 > {tip} Команда `share` поддерживается [Expose](https://github.com/beyondcode/expose), службой туннелирования с открытым исходным кодом от [BeyondCode](https://beyondco.de).
 
@@ -398,7 +420,7 @@ SAIL_XDEBUG_MODE=develop,debug
 
 Во-первых, вы должны определить правильный IP-адрес хоста для добавления в переменную окружения, выполнив следующую команду. Как правило, `<container-name>` должно быть именем контейнера, который обслуживает ваше приложение, и чаще всего заканчиваться на `_laravel.test_1`:
 
-```bash
+```shell
 docker inspect -f {{range.NetworkSettings.Networks}}{{.Gateway}}{{end}} <container-name>
 ```
 
@@ -413,7 +435,7 @@ SAIL_XDEBUG_CONFIG="client_host=<host-ip-address>"
 
 Команда `sail debug` может быть использована для запуска сеанса отладки при запуске команды Artisan:
 
-```bash
+```shell
 # Запустить команды Artisan без Xdebug ...
 sail artisan migrate
 
@@ -435,12 +457,12 @@ sail debug migrate
 
 Поскольку Sail – это просто Docker, то вы можете настроить почти все в нем. Чтобы опубликовать Docker-файлы Sail, вы можете выполнить команду `sail:publish`:
 
-```bash
+```shell
 sail artisan sail:publish
 ```
 
 После запуска этой команды файлы Docker и другие конфигурационные файлы, используемые Laravel Sail, будут помещены в каталог `docker` корневого каталога вашего приложения. После настройки Sail вы можете изменить имя образа для контейнера приложения в файле `docker-compose.yml` вашего приложения. После этого пересоберите контейнеры вашего приложения с помощью команды `build`. Присвоение уникального имени образу приложения особенно важно, если вы используете Sail для разработки нескольких приложений Laravel на одном компьютере:
 
-```bash
+```shell
 sail build --no-cache
 ```

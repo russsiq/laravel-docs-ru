@@ -166,6 +166,7 @@
 - [random](#method-random)
 - [range](#method-range)
 - [reduce](#method-reduce)
+- [reduceMany](#method-reduce-many)
 - [reduceSpread](#method-reduce-spread)
 - [reject](#method-reject)
 - [replace](#method-replace)
@@ -288,13 +289,15 @@
 
 Этот метод особенно полезен в [шаблонах](views.md) при работе с сеткой, такой как [Bootstrap](https://getbootstrap.com/docs/4.1/layout/grid/). Например, представьте, что у вас есть коллекция моделей [Eloquent](eloquent.md), которые вы хотите отобразить в сетке:
 
-    @foreach ($products->chunk(3) as $chunk)
-        <div class="row">
-            @foreach ($chunk as $product)
-                <div class="col-xs-4">{{ $product->name }}</div>
-            @endforeach
-        </div>
-    @endforeach
+```blade
+@foreach ($products->chunk(3) as $chunk)
+    <div class="row">
+        @foreach ($chunk as $product)
+            <div class="col-xs-4">{{ $product->name }}</div>
+        @endforeach
+    </div>
+@endforeach
+```
 
 <a name="method-chunkwhile"></a>
 #### `chunkWhile()`
@@ -1817,13 +1820,29 @@
 
     // 4264
 
+<a name="method-reduce-many"></a>
+#### `reduceMany()`
+
+Метод `reduceMany` сокращает коллекцию до массива значений, передавая результаты каждой итерации следующей итерации. Этот метод подобен методу `reduce`; однако он может принимать несколько начальных значений:
+
+    [$creditsRemaining, $batch] = Image::where('status', 'unprocessed')
+        ->get()
+        ->reduceMany(function ($creditsRemaining, $batch, $image) {
+            if ($creditsRemaining >= $image->creditsRequired()) {
+                $batch->push($image);
+
+                $creditsRemaining -= $image->creditsRequired();
+            }
+
+            return [$creditsRemaining, $batch];
+        }, $creditsAvailable, collect());
+
 <a name="method-reduce-spread"></a>
 #### `reduceSpread()`
 
 Метод `reduceSpread` сокращает коллекцию до массива значений, передавая результаты каждой итерации в следующую итерацию. Этот метод похож на метод `reduce`; однако он может принимать несколько начальных значений:
 
-```php
-[$creditsRemaining, $batch] = Image::where('status', 'unprocessed')
+    [$creditsRemaining, $batch] = Image::where('status', 'unprocessed')
         ->get()
         ->reduceSpread(function ($creditsRemaining, $batch, $image) {
             if ($creditsRemaining >= $image->creditsRequired()) {
@@ -1834,7 +1853,6 @@
 
             return [$creditsRemaining, $batch];
         }, $creditsAvailable, collect());
-```
 
 <a name="method-reject"></a>
 #### `reject()`

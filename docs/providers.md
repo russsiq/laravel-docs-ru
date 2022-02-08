@@ -27,7 +27,9 @@
 
 Чтобы сгенерировать нового поставщика, используйте команду `make:provider` [Artisan](artisan.md):
 
-    php artisan make:provider RiakServiceProvider
+```shell
+php artisan make:provider RiakServiceProvider
+```
 
 <a name="the-register-method"></a>
 ### Метод `register`

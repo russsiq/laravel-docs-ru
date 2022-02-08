@@ -18,13 +18,15 @@
 
 Без защиты от CSRF вредоносный веб-сайт может создать HTML-форму, которая указывает на маршрут вашего приложения `/user/email` и отправляет собственный адрес электронной почты злоумышленника:
 
-    <form action="https://your-application.com/user/email" method="POST">
-        <input type="email" value="malicious-email@example.com">
-    </form>
+```blade
+<form action="https://your-application.com/user/email" method="POST">
+    <input type="email" value="malicious-email@example.com">
+</form>
 
-    <script>
-        document.forms[0].submit();
-    </script>
+<script>
+    document.forms[0].submit();
+</script>
+```
 
 Если вредоносный веб-сайт автоматически отправляет форму при загрузке страницы, злоумышленнику нужно только подтолкнуть ничего не подозревающего пользователя вашего приложения посетить свой веб-сайт, и его адрес электронной почты будет изменен в вашем приложении.
 
@@ -49,12 +51,14 @@ Laravel автоматически генерирует «токен» CSRF дл
 
 Каждый раз, когда вы создаете HTML-форму запросов «POST» «PUT», «PATCH» или «DELETE» в своем приложении, вы должны включать в форму скрытое поле `_token`, чтобы посредник защиты от CSRF смог выполнить проверку запроса. Для удобства вы можете использовать директиву `@csrf` Blade для создания скрытого поля ввода, содержащего этот токен:
 
-    <form method="POST" action="/profile">
-        @csrf
+```blade
+<form method="POST" action="/profile">
+    @csrf
 
-        <!-- Эквивалентно ... -->
-        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-    </form>
+    <!-- Эквивалентно ... -->
+    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+</form>
+```
 
 [Посредник](middleware.md) `App\Http\Middleware\VerifyCsrfToken`, который по умолчанию стоит в группе посредников `web`, автоматически проверяет соответствие токена во входном запросе и токен, хранящийся в сессии. Когда эти два токена совпадают, мы знаем, что запрос инициирует аутентифицированный пользователь.
 
@@ -97,15 +101,19 @@ Laravel автоматически генерирует «токен» CSRF дл
 
 В дополнение к проверке токена CSRF в качестве параметра POST-запроса посредник `App\Http\Middleware\VerifyCsrfToken` также проверяет заголовок запроса `X-CSRF-TOKEN`. Вы можете, например, сохранить токен в HTML-теге `meta`:
 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+```blade
+<meta name="csrf-token" content="{{ csrf_token() }}">
+```
 
 Затем, вы можете указать библиотеке, такой как jQuery, автоматически добавлять токен во все заголовки запросов. Это обеспечивает простую и удобную защиту от CSRF для ваших приложений с использованием устаревшей технологии JavaScript на основе AJAX:
 
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
+```js
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+```
 
 <a name="csrf-x-xsrf-token"></a>
 ## Токен X-XSRF

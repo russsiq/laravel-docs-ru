@@ -24,7 +24,9 @@
 
 Ресурсы расширяют класс `Illuminate\Http\Resources\Json\JsonResource`. Чтобы сгенерировать новый ресурс, используйте команду `make:resource` [Artisan](artisan.md). Эта команда поместит новый класс ресурса в каталог `app/Http/Resources` вашего приложения:
 
-    php artisan make:resource UserResource
+```shell
+php artisan make:resource UserResource
+```
 
 <a name="generating-resource-collections"></a>
 #### Генерация коллекций ресурса
@@ -33,9 +35,11 @@
 
 Чтобы сгенерировать новую коллекцию ресурса, вы должны использовать флаг `--collection` при создании ресурса. Или включение слова `Collection` в имя ресурса укажет Laravel, что он должен создать коллекцию ресурса. Коллекции ресурса расширяют класс `Illuminate\Http\Resources\Json\ResourceCollection`:
 
-    php artisan make:resource User --collection
+```shell
+php artisan make:resource User --collection
 
-    php artisan make:resource UserCollection
+php artisan make:resource UserCollection
+```
 
 <a name="concept-overview"></a>
 ## Обзор концепции
@@ -95,7 +99,9 @@
 
 Обратите внимание, что это не позволит добавить пользовательские метаданные, которые могут потребоваться при возвращении с вашей коллекцией. Если вы хотите получить больший контроль над ответом коллекции ресурса, то вы можете создать выделенный ресурс для представления коллекции:
 
-    php artisan make:resource UserCollection
+```shell
+php artisan make:resource UserCollection
+```
 
 После создания класса коллекции ресурса, вы можете легко определить любые метаданные, которые должны быть включены в ответ:
 
@@ -308,20 +314,22 @@
 
 По умолчанию, ваш самый верхний ресурс будет заключен в ключ `data`, когда ответ ресурса преобразуется в JSON. Так, например, типичный ответ коллекции ресурса выглядит следующим образом:
 
-    {
-        "data": [
-            {
-                "id": 1,
-                "name": "Eladio Schroeder Sr.",
-                "email": "therese28@example.com",
-            },
-            {
-                "id": 2,
-                "name": "Liliana Mayert",
-                "email": "evandervort@example.com",
-            }
-        ]
-    }
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "Eladio Schroeder Sr.",
+            "email": "therese28@example.com",
+        },
+        {
+            "id": 2,
+            "name": "Liliana Mayert",
+            "email": "evandervort@example.com",
+        }
+    ]
+}
+```
 
 Если вы хотите использовать собственный ключ вместо `data`, вы можете определить свойство `$wrap` в классе ресурса:
 
@@ -407,35 +415,37 @@
 
 При возврате разбитых на страницы коллекций через ответ ресурса, Laravel обернет ваши данные ресурса в ключ `data`, даже если был вызван метод `withoutWrapping`. Это потому, что разбитые на страницы ответы всегда содержат ключи `meta` и `links` с информацией о состоянии постраничной разбивки:
 
-    {
-        "data": [
-            {
-                "id": 1,
-                "name": "Eladio Schroeder Sr.",
-                "email": "therese28@example.com",
-            },
-            {
-                "id": 2,
-                "name": "Liliana Mayert",
-                "email": "evandervort@example.com",
-            }
-        ],
-        "links":{
-            "first": "http://example.com/pagination?page=1",
-            "last": "http://example.com/pagination?page=1",
-            "prev": null,
-            "next": null
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "Eladio Schroeder Sr.",
+            "email": "therese28@example.com",
         },
-        "meta":{
-            "current_page": 1,
-            "from": 1,
-            "last_page": 1,
-            "path": "http://example.com/pagination",
-            "per_page": 15,
-            "to": 10,
-            "total": 10
+        {
+            "id": 2,
+            "name": "Liliana Mayert",
+            "email": "evandervort@example.com",
         }
+    ],
+    "links":{
+        "first": "http://example.com/pagination?page=1",
+        "last": "http://example.com/pagination?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta":{
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "path": "http://example.com/pagination",
+        "per_page": 15,
+        "to": 10,
+        "total": 10
     }
+}
+```
 
 <a name="pagination"></a>
 ### Постраничная разбивка
@@ -451,35 +461,37 @@
 
 Ответы с постраничной разбивкой всегда содержат ключи `meta` и `links` с информацией о состоянии пагинатора:
 
-    {
-        "data": [
-            {
-                "id": 1,
-                "name": "Eladio Schroeder Sr.",
-                "email": "therese28@example.com",
-            },
-            {
-                "id": 2,
-                "name": "Liliana Mayert",
-                "email": "evandervort@example.com",
-            }
-        ],
-        "links":{
-            "first": "http://example.com/pagination?page=1",
-            "last": "http://example.com/pagination?page=1",
-            "prev": null,
-            "next": null
+```json
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "Eladio Schroeder Sr.",
+            "email": "therese28@example.com",
         },
-        "meta":{
-            "current_page": 1,
-            "from": 1,
-            "last_page": 1,
-            "path": "http://example.com/pagination",
-            "per_page": 15,
-            "to": 10,
-            "total": 10
+        {
+            "id": 2,
+            "name": "Liliana Mayert",
+            "email": "evandervort@example.com",
         }
+    ],
+    "links":{
+        "first": "http://example.com/pagination?page=1",
+        "last": "http://example.com/pagination?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta":{
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "path": "http://example.com/pagination",
+        "per_page": 15,
+        "to": 10,
+        "total": 10
     }
+}
+```
 
 <a name="conditional-attributes"></a>
 ### Условные атрибуты

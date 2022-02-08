@@ -1,18 +1,15 @@
 # Laravel 9 · Руководство по обновлению
 
-- [Обновление с 7.x версии до 8.0](#upgrade-8.0)
+- [Обновление с 8.x версии до 9.0](#upgrade-9.0)
 
 <a name="high-impact-changes"></a>
 ## Изменения, оказывающие большое влияние
 
 <!-- <div class="content-list" markdown="1"> -->
 
-- [Фабрики модели](#model-factories)
-- [Метод очереди `retryAfter`](#queue-retry-after-method)
-- [Свойство очереди `timeoutAt`](#queue-timeout-at-property)
-- [Методы очереди `allOnQueue` и `allOnConnection`](#queue-allOnQueue-allOnConnection)
-- [Пагинация по умолчанию](#pagination-defaults)
-- [Пространства имен наполнителей и фабрик](#seeder-factory-namespaces)
+- [Обновление зависимостей](#updating-dependencies)
+- [Flysystem 3.x](#flysystem-3)
+- [Symfony Mailer](#symfony-mailer)
 
 <!-- </div> -->
 
@@ -21,425 +18,669 @@
 
 <!-- <div class="content-list" markdown="1"> -->
 
-- [Требование PHP 7.3.0](#php-7.3.0-required)
-- [Поддержка пакетной обработки и таблица невыполненных заданий](#failed-jobs-table-batch-support)
-- [Обновления режима обслуживания](#maintenance-mode-updates)
-- [Параметр `php artisan down --message`](#artisan-down-message)
-- [Метод `assertExactJson`](#assert-exact-json-method)
+- [Методы `firstOrNew`, `firstOrCreate` и `updateOrCreate` отношений «Belongs To Many»](#belongs-to-many-first-or-new)
+- [Пользовательская типизация и `null`](#custom-casts-and-null)
+- [Время ожидания HTTP-клиента по умолчанию](#http-client-default-timeout)
+- [Возвращаемые типы PHP](#php-return-types)
+- [Изменение параметра `schema` для Postgres](#postgres-schema-configuration)
+- [Метод `assertDeleted`](#the-assert-deleted-method)
+- [Каталог `lang`](#the-lang-directory)
+- [Правило `password`](#the-password-rule)
+- [Методы `when` / `unless`](#when-and-unless-methods)
+- [Непровалидированные ключи массива](#unvalidated-array-keys)
 
 <!-- </div> -->
 
-<a name="upgrade-8.0"></a>
-## Обновление с 7.x версии до 8.0
+<a name="upgrade-9.0"></a>
+## Обновление с 8.x версии до 9.0
 
-<a name="estimated-upgrade-time-15-minutes"></a>
-#### Приблизительное время обновления: 15 минут
+<a name="estimated-upgrade-time-30-minutes"></a>
+#### Приблизительное время обновления: 30 минут
 
-> {note} Мы стараемся задокументировать все возможные критические изменения. Поскольку некоторые из этих критических изменений находятся в малоизвестных частях фреймворка, только часть этих изменений может повлиять на ваше приложение.
-
-<a name="php-7.3.0-required"></a>
-### Требование PHP 7.3.0
-
-**Вероятность воздействия: средняя**
-
-Новая минимальная версия PHP теперь 7.3.0.
+> {tip} Мы стараемся задокументировать все возможные критические изменения. Поскольку некоторые из этих критических изменений находятся в малоизвестных частях фреймворка, только часть этих изменений может повлиять на ваше приложение. Хотите сэкономить время? Вы можете использовать [Laravel Shift](https://laravelshift.com/), чтобы автоматизировать обновления приложений.
 
 <a name="updating-dependencies"></a>
 ### Обновление зависимостей
 
-Обновите следующие зависимости в вашем файле `composer.json`:
+**Вероятность воздействия: высокая**
+
+#### Требование PHP 8.0.2
+
+Laravel теперь требует PHP 8.0.2 или выше.
+
+#### Зависимости Composer
+
+Вы должны обновить следующие зависимости в файле `composer.json` вашего приложения:
 
 <!-- <div class="content-list" markdown="1"> -->
 
-- `guzzlehttp/guzzle` до `^7.0.1`
-- `facade/ignition` до `^2.3.6`
-- `laravel/framework` до `^8.0`
-- `laravel/ui` до `^3.0`
-- `nunomaduro/collision` до `^5.0`
-- `phpunit/phpunit` до `^9.0`
+- `laravel/framework` до `^9.0`
+- `nunomaduro/collision` до `^6.0`
 
 <!-- </div> -->
 
-Следующие сторонние пакеты имеют новые основные выпуски для поддержки Laravel 8. Если возможно, вы должны прочитать соответствующие руководства перед обновлением:
+Кроме того, замените `facade/ignition` на `"spatie/laravel-ignition": "^1.0"` в файле `composer.json` вашего приложения.
+
+Кроме того, следующие пакеты получили новые релизы для поддержки Laravel 9.x. Если применимо, то вы должны прочитать их отдельные руководства перед обновлением:
 
 <!-- <div class="content-list" markdown="1"> -->
 
-- [Horizon v5.0](https://github.com/laravel/horizon/blob/master/UPGRADE.md)
-- [Passport v10.0](https://github.com/laravel/passport/blob/master/UPGRADE.md)
-- [Socialite v5.0](https://github.com/laravel/socialite/blob/master/UPGRADE.md)
-- [Telescope v4.0](https://github.com/laravel/telescope/blob/master/UPGRADE.md)
+- [Vonage Notification Channel (v3.0)](https://github.com/laravel/vonage-notification-channel/blob/3.x/UPGRADE.md) (заменяет Nexmo)
 
 <!-- </div> -->
 
-Кроме того, установщик Laravel был обновлен для поддержки `composer create-project` и Laravel Jetstream. Любой установщик старше 4.0 перестанет работать после октября 2020 года. Вам следует как можно скорее обновить глобальный установщик до `^4.0`.
+Наконец, проверьте любые другие сторонние пакеты, используемые вашим приложением, и убедитесь, что вы используете корректную версию для поддержки Laravel 9.
 
-Наконец, изучите любые другие сторонние пакеты, используемые вашим приложением, и убедитесь, что вы используете корректную версию с поддержкой Laravel 8.
+<a name="php-return-types"></a>
+#### Возвращаемые типы PHP
 
-<a name="collections"></a>
+PHP начинает переходить к требованию определения типа возвращаемого значения в методах PHP, таких как `offsetGet`, `offsetSet` и т. д. В свете этого Laravel 9 реализовал эти возвращаемые типы в своей кодовой базе. Как правило, это не должно влиять на написанный пользователем код; однако, если вы переопределяете один из этих методов, расширяя базовые классы Laravel, то вам нужно будет добавить эти возвращаемые типы в код вашего собственного приложения или пакета:
+
+<!-- <div class="content-list" markdown="1"> -->
+
+- `count(): int`
+- `getIterator(): Traversable`
+- `getSize(): int`
+- `jsonSerialize(): array`
+- `offsetExists($key): bool`
+- `offsetGet($key): mixed`
+- `offsetSet($key, $value): void`
+- `offsetUnset($key): void`
+
+<!-- </div> -->
+
+Кроме того, в методы, реализующие `SessionHandlerInterface` PHP, были добавлены возвращаемые типы. Опять же, маловероятно, что это изменение повлияет на ваше собственное приложение или код пакета:
+
+<!-- <div class="content-list" markdown="1"> -->
+
+- `open($savePath, $sessionName): bool`
+- `close(): bool`
+- `read($sessionId): string|false`
+- `write($sessionId, $data): bool`
+- `destroy($sessionId): bool`
+- `gc($lifetime): int`
+
+<!-- </div> -->
+
+<a name="application"></a>
+### Приложение
+
+<a name="the-application-contract"></a>
+#### Контракт `Application`
+
+**Вероятность воздействия: низкая**
+
+Метод `storagePath` интерфейса `Illuminate\Contracts\Foundation\Application` был обновлен, чтобы принимать аргумент `$path`. Если вы реализуете этот интерфейс, то вы должны соответствующим образом обновить свою реализацию:
+
+    public function storagePath($path = '');
+
+#### Метод `ignore` обработчика исключений
+
+**Вероятность воздействия: низкая**
+
+Метод `ignore` обработчика исключений теперь является `public`, а не `protected`. Этот метод не включен в приложение по умолчанию; однако, если вы определили этот метод самостоятельно, то вы должны обновить его до `public`:
+
+```php
+public function ignore(string $class);
+```
+
+### Шаблонизатор Blade
+
+#### Отложенные коллекции и переменная `$loop`
+
+**Вероятность воздействия: низкая**
+
+При итерации экземпляра `LazyCollection` в шаблоне Blade переменная `$loop` больше недоступна, так как доступ к этой переменной приводит к загрузке всего `LazyCollection` в память, что делает использование отложенных коллекций бессмысленным в этом сценарий.
+
 ### Коллекции
 
-<a name="the-isset-method"></a>
-#### Метод `isset`
+#### Контракт `Enumerable`
 
 **Вероятность воздействия: низкая**
 
-Чтобы соответствовать типичному поведению PHP, метод `offsetExists` в `Illuminate\Support\Collection` был обновлен и теперь использует `isset` вместо `array_key_exists`. Это может привести к изменению поведения при работе с элементами коллекции, имеющими значение `null`:
+Контракт `Illuminate\Support\Enumerable` теперь определяет метод `sole`. Если вы реализуете этот контракт самостоятельно, то вам следует обновить свою реализацию, чтобы отразить этот новый метод:
 
-    $collection = collect([null]);
+```php
+public function sole($key = null, $operator = null, $value = null);
+```
 
-    // Laravel 7.x - true
-    isset($collection[0]);
+#### Метод `reduceWithKeys`
 
-    // Laravel 8.x - false
-    isset($collection[0]);
+Метод `reduceWithKeys` был удален, так как метод `reduce` обеспечивает ту же функциональность. Вы можете просто обновить свой код, чтобы он вызывал `reduce` вместо `reduceWithKeys`.
 
-<a name="database"></a>
+#### Метод `reduceMany`
+
+Метод `reduceMany` был переименован в `reduceSpread` для согласованности именования с другими подобными методами.
+
+### Контейнер служб
+
+#### Контракт `Container`
+
+**Вероятность воздействия: очень низкая**
+
+Контракт `Illuminate\Contracts\Container\Container` теперь определяет два метода: `scoped` и `scopedIf`. Если вы реализуете этот контракт самостоятельно, то вам следует обновить свою реализацию, чтобы отразить эти новые методы.
+
+#### Контракт `ContextualBindingBuilder`
+
+**Вероятность воздействия: очень низкая**
+
+Контракт `Illuminate\Contracts\Container\ContextualBindingBuilder` теперь определяет метод `giveConfig`. Если вы реализуете этот контракт самостоятельно, то вам следует обновить свою реализацию, чтобы отразить этот новый метод:
+
+```php
+public function giveConfig($key, $default = null);
+```
+
 ### База данных
 
-<a name="seeder-factory-namespaces"></a>
-#### Пространства имен наполнителей и фабрик
-
-**Вероятность воздействия: высокая**
-
-Наполнители и фабрики теперь имеют пространство имен. Чтобы учесть эти изменения, добавьте пространство имен `Database\Seeders` в ваши классы наполнителей. Кроме того, имеющийся каталог `database/seeds` должен быть переименован в `database/seeders`:
-
-    <?php
-
-    namespace Database\Seeders;
-
-    use App\Models\User;
-    use Illuminate\Database\Seeder;
-
-    class DatabaseSeeder extends Seeder
-    {
-        /**
-         * Заполнить базу данных приложения.
-         *
-         * @return void
-         */
-        public function run()
-        {
-            ...
-        }
-    }
-
-Если вы решите использовать пакет `laravel/legacy-factories`, то никаких изменений в классах ваших фабрик не требуется. Однако, если вы обновляете свои фабрики, вы должны добавить к этим классам пространство имен `Database\Factories`.
-
-Затем в вашем файле `composer.json` удалите блок `classmap` из раздела `autoload` и добавьте новые сопоставления каталогов классов с пространством имен:
-
-    "autoload": {
-        "psr-4": {
-            "App\\": "app/",
-            "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
-        }
-    },
-
-<a name="eloquent"></a>
-### Eloquent
-
-<a name="model-factories"></a>
-#### Фабрики модели
-
-**Вероятность воздействия: высокая**
-
-Функция Laravel [фабрики модели](/docs/database-testing.md#defining-model-factories) была полностью переписана для поддержки классов и несовместима с фабриками стиля Laravel 7.x. Однако, чтобы упростить процесс обновления, был создан новый пакет `laravel/legacy-factories`, чтобы продолжать использовать ваши существующие фабрики с Laravel 8.x. Вы можете установить этот пакет через Composer:
-
-    composer require laravel/legacy-factories
-
-<a name="the-castable-interface"></a>
-#### Интерфейс `Castable`
-
-**Вероятность воздействия: низкая**
-
-Метод `castUsing` интерфейса `Castable` обновлен и теперь принимает массив аргументов. Если вы реализуете этот интерфейс, вам, соответственно, следует обновить реализацию:
-
-    public static function castUsing(array $arguments);
-
-<a name="increment-decrement-events"></a>
-#### События Increment / Decrement
-
-**Вероятность воздействия: низкая**
-
-События модели, связанные с «обновлением» и «сохранением», теперь будут вызываться при выполнении методов `increment` или `decrement` экземпляров модели Eloquent.
-
-<a name="events"></a>
-### События
-
-<a name="the-event-service-provider-class"></a>
-#### Класс `EventServiceProvider`
-
-**Вероятность воздействия: низкая**
-
-Если ваш класс `App\Providers\EventServiceProvider` содержит метод `register`, то вы должны убедиться, что вы вызываете `parent::register` в начале этого метода. В противном случае события вашего приложения не будут зарегистрированы.
-
-<a name="the-dispatcher-contract"></a>
-#### Контракт `Dispatcher`
-
-**Вероятность воздействия: низкая**
-
-Метод `listen` контракта `Illuminate\Contracts\Events\Dispatcher` был обновлен, чтобы сделать свойство `$listener` необязательным. Это изменение было внесено для поддержки автоматического определения обрабатываемых типов событий через рефлексию. Если вы реализуете этот интерфейс, вам, соответственно, следует обновить реализацию:
-
-    public function listen($events, $listener = null);
-
-<a name="framework"></a>
-### Фреймворк
-
-<a name="maintenance-mode-updates"></a>
-#### Обновления режима обслуживания
-
-**Вероятность воздействия: необязательно**
-
-[Режим обслуживания](/docs/configuration.md#maintenance-mode) был улучшен в Laravel 8.x. Теперь поддерживается предварительный рендеринг шаблона режима обслуживания, что исключает вероятность того, что конечные пользователи столкнутся с ошибками в режиме обслуживания. Однако для поддержки этого в ваш файл `public/index.php` необходимо добавить следующие строки. Эти строки следует разместить непосредственно под существующим определением константы `LARAVEL_START`:
-
-    define('LARAVEL_START', microtime(true));
-
-    if (file_exists(__DIR__.'/../storage/framework/maintenance.php')) {
-        require __DIR__.'/../storage/framework/maintenance.php';
-    }
-
-<a name="artisan-down-message"></a>
-#### Параметр `php artisan down --message`
+<a name="postgres-schema-configuration"></a>
+#### Изменение параметра `schema` для Postgres
 
 **Вероятность воздействия: средняя**
 
-Параметр `--message` команды `php artisan down` была удалена. В качестве альтернативы рассмотрите возможность [предварительного рендеринга шаблонов в режиме обслуживания](/docs/configuration.md#maintenance-mode) с желаемым сообщением.
+Параметр конфигурации `schema`, используемый для настройки путей поиска соединений Postgres в конфигурационном файле `config/database.php` вашего приложения, должен быть переименован в `search_path`.
 
-<a name="php-artisan-serve-no-reload-option"></a>
-#### Параметр `php artisan serve --no-reload`
-
-**Вероятность воздействия: низкая**
-
-В команде `php artisan serve` добавлен параметр `--no-reload`. Это даст указание встроенному серверу не перезагружаться при обнаружении изменений файла окружения. Эта опция в первую очередь полезна при запуске тестов Laravel Dusk в среде CI (непрерывной интеграции).
-
-<a name="manager-app-property"></a>
-#### Свойство `$app` Менеджера
+<a name="schema-builder-doctrine-method"></a>
+#### Метод `registerCustomDoctrineType` построителя схемы
 
 **Вероятность воздействия: низкая**
 
-Ранее устаревшее свойство `$app` класса `Illuminate\Support\Manager` было удалено. Если вы полагались на это свойство, вам следует использовать вместо него свойство `$container`.
+Метод `registerCustomDoctrineType` был удален из класса `Illuminate\Database\Schema\Builder`. Вместо этого вы можете использовать метод `registerDoctrineType` фасада `DB` или зарегистрировать пользовательские типы Doctrine в конфигурационном файле `config/database.php`.
 
-<a name="the-elixir-helper"></a>
-#### Помощник `elixir`
+### Модели Eloquent
+
+<a name="custom-casts-and-null"></a>
+#### Пользовательская типизация и `null`
+
+**Вероятность воздействия: средняя**
+
+В предыдущих релизах Laravel метод `set` классов пользовательской типизации не вызывался, если для типизируемого атрибута было установлено значение `null`. Однако такое поведение не соответствовало документации Laravel. В Laravel 9.x метод `set` класса типизации будет вызываться с `null` в качестве предоставленного аргумента `$value`. Поэтому вы должны убедиться, что ваши пользовательские типизации способны в достаточной степени справиться с этим сценарием:
+
+```php
+/**
+ * Подготовить переданное значение к сохранению.
+ *
+ * @param  \Illuminate\Database\Eloquent\Model  $model
+ * @param  string  $key
+ * @param  AddressModel  $value
+ * @param  array  $attributes
+ * @return array
+ */
+public function set($model, $key, $value, $attributes)
+{
+    if (! $value instanceof AddressModel) {
+        throw new InvalidArgumentException('The given value is not an Address instance.');
+    }
+
+    return [
+        'address_line_one' => $value->lineOne,
+        'address_line_two' => $value->lineTwo,
+    ];
+}
+```
+
+<a name="belongs-to-many-first-or-new"></a>
+#### Методы `firstOrNew`, `firstOrCreate` и `updateOrCreate` отношений «Belongs To Many»
+
+**Вероятность воздействия: средняя**
+
+Методы `firstOrNew`, `firstOrCreate` и `updateOrCreate` отношений «Belongs To Many» принимают массив атрибутов в качестве первого аргумента. В предыдущих релизах Laravel этот массив атрибутов сравнивался со «сводной» / промежуточной таблицей для существующих записей.
+
+Однако такое поведение было неожиданным и, как правило, нежелательным. Вместо этого эти методы теперь сравнивают массив атрибутов с таблицей связанной модели:
+
+```php
+$user->roles()->updateOrCreate([
+    'name' => 'Administrator',
+]);
+```
+
+Кроме того, метод `firstOrCreate` теперь принимает массив `$values` ​​в качестве второго аргумента. Этот массив будет объединен с первым аргументом метода (`$attributes`) при создании связанной модели, если он еще не существует. Эти изменения делают этот метод совместимым с методами `firstOrCreate`, предлагаемыми другими типами отношений:
+
+```php
+$user->roles()->firstOrCreate([
+    'name' => 'Administrator',
+], [
+    'created_by' => $user->id,
+]);
+```
+
+#### Метод `touch`
 
 **Вероятность воздействия: низкая**
 
-Ранее устаревший помощник `elixir` был удален. Приложениям, все еще использующим данный метод сборки, рекомендуется перейти на [Laravel Mix](https://github.com/JeffreyWay/laravel-mix).
+Метод `touch` теперь принимает затрагиваемый атрибут. Если вы ранее перезаписывали этот метод, то вам следует обновить сигнатуру метода, чтобы отразить этот новый аргумент:
 
-<a name="mail"></a>
-### Почта
+```php
+public function touch($attribute = null);
+```
 
-<a name="the-sendnow-method"></a>
-#### Метод `sendNow`
+### Шифрование
+
+#### Контракт `Encrypter`
 
 **Вероятность воздействия: низкая**
 
-Ранее устаревший метод `sendNow` был удален. Вместо этого используйте метод `send`.
+Контракт `Illuminate\Contracts\Encryption\Encrypter` теперь определяет метод `getKey`. Если вы реализуете этот интерфейс самостоятельно, то вам следует соответствующим образом обновить свою реализацию:
 
-<a name="pagination"></a>
-### Постраничная навигация
+```php
+public function getKey();
+```
 
-<a name="pagination-defaults"></a>
-#### Пагинация по умолчанию
+### Фасады
+
+#### Метод `getFacadeAccessor`
+
+**Вероятность воздействия: низкая**
+
+Метод `getFacadeAccessor` всегда должен возвращать ключ привязки контейнера. В предыдущих релизах Laravel этот метод мог возвращать экземпляр объекта; однако это поведение больше не поддерживается. Если вы написали свои собственные фасады, то вы должны убедиться, что этот метод возвращает строку привязки контейнера:
+
+```php
+/**
+ * Получить зарегистрированное имя компонента.
+ *
+ * @return string
+ */
+protected static function getFacadeAccessor()
+{
+    return Example::class;
+}
+```
+
+### Файловое хранилище
+
+#### Переменная окружения `FILESYSTEM_DRIVER`
+
+**Вероятность воздействия: низкая**
+
+Переменная окружения `FILESYSTEM_DRIVER` была переименована в `FILESYSTEM_DISK` для более точного отражения ее использования. Это изменение затрагивает только скелет приложения; однако вы можете обновить переменные окружения своего собственного приложения, чтобы отразить это изменение, если хотите.
+
+#### Диск `cloud`
+
+**Вероятность воздействия: низкая**
+
+Параметр конфигурации `cloud` диска был удален из скелета приложения по умолчанию в ноябре 2020 года. Это изменение влияет только на скелет приложения. Если вы используете диск `cloud` в своем приложении, то вы должны оставить это значение конфигурации в скелете вашего собственного приложения.
+
+<a name="flysystem-3"></a>
+### Flysystem 3.x
 
 **Вероятность воздействия: высокая**
 
-Пагинатор теперь использует [CSS-фреймворк Tailwind](https://tailwindcss.com) для стилизации по умолчанию. Чтобы продолжить использование Bootstrap, вы должны добавить следующий вызов метода в методе `boot` поставщика `App\Providers\AppServiceProvider`:
+Laravel 9.x мигрировал с [Flysystem](https://flysystem.thephpleague.com/v2/docs/) версии 1.x на версию 3.x. Под капотом Flysystem используются все методы манипулирования файлами, предоставляемые фасадом `Storage`. В связи с этим в вашем приложении могут потребоваться некоторые изменения; однако мы постарались сделать этот переход максимально плавным.
 
-    use Illuminate\Pagination\Paginator;
+#### Требования к драйверу
 
-    Paginator::useBootstrap();
+Перед использованием драйверов S3 или SFTP вам необходимо установить соответствующий пакет с помощью менеджера пакетов Composer:
+
+- Amazon S3: `composer require --with-all-dependencies league/flysystem-aws-s3-v3 "^3.0"`
+- SFTP: `composer require league/flysystem-sftp-v3 "^3.0"`
+
+#### Перезапись существующих файлов
+
+Операции записи, такие как `put`, `write`, `writeStream`, теперь по умолчанию перезаписывают существующие файлы. Если вы не хотите перезаписывать существующие файлы, то вам следует предварительно проверить существование файла перед выполнением операции записи.
+
+#### Чтение отсутствующих файлов
+
+Попытка чтения из несуществующего файла теперь возвращает `null`. В предыдущих релизах Laravel возникало исключение `Illuminate\Contracts\Filesystem\FileNotFoundException`.
+
+#### Удаление отсутствующих файлов
+
+Попытка «удалить» несуществующий файл с помощью метода `delete` теперь возвращает `true`.
+
+#### Адаптеры с кешем
+
+Flysystem больше не поддерживает адаптеры с кешем. Таким образом, они были удалены из Laravel, и любая соответствующая конфигурация (например, ключ `cache` в конфигурациях диска) может быть удалена.
+
+#### Пользовательские файловые системы
+
+Небольшие изменения были внесены в шаги, необходимые для регистрации пользовательских драйверов файловой системы. Поэтому, если вы определяли свои собственные пользовательские драйверы файловой системы или использовали пакеты, определяющие пользовательские драйверы, то вам следует обновить свой код и зависимости.
+
+Например, в Laravel 8.x пользовательский драйвер файловой системы может быть зарегистрирован следующим образом:
+
+```php
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\Filesystem;
+use Spatie\Dropbox\Client as DropboxClient;
+use Spatie\FlysystemDropbox\DropboxAdapter;
+
+Storage::extend('dropbox', function ($app, $config) {
+    $client = new DropboxClient(
+        $config['authorization_token']
+    );
+
+    return new Filesystem(new DropboxAdapter($client));
+});
+```
+
+Однако в Laravel 9.x замыкание метода `Storage::extend` должно возвращать экземпляр `Illuminate\Filesystem\FilesystemAdapter` напрямую:
+
+```php
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Support\Facades\Storage;
+use League\Flysystem\Filesystem;
+use Spatie\Dropbox\Client as DropboxClient;
+use Spatie\FlysystemDropbox\DropboxAdapter;
+
+Storage::extend('dropbox', function ($app, $config) {
+    $adapter = new DropboxAdapter(new DropboxClient(
+        $config['authorization_token']
+    ););
+
+    return new FilesystemAdapter(
+        new Filesystem($adapter, $config),
+        $adapter,
+        $config
+    );
+});
+```
+
+### Глобальные помощники
+
+<a name="data-get-function"></a>
+#### Функция `data_get` и итерируемые объекты
+
+**Вероятность воздействия: очень низкая**
+
+Раньше помощник `data_get` можно было использовать для извлечения вложенных данных в массивах и экземплярах `Collection`; однако теперь этот помощник может извлекать вложенные данные во всех итерируемых объектах.
+
+<a name="str-function"></a>
+#### Функция `str`
+
+**Вероятность воздействия: очень низкая**
+
+Laravel 9.x теперь включает [глобальный помощник `str`](helpers.md#method-str). Если вы самостоятельно определили глобальный помощник `str` в своем приложении, то вы должны переименовать или удалить его, чтобы он не конфликтовал с помощником `str` Laravel.
+
+<a name="when-and-unless-methods"></a>
+#### Методы `when` / `unless`
+
+**Вероятность воздействия: средняя**
+
+Как вы, возможно, знаете, методы `when` и `unless` предлагаются различными классами фреймворка. Эти методы можно использовать для условного выполнения действия, если логическое значение первого аргумента метода оценивается как «истина» или «ложь», соответственно:
+
+```php
+$collection->when(true, function ($collection) {
+    $collection->merge([1, 2, 3]);
+});
+```
+
+Поэтому в предыдущих релизах Laravel передача замыкания методам `when` или `unless` означала, что условная операция всегда будет выполняться, поскольку гибкое сравнение с объектом замыкания (или любым другим объектом) всегда оценивается как `true`. Это часто приводило к неожиданным результатам, поскольку разработчики ожидали, что **результат** замыкания будет использоваться как логическое значение, определяющее, выполняется ли условное действие.
+
+Таким образом, в Laravel 9.x любые замыкания, переданные методам `when` или `unless`, будут выполнены, а значение, возвращаемое замыканием, будет считаться логическим значением, используемым методами `when` и `unless`:
+
+```php
+$collection->when(function ($collection) {
+    // Это замыкание будет выполнено ...
+    return false;
+}, function ($collection) {
+    // Не будет выполнено, так как первое замыкание вернуло `false` ...
+    $collection->merge([1, 2, 3]);
+});
+```
+
+### HTTP-клиент
+
+<a name="http-client-default-timeout"></a>
+#### Время ожидания HTTP-клиента по умолчанию
+
+**Вероятность воздействия: средняя**
+
+[HTTP-клиент](http-client.md) теперь имеет время ожидания по умолчанию, равное 30 секундам. Другими словами, если сервер не отвечает в течение 30 секунд, то будет выброшено исключение. Раньше для HTTP-клиента не настраивалось время ожидания по умолчанию, из-за чего запросы иногда «зависали» на неопределенный срок.
+
+Если вы хотите указать более длительный тайм-аут для конкретного запроса, то вы можете сделать это с помощью метода `timeout`:
+
+    $response = Http::timeout(120)->get(...);
+
+#### Имитация HTTP и посредник
+
+**Вероятность воздействия: низкая**
+
+Ранее Laravel не запускал посредников Guzzle HTTP, если [HTTP-клиент](http-client.md) являлся имитацией. Однако в Laravel 9.x посредник Guzzle HTTP будет выполняться даже при имитации HTTP-клиента.
+
+#### Имитация HTTP Fake и внедрение зависимостей
+
+**Вероятность воздействия: низкая**
+
+В предыдущих релизах Laravel вызов метода `Http::fake()` не влиял на экземпляры `Illuminate\Http\Client\Factory`, которые были внедрены в конструкторы классов. Однако в Laravel 9.x `Http::fake()` гарантирует, что фейковые ответы будут возвращены HTTP-клиентами, внедряемыми в другие службы посредством внедрения зависимостей. Такое поведение больше соответствует поведению других фасадов и их имитаций.
+
+<a name="symfony-mailer"></a>
+### Symfony Mailer
+
+**Вероятность воздействия: высокая**
+
+Одним из самых больших изменений в Laravel 9.x является переход от SwiftMailer, который больше не поддерживается с декабря 2021 года, к Symfony Mailer. Однако мы постарались сделать этот переход как можно более плавным для ваших приложений. При этом внимательно ознакомьтесь со списком изменений ниже, чтобы убедиться, что ваше приложение полностью совместимо.
+
+#### Предварительная подготовка драйверов
+
+Чтобы продолжить использование драйвера Mailgun, вашему приложению требуется пакет `symfony/mailgun-mailer` Composer:
+
+```shell
+composer require symfony/mailgun-mailer
+```
+
+Пакет `wildbit/swiftmailer-postmark` Composer должен быть удален из вашего приложения. Вместо этого вашему приложению должен потребоваться пакет `symfony/postmark-mailer` Composer:
+
+```shell
+composer require symfony/postmark-mailer
+```
+
+#### Обновлены возвращаемые типы
+
+Методы `send`, `html`, `text` и `plain` больше не возвращают количество получателей, получивших сообщение. Вместо этого возвращается экземпляр `Illuminate\Mail\SentMessage`. Этот объект содержит экземпляр `Symfony\Component\Mailer\SentMessage`, доступный через метод `getSymfonySentMessage` или путем динамического вызова методов объекта.
+
+#### Переименованы методы Swift
+
+Различные методы, связанные со SwiftMailer, некоторые из которых не были задокументированы, были переименованы в их аналоги Symfony Mailer. Например, метод `withSwiftMessage` был переименован в `withSymfonyMessage`:
+
+    // Laravel 8.x...
+    $this->withSwiftMessage(function ($message) {
+        $message->getHeaders()->addTextHeader(
+            'Custom-Header', 'Header Value'
+        );
+    });
+
+    // Laravel 9.x...
+    use Symfony\Component\Mime\Email;
+
+    $this->withSymfonyMessage(function (Email $message) {
+        $message->getHeaders()->addTextHeader(
+            'Custom-Header', 'Header Value'
+        );
+    });
+
+> {note} Пожалуйста, внимательно изучите [документацию Symfony Mailer](https://symfony.com/doc/6.0/mailer.html#creating-sending-messages) для взаимодействий с объектом `Symfony\Component\Mime\Email`.
+
+Список ниже содержит более подробный обзор переименованных методов. Многие из этих методов являются низкоуровневыми методами, используемыми для прямого взаимодействия со SwiftMailer / Symfony Mailer, поэтому могут не использоваться в большинстве приложений Laravel:
+
+    Message::getSwiftMessage();
+    Message::getSymfonyMessage();
+
+    Mailable::withSwiftMessage($callback);
+    Mailable::withSymfonyMessage($callback);
+
+    MailMessage::withSwiftMessage($callback);
+    MailMessage::withSymfonyMessage($callback);
+
+    Mailer::getSwiftMailer();
+    Mailer::getSymfonyTransport();
+
+    Mailer::setSwiftMailer($swift);
+    Mailer::setSymfonyTransport(TransportInterface $transport);
+
+    MailManager::createTransport($config);
+    MailManager::createSymfonyTransport($config);
+
+#### Прокси-методы `Illuminate\Mail\Message`
+
+`Illuminate\Mail\Message` обычно проксирует отсутствующие методы базовому экземпляру `Swift_Message`. Однако отсутствующие методы теперь вместо этого проксируются экземпляру `Symfony\Component\Mime\Email`. Таким образом, любой код, который ранее полагался на отсутствующие методы для проксирования SwiftMailer, должен быть обновлен до соответствующих аналогов Symfony Mailer.
+
+Опять же, многие приложения могут не взаимодействовать с этими методами, поскольку они не описаны в документации Laravel:
+
+    // Laravel 8.x...
+    $message
+        ->setFrom('taylor@laravel.com')
+        ->setTo('example@example.org')
+        ->setSubject('Order Shipped')
+        ->setBody('<h1>HTML</h1>', 'text/html')
+        ->addPart('Plain Text', 'text/plain');
+
+    // Laravel 9.x...
+    $message
+        ->from('taylor@laravel.com')
+        ->to('example@example.org')
+        ->subject('Order Shipped')
+        ->html('<h1>HTML</h1>')
+        ->text('Plain Text');
+
+#### Генерация идентификаторов сообщений
+
+SwiftMailer предлагал возможность определить собственный домен для включения в сгенерированные идентификаторы сообщений с помощью параметра конфигурации `mime.idgenerator.idright`. Это не поддерживается в Symfony Mailer. Вместо этого Symfony Mailer автоматически сгенерирует идентификатор сообщения на основе отправителя.
+
+#### Принудительное переподключение
+
+Больше невозможно принудительно переподключиться к транспорту (например, когда почтовая программа работает через процесс-демон). Вместо этого Symfony Mailer попытается автоматически переподключиться к транспорту и выдаст исключение, если переподключение не удастся.
+
+#### Параметры потока SMTP
+
+Определение параметров потока для транспорта SMTP больше не поддерживается. Вместо этого вы должны определить соответствующие параметры непосредственно в конфигурации, если они поддерживаются. Например, чтобы отключить одноранговую проверку TLS:
+
+    'smtp' => [
+        // Laravel 8.x...
+        'stream' => [
+            'ssl' => [
+                'verify_peer' => false,
+            ],
+        ],
+
+        // Laravel 9.x...
+        'verify_peer' => false,
+    ],
+
+Чтобы узнать больше о доступных параметрах конфигурации, ознакомьтесь с [документацией Symfony Mailer](https://symfony.com/doc/6.0/mailer.html#transport-setup).
+
+> {note} Несмотря на приведенный выше пример, обычно не рекомендуется отключать проверку SSL, поскольку это создает возможность атак типа [«man-in-the-middle»](https://ru.wikipedia.org/wiki/Атака_посредника).
+
+#### Режим аутентификации SMTP
+
+Определение параметра `auth_mode` SMTP в конфигурационном файле `mail` больше не требуется. Режим аутентификации будет автоматически согласован между Symfony Mailer и SMTP-сервером.
+
+#### Несостоявшиеся получатели
+
+Больше невозможно получить список неуспешных получателей после отправки сообщения. Вместо этого будет выброшено исключение `Symfony\Component\Mailer\Exception\TransportExceptionInterface`, если сообщение не будет отправлено. Вместо того, чтобы полагаться на получение недействительных адресов электронной почты после отправки сообщения, мы рекомендуем вам проверять адреса электронной почты перед отправкой сообщения.
+
+### Пакеты
+
+<a name="the-lang-directory"></a>
+#### Каталог `lang`
+
+**Вероятность воздействия: средняя**
+
+В новых приложениях Laravel каталог `resources/lang` теперь находится в корневом каталоге проекта (`lang`). Если ваш пакет публикует языковые файлы в этом каталоге, то вы должны убедиться, что ваш пакет вместо жестко заданного пути публикует файлы в `app()->langPath()`.
 
 <a name="queue"></a>
 ### Очереди
 
-<a name="queue-retry-after-method"></a>
-#### Метод `retryAfter`
-
-**Вероятность воздействия: высокая**
-
-Для согласованности с другой функциональностью Laravel, метод `retryAfter` и свойство `retryAfter` заданий в очереди, почтовых программ, уведомлений и слушателей были переименованы в `backoff`. Вам следует обновить имя этого метода / свойства в соответствующих классах вашего приложения.
-
-<a name="queue-timeout-at-property"></a>
-#### Свойство `timeoutAt`
-
-**Вероятность воздействия: высокая**
-
-Свойство `timeoutAt` заданий в очереди, уведомлений и слушателей переименовано в `retryUntil`. Вам следует обновить имя этого свойства в соответствующих классах вашего приложения.
-
-<a name="queue-allOnQueue-allOnConnection"></a>
-#### Методы `allOnQueue()` / `allOnConnection()`
-
-**Вероятность воздействия: высокая**
-
-Для согласованности с другими методами диспетчеризации были удалены методы `allOnQueue()` и `allOnConnection()`, используемые с цепочкой заданий. Вместо этого вы можете использовать методы `onQueue()` и `onConnection()`. Эти методы следует вызывать перед вызовом метода `dispatch`:
-
-    ProcessPodcast::withChain([
-        new OptimizePodcast,
-        new ReleasePodcast
-    ])->onConnection('redis')->onQueue('podcasts')->dispatch();
-
-Обратите внимание, что это изменение влияет только на код, использующий метод `withChain`. В то время как методы `allOnQueue()` и `allOnConnection()` по-прежнему доступны при использовании глобального помощника `dispatch()`.
-
-<a name="failed-jobs-table-batch-support"></a>
-#### Поддержка пакетной обработки и таблица невыполненных заданий
-
-**Вероятность воздействия: необязательно**
-
-Если вы планируете использовать функционал [пакетной обработки заданий](/docs/queues.md#job-batching) Laravel 8.x, то таблица `failed_jobs` БД должна быть обновлена. Во-первых, в эту таблицу должен быть добавлен новый столбец `uuid`:
-
-    use Illuminate\Database\Schema\Blueprint;
-    use Illuminate\Support\Facades\Schema;
-
-    Schema::table('failed_jobs', function (Blueprint $table) {
-        $table->string('uuid')->after('id')->nullable()->unique();
-    });
-
-Затем, параметр конфигурации `failed.driver` в конфигурационном файле `config/queue.php` должен быть изменен на `database-uuids`.
-
-Кроме того, вы можете сгенерировать UUID для существующих невыполненных заданий:
-
-    DB::table('failed_jobs')->whereNull('uuid')->cursor()->each(function ($job) {
-        DB::table('failed_jobs')
-            ->where('id', $job->id)
-            ->update(['uuid' => (string) Illuminate\Support\Str::uuid()]);
-    });
-
-<a name="routing"></a>
-### Маршрутизация
-
-<a name="automatic-controller-namespace-prefixing"></a>
-#### Автоматическое префикс пространства имен контроллера
-
-**Вероятность воздействия: необязательно**
-
-В предыдущих выпусках Laravel класс `RouteServiceProvider` содержал свойство `$namespace` со значением `App\Http\Controllers`. Значение этого свойства использовалось для объявлений автоматического префикса маршрута контроллера и генерации URL маршрута контроллера, например, при вызове помощника `action`.
-
-В Laravel 8 для этого свойства по умолчанию установлено значение `null`. Это позволяет объявлениям маршрута вашего контроллера использовать стандартный вызываемый синтаксис PHP, который обеспечивает лучшую поддержку перехода к классу контроллера во многих IDE:
-
-    use App\Http\Controllers\UserController;
-
-    // Использование вызываемого синтаксиса PHP ...
-    Route::get('/users', [UserController::class, 'index']);
-
-    // Использование строкового синтаксиса ...
-    Route::get('/users', 'App\Http\Controllers\UserController@index');
-
-В большинстве случаев это не повлияет на обновляемые приложения, потому что ваш `RouteServiceProvider` по-прежнему будет содержать свойство `$namespace` с его предыдущим значением. Однако, если вы обновите свое приложение, создав новый проект Laravel, то это изменение может стать критическим.
-
-Если вы хотите по-прежнему использовать исходную маршрутизацию контроллера с автоматическим префиксом, вы можете просто установить значение свойства `$namespace` в `RouteServiceProvider` и обновить регистрации маршрута в методе `boot`, чтобы использовать свойство `$namespace`:
-
-    class RouteServiceProvider extends ServiceProvider
-    {
-        /**
-         * Путь к «домашнему» маршруту вашего приложения.
-         *
-         * Используется аутентификацией Laravel для перенаправления пользователей после входа в систему.
-         *
-         * @var string
-         */
-        public const HOME = '/home';
-
-        /**
-         * Если указано, это пространство имен автоматически применяется к маршрутам вашего контроллера.
-         *
-         * Кроме того, оно устанавливается как корневое пространство имен генератора URL.
-         *
-         * @var string
-         */
-        protected $namespace = 'App\Http\Controllers';
-
-        /**
-         * Определить связывание модели и маршрута, фильтры шаблонов и т.д.
-         *
-         * @return void
-         */
-        public function boot()
-        {
-            $this->configureRateLimiting();
-
-            $this->routes(function () {
-                Route::middleware('web')
-                    ->namespace($this->namespace)
-                    ->group(base_path('routes/web.php'));
-
-                Route::prefix('api')
-                    ->middleware('api')
-                    ->namespace($this->namespace)
-                    ->group(base_path('routes/api.php'));
-            });
-        }
-
-        /**
-         * Настроить ограничения запросов для приложения.
-         *
-         * @return void
-         */
-        protected function configureRateLimiting()
-        {
-            RateLimiter::for('api', function (Request $request) {
-                return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
-            });
-        }
-    }
-
-<a name="scheduling"></a>
-### Планирование задач
-
-<a name="the-cron-expression-library"></a>
-#### Библиотека `cron-expression`
+<a name="the-opis-closure-library"></a>
+#### Библиотека `opis/closure`
 
 **Вероятность воздействия: низкая**
 
-Зависимость Laravel от `dragonmantank/cron-expression` была обновлена с `2.x` до `3.x`. Это не должно вызывать каких-либо критических изменений в вашем приложении, если вы не взаимодействуете напрямую с библиотекой `cron-expression`. Если вы напрямую взаимодействуете с этой библиотекой, просмотрите ее [журнал изменений](https://github.com/dragonmantank/cron-expression/blob/master/CHANGELOG.md).
+Зависимость Laravel от `opis/closure` была заменена на `laravel/serializable-closure`. Это не должно привести к каким-либо критическим изменениям в вашем приложении, если только вы не взаимодействуете с библиотекой `opis/closure` напрямую. Кроме того, были удалены ранее объявленные устаревшими классы `Illuminate\Queue\SerializableClosureFactory` и `Illuminate\Queue\SerializableClosure`. Если вы взаимодействуете с библиотекой `opis/closure` напрямую или используете какой-либо из удаленных классов, вместо этого вы можете использовать [Laravel Serializable Closure](https://github.com/laravel/serializable-closure).
 
-<a name="session"></a>
+#### Метод `flush` поставщика неудачных заданий
+
+**Вероятность воздействия: низкая**
+
+Метод `flush`, определенный интерфейсом `Illuminate\Queue\Failed\FailedJobProviderInterface`, теперь принимает аргумент `$hours`, который определяет, насколько старым должно быть неудачное задание (в часах), прежде чем оно будет удалено командой `queue:flush`. Если вы самостоятельно реализуете `FailedJobProviderInterface`, то вы должны убедиться, что ваша реализация обновлена, чтобы отразить этот новый аргумент:
+
+```php
+public function flush($hours = null);
+```
+
 ### Сессия
 
-<a name="the-session-contract"></a>
-#### Контракт `Session`
+#### Метод `getSession`
 
 **Вероятность воздействия: низкая**
 
-Контракт `Illuminate\Contracts\Session\Session` получил новый метод `pull`. Если вы реализуете этот контракт самостоятельно, то вам следует соответствующим образом обновить его реализацию:
+Класс `Symfony\Component\HttpFoundaton\Request`, расширенный собственным классом `Illuminate\Http\Request` Laravel, предлагает метод `getSession` для получения текущего обработчика хранилища сессии. Этот метод не задокументирован Laravel, так как большинство приложений Laravel взаимодействуют с сессией через метод `session` Laravel.
 
-    /**
-     * Получите значение переданного ключа и удалить его.
-     *
-     * @param  string  $key
-     * @param  mixed  $default
-     * @return mixed
-     */
-    public function pull($key, $default = null);
+Метод `getSession` ранее возвращал экземпляр `Illuminate\Session\Store` или `null`; однако из-за того, что в версии Symfony 6.x принудительно используется тип возвращаемого значения `Symfony\Component\HttpFoundation\Session\SessionInterface`, то `getSession` теперь корректно возвращает реализацию `SessionInterface` или выбрасывает `Symfony\Component\HttpFoundation\Exception\SessionNotFoundException`, когда сессия недоступна.
 
-<a name="testing"></a>
 ### Тестирование
 
-<a name="decode-response-json-method"></a>
-#### Метод `decodeResponseJson`
-
-**Вероятность воздействия: низкая**
-
-Метод `decodeResponseJson`, принадлежащий классу `Illuminate\Testing\TestResponse`, больше не принимает никаких аргументов. Пожалуйста, подумайте об использовании вместо этого метода `json`.
-
-<a name="assert-exact-json-method"></a>
-#### Метод `assertExactJson`
+<a name="the-assert-deleted-method"></a>
+#### Метод `assertDeleted`
 
 **Вероятность воздействия: средняя**
 
-Метод `assertExactJson` теперь требует, чтобы числовые ключи сравниваемых массивов совпадали и располагались в том же порядке. Если вы хотите сравнить JSON с массивом, не требуя, чтобы массивы с числовыми ключами имели одинаковый порядок, вы можете вместо этого использовать метод `assertSimilarJson`.
+Все вызовы метода `assertDeleted` должны быть заменена на `assertModelMissing`.
 
-<a name="validation"></a>
-### Валидация
-
-<a name="database-rule-connections"></a>
-### Соединения для правил, использующих БД
+### Доверенные прокси
 
 **Вероятность воздействия: низкая**
 
-Правила `unique` и `exists` теперь будут учитывать указанное имя соединения моделей Eloquent при выполнении запросов. Это имя соединения доступно через метод `getConnectionName` модели.
+Если вы обновляете свой проект Laravel 8 до Laravel 9, импортируя существующий код приложения в совершенно новый скелет приложения Laravel 9, вам может потребоваться обновить посредник «доверенного прокси» вашего приложения.
+
+В вашем файле `app/Http/Middleware/TrustProxies.php` измените `use Fideloper\Proxy\TrustProxies as Middleware` на `use Illuminate\Http\Middleware\TrustProxies as Middleware`.
+
+Там же вы должны обновить определение свойства `$headers`:
+
+```php
+// До ...
+protected $headers = Request::HEADER_X_FORWARDED_ALL;
+
+// После ...
+protected $headers =
+    Request::HEADER_X_FORWARDED_FOR |
+    Request::HEADER_X_FORWARDED_HOST |
+    Request::HEADER_X_FORWARDED_PORT |
+    Request::HEADER_X_FORWARDED_PROTO |
+    Request::HEADER_X_FORWARDED_AWS_ELB;
+```
+
+### Валидация
+
+#### Метод `validated` запроса формы
+
+**Вероятность воздействия: низкая**
+
+Метод `validated`, предлагаемый запросами формы, теперь принимает аргументы `$key` и `$default`. Если вы самостоятельно определяете этот метод, то вам следует обновить сигнатуру вашего метода, чтобы отразить эти новые аргументы:
+
+```php
+public function validated($key = null, $default = null)
+```
+
+<a name="the-password-rule"></a>
+#### Правило `password`
+
+**Вероятность воздействия: средняя**
+
+Правило `password`, которое проверяет, соответствует ли заданное входное значение текущему паролю аутентифицированного пользователя, было переименовано в `current_password`.
+
+<a name="unvalidated-array-keys"></a>
+#### Непровалидированные ключи массива
+
+**Вероятность воздействия: средняя**
+
+В предыдущих релизах Laravel вам приходилось вручную указывать валидатору Laravel исключать непроверенные ключи массива из «провалидированных» данных, которые он возвращает, особенно в сочетании с правилом `array`, которое не указывает список разрешенных ключей.
+
+Однако в Laravel 9.x непроверенные ключи массива всегда исключаются из «провалидированных» данных, даже если в правиле `array` не указаны разрешенные ключи. Как правило, такое поведение является наиболее ожидаемым поведением, и предыдущий метод `excludeUnvalidatedArrayKeys` был добавлен в Laravel 8.x только как временная мера для сохранения обратной совместимости.
+
+Хотя это не рекомендуется, но вы можете отказаться от предыдущего поведения Laravel 8.x, вызвав новый метод `includeUnvalidatedArrayKeys` в методе `boot` одного из поставщика служб вашего приложения:
+
+```php
+use Illuminate\Support\Facades\Validator;
+
+/**
+ * Загрузка любых служб приложения.
+ *
+ * @return void
+ */
+public function boot()
+{
+    Validator::includeUnvalidatedArrayKeys();
+}
+```
 
 <a name="miscellaneous"></a>
 ### Разное
 
-Мы также рекомендуем вам просматривать изменения в GitHub-репозитории [`laravel/laravel`](https://github.com/laravel/laravel). Хотя многие из этих изменений могут быть неважны, но вы можете синхронизировать эти файлы с вашим приложением. Некоторые из этих изменений будут рассмотрены в данном руководстве по обновлению, но другие, такие как изменения файлов конфигурации или комментарии, не будут. Вы можете легко просмотреть изменения с помощью [инструмента сравнения GitHub](https://github.com/laravel/laravel/compare/7.x...8.x) и выбрать, какие обновления важны для вас.
+Мы также рекомендуем вам просматривать изменения в GitHub-репозитории [`laravel/laravel`](https://github.com/laravel/laravel). Хотя многие из этих изменений могут быть неважны, но вы можете синхронизировать эти файлы с вашим приложением. Некоторые из этих изменений будут рассмотрены в данном руководстве по обновлению, но другие, такие как изменения файлов конфигурации или комментарии, не будут. Вы можете легко просмотреть изменения с помощью [инструмента сравнения GitHub](https://github.com/laravel/laravel/compare/8.x...9.x) и выбрать, какие обновления важны для вас.

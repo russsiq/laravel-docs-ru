@@ -133,6 +133,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::substr](#method-str-substr)
 - [Str::substrCount](#method-str-substrcount)
 - [Str::substrReplace](#method-str-substrreplace)
+- [Str::swap](#method-str-swap)
 - [Str::title](#method-title-case)
 - [Str::toHtmlString](#method-str-to-html-string)
 - [Str::ucfirst](#method-str-ucfirst)
@@ -140,6 +141,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::uuid](#method-str-uuid)
 - [Str::wordCount](#method-str-word-count)
 - [Str::words](#method-str-words)
+- [str](#method-str)
 - [trans](#method-trans)
 - [trans_choice](#method-trans-choice)
 
@@ -203,6 +205,7 @@ Laravel содержит множество глобальных «вспомо�
 - [studly](#method-fluent-str-studly)
 - [substr](#method-fluent-str-substr)
 - [substrReplace](#method-fluent-str-substrreplace)
+- [swap](#method-fluent-str-swap)
 - [tap](#method-fluent-str-tap)
 - [test](#method-fluent-str-test)
 - [title](#method-fluent-str-title)
@@ -236,6 +239,7 @@ Laravel содержит множество глобальных «вспомо�
 - [route](#method-route)
 - [secure_asset](#method-secure-asset)
 - [secure_url](#method-secure-url)
+- [to_route](#method-to-route)
 - [url](#method-url)
 
 <!-- </div> -->
@@ -1724,6 +1728,20 @@ Laravel содержит множество глобальных «вспомо�
     $result = Str::substrReplace('1300', ':', 2, 0);
     // 13:00
 
+<a name="method-str-swap"></a>
+#### `Str::swap()`
+
+Метод `Str::swap` заменяет несколько значений в переданной строке, используя функцию `strtr` PHP:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::swap([
+        'Tacos' => 'Burritos',
+        'great' => 'fantastic',
+    ], 'Tacos are great!');
+
+    // Burritos are fantastic!
+
 <a name="method-title-case"></a>
 #### `Str::title()`
 
@@ -1796,6 +1814,21 @@ Str::wordCount('Hello, world!'); // 2
     return Str::words('Perfectly balanced, as all things should be.', 3, ' >>>');
 
     // Perfectly balanced, as >>>
+
+<a name="method-str"></a>
+#### `str()`
+
+Функция `str` возвращает новый экземпляр `Illuminate\Support\Stringable` переданной строки. Эта функция эквивалентна методу `Str::of`:
+
+    $string = str('Taylor')->append(' Otwell');
+
+    // 'Taylor Otwell'
+
+Если для функции `str` не указан аргумент, то функция возвращает экземпляр `Illuminate\Support\Str`:
+
+    $snake = str()->snake('FooBar');
+
+    // 'foo_bar'
 
 <a name="method-trans"></a>
 #### `trans()`
@@ -2570,6 +2603,21 @@ If no matches are found, an empty collection will be returned.
 
     // The Laravel Framework
 
+<a name="method-fluent-str-swap"></a>
+#### `swap`
+
+Метод `swap` заменяет несколько значений в переданной строке, используя функцию `strtr` PHP:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('Tacos are great!')
+        ->swap([
+            'Tacos' => 'Burritos',
+            'great' => 'fantastic',
+        ]);
+
+    // Burritos are fantastic!
+
 <a name="method-fluent-str-tap"></a>
 #### `tap`
 
@@ -2902,6 +2950,17 @@ Str::of('Hello, world!')->wordCount(); // 2
     $url = secure_url('user/profile');
 
     $url = secure_url('user/profile', [1]);
+
+<a name="method-to-route"></a>
+#### `to_route()`
+
+Функция `to_route` генерирует [HTTP-ответ перенаправления](responses.md#redirects) на [именованный маршрут](routing.md#named-routes):
+
+    return to_route('users.show', ['user' => 1]);
+
+При необходимости вы можете передать код состояния HTTP, который должен быть назначен перенаправлению, и любые дополнительные заголовки ответа в качестве третьего и четвертого аргументов метода `to_route`, соответственно:
+
+    return to_route('users.show', ['user' => 1], 302, ['X-Framework' => 'Laravel']);
 
 <a name="method-url"></a>
 #### `url()`
@@ -3296,7 +3355,7 @@ Str::of('Hello, world!')->wordCount(); // 2
 Функция `retry` пытается выполнить переданное замыкание, пока не будет достигнут указанный лимит попыток. Если замыкание не выбросит исключение, то будет возвращено его значение. Если замыкание выбросит исключение, то замыкание будет автоматически повторено. Если максимальное количество попыток превышено, будет выброшено исключение:
 
     return retry(5, function () {
-        // Attempt 5 times while resting 100ms in between attempts...
+        // Попытаться выполнить 5 раз с перерывом 100 мс между попытками ...
     }, 100);
 
 Если вы хотите указать количество миллисекунд между попытками, то вы можете передать замыкание в качестве третьего аргумента функции `retry`:
@@ -3307,7 +3366,12 @@ Str::of('Hello, world!')->wordCount(); // 2
         return $attempt * 100;
     });
 
-<!--  -->
+Для удобства вы можете предоставить массив в качестве первого аргумента функции `retry`. Этот массив будет использоваться для определения количества миллисекунд ожидания между последующими попытками:
+
+    return retry([100, 200] function () {
+        // Ждем 100 мс при первой попытке, 200 мс при второй попытке ...
+    });
+
 Для задания определенных условий выполнения попытки, вы можете передать замыкание в качестве четвертого аргумента функции `retry`:
 
     return retry(5, function () {

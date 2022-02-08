@@ -83,20 +83,26 @@
 
 Если вы планируете транслировать свои события с помощью [Pusher Channels](https://pusher.com/channels), то вам следует установить PHP SDK Pusher Channels с помощью менеджера пакетов Composer:
 
-    composer require pusher/pusher-php-server
+```shell
+composer require pusher/pusher-php-server
+```
 
 Далее, вы должны настроить свои учетные данные Pusher Channels в конфигурационном файле `config/broadcasting.php`. Пример конфигурации Pusher Channels уже содержится в этом файле, что позволяет быстро указать параметры `key`, `secret` и `app_id`. Как правило, эти значения должны быть установлены через [переменные окружения](configuration.md#environment-configuration) `PUSHER_APP_KEY`, `PUSHER_APP_SECRET` и `PUSHER_APP_ID`:
 
-    PUSHER_APP_ID=your-pusher-app-id
-    PUSHER_APP_KEY=your-pusher-key
-    PUSHER_APP_SECRET=your-pusher-secret
-    PUSHER_APP_CLUSTER=mt1
+```ini
+PUSHER_APP_ID=your-pusher-app-id
+PUSHER_APP_KEY=your-pusher-key
+PUSHER_APP_SECRET=your-pusher-secret
+PUSHER_APP_CLUSTER=mt1
+```
 
 Конфигурация `pusher` в файле `config/broadcasting.php` также позволяет вам указывать дополнительные параметры, которые поддерживаются Pusher, например, `cluster`.
 
 Далее, вам нужно будет изменить драйвер трансляции на `pusher` в файле `.env`:
 
-    BROADCAST_DRIVER=pusher
+```ini
+BROADCAST_DRIVER=pusher
+```
 
 И, наконец, вы готовы установить и настроить [Laravel Echo](#client-side-installation), который будет получать транслируемые события на клиентской стороне.
 
@@ -110,15 +116,21 @@
 
 Если вы планируете транслировать свои события с помощью [Ably](https://ably.io), то вам следует установить PHP SDK Ably с помощью менеджера пакетов Composer:
 
-    composer require ably/ably-php
+```shell
+composer require ably/ably-php
+```
 
 Далее, вы должны настроить свои учетные данные Ably в конфигурационном файле `config/broadcasting.php`. Пример конфигурации Ably уже содержится в этом файле, что позволяет быстро указать параметр `key`. Как правило, это значение должно быть установлено через [переменную окружения](configuration.md#environment-configuration) `ABLY_KEY`:
 
-    ABLY_KEY=your-ably-key
+```ini
+ABLY_KEY=your-ably-key
+```
 
 Далее, вам нужно будет изменить драйвер трансляции на `ably` в файле `.env`:
 
-    BROADCAST_DRIVER=ably
+```ini
+BROADCAST_DRIVER=ably
+```
 
 И, наконец, вы готовы установить и настроить [Laravel Echo](#client-side-installation), который будет получать транслируемые события на клиентской стороне.
 
@@ -143,7 +155,7 @@
 
 [Laravel Echo](https://github.com/laravel/echo) – это JavaScript-библиотека, которая позволяет безболезненно подписаться на каналы и прослушивать события, транслируемые вашим драйвером трансляции на стороне сервера. Вы можете установить Echo через менеджер пакетов NPM. В этом примере мы также установим пакет `pusher-js`, так как мы будем использовать вещатель Pusher Channels:
 
-```bash
+```shell
 npm install --save-dev laravel-echo pusher-js
 ```
 
@@ -164,7 +176,9 @@ window.Echo = new Echo({
 
 После того, как вы раскомментировали и настроили конфигурацию Echo в соответствии с вашими потребностями, вы можете скомпилировать исходники вашего приложения:
 
-    npm run dev
+```shell
+npm run dev
+```
 
 > {tip} Чтобы узнать больше о компиляции JavaScript-исходников вашего приложения, обратитесь к документации [Laravel Mix](mix.md).
 
@@ -192,7 +206,7 @@ window.Echo = new Echo({
 
 Вы можете задаться вопросом, зачем нам устанавливать библиотеку `pusher-js` JavaScript, даже если мы используем Ably для трансляции наших событий. К счастью, Ably имеет режим совместимости Pusher, который позволяет нам использовать протокол Pusher при прослушивании событий в нашем клиентском приложении:
 
-```bash
+```shell
 npm install --save-dev laravel-echo pusher-js
 ```
 
@@ -219,7 +233,9 @@ window.Echo = new Echo({
 
 После того, как вы раскомментировали и настроили конфигурацию Echo в соответствии с вашими потребностями, вы можете скомпилировать исходники вашего приложения:
 
-    npm run dev
+```shell
+npm run dev
+```
 
 > {tip} Чтобы узнать больше о компиляции JavaScript-исходников вашего приложения, обратитесь к документации [Laravel Mix](mix.md).
 
@@ -389,13 +405,15 @@ Echo.private(`orders.${orderId}`)
 
 При трансляции события, все его публичные свойства автоматически сериализуются и транслируются как полезная нагрузка события, что позволяет вам получить доступ к любым его публичным данным из вашего JavaScript-приложения. Так, например, если ваше событие имеет единственное публичное свойство `$user`, представляющее собой модель Eloquent, то полезная нагрузка при трансляции события будет:
 
-    {
-        "user": {
-            "id": 1,
-            "name": "Patrick Stewart"
-            ...
-        }
+```json
+{
+    "user": {
+        "id": 1,
+        "name": "Patrick Stewart"
+        ...
     }
+}
+```
 
 Однако, если вы хотите иметь более точный контроль над полезной нагрузкой трансляции, то вы можете определить метод `broadcastWith` вашего события. Этот метод должен возвращать массив данных, которые вы хотите использовать в качестве полезной нагрузки при трансляции события:
 
@@ -510,36 +528,40 @@ Laravel упрощает определение маршрутов для отв
 
 По умолчанию Echo будет использовать конечную точку `/broadcasting/auth` для авторизации доступа к каналу. Однако вы можете указать свою собственную конечную точку авторизации, передав параметр конфигурации `authEndpoint` вашему экземпляру Echo:
 
-    window.Echo = new Echo({
-        broadcaster: 'pusher',
-        // ...
-        authEndpoint: '/custom/endpoint/auth'
-    });
+```js
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    // ...
+    authEndpoint: '/custom/endpoint/auth'
+});
+```
 
 <a name="customizing-the-authorization-request"></a>
 #### Настройка запроса на авторизацию
 
 Вы можете изменить выполнение запросов авторизации Laravel Echo при его инициализации, предоставив параметр `authorizer`:
 
-    window.Echo = new Echo({
-        // ...
-        authorizer: (channel, options) => {
-            return {
-                authorize: (socketId, callback) => {
-                    axios.post('/api/broadcasting/auth', {
-                        socket_id: socketId,
-                        channel_name: channel.name
-                    })
-                    .then(response => {
-                        callback(false, response.data);
-                    })
-                    .catch(error => {
-                        callback(true, error);
-                    });
-                }
-            };
-        },
-    })
+```js
+window.Echo = new Echo({
+    // ...
+    authorizer: (channel, options) => {
+        return {
+            authorize: (socketId, callback) => {
+                axios.post('/api/broadcasting/auth', {
+                    socket_id: socketId,
+                    channel_name: channel.name
+                })
+                .then(response => {
+                    callback(false, response.data);
+                })
+                .catch(error => {
+                    callback(true, error);
+                });
+            }
+        };
+    },
+})
+```
 
 <a name="defining-authorization-callbacks"></a>
 ### Определение авторизации канала
@@ -581,7 +603,9 @@ Laravel упрощает определение маршрутов для отв
 
 Если ваше приложение использует много разных каналов, то ваш файл `routes/channels.php` может стать громоздким. Таким образом, вместо использования замыканий для авторизации каналов вы можете использовать классы каналов. Чтобы сгенерировать новый канал, используйте команду `make:channel` [Artisan](artisan.md). Эта команда поместит новый класс канала в каталог `app/Broadcasting` вашего приложения:
 
-    php artisan make:channel OrderChannel
+```shell
+php artisan make:channel OrderChannel
+```
 
 Затем зарегистрируйте свой канал в файле `routes/channels.php`:
 
@@ -645,10 +669,12 @@ Laravel упрощает определение маршрутов для отв
 
 Чтобы лучше понять необходимость использования метода `toOthers`, давайте представим приложение со списком задач, в котором пользователь может создать новую задачу, введя имя задачи. Чтобы создать задачу, ваше приложение может сделать запрос к URL-адресу `/task`, который транслирует создание задачи и возвращает JSON-представление новой задачи. Когда ваше JavaScript-приложение получает ответ от конечной точки, оно может напрямую вставить новую задачу в свой список задач следующим образом:
 
-    axios.post('/task', task)
-        .then((response) => {
-            this.tasks.push(response.data);
-        });
+```js
+axios.post('/task', task)
+    .then((response) => {
+        this.tasks.push(response.data);
+    });
+```
 
 Однако помните, что мы также транслируем создание задачи. Если ваше JavaScript-приложение также прослушивает это событие, чтобы добавить задачи в список задач, у вас будут дублирующиеся задачи в вашем списке: одна из конечной точки и одна из трансляции. Вы можете решить эту проблему, используя метод `toOthers`, чтобы указать вещателю не транслировать событие текущему пользователю.
 
@@ -661,7 +687,9 @@ Laravel упрощает определение маршрутов для отв
 
 Если вы не используете глобальный экземпляр Axios, то вам необходимо вручную сконфигурировать JavaScript-приложение для отправки заголовка `X-Socket-ID` со всеми исходящими запросами. Вы можете получить идентификатор сокета, используя метод `Echo.socketId`:
 
-    var socketId = Echo.socketId();
+```js
+var socketId = Echo.socketId();
+```
 
 <a name="customizing-the-connection"></a>
 ### Настройка соединения
@@ -794,19 +822,21 @@ Echo.channel('orders')
 
 Чтобы присоединиться к каналу присутствия, вы можете использовать метод `join` Echo. Метод `join` вернет реализацию `PresenceChannel`, которая, наряду с методом `listen`, позволяет вам подписаться на события `here`, `joining` и `leave`.
 
-    Echo.join(`chat.${roomId}`)
-        .here((users) => {
-            //
-        })
-        .joining((user) => {
-            console.log(user.name);
-        })
-        .leaving((user) => {
-            console.log(user.name);
-        })
-        .error((error) => {
-            console.error(error);
-        });
+```js
+Echo.join(`chat.${roomId}`)
+    .here((users) => {
+        //
+    })
+    .joining((user) => {
+        console.log(user.name);
+    })
+    .leaving((user) => {
+        console.log(user.name);
+    })
+    .error((error) => {
+        console.error(error);
+    });
+```
 
 Замыкание `here` будет выполнено сразу после успешного присоединения к каналу и получит массив, содержащий информацию о пользователе для всех других пользователей, которые в настоящее время подписаны на канал. Метод `joining` будет выполнен, когда новый пользователь присоединится к каналу, а метод `leaving` будет выполнен при покидании пользователем канала. Метод `error` будет выполнен, когда конечная точка аутентификации вернет код состояния HTTP, отличный от 200, или если возникнет проблема с синтаксическим анализом возвращенного JSON.
 
@@ -833,13 +863,15 @@ Echo.channel('orders')
 
 Как и для других типов событий, вы можете прослушивать события, отправленные в каналы присутствия, используя метод `listen` Echo:
 
-    Echo.join(`chat.${roomId}`)
-        .here(...)
-        .joining(...)
-        .leaving(...)
-        .listen('NewMessage', (e) => {
-            //
-        });
+```js
+Echo.join(`chat.${roomId}`)
+    .here(...)
+    .joining(...)
+    .leaving(...)
+    .listen('NewMessage', (e) => {
+        //
+    });
+```
 
 <a name="model-broadcasting"></a>
 ## Трансляция событий модели
@@ -973,15 +1005,17 @@ $user->broadcastChannel()
 
 Так, например, обновление модели `App\Models\Post` будет транслировать событие в ваше клиентское приложение как `PostUpdated` со следующей полезной нагрузкой:
 
-    {
-        "model": {
-            "id": 1,
-            "title": "My first post"
-            ...
-        },
+```json
+{
+    "model": {
+        "id": 1,
+        "title": "My first post"
         ...
-        "socket": "someSocketId",
-    }
+    },
+    ...
+    "socket": "someSocketId",
+}
+```
 
 Удаление модели `App\Models\User` будет транслировано событием с именем `UserDeleted`.
 
@@ -1042,17 +1076,21 @@ Echo.private(`App.Models.User.${this.user.id}`)
 
 Чтобы транслировать клиентские события, вы можете использовать метод `whisper` Echo:
 
-    Echo.private(`chat.${roomId}`)
-        .whisper('typing', {
-            name: this.user.name
-        });
+```js
+Echo.private(`chat.${roomId}`)
+    .whisper('typing', {
+        name: this.user.name
+    });
+```
 
 Чтобы прослушивать клиентские события, вы можете использовать метод `listenForWhisper`:
 
-    Echo.private(`chat.${roomId}`)
-        .listenForWhisper('typing', (e) => {
-            console.log(e.name);
-        });
+```js
+Echo.private(`chat.${roomId}`)
+    .listenForWhisper('typing', (e) => {
+        console.log(e.name);
+    });
+```
 
 <a name="notifications"></a>
 ## Уведомления
@@ -1061,9 +1099,11 @@ Echo.private(`App.Models.User.${this.user.id}`)
 
 После того, как вы настроили уведомление для использования трансляции канала, вы можете прослушивать транслируемые события, используя метод `notification` Echo. Помните, что имя канала должно соответствовать имени класса объекта, получающего уведомления:
 
-    Echo.private(`App.Models.User.${userId}`)
-        .notification((notification) => {
-            console.log(notification.type);
-        });
+```js
+Echo.private(`App.Models.User.${userId}`)
+    .notification((notification) => {
+        console.log(notification.type);
+    });
+```
 
 В этом примере все уведомления, отправленные экземплярам `App\Models\User` через канал `broadcast`, будут получены в замыкании. Авторизация канала `App.Models.User.{id}` уже изначально содержится в `BroadcastServiceProvider` фреймворка Laravel.

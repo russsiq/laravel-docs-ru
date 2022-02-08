@@ -22,7 +22,9 @@
 
 Чтобы создать нового посредника, используйте команду `make:middleware` [Artisan](artisan.md):
 
-    php artisan make:middleware EnsureTokenIsValid
+```shell
+php artisan make:middleware EnsureTokenIsValid
+```
 
 Эта команда поместит новый класс посредника в каталог `app/Http/Middleware` вашего приложения. В этом посреднике мы будем разрешать доступ к маршруту только в том случае, если значение входящего `token` соответствует указанному. В противном случае мы перенаправим пользователя по маршруту `home`:
 

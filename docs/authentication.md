@@ -354,8 +354,10 @@ Laravel Breeze – это минимальная и простая реализ�
 
 Если вы используете PHP FastCGI и Apache для своего приложения Laravel, то аутентификация HTTP Basic может работать некорректно. Чтобы исправить эти проблемы, в файл `.htaccess` вашего приложения можно добавить следующие строки:
 
-    RewriteCond %{HTTP:Authorization} ^(.+)$
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+```apache
+RewriteCond %{HTTP:Authorization} ^(.+)$
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+```
 
 <a name="stateless-http-basic-authentication"></a>
 ### Basic HTTP-аутентификация без сохранения состояния

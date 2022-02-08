@@ -49,13 +49,17 @@
 
 Конечно, вручную создавать файлы для каждого события и слушателя сложно. Вместо этого добавьте необходимые события и их слушатели в поставщике `App\Providers\EventServiceProvider`, затем, используйте команду `event:generate` [Artisan](artisan.md). Эта команда сгенерирует любые события или слушатели, перечисленные в поставщике `EventServiceProvider`, но которые еще не существуют:
 
-    php artisan event:generate
+```shell
+php artisan event:generate
+```
 
 В качестве альтернативы вы можете использовать команды `make:event` и `make:listener` Artisan для генерации отдельных событий и слушателей:
 
-    php artisan make:event PodcastProcessed
+```shell
+php artisan make:event PodcastProcessed
 
-    php artisan make:listener SendPodcastNotification --event=PodcastProcessed
+php artisan make:listener SendPodcastNotification --event=PodcastProcessed
+```
 
 <a name="manually-registering-events"></a>
 ### Явная регистрация событий
@@ -137,7 +141,7 @@
 
 Вместо того, чтобы вручную регистрировать события и слушателей в массиве `$listen` поставщика `EventServiceProvider`, вы можете включить автоматическое обнаружение событий. Когда обнаружение событий включено, Laravel автоматически найдет и зарегистрирует ваши события и слушатели, сканируя каталог `Listeners` вашего приложения. Кроме того, любые явно определенные события, перечисленные в `EventServiceProvider`, по-прежнему будут зарегистрированы.
 
-Laravel находит слушателей событий, сканируя классы слушателей с помощью рефлексии PHP. Когда Laravel находит какой-либо метод класса слушателя, который начинается с `handle`, Laravel зарегистрирует эти методы как слушатели событий для события, тип которого указан в сигнатуре метода:
+Laravel находит слушателей событий, сканируя классы слушателей с помощью рефлексии PHP. Когда Laravel находит какой-либо метод класса слушателя, который начинается с `handle` или `__invoke`, Laravel зарегистрирует эти методы как слушатели событий для события, тип которого указан в сигнатуре метода:
 
     use App\Events\PodcastProcessed;
 
