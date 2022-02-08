@@ -187,6 +187,7 @@
 - [sortDesc](#method-sortdesc)
 - [sortKeys](#method-sortkeys)
 - [sortKeysDesc](#method-sortkeysdesc)
+- [sortKeysUsing](#method-sortkeysusing)
 - [splice](#method-splice)
 - [split](#method-split)
 - [splitIn](#method-splitin)
@@ -2302,6 +2303,31 @@
 #### `sortKeysDesc()`
 
 Этот метод имеет ту же сигнатуру, что и метод [`sortKeys`](#method-sortkeys), но отсортирует коллекцию в обратном порядке.
+
+<a name="method-sortkeysusing"></a>
+#### `sortKeysUsing()`
+
+Метод `sortKeysUsing` сортирует коллекцию по ключам ассоциативного массива с помощью замыканиня:
+
+    $collection = collect([
+        'ID' => 22345,
+        'first' => 'John',
+        'last' => 'Doe',
+    ]);
+
+    $sorted = $collection->sortKeysUsing('strnatcasecmp');
+
+    $sorted->all();
+
+    /*
+        [
+            'first' => 'John',
+            'ID' => 22345,
+            'last' => 'Doe',
+        ]
+    */
+
+Замыкание должно быть функцией сравнения, возвращающей целое число, которое меньше, равно или больше нуля. Для получения дополнительной информации обратитесь к документации по [`uksort`](https://www.php.net/manual/ru/function.uksort.php#refsect1-function.uksort-parameters), которая является функцией PHP, используемой методом `sortKeysUsing`.
 
 <a name="method-splice"></a>
 #### `splice()`

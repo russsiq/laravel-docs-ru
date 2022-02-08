@@ -12,13 +12,16 @@
 <a name="introduction"></a>
 ## Введение
 
-Почти каждое современное веб-приложение взаимодействует с базой данных. Laravel делает взаимодействие с базами данных чрезвычайно простым через поддержку множества баз данных, используя либо сырой SQL [построителя запросов](queries.md), либо [Eloquent ORM](eloquent.md). В настоящее время Laravel обеспечивает поддержку четырех баз данных:
+Почти каждое современное веб-приложение взаимодействует с базой данных. Laravel делает взаимодействие с базами данных чрезвычайно простым через поддержку множества баз данных, используя либо сырой SQL [построителя запросов](queries.md), либо [Eloquent ORM](eloquent.md). В настоящее время Laravel обеспечивает поддержку пяти баз данных:
 
 <!-- <div class="content-list" markdown="1"> -->
+
+- MariaDB 10.2+ ([Политика версий](https://mariadb.org/about/#maintenance-policy))
 - MySQL 5.7+ ([Политика версий](https://en.wikipedia.org/wiki/MySQL#Release_history))
 - PostgreSQL 9.6+ ([Политика версий](https://www.postgresql.org/support/versioning/))
 - SQLite 3.8.8+
 - SQL Server 2017+ ([Политика версий](https://docs.microsoft.com/en-us/lifecycle/products/?products=sql-server))
+
 <!-- </div> -->
 
 <a name="configuration"></a>

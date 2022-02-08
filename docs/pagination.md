@@ -22,6 +22,20 @@
 
 По умолчанию HTML, генерируемый пагинатором, совместим с [фреймворком Tailwind CSS](https://tailwindcss.com/); однако, также доступна поддержка разбивки на страницы с использованием Bootstrap.
 
+<a name="tailwind-jit"></a>
+#### Tailwind JIT
+
+Если вы используете шаблоны разбивки на страницы Tailwind от Laravel и механизм Tailwind JIT, то вы должны убедиться, что ключ содержимого файла `tailwind.config.js` вашего приложения ссылается на шаблоны Laravel, чтобы классы Tailwind не удалялись:
+
+```js
+content: [
+    './resources/**/*.blade.php',
+    './resources/**/*.js',
+    './resources/**/*.vue',
+    './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+],
+```
+
 <a name="basic-usage"></a>
 ## Основы использования
 

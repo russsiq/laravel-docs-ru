@@ -883,6 +883,7 @@ Dusk содержит множество утверждений, которые 
 </style> -->
 
 <!-- <div class="collection-method-list" markdown="1"> -->
+
 - [assertTitle](#assert-title)
 - [assertTitleContains](#assert-title-contains)
 - [assertUrlIs](#assert-url-is)
@@ -956,6 +957,7 @@ Dusk содержит множество утверждений, которые 
 - [assertVueIsNot](#assert-vue-is-not)
 - [assertVueContains](#assert-vue-contains)
 - [assertVueDoesNotContain](#assert-vue-does-not-contain)
+
 <!-- </div> -->
 
 <a name="assert-title"></a>

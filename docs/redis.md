@@ -162,7 +162,7 @@ composer require predis/predis
         // Остальная часть конфигурации Redis ...
     ],
 
-Помимо основных параметров конфигурации сервера `host`, `port`, `database` и `password`, phpredis поддерживает дополнительные параметры подключения: `name`, `persistent`, `prefix`, `read_timeout`, `retry_interval`, `timeout` и `context`. Чтобы использовать эти дополнительные параметры конфигурации, добавьте их в конфигурацию сервера Redis в конфигурационном файле `config/database.php` вашего приложения:
+Помимо основных параметров конфигурации сервера `scheme`, `host`, `port`, `database` и `password`, phpredis поддерживает дополнительные параметры подключения: `name`, `persistent`, `persistent_id`, `prefix`, `read_timeout`, `retry_interval`, `timeout` и `context`. Чтобы использовать эти дополнительные параметры конфигурации, добавьте их в конфигурацию сервера Redis в конфигурационном файле `config/database.php` вашего приложения:
 
     'default' => [
         'host' => env('REDIS_HOST', 'localhost'),
@@ -175,6 +175,29 @@ composer require predis/predis
             // 'stream' => ['verify_peer' => false],
         ],
     ],
+
+<a name="phpredis-serialization"></a>
+#### Сериализация и сжатие phpredis
+
+Расширение phpredis также можно настроить для использования различных алгоритмов сериализации и сжатия. Эти алгоритмы можно настроить с помощью массива параметров вашей конфигурации Redis:
+
+    use Redis;
+
+    'redis' => [
+
+        'client' => env('REDIS_CLIENT', 'phpredis'),
+
+        'options' => [
+            'serializer' => Redis::SERIALIZER_MSGPACK,
+            'compression' => Redis::COMPRESSION_LZ4,
+        ],
+
+        // Остальные настройки Redis...
+    ],
+
+В настоящее время поддерживаются следующие алгоритмы сериализации: `Redis::SERIALIZER_NONE` (по умолчанию), `Redis::SERIALIZER_PHP`, `Redis::SERIALIZER_JSON`, `Redis::SERIALIZER_IGBINARY` и `Redis::SERIALIZER_MSGPACK`.
+
+Поддерживаемые алгоритмы сжатия включают в себя: `Redis::COMPRESSION_NONE` (по умолчанию), `Redis::COMPRESSION_LZF`, `Redis::COMPRESSION_ZSTD` и `Redis::COMPRESSION_LZ4`.
 
 <a name="interacting-with-redis"></a>
 ## Взаимодействие с Redis

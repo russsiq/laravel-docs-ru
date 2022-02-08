@@ -1050,11 +1050,13 @@ public function boot()
 В приведенном выше примере будут применяться проверки `RFCValidation` и `DNSCheckValidation`. Вот полный список стилей проверки, которые вы можете применить:
 
 <!-- <div class="content-list" markdown="1"> -->
+
 - `rfc`: `RFCValidation`
 - `strict`: `NoRFCWarningsValidation`
 - `dns`: `DNSCheckValidation`
 - `spoof`: `SpoofCheckValidation`
 - `filter`: `FilterEmailValidation`
+
 <!-- </div> -->
 
 Валидатор `filter`, который использует функцию `filter_var` PHP, поставляется с Laravel и применялся по умолчанию до Laravel версии 5.8.
@@ -1605,11 +1607,11 @@ public function boot()
         ],
     ];
 
-    $validator->sometimes('channels.*.address', 'email', function($input, $item) {
+    $validator->sometimes('channels.*.address', 'email', function ($input, $item) {
         return $item->type === 'email';
     });
 
-    $validator->sometimes('channels.*.address', 'url', function($input, $item) {
+    $validator->sometimes('channels.*.address', 'url', function ($input, $item) {
         return $item->type !== 'email';
     });
 

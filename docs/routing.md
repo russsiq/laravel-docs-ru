@@ -10,6 +10,7 @@
 - [Именованные маршруты](#named-routes)
 - [Группы маршрутов](#route-groups)
     - [Посредники](#route-group-middleware)
+    - [Контроллеры](#route-group-controllers)
     - [Маршрутизация поддоменов](#route-group-subdomain-routing)
     - [Префиксы URI сгруппированных маршрутов](#route-group-prefixes)
     - [Префиксы имен сгруппированных маршрутов](#route-group-name-prefixes)
@@ -321,6 +322,18 @@
         Route::get('/user/profile', function () {
             // Использует посредники `first` и `second` ...
         });
+    });
+
+<a name="route-group-controllers"></a>
+### Контроллеры
+
+Если группа маршрутов использует один и тот же [контроллер](controllers.md), то вы можете использовать метод `controller`, чтобы определить общий контроллер для всех маршрутов в группе. Затем при определении маршрутов вам нужно только указать метод контроллера, который они вызывают:
+
+    use App\Http\Controllers\OrderController;
+
+    Route::controller(OrderController::class)->group(function () {
+        Route::get('/orders/{id}', 'show');
+        Route::post('/orders', 'store');
     });
 
 <a name="route-group-subdomain-routing"></a>

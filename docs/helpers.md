@@ -193,6 +193,7 @@ Laravel содержит множество глобальных «вспомо�
 - [replaceLast](#method-fluent-str-replace-last)
 - [replaceMatches](#method-fluent-str-replace-matches)
 - [rtrim](#method-fluent-str-rtrim)
+- [scan](#method-fluent-str-scan)
 - [singular](#method-fluent-str-singular)
 - [slug](#method-fluent-str-slug)
 - [snake](#method-fluent-str-snake)
@@ -2443,6 +2444,17 @@ If no matches are found, an empty collection will be returned.
 
     // '/Laravel'
 
+<a name="method-fluent-str-scan"></a>
+#### `scan`
+
+Метод `scan` преобразует входные данные из строки в коллекцию в соответствии с форматом, поддерживаемым [функцией `sscanf` PHP](https://www.php.net/manual/ru/function.sscanf.php):
+
+    use Illuminate\Support\Str;
+
+    $collection = Str::of('filename.jpg')->scan('%[^.].%s');
+
+    // collect(['filename', 'jpg'])
+
 <a name="method-fluent-str-singular"></a>
 #### `singular`
 
@@ -3439,7 +3451,7 @@ Str::of('Hello, world!')->wordCount(); // 2
 Функция `with` возвращает переданное значение. Если вы передадите замыкание в функцию в качестве второго аргумента, то замыкание будет выполнено и будет возвращен результат его выполнения:
 
     $callback = function ($value) {
-        return (is_numeric($value)) ? $value * 2 : 0;
+        return is_numeric($value) ? $value * 2 : 0;
     };
 
     $result = with(5, $callback);

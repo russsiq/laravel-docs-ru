@@ -23,6 +23,7 @@
 Фреймворк Laravel имеет несколько системных требований. Вы должны убедиться, что ваш веб-сервер имеет следующую минимальную версию PHP и расширения:
 
 <!-- <div class="content-list" markdown="1"> -->
+
 - PHP >= 7.3
 - Расширение PHP BCMath
 - Расширение PHP Ctype
@@ -33,6 +34,7 @@
 - Расширение PHP PDO
 - Расширение PHP Tokenizer
 - Расширение PHP XML
+
 <!-- </div> -->
 
 <a name="server-configuration"></a>

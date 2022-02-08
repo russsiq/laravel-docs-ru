@@ -6,23 +6,27 @@
 ## Изменения, оказывающие большое влияние
 
 <!-- <div class="content-list" markdown="1"> -->
+
 - [Фабрики модели](#model-factories)
 - [Метод очереди `retryAfter`](#queue-retry-after-method)
 - [Свойство очереди `timeoutAt`](#queue-timeout-at-property)
 - [Методы очереди `allOnQueue` и `allOnConnection`](#queue-allOnQueue-allOnConnection)
 - [Пагинация по умолчанию](#pagination-defaults)
 - [Пространства имен наполнителей и фабрик](#seeder-factory-namespaces)
+
 <!-- </div> -->
 
 <a name="medium-impact-changes"></a>
 ## Изменения со средней степенью воздействия
 
 <!-- <div class="content-list" markdown="1"> -->
+
 - [Требование PHP 7.3.0](#php-7.3.0-required)
 - [Поддержка пакетной обработки и таблица невыполненных заданий](#failed-jobs-table-batch-support)
 - [Обновления режима обслуживания](#maintenance-mode-updates)
 - [Параметр `php artisan down --message`](#artisan-down-message)
 - [Метод `assertExactJson`](#assert-exact-json-method)
+
 <!-- </div> -->
 
 <a name="upgrade-8.0"></a>
@@ -46,21 +50,25 @@
 Обновите следующие зависимости в вашем файле `composer.json`:
 
 <!-- <div class="content-list" markdown="1"> -->
+
 - `guzzlehttp/guzzle` до `^7.0.1`
 - `facade/ignition` до `^2.3.6`
 - `laravel/framework` до `^8.0`
 - `laravel/ui` до `^3.0`
 - `nunomaduro/collision` до `^5.0`
 - `phpunit/phpunit` до `^9.0`
+
 <!-- </div> -->
 
 Следующие сторонние пакеты имеют новые основные выпуски для поддержки Laravel 8. Если возможно, вы должны прочитать соответствующие руководства перед обновлением:
 
 <!-- <div class="content-list" markdown="1"> -->
+
 - [Horizon v5.0](https://github.com/laravel/horizon/blob/master/UPGRADE.md)
 - [Passport v10.0](https://github.com/laravel/passport/blob/master/UPGRADE.md)
 - [Socialite v5.0](https://github.com/laravel/socialite/blob/master/UPGRADE.md)
 - [Telescope v4.0](https://github.com/laravel/telescope/blob/master/UPGRADE.md)
+
 <!-- </div> -->
 
 Кроме того, установщик Laravel был обновлен для поддержки `composer create-project` и Laravel Jetstream. Любой установщик старше 4.0 перестанет работать после октября 2020 года. Вам следует как можно скорее обновить глобальный установщик до `^4.0`.

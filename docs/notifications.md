@@ -1037,41 +1037,6 @@ Laravel также поддерживает отправку уведомлен�
                     ->content('One of your invoices has been paid!');
     }
 
-<a name="customizing-the-sender-recipient"></a>
-#### Изменение отправителя и получателя
-
-Вы можете использовать методы `from` и `to` для корректировки отправителя и получателя. Метод `from` принимает имя пользователя и идентификатор эмодзи, а метод `to` принимает канал или имя пользователя:
-
-    /**
-     * Получить представление Slack-уведомления.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\SlackMessage
-     */
-    public function toSlack($notifiable)
-    {
-        return (new SlackMessage)
-                    ->from('Ghost', ':ghost:')
-                    ->to('#bots')
-                    ->content('This will be sent to #bots');
-    }
-
-Вы также можете использовать изображение в качестве своего «логотипа» вместо эмодзи:
-
-    /**
-     * Получить представление Slack-уведомления.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\SlackMessage
-     */
-    public function toSlack($notifiable)
-    {
-        return (new SlackMessage)
-                    ->from('Laravel')
-                    ->image('https://laravel.com/img/favicon/favicon.ico')
-                    ->content('This will display the Laravel logo next to the message');
-    }
-
 <a name="slack-attachments"></a>
 ### Вложения Slack-уведомлений
 

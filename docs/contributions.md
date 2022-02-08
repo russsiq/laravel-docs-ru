@@ -23,6 +23,7 @@
 В управлении исходным кодом Laravel используется GitHub, и для каждого проекта есть репозитории:
 
 <!-- <div class="content-list" markdown="1"> -->
+
 - [Приложение Laravel](https://github.com/laravel/laravel)
 - [Логотипы Laravel](https://github.com/laravel/art)
 - [Документация Laravel](https://github.com/laravel/docs)
@@ -43,6 +44,7 @@
 - [Пакет Laravel Socialite](https://github.com/laravel/socialite)
 - [Пакет Laravel Telescope](https://github.com/laravel/telescope)
 - [Исходники официального сайта Laravel](https://github.com/laravel/laravel.com-next)
+
 <!-- </div> -->
 
 <a name="support-questions"></a>
@@ -51,13 +53,15 @@
 Трекеры с тикетами проблем Laravel на GitHub не предназначены для предоставления помощи или поддержки Laravel. Вместо этого используйте один из следующих каналов:
 
 <!-- <div class="content-list" markdown="1"> -->
+
 - [Обсуждения на GitHub](https://github.com/laravel/framework/discussions)
 - [Форум Laracasts](https://laracasts.com/discuss)
 - [Форум Laravel.io](https://laravel.io/forum)
 - [StackOverflow](https://stackoverflow.com/questions/tagged/laravel)
-- [Discord](https://discordapp.com/invite/mPZNm7A)
+- [Discord](https://discord.gg/laravel)
 - [Larachat](https://larachat.co)
 - [IRC](https://web.libera.chat/?nick=artisan&channels=#laravel)
+
 <!-- </div> -->
 
 <a name="core-development-discussion"></a>
@@ -65,7 +69,7 @@
 
 Вы можете предлагать новый функционал или улучшения существующего поведения Laravel в репозитории фреймворка Laravel на [доске обсуждений GitHub](https://github.com/laravel/framework/discussions). Если вы предлагаете новый функционал, то пожалуйста, будьте готовы реализовать по крайней мере часть кода, который потребуется для его завершения.
 
-Неформальное обсуждение ошибок, нового функционала и реализаций существующего происходит на канале `#internals` сервера [Laravel Discord](https://discordapp.com/invite/mPZNm7A). Тейлор Отвелл, сопровождающий Laravel, обычно присутствует на канале в будние дни с 8:00 до 17:00 (UTC-06:00 или Америка / Чикаго) и от случая к случаю – в остальное время.
+Неформальное обсуждение ошибок, нового функционала и реализаций существующего происходит на канале `#internals` сервера [Laravel Discord](https://discord.gg/laravel). Тейлор Отвелл, сопровождающий Laravel, обычно присутствует на канале в будние дни с 8:00 до 17:00 (UTC-06:00 или Америка / Чикаго) и от случая к случаю – в остальное время.
 
 <a name="which-branch"></a>
 ## Какую ветку выбрать при запросах слияния?
@@ -76,7 +80,7 @@
 
 **Мажорный** новый функционал всегда следует отправлять в ветку `master`, содержащую предстоящий релиз.
 
-Если вы не уверены, квалифицируется ли ваш функционал как мажорный или минорный, то спросите Тейлора Отвелла на канале `#internals` сервера [Laravel Discord](https://discordapp.com/invite/mPZNm7A).
+Если вы не уверены, квалифицируется ли ваш функционал как мажорный или минорный, то спросите Тейлора Отвелла на канале `#internals` сервера [Laravel Discord](https://discord.gg/laravel).
 
 <a name="compiled-assets"></a>
 ## Скомпилированные ресурсы исходников
@@ -124,8 +128,10 @@ Laravel следует стандарту кодирования [PSR-2](https:/
 Кодекс поведения Laravel основан на кодексе поведения Ruby. О любых нарушениях кодекса поведения можно сообщить Тейлору Отвеллу (taylor@laravel.com):
 
 <!-- <div class="content-list" markdown="1"> -->
+
 - Участники будут терпимо относиться к противоположным взглядам.
 - Участники должны гарантировать, что их язык и действия не содержат личных нападок и пренебрежительных личных замечаний.
 - Толкуя слова и действия других, участники всегда должны исходить из добрых намерений.
 - Не допускается поведение, которое можно обоснованно считать преследованием.
+
 <!-- </div> -->
