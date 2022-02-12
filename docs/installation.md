@@ -157,7 +157,7 @@ curl -s "https://laravel.build/example-app?with=mysql,redis" | bash
 
 Если на вашем компьютере уже установлены PHP и Composer, то вы можете создать новый проект Laravel напрямую с помощью Composer. После того, как приложение было создано, вы можете запустить локальный сервер разработки Laravel с помощью команды `serve` Artisan CLI:
 
-    composer create-project laravel/laravel example-app
+    composer create-project laravel/laravel:^8.0 example-app
 
     cd example-app
 
