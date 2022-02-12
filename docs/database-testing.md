@@ -635,18 +635,8 @@ Laravel содержит несколько утверждений базы да
         'email' => 'sally@example.com',
     ]);
 
-<a name="assert-deleted"></a>
-#### assertDeleted
-
-Утверждение о том, что переданная модель Eloquent была удалена из базы данных:
-
-    use App\Models\User;
-
-    $user = User::find(1);
-
-    $user->delete();
-
-    $this->assertDeleted($user);
+<a name="assert-soft-deleted"></a>
+#### assertSoftDeleted
 
 Метод `assertSoftDeleted` используется для утверждения того, что переданная модель Eloquent была «программно удалена»:
 

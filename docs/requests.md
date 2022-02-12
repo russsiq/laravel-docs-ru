@@ -496,7 +496,7 @@ Laravel также содержит глобального помощника `o
 <a name="other-file-methods"></a>
 #### Другие методы для работы с загружаемыми файлами
 
-Для экземпляров `UploadedFile` доступно множество других методов. Дополнительные сведения об этих методах смотрите в [документации по API](https://api.symfony.com/master/Symfony/Component/HttpFoundation/File/UploadedFile.html) для этого класса.
+Для экземпляров `UploadedFile` доступно множество других методов. Дополнительные сведения об этих методах смотрите в [исходниках](https://github.com/symfony/symfony/blob/6.0/src/Symfony/Component/HttpFoundation/File/UploadedFile.php) этого класса.
 
 <a name="storing-uploaded-files"></a>
 ### Сохранение загруженных файлов

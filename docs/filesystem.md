@@ -69,21 +69,25 @@ php artisan storage:link
 <a name="driver-prerequisites"></a>
 ### Предварительная подготовка драйверов
 
-<a name="composer-packages"></a>
-#### Пакеты Composer
-
-Перед использованием драйверов S3 или SFTP вам необходимо установить соответствующий пакет с помощью менеджера пакетов Composer:
-
-- Amazon S3: `composer require --with-all-dependencies league/flysystem-aws-s3-v3 "^3.0"`
-- SFTP: `composer require league/flysystem-sftp-v3 "^3.0"`
-
 <a name="s3-driver-configuration"></a>
 #### Конфигурирование драйвера S3
+
+Перед использованием драйвера S3 вам необходимо установить пакет Flysystem S3 с помощью менеджера пакетов Composer:
+
+```shell
+composer require -W league/flysystem-aws-s3-v3 "^3.0"
+```
 
 Информация о конфигурации драйвера S3 находится в вашем файле конфигурации `config/filesystems.php`. Этот файл содержит пример массива конфигурации для драйвера S3. Вы можете изменить этот массив своей собственной конфигурацией S3 и учетными данными. Для удобства эти переменные среды соответствуют соглашению об именах, используемому в интерфейсе командной строки AWS.
 
 <a name="ftp-driver-configuration"></a>
 #### Конфигурирование драйвера FTP
+
+Перед использованием драйвера FTP вам необходимо установить пакет Flysystem FTP с помощью менеджера пакетов Composer:
+
+```shell
+composer require league/flysystem-ftp "^3.0"
+```
 
 Интеграция Laravel с Flysystem отлично работает с FTP; однако, пример конфигурации по умолчанию не включен в конфигурационный файл `config/filesystems.php` фреймворка. Если вам нужно настроить файловую систему FTP, вы можете использовать пример конфигурации ниже:
 
@@ -103,6 +107,12 @@ php artisan storage:link
 
 <a name="sftp-driver-configuration"></a>
 #### Конфигурирование драйвера SFTP
+
+Перед использованием драйвера SFTP вам необходимо установить пакет Flysystem SFTP с помощью менеджера пакетов Composer:
+
+```shell
+composer require league/flysystem-sftp-v3 "^3.0"
+```
 
 Интеграция Laravel с Flysystem отлично работает с SFTP; однако, пример конфигурации по умолчанию не включен в конфигурационный файл `config/filesystems.php` фреймворка. Если вам нужно настроить файловую систему SFTP, вы можете использовать пример конфигурации ниже:
 
@@ -569,7 +579,7 @@ composer require spatie/flysystem-dropbox
             Storage::extend('dropbox', function ($app, $config) {
                 $adapter = new DropboxAdapter(new DropboxClient(
                     $config['authorization_token']
-                ););
+                ));
 
                 return new FilesystemAdapter(
                     new Filesystem($adapter, $config),

@@ -6,6 +6,7 @@
     - [Каталог `bootstrap`](#the-bootstrap-directory)
     - [Каталог `config`](#the-config-directory)
     - [Каталог `database`](#the-database-directory)
+    - [Каталог `lang`](#the-lang-directory)
     - [Каталог `public`](#the-public-directory)
     - [Каталог `resources`](#the-resources-directory)
     - [Каталог `routes`](#the-routes-directory)
@@ -55,6 +56,11 @@
 
 Каталог `database` содержит миграции ваших баз данных, фабрики моделей и наполнители. При желании вы также можете использовать этот каталог для хранения SQLite БД.
 
+<a name="the-lang-directory"></a>
+#### Каталог `lang`
+
+Каталог `lang` содержит все языковые файлы вашего приложения.
+
 <a name="the-public-directory"></a>
 #### Каталог `public`
 
@@ -63,7 +69,7 @@
 <a name="the-resources-directory"></a>
 #### Каталог `resources`
 
-Каталог `resources` содержит ваши [шаблоны](views.md), а также ваши необработанные, нескомпилированные ресурсы, например, JavaScript или CSS. В этом каталоге также находятся все ваши языковые файлы.
+Каталог `resources` содержит ваши [шаблоны](views.md), а также ваши необработанные, нескомпилированные ресурсы, например, JavaScript или CSS.
 
 <a name="the-routes-directory"></a>
 #### Каталог `routes`

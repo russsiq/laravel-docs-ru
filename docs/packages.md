@@ -174,7 +174,7 @@
      */
     public function boot()
     {
-        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'courier');
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'courier');
     }
 
 Для ссылок на переводы пакетов используется синтаксическое соглашение `package::file.line`. Итак, вы можете загрузить строку приветствия пакета `courier` из файла `messages` следующим образом:
@@ -184,7 +184,7 @@
 <a name="publishing-translations"></a>
 #### Публикация переводов
 
-Если вы хотите опубликовать переводы вашего пакета в каталоге `resources/lang/vendor` приложения, то вы можете использовать метод `publishes` поставщика службы. Метод `publishes` принимает массив путей пакета и желаемых мест их публикации. Например, чтобы опубликовать файлы перевода пакета `courier`, вы можете сделать следующее:
+Если вы хотите опубликовать переводы вашего пакета в каталоге `lang/vendor` приложения, то вы можете использовать метод `publishes` поставщика службы. Метод `publishes` принимает массив путей пакета и желаемых мест их публикации. Например, чтобы опубликовать файлы перевода пакета `courier`, вы можете сделать следующее:
 
     /**
      * Загрузка любых служб пакета.
@@ -193,10 +193,10 @@
      */
     public function boot()
     {
-        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'courier');
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'courier');
 
         $this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/courier'),
+            __DIR__.'/../lang' => resource_path('lang/vendor/courier'),
         ]);
     }
 

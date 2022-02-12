@@ -55,7 +55,7 @@ Laravel теперь требует PHP 8.0.2 или выше.
 <!-- <div class="content-list" markdown="1"> -->
 
 - `laravel/framework` до `^9.0`
-- `nunomaduro/collision` до `^6.0`
+- `nunomaduro/collision` до `^6.1`
 
 <!-- </div> -->
 
@@ -233,7 +233,7 @@ $user->roles()->updateOrCreate([
 ]);
 ```
 
-Кроме того, метод `firstOrCreate` теперь принимает массив `$values` ​​в качестве второго аргумента. Этот массив будет объединен с первым аргументом метода (`$attributes`) при создании связанной модели, если она еще не существует. Эти изменения делают этот метод совместимым с методами `firstOrCreate` других типов отношений:
+Кроме того, метод `firstOrCreate` теперь принимает массив `$values` ​​в качестве второго аргумента. Этот массив будет объединен с первым аргументом метода (`$attributes`) при создании связанной модели, если она еще не существует. Это изменение делает этот метод совместимым с методами `firstOrCreate` других типов отношений:
 
 ```php
 $user->roles()->firstOrCreate([
@@ -308,9 +308,10 @@ Laravel 9.x мигрировал с [Flysystem](https://flysystem.thephpleague.c
 
 #### Требования к драйверу
 
-Перед использованием драйверов S3 или SFTP вам необходимо установить соответствующий пакет с помощью менеджера пакетов Composer:
+Перед использованием драйверов S3, FTP или SFTP вам необходимо установить соответствующий пакет с помощью менеджера пакетов Composer:
 
-- Amazon S3: `composer require --with-all-dependencies league/flysystem-aws-s3-v3 "^3.0"`
+- Amazon S3: `composer require -W league/flysystem-aws-s3-v3 "^3.0"`
+- FTP: `composer require league/flysystem-ftp "^3.0"`
 - SFTP: `composer require league/flysystem-sftp-v3 "^3.0"`
 
 #### Перезапись существующих файлов
@@ -449,16 +450,16 @@ $collection->when(function ($collection) {
 
 #### Предварительная подготовка драйверов
 
-Чтобы продолжить использование драйвера Mailgun, вашему приложению требуется пакет `symfony/mailgun-mailer` Composer:
+Чтобы продолжить использование драйвера Mailgun, вашему приложению требуется пакеты `symfony/mailgun-mailer` и `symfony/http-client` Composer:
 
 ```shell
-composer require symfony/mailgun-mailer
+composer require symfony/mailgun-mailer symfony/http-client
 ```
 
-Пакет `wildbit/swiftmailer-postmark` Composer должен быть удален из вашего приложения. Вместо этого вашему приложению должен потребоваться пакет `symfony/postmark-mailer` Composer:
+Пакет `wildbit/swiftmailer-postmark` Composer должен быть удален из вашего приложения. Вместо этого вашему приложению должен потребоваться пакеты `symfony/postmark-mailer` и `symfony/http-client` Composer::
 
 ```shell
-composer require symfony/postmark-mailer
+composer require symfony/postmark-mailer symfony/http-client
 ```
 
 #### Обновлены возвращаемые типы

@@ -50,7 +50,7 @@
 Чтобы использовать драйвер Mailgun, сначала установите Symfony Mailgun Mailer с помощью менеджера пакетов Composer:
 
 ```shell
-composer require symfony/mailgun-mailer
+composer require symfony/mailgun-mailer symfony/http-client
 ```
 
 Затем установите параметру `default` в вашем конфигурационном файле `config/mail.php` значение `mailgun`. Затем убедитесь, что ваш конфигурационный файл `config/services.php` содержит следующие параметры:
@@ -74,7 +74,7 @@ composer require symfony/mailgun-mailer
 Чтобы использовать драйвер Postmark, сначала установите Symfony Postmark Mailer с помощью менеджера пакетов Composer:
 
 ```shell
-composer require symfony/postmark-mailer
+composer require symfony/postmark-mailer symfony/http-client
 ```
 
 Затем установите параметру `default` в вашем конфигурационном файле `config/mail.php` значение `postmark`. Затем убедитесь, что ваш конфигурационный файл `config/services.php` содержит следующие параметры:
