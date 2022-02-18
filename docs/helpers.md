@@ -101,6 +101,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::contains](#method-str-contains)
 - [Str::containsAll](#method-str-contains-all)
 - [Str::endsWith](#method-ends-with)
+- [Str::excerpt](#method-excerpt)
 - [Str::finish](#method-str-finish)
 - [Str::headline](#method-str-headline)
 - [Str::is](#method-str-is)
@@ -166,6 +167,7 @@ Laravel содержит множество глобальных «вспомо�
 - [containsAll](#method-fluent-str-contains-all)
 - [dirname](#method-fluent-str-dirname)
 - [endsWith](#method-fluent-str-ends-with)
+- [excerpt](#method-fluent-str-excerpt)
 - [exactly](#method-fluent-str-exactly)
 - [explode](#method-fluent-str-explode)
 - [finish](#method-fluent-str-finish)
@@ -1274,6 +1276,32 @@ Laravel содержит множество глобальных «вспомо�
 
     // false
 
+<a name="method-excerpt"></a>
+#### `Str::excerpt()`
+
+Метод `Str::excerpt` извлекает отрывок из переданной строки, который соответствует первому экземпляру фразы в этой строке:
+
+    use Illuminate\Support\Str;
+
+    $excerpt = Str::excerpt('This is my name', 'my', [
+        'radius' => 3
+    ]);
+
+    // '...is my na...'
+
+Параметр `radius`, который по умолчанию равен `100`, позволяет вам определить количество символов, которые должны присутствовать с каждой стороны усеченной строки.
+
+Кроме того, вы можете использовать параметр `omission`, чтобы определить строку, которая будет добавлена к усеченной строке:
+
+    use Illuminate\Support\Str;
+
+    $excerpt = Str::excerpt('This is my name', 'name', [
+        'radius' => 3,
+        'omission' => '(...) '
+    ]);
+
+    // '(...) my name'
+
 <a name="method-str-finish"></a>
 #### `Str::finish()`
 
@@ -2026,6 +2054,32 @@ Str::wordCount('Hello, world!'); // 2
     $string = Str::of('/foo/bar/baz')->dirname(2);
 
     // '/foo'
+
+<a name="method-fluent-str-excerpt"></a>
+#### `excerpt`
+
+Метод `excerpt` извлекает отрывок из переданной строки, который соответствует первому экземпляру фразы в этой строке:
+
+    use Illuminate\Support\Str;
+
+    $excerpt = Str::of('This is my name')->excerpt('my', [
+        'radius' => 3
+    ]);
+
+    // '...is my na...'
+
+Параметр `radius`, который по умолчанию равен `100`, позволяет вам определить количество символов, которые должны присутствовать с каждой стороны усеченной строки.
+
+Кроме того, вы можете использовать параметр `omission`, чтобы определить строку, которая будет добавлена к усеченной строке:
+
+    use Illuminate\Support\Str;
+
+    $excerpt = Str::of('This is my name')->excerpt('name', [
+        'radius' => 3,
+        'omission' => '(...) '
+    ]);
+
+    // '(...) my name'
 
 <a name="method-fluent-str-ends-with"></a>
 #### `endsWith`

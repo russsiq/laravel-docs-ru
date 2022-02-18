@@ -789,7 +789,7 @@ where exists (
 
     $users = DB::table('users')
                     ->when($role, function ($query, $role) {
-                        return $query->where('role_id', $role);
+                        $query->where('role_id', $role);
                     })
                     ->get();
 
@@ -801,9 +801,9 @@ where exists (
 
     $users = DB::table('users')
                     ->when($sortByVotes, function ($query, $sortByVotes) {
-                        return $query->orderBy('votes');
+                        $query->orderBy('votes');
                     }, function ($query) {
-                        return $query->orderBy('name');
+                        $query->orderBy('name');
                     })
                     ->get();
 

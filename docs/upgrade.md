@@ -114,6 +114,10 @@ PHP начинает переходить к требованию определ
 
     public function storagePath($path = '');
 
+Точно так же метод `langPath` класса `Illuminate\Foundation\Application` был обновлен, чтобы принимать аргумент `$path`:
+
+    public function langPath($path = '');
+
 #### Метод `ignore` обработчика исключений
 
 **Вероятность воздействия: низкая**

@@ -143,7 +143,7 @@
         protected function isAdmin(): Attribute
         {
             return new Attribute(
-                get: fn () => 'yes';
+                get: fn () => 'yes',
             );
         }
     }
