@@ -3,6 +3,7 @@
 - [Основы маршрутизации](#basic-routing)
     - [Маршруты перенаправлений](#redirect-routes)
     - [Маршруты представлений](#view-routes)
+    - [Список маршрутов](#the-route-list)
 - [Параметры маршрута](#route-parameters)
     - [Обязательные параметры](#required-parameters)
     - [Необязательные параметры](#parameters-optional-parameters)
@@ -123,6 +124,27 @@
     Route::view('/welcome', 'welcome', ['name' => 'Taylor']);
 
 > {note} При использовании параметров маршрута в маршрутах представлений, следующие параметры зарезервированы Laravel и не могут быть использованы: `view`, `data`, `status` и `headers`.
+
+<a name="the-route-list"></a>
+### Список маршрутов
+
+Команда `route:list` Artisan может легко предоставить обзор всех маршрутов, определенных вашим приложением:
+
+```shell
+php artisan route:list
+```
+
+По умолчанию посредник, назначенный каждому маршруту, не будет отображаться при выводе `route:list`; однако вы можете указать Laravel отображать посредников маршрута, добавив в команду параметр `-v`:
+
+```shell
+php artisan route:list -v
+```
+
+Кроме того, вы можете указать Laravel скрывать любые маршруты, определенные сторонними пакетами, указав параметр `--except-vendor` при выполнении команды `route:list`:
+
+```shell
+php artisan route:list --except-vendor
+```
 
 <a name="route-parameters"></a>
 ## Параметры маршрута

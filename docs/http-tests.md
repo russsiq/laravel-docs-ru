@@ -954,7 +954,7 @@ Laravel также позволяет отображать шаблоны без
 <a name="assert-redirect-to-signed-route"></a>
 #### assertRedirectToSignedRoute
 
-Утверждение о том, что ответ является перенаправлением на указанный подписанный маршрут:
+Утверждение о том, что ответ является перенаправлением на указанный [подписанный маршрут](urls.md#signed-urls):
 
     $response->assertRedirectToSignedRoute($name = null, $parameters = []);
 

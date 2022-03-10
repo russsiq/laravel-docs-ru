@@ -27,6 +27,7 @@
 - [Условное добавление правил](#conditionally-adding-rules)
 - [Валидация массивов](#validating-arrays)
     - [Валидация вложенных массивов](#validating-nested-array-input)
+    - [Индексы и позиции сообщений об ошибках](#error-message-indexes-and-positions)
 - [Валидация паролей](#validating-passwords)
 - [Пользовательские правила валидации](#custom-validation-rules)
     - [Использование класса Rule](#using-rule-objects)
@@ -1387,9 +1388,7 @@ The credit card number field is required when payment type is credit card.
     ]);
 
     Validator::make($request->all(), [
-        'role_id' => Rule::requiredIf(function () use ($request) {
-            return $request->user()->is_admin;
-        }),
+        'role_id' => Rule::requiredIf(fn () => $request->user()->is_admin),
     ]);
 
 <a name="rule-required-unless"></a>
@@ -1514,9 +1513,7 @@ The credit card number field is required when payment type is credit card.
 
 Вы можете указать дополнительные условия запроса, изменив запрос с помощью метода `where`. Например, давайте добавим условие запроса, которое ограничивает область запроса только поиском записями, у которых значение столбца `account_id` равно `1`:
 
-    'email' => Rule::unique('users')->where(function ($query) {
-        return $query->where('account_id', 1);
-    })
+    'email' => Rule::unique('users')->where(fn ($query) => $query->where('account_id', 1))
 
 <a name="rule-url"></a>
 #### url
@@ -1669,7 +1666,7 @@ The credit card number field is required when payment type is credit card.
 <a name="accessing-nested-array-data"></a>
 #### Доступ к данным вложенного массива
 
-Иногда требуется получить доступ к значению переданного вложенного элемента массива при назначении правил валидации для атрибута. Вы можете сделать это, используя метод `Rule::foreEach`. Метод `forEach` принимает замыкание, которое будет вызываться для каждой итерации проверяемого атрибута массива, и будет получать значение атрибута и явное, полностью развернутое имя атрибута. Замыкание должно возвращать массив правил предназначенных элементу массива:
+Иногда требуется получить доступ к значению переданного вложенного элемента массива при назначении правил валидации для атрибута. Вы можете сделать это, используя метод `Rule::forEach`. Метод `forEach` принимает замыкание, которое будет вызываться для каждой итерации проверяемого атрибута массива, и будет получать значение атрибута и явное, полностью развернутое имя атрибута. Замыкание должно возвращать массив правил предназначенных элементу массива:
 
     use App\Rules\HasPermission;
     use Illuminate\Support\Facades\Validator;
@@ -1683,6 +1680,34 @@ The credit card number field is required when payment type is credit card.
             ];
         }),
     ]);
+
+<a name="error-message-indexes-and-positions"></a>
+### Индексы и позиции сообщений об ошибках
+
+При валидации массивов вы можете указать индекс или положение определенного элемента, который не прошел проверку, в сообщении об ошибке, отображаемом вашим приложением. Для этого вы можете включить заполнители `:index` и `:position` в свое [собственное сообщение об ошибке](#manual-customizing-the-error-messages):
+
+    use Illuminate\Support\Facades\Validator;
+
+    $input = [
+        'photos' => [
+            [
+                'name' => 'BeachVacation.jpg',
+                'description' => 'A photo of my beach vacation!',
+            ],
+            [
+                'name' => 'GrandCanyon.jpg',
+                'description' => '',
+            ],
+        ],
+    ];
+
+    Validator::validate($input, [
+        'photos.*.description' => 'required',
+    ], [
+        'photos.*.description.required' => 'Please describe photo #:position.',
+    ]);
+
+В приведенном выше примере валидация завершится ошибкой, и пользователю будет представлена ​​следующая ошибка: _"Please describe photo #2."_
 
 <a name="validating-passwords"></a>
 ## Валидация паролей

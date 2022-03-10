@@ -16,6 +16,7 @@
 
 <!-- <div class="content-list" markdown="1"> -->
 
+- MariaDB 10.2+ ([Политика версий](https://mariadb.org/about/#maintenance-policy))
 - MySQL 5.7+ ([Политика версий](https://en.wikipedia.org/wiki/MySQL#Release_history))
 - PostgreSQL 9.6+ ([Политика версий](https://www.postgresql.org/support/versioning/))
 - SQLite 3.8.8+

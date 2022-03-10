@@ -43,6 +43,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Arr::hasAny](#method-array-hasany)
 - [Arr::isAssoc](#method-array-isassoc)
 - [Arr::isList](#method-array-islist)
+- [Arr::keyBy](#method-array-keyby)
 - [Arr::last](#method-array-last)
 - [Arr::only](#method-array-only)
 - [Arr::pluck](#method-array-pluck)
@@ -75,6 +76,7 @@ Laravel содержит множество глобальных «вспомо�
 - [base_path](#method-base-path)
 - [config_path](#method-config-path)
 - [database_path](#method-database-path)
+- [lang_path](#method-lang-path)
 - [mix](#method-mix)
 - [public_path](#method-public-path)
 - [resource_path](#method-resource-path)
@@ -97,6 +99,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::before](#method-str-before)
 - [Str::beforeLast](#method-str-before-last)
 - [Str::between](#method-str-between)
+- [Str::betweenFirst](#method-str-between-first)
 - [Str::camel](#method-camel-case)
 - [Str::contains](#method-str-contains)
 - [Str::containsAll](#method-str-contains-all)
@@ -108,6 +111,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::isAscii](#method-str-is-ascii)
 - [Str::isUuid](#method-str-is-uuid)
 - [Str::kebab](#method-kebab-case)
+- [Str::lcfirst](#method-str-lcfirst)
 - [Str::length](#method-str-length)
 - [Str::limit](#method-str-limit)
 - [Str::lower](#method-str-lower)
@@ -162,6 +166,7 @@ Laravel содержит множество глобальных «вспомо�
 - [before](#method-fluent-str-before)
 - [beforeLast](#method-fluent-str-before-last)
 - [between](#method-fluent-str-between)
+- [betweenFirst](#method-fluent-str-between-first)
 - [camel](#method-fluent-str-camel)
 - [contains](#method-fluent-str-contains)
 - [containsAll](#method-fluent-str-contains-all)
@@ -177,6 +182,7 @@ Laravel содержит множество глобальных «вспомо�
 - [isNotEmpty](#method-fluent-str-is-not-empty)
 - [isUuid](#method-fluent-str-is-uuid)
 - [kebab](#method-fluent-str-kebab)
+- [lcfirst](#method-fluent-str-lcfirst)
 - [length](#method-fluent-str-length)
 - [limit](#method-fluent-str-limit)
 - [lower](#method-fluent-str-lower)
@@ -595,6 +601,27 @@ Laravel содержит множество глобальных «вспомо�
     $isAssoc = Arr::isList(['product' => ['name' => 'Desk', 'price' => 100]]);
 
     // false
+
+<a name="method-array-keyby"></a>
+#### `Arr::keyBy()`
+
+Метод `Arr::keyBy` группирует массив по значениям переданного ключа. Если несколько элементов имеют один и тот же ключ, в новом массиве появится только последний:
+
+    use Illuminate\Support\Arr;
+
+    $array = [
+        ['product_id' => 'prod-100', 'name' => 'Desk'],
+        ['product_id' => 'prod-200', 'name' => 'Chair'],
+    ];
+
+    $keyed = Arr::keyBy($array, 'product_id');
+
+    /*
+        [
+            'prod-100' => ['product_id' => 'prod-100', 'name' => 'Desk'],
+            'prod-200' => ['product_id' => 'prod-200', 'name' => 'Chair'],
+        ]
+    */
 
 <a name="method-array-last"></a>
 #### `Arr::last()`
@@ -1068,6 +1095,15 @@ Laravel содержит множество глобальных «вспомо�
 
     $path = database_path('factories/UserFactory.php');
 
+<a name="method-lang-path"></a>
+#### `lang_path()`
+
+Функция `lang_path` возвращает полный путь к каталогу `lang` вашего приложения. Вы также можете использовать функцию `lang_path` для создания полного пути к конкретному файлу в каталоге:
+
+    $path = lang_path();
+
+    $path = lang_path('en/messages.php');
+
 <a name="method-mix"></a>
 #### `mix()`
 
@@ -1210,6 +1246,17 @@ Laravel содержит множество глобальных «вспомо�
     $slice = Str::between('This is my name', 'This', 'name');
 
     // ' is my '
+
+<a name="method-str-between-first"></a>
+#### `Str::betweenFirst()`
+
+Метод `Str::betweenFirst` возвращает наименьшую возможную часть строки между двумя значениями:
+
+    use Illuminate\Support\Str;
+
+    $slice = Str::betweenFirst('[a] bc [d]', '[', ']');
+
+    // 'a'
 
 <a name="method-camel-case"></a>
 #### `Str::camel()`
@@ -1387,6 +1434,17 @@ Laravel содержит множество глобальных «вспомо�
     $converted = Str::kebab('fooBar');
 
     // foo-bar
+
+<a name="method-str-lcfirst"></a>
+#### `Str::lcfirst()`
+
+Метод `Str::lcfirst` возвращает переданную строку с первым символом в нижнем регистре:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::lcfirst('Foo Bar');
+
+    // foo Bar
 
 <a name="method-str-length"></a>
 #### `Str::length()`
@@ -1995,6 +2053,17 @@ Str::wordCount('Hello, world!'); // 2
 
     // ' is my '
 
+<a name="method-fluent-str-between-first"></a>
+#### `betweenFirst`
+
+Метод `betweenFirst` возвращает наименьшую возможную часть строки между двумя значениями:
+
+    use Illuminate\Support\Str;
+
+    $converted = Str::of('[a] bc [d]')->betweenFirst('[', ']');
+
+    // 'a'
+
 <a name="method-fluent-str-camel"></a>
 #### `camel`
 
@@ -2227,6 +2296,17 @@ Str::wordCount('Hello, world!'); // 2
     $converted = Str::of('fooBar')->kebab();
 
     // foo-bar
+
+<a name="method-str-fluent-lcfirst"></a>
+#### `lcfirst()`
+
+Метод `lcfirst` возвращает переданную строку с первым символом в нижнем регистре:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('Foo Bar')->lcfirst();
+
+    // foo Bar
 
 <a name="method-fluent-str-length"></a>
 #### `length`

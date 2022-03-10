@@ -13,6 +13,9 @@
     - [URL-адреса файлов](#file-urls)
     - [Метаданные файла](#file-metadata)
 - [Хранение файлов](#storing-files)
+    - [Добавление информации к файлам](#prepending-appending-to-files)
+    - [Копирование и перемещение файлов](#copying-moving-files)
+    - [Автоматическая потоковая передача](#automatic-streaming)
     - [Загрузка файлов](#file-uploads)
     - [Видимость файла](#file-visibility)
 - [Удаление файлов](#deleting-files)
@@ -129,9 +132,13 @@ composer require league/flysystem-sftp-v3 "^3.0"
         'password' => env('SFTP_PASSWORD'),
 
         // Optional SFTP Settings...
+        // 'hostFingerprint' => env('SFTP_HOST_FINGERPRINT'),
+        // 'maxTries' => 4,
+        // 'passphrase' => env('SFTP_PASSPHRASE'),
         // 'port' => env('SFTP_PORT', 22),
         // 'root' => env('SFTP_ROOT', ''),
         // 'timeout' => 30,
+        // 'useAgent' => true,
     ],
 
 <a name="amazon-s3-compatible-filesystems"></a>
@@ -309,8 +316,43 @@ $disk->put('image.jpg', $content);
 
     Storage::put('file.jpg', $resource);
 
+<a name="failed-writes"></a>
+#### Неудавшиеся операции записи
+
+Если метод `put` (или другие операции «записи») не может записать файл на диск, то будет возвращено `false`:
+
+    if (! Storage::put('file.jpg', $contents)) {
+        // Не удалось записать файл на диск...
+    }
+
+Если хотите, то вы можете определить параметр `throw` в конфигурационном массиве файловой системы вашего диска. Когда этот параметр определен как `true`, то методы «записи», такие как `put`, будут генерировать экземпляр `League\Flysystem\UnableToWriteFile` при неудавшихся операциях записи:
+
+    'public' => [
+        'driver' => 'local',
+        // ...
+        'throw' => true,
+    ],
+
+<a name="prepending-appending-to-files"></a>
+### Добавление информации к файлам
+
+Методы `prepend` и `append` позволяют записывать в начало или конец файла, соответственно:
+
+    Storage::prepend('file.log', 'Prepended Text');
+
+    Storage::append('file.log', 'Appended Text');
+
+<a name="copying-moving-files"></a>
+### Копирование и перемещение файлов
+
+Метод `copy` используется для копирования существующего файла в новое место на диске, а метод `move` используется для переименования или перемещения существующего файла в новое место:
+
+    Storage::copy('old/file.jpg', 'new/file.jpg');
+
+    Storage::move('old/file.jpg', 'new/file.jpg');
+
 <a name="automatic-streaming"></a>
-#### Автоматическая потоковая передача
+### Автоматическая потоковая передача
 
 Потоковая передача файлов в хранилище позволяет значительно сократить использование памяти. Если вы хотите, чтобы Laravel автоматически управлял потоковой передачей переданного файла в ваше хранилище, вы можете использовать методы `putFile` или `putFileAs`. Эти методы принимают экземпляр `Illuminate\Http\File` или `Illuminate\Http\UploadedFile` и автоматически передают файл в нужное место:
 
@@ -328,24 +370,6 @@ $disk->put('image.jpg', $content);
 Методы `putFile` и `putFileAs` также принимают аргумент для определения «видимости» сохраненного файла. Это особенно полезно, если вы храните файл на облачном диске, таком как Amazon S3, и хотите, чтобы файл был общедоступным через сгенерированные URL:
 
     Storage::putFile('photos', new File('/path/to/photo'), 'public');
-
-<a name="prepending-appending-to-files"></a>
-#### Добавление информации к файлам
-
-Методы `prepend` и `append` позволяют записывать в начало или конец файла, соответственно:
-
-    Storage::prepend('file.log', 'Prepended Text');
-
-    Storage::append('file.log', 'Appended Text');
-
-<a name="copying-moving-files"></a>
-#### Копирование и перемещение файлов
-
-Метод `copy` используется для копирования существующего файла в новое место на диске, а метод `move` используется для переименования или перемещения существующего файла в новое место:
-
-    Storage::copy('old/file.jpg', 'new/file.jpg');
-
-    Storage::move('old/file.jpg', 'new/file.jpg');
 
 <a name="file-uploads"></a>
 ### Загрузка файлов
@@ -396,7 +420,7 @@ $disk->put('image.jpg', $content);
         'avatars', $request->file('avatar'), $request->user()->id
     );
 
-> {note} Непечатаемые и недопустимые символы Unicode будут автоматически удалены из путей к файлам. По этой причине, вы _по желанию_ можете очистить пути к файлам перед их передачей в методы хранения файлов Laravel. Пути к файлам нормализуются с помощью метода `League\Flysystem\Util::normalizePath`.
+> {note} Непечатаемые и недопустимые символы Unicode будут автоматически удалены из путей к файлам. По этой причине, вы _по желанию_ можете очистить пути к файлам перед их передачей в методы хранения файлов Laravel. Пути к файлам нормализуются с помощью метода `League\Flysystem\WhitespacePathNormalizer::normalizePath`.
 
 <a name="specifying-a-disk"></a>
 #### Указание диска

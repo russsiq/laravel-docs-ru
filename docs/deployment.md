@@ -27,6 +27,7 @@
 - PHP >= 8.0
 - Расширение PHP BCMath
 - Расширение PHP Ctype
+- Расширение PHP cURL
 - Расширение PHP DOM
 - Расширение PHP Fileinfo
 - Расширение PHP JSON

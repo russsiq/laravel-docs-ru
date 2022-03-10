@@ -320,7 +320,19 @@ Laravel 9.x мигрировал с [Flysystem](https://flysystem.thephpleague.c
 
 #### Перезапись существующих файлов
 
-Операции записи, такие как `put`, `write`, `writeStream`, теперь по умолчанию перезаписывают существующие файлы. Если вы не хотите перезаписывать существующие файлы, то вам следует предварительно проверить существование файла перед выполнением операции записи.
+Операции записи, такие как `put`, `write` и `writeStream`, теперь по умолчанию перезаписывают существующие файлы. Если вы не хотите перезаписывать существующие файлы, то вам следует предварительно проверить существование файла перед выполнением операции записи.
+
+#### Выброс исключений при выполнении записи
+
+Операции записи, такие как `put`, `write` и `writeStream`, больше не вызывают исключение при неудавшихся операциях записи. Вместо этого возвращается `false`. Если вы хотите сохранить предыдущее поведение, которое вызывало исключения, то вы можете определить параметр `throw` в конфигурационном массиве файловой системы вашего диска:
+
+```php
+'public' => [
+    'driver' => 'local',
+    // ...
+    'throw' => true,
+],
+```
 
 #### Чтение отсутствующих файлов
 
@@ -365,9 +377,9 @@ use Spatie\Dropbox\Client as DropboxClient;
 use Spatie\FlysystemDropbox\DropboxAdapter;
 
 Storage::extend('dropbox', function ($app, $config) {
-    $adapter = new DropboxAdapter(new DropboxClient(
-        $config['authorization_token']
-    ););
+    $adapter = new DropboxAdapter(
+        new DropboxClient($config['authorization_token'])
+    );
 
     return new FilesystemAdapter(
         new Filesystem($adapter, $config),

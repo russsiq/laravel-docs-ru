@@ -48,7 +48,7 @@
          */
         protected function firstName(): Attribute
         {
-            return new Attribute(
+            return Attribute::make(
                 get: fn ($value) => ucfirst($value),
             );
         }
@@ -82,7 +82,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  */
 public function address(): Attribute
 {
-    return new Attribute(
+    return Attribute::make(
         get: fn ($value, $attributes) => new Address(
             $attributes['address_line_one'],
             $attributes['address_line_two'],
@@ -112,12 +112,12 @@ public function address(): Attribute
  */
 public function address(): Attribute
 {
-    return (new Attribute(
+    return Attribute::make(
         get: fn ($value, $attributes) => new Address(
             $attributes['address_line_one'],
             $attributes['address_line_two'],
         ),
-    ))->withoutObjectCaching();
+    )->withoutObjectCaching();
 }
 ```
 
@@ -143,7 +143,7 @@ public function address(): Attribute
          */
         protected function firstName(): Attribute
         {
-            return new Attribute(
+            return Attribute::make(
                 get: fn ($value) => ucfirst($value),
                 set: fn ($value) => strtolower($value),
             );
@@ -176,7 +176,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  */
 protected function address(): Attribute
 {
-    return new Attribute(
+    return Attribute::make(
         get: fn ($value, $attributes) => new Address(
             $attributes['address_line_one'],
             $attributes['address_line_two'],
@@ -439,6 +439,11 @@ Eloquent также позволяет вам преобразовывать з�
 Типизация `encrypted` зашифрует значение атрибута модели, используя встроенный в Laravel функционал [шифрования](encryption.md). Кроме того, типизации `encrypted:array`, `encrypted:collection`, `encrypted:object`, `AsEncryptedArrayObject` и `AsEncryptedCollection` работают так же, как и их обычные аналоги; однако, базовое значение будет зашифровано при сохранении в вашей базе данных.
 
 Поскольку окончательная длина зашифрованного текста непредсказуема и больше, чем его копия в виде простого текста, убедитесь, что соответствующий столбец в базе данных имеет тип `TEXT` или больше. Кроме того, поскольку значения будут зашифрованы в базе данных, вы не сможете выполнять запросы или искать зашифрованные значения атрибутов.
+
+<a name="key-rotation"></a>
+#### Смена ключа приложения
+
+Laravel шифрует строки, используя значение конфигурации `key`, указанное в конфигурационном файле `app` вашего приложения. Как правило, это значение соответствует значению переменной окружения `APP_KEY`. Если вам нужно сменить ключ шифрования вашего приложения, то вам нужно будет вручную повторно зашифровать ваши зашифрованные атрибуты с помощью нового ключа.
 
 <a name="query-time-casting"></a>
 ### Типизация во время запроса

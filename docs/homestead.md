@@ -56,6 +56,7 @@ Homestead работает в любой системе: Windows, macOS или L
 </style> -->
 
 <!-- <div id="software-list" markdown="1"> -->
+
 - Ubuntu 20.04
 - Git
 - PHP 8.1
@@ -82,6 +83,7 @@ Homestead работает в любой системе: Windows, macOS или L
 - Xdebug
 - XHProf / Tideways / XHGui
 - wp-cli
+
 <!-- </div> -->
 
 <a name="optional-software"></a>
@@ -96,6 +98,7 @@ Homestead работает в любой системе: Windows, macOS или L
 </style> -->
 
 <!-- <div id="software-list" markdown="1"> -->
+
 - Apache
 - Blackfire
 - Cassandra
@@ -125,6 +128,7 @@ Homestead работает в любой системе: Windows, macOS или L
 - TimescaleDB
 - Trader <small>(расширение PHP)</small>
 - Утилиты Webdriver и Laravel Dusk
+
 <!-- </div> -->
 
 <a name="installation-and-setup"></a>

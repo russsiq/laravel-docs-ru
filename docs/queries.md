@@ -12,6 +12,7 @@
 - [Основные выражения Where](#basic-where-clauses)
     - [Выражения Where](#where-clauses)
     - [Выражения Or Where](#or-where-clauses)
+    - [Выражения Where Not](#where-not-clauses)
     - [Выражения Where и JSON](#json-where-clauses)
     - [Дополнительные выражения Where](#additional-where-clauses)
     - [Логическая группировка](#logical-grouping)
@@ -461,6 +462,18 @@ select * from users where votes > 100 or (name = 'Abigail' and votes > 50)
 ```
 
 > {note} Вы всегда должны группировать вызовы `orWhere`, чтобы избежать неожиданного поведения при применении [глобальных областей запроса](eloquent.md#query-scopes).
+
+<a name="where-not-clauses"></a>
+### Выражения Where Not
+
+Методы `whereNot` и `orWhereNot` могут использоваться для отмены переданной группы ограничений запроса. Например, следующий запрос исключает товары, которые находятся на распродаже или имеют цену меньше десяти:
+
+    $products = DB::table('products')
+                    ->whereNot(function ($query) {
+                        $query->where('clearance', true)
+                              ->orWhere('price', '<', 10);
+                    })
+                    ->get();
 
 <a name="json-where-clauses"></a>
 ### Выражения Where и JSON
