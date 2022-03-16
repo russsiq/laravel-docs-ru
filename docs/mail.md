@@ -11,6 +11,7 @@
     - [Данные шаблона](#view-data)
     - [Вложения](#attachments)
     - [Встраиваемые вложения](#inline-attachments)
+    - [Теги и метаданные](#tags-and-metadata)
     - [Настройка сообщения Symfony](#customizing-the-symfony-message)
 - [Отправления с разметкой Markdown](#markdown-mailables)
     - [Генерация отправлений с разметкой Markdown](#generating-markdown-mailables)
@@ -469,6 +470,27 @@ php artisan make:mail OrderShipped
     <img src="{{ $message->embedData($data, 'example-image.jpg') }}">
 </body>
 ```
+
+<a name="tags-and-metadata"></a>
+### Теги и метаданные
+
+Некоторые сторонние почтовые поставщики, такие как Mailgun и Postmark, поддерживают «теги» и «метаданные» сообщения, которые могут использоваться для группировки и отслеживания электронных писем, отправляемых вашим приложением. Вы можете добавить теги и метаданные к сообщению электронной почты с помощью методов `tag` и `metadata`:
+
+    /**
+     * Создать сообщение.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+        return $this->view('emails.orders.shipped')
+                    ->tag('shipment')
+                    ->metadata('order_id', $this->order->id);
+    }
+
+Если ваше приложение использует драйвер Mailgun, то вы можете обратиться к документации Mailgun для получения дополнительной информации о [тегах](https://documentation.mailgun.com/en/latest/user_manual.html#tagging-1) и [метаданных](https://documentation.mailgun.com/en/latest/user_manual.html#attaching-data-to-messages). Кроме того, можно также обратиться к документации Postmark для получения дополнительной информации об их поддержке [тегов](https://postmarkapp.com/blog/tags-support-for-smtp) и [метаданных](https://postmarkapp.com/support/article/1125-custom-metadata-faq).
+
+Если ваше приложение использует Amazon SES для отправки электронных писем, то вам следует использовать метод `metadata` для прикрепления [тегов SES](https://docs.aws.amazon.com/ses/latest/APIReference/API_MessageTag.html) к сообщению.
 
 <a name="customizing-the-symfony-message"></a>
 ### Настройка сообщения Symfony

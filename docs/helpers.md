@@ -143,6 +143,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::title](#method-title-case)
 - [Str::toHtmlString](#method-str-to-html-string)
 - [Str::ucfirst](#method-str-ucfirst)
+- [Str::ucsplit](#method-str-ucsplit)
 - [Str::upper](#method-str-upper)
 - [Str::uuid](#method-str-uuid)
 - [Str::wordCount](#method-str-word-count)
@@ -1876,6 +1877,17 @@ Laravel содержит множество глобальных «вспомо�
     $string = Str::ucfirst('foo bar');
 
     // Foo bar
+
+<a name="method-str-ucsplit"></a>
+#### `Str::ucsplit()`
+
+Метод `Str::ucsplit` разбивает переданную строку на массив по символам верхнего регистра:
+
+    use Illuminate\Support\Str;
+
+    $segments = Str::ucsplit('FooBar');
+
+    // [0 => 'Foo', 1 => 'Bar']
 
 <a name="method-str-upper"></a>
 #### `Str::upper()`

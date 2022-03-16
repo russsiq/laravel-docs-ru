@@ -338,6 +338,10 @@ Laravel также содержит несколько помощников дл
         }
     }
 
+Метод `assertJsonPath` также принимает замыкание, которое можно использовать для динамического определения утверждения:
+
+    $response->assertJsonPath('team.owner.name', fn ($name) => strlen($name) >= 3);
+
 <a name="fluent-json-testing"></a>
 ### Последовательное тестирование JSON
 
@@ -651,7 +655,6 @@ Laravel также позволяет отображать шаблоны без
 - [assertSessionHasNoErrors](#assert-session-has-no-errors)
 - [assertSessionDoesntHaveErrors](#assert-session-doesnt-have-errors)
 - [assertSessionMissing](#assert-session-missing)
-- [assertSimilarJson](#assert-similar-json)
 - [assertStatus](#assert-status)
 - [assertSuccessful](#assert-successful)
 - [assertUnauthorized](#assert-unauthorized)

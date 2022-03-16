@@ -598,6 +598,9 @@ Laravel предлагает полезные методы для имитаци
             // Утверждаем, что один или несколько файлов не были сохранены ...
             Storage::disk('photos')->assertMissing('missing.jpg');
             Storage::disk('photos')->assertMissing(['missing.jpg', 'non-existing.jpg']);
+
+            // Утверждаем, что указанный каталог пуст...
+            Storage::disk('photos')->assertDirectoryEmpty('/wallpapers');
         }
     }
 
@@ -610,6 +613,8 @@ Laravel предлагает полезные методы для имитаци
 
 При тестировании вам может иногда потребоваться изменить время, возвращаемое такими помощниками, как `now` или `Illuminate\Support\Carbon::now()`. К счастью, базовый класс тестирования функций Laravel включает помощников, которые позволяют вам управлять текущим временем:
 
+    use Illuminate\Support\Carbon;
+
     public function testTimeCanBeManipulated()
     {
         // Путешествие в будущее ...
@@ -620,6 +625,11 @@ Laravel предлагает полезные методы для имитаци
         $this->travel(5)->days();
         $this->travel(5)->weeks();
         $this->travel(5)->years();
+
+        // Заморозить время и возобновить его после выполнения замыкания ...
+        $this->freezeTime(function (Carbon $time) {
+            // ...
+        });
 
         // Путешествие в прошлое ...
         $this->travel(-5)->hours();

@@ -16,6 +16,8 @@
     - [Изменение почтового драйвера](#customizing-the-mailer)
     - [Изменение почтовых шаблонов](#customizing-the-templates)
     - [Почтовые вложения](#mail-attachments)
+    - [Теги и метаданные](#adding-tags-metadata)
+    - [Настройка сообщения Symfony](#customizing-the-symfony-message)
     - [Использование почтовых отправлений](#using-mailables)
     - [Предварительный просмотр почтовых уведомлений](#previewing-mail-notifications)
 - [Почтовые уведомления с разметкой Markdown](#markdown-mail-notifications)
@@ -348,7 +350,7 @@ php artisan make:notification InvoicePaid
      * Получить содержимое почтового уведомления.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Message
+     * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
     {
@@ -524,6 +526,53 @@ php artisan vendor:publish --tag=laravel-notifications
                     ->attachData($this->pdf, 'name.pdf', [
                         'mime' => 'application/pdf',
                     ]);
+    }
+
+<a name="adding-tags-metadata"></a>
+### Теги и метаданные
+
+Некоторые сторонние почтовые поставщики, такие как Mailgun и Postmark, поддерживают «теги» и «метаданные» сообщения, которые могут использоваться для группировки и отслеживания электронных писем, отправляемых вашим приложением. Вы можете добавить теги и метаданные к сообщению электронной почты с помощью методов `tag` и `metadata`:
+
+    /**
+     * Получить содержимое почтового уведомления.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
+                    ->greeting('Comment Upvoted!')
+                    ->tag('upvote')
+                    ->metadata('comment_id', $this->comment->id);
+    }
+
+Если ваше приложение использует драйвер Mailgun, то вы можете обратиться к документации Mailgun для получения дополнительной информации о [тегах](https://documentation.mailgun.com/en/latest/user_manual.html#tagging-1) и [метаданных](https://documentation.mailgun.com/en/latest/user_manual.html#attaching-data-to-messages). Кроме того, можно также обратиться к документации Postmark для получения дополнительной информации об их поддержке [тегов](https://postmarkapp.com/blog/tags-support-for-smtp) и [метаданных](https://postmarkapp.com/support/article/1125-custom-metadata-faq).
+
+Если ваше приложение использует Amazon SES для отправки электронных писем, то вам следует использовать метод `metadata` для прикрепления [тегов SES](https://docs.aws.amazon.com/ses/latest/APIReference/API_MessageTag.html) к сообщению.
+Теги и метаданные могут быть добавлены в `MailMessage` – они используются вашей почтовой службой для фильтрации/обработки.
+
+<a name="customizing-the-symfony-message"></a>
+### Настройка сообщения Symfony
+
+Метод `withSymfonyMessage` базового класса `MailMessage` позволяет вам зарегистрировать замыкание, которое будет вызываться с экземпляром сообщения Symfony перед отправкой сообщения. Это дает вам возможность глубокой настройки сообщения перед его доставкой:
+
+    use Symfony\Component\Mime\Email;
+
+    /**
+     * Получить содержимое почтового уведомления.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
+                    ->withSymfonyMessage(function (Email $message) {
+                        $message->getHeaders()->addTextHeader(
+                            'Custom-Header', 'Header Value'
+                        );
+                    });
     }
 
 <a name="using-mailables"></a>

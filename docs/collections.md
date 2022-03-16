@@ -166,7 +166,6 @@
 - [random](#method-random)
 - [range](#method-range)
 - [reduce](#method-reduce)
-- [reduceMany](#method-reduce-many)
 - [reduceSpread](#method-reduce-spread)
 - [reject](#method-reject)
 - [replace](#method-replace)
@@ -1822,23 +1821,6 @@
 
     // 4264
 
-<a name="method-reduce-many"></a>
-#### `reduceMany()`
-
-Метод `reduceMany` сокращает коллекцию до массива значений, передавая результаты каждой итерации следующей итерации. Этот метод подобен методу `reduce`; однако он может принимать несколько начальных значений:
-
-    [$creditsRemaining, $batch] = Image::where('status', 'unprocessed')
-        ->get()
-        ->reduceMany(function ($creditsRemaining, $batch, $image) {
-            if ($creditsRemaining >= $image->creditsRequired()) {
-                $batch->push($image);
-
-                $creditsRemaining -= $image->creditsRequired();
-            }
-
-            return [$creditsRemaining, $batch];
-        }, $creditsAvailable, collect());
-
 <a name="method-reduce-spread"></a>
 #### `reduceSpread()`
 
@@ -2787,15 +2769,15 @@
 <a name="method-when"></a>
 #### `when()`
 
-Метод `when` выполнит указанное замыкание, если первый аргумент, переданный методу, оценивается как `true`:
+Метод `when` выполнит указанное замыкание, если первый аргумент, переданный методу, оценивается как `true`. Экземпляр коллекции и первый аргумент, переданный методу `when`, будут переданы замыканию:
 
     $collection = collect([1, 2, 3]);
 
-    $collection->when(true, function ($collection) {
+    $collection->when(true, function ($collection, $value) {
         return $collection->push(4);
     });
 
-    $collection->when(false, function ($collection) {
+    $collection->when(false, function ($collection, $value) {
         return $collection->push(5);
     });
 
@@ -2807,7 +2789,7 @@
 
     $collection = collect([1, 2, 3]);
 
-    $collection->when(false, function ($collection) {
+    $collection->when(false, function ($collection, $value) {
         return $collection->push(4);
     }, function ($collection) {
         return $collection->push(5);
