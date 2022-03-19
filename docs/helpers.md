@@ -221,6 +221,7 @@ Laravel содержит множество глобальных «вспомо�
 - [title](#method-fluent-str-title)
 - [trim](#method-fluent-str-trim)
 - [ucfirst](#method-fluent-str-ucfirst)
+- [ucsplit](#method-fluent-str-ucsplit)
 - [upper](#method-fluent-str-upper)
 - [when](#method-fluent-str-when)
 - [whenContains](#method-fluent-str-when-contains)
@@ -2309,8 +2310,8 @@ Str::wordCount('Hello, world!'); // 2
 
     // foo-bar
 
-<a name="method-str-fluent-lcfirst"></a>
-#### `lcfirst()`
+<a name="method-fluent-str-lcfirst"></a>
+#### `lcfirst`
 
 Метод `lcfirst` возвращает переданную строку с первым символом в нижнем регистре:
 
@@ -2845,6 +2846,17 @@ If no matches are found, an empty collection will be returned.
     $string = Str::of('foo bar')->ucfirst();
 
     // Foo bar
+
+<a name="method-fluent-str-ucsplit"></a>
+#### `ucsplit`
+
+Метод `ucsplit` разбивает переданную строку на коллекцию по символам верхнего регистра:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('Foo Bar')->ucsplit();
+
+    // collect(['Foo', 'Bar'])
 
 <a name="method-fluent-str-upper"></a>
 #### `upper`

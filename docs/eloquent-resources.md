@@ -498,8 +498,6 @@ php artisan make:resource UserCollection
 
 По желанию можно включить атрибут в ответ ресурса, только если какое-то условие выполнено. Например, бывает необходимо включить значение, только если текущий пользователь является «администратором». Laravel предлагает множество вспомогательных методов, которые помогут вам в этой ситуации. Метод `when` используется для условного добавления атрибута в ответ ресурса:
 
-    use Illuminate\Support\Facades\Auth;
-
     /**
      * Преобразовать ресурс в массив.
      *
@@ -512,7 +510,7 @@ php artisan make:resource UserCollection
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'secret' => $this->when(Auth::user()->isAdmin(), 'secret-value'),
+            'secret' => $this->when($request->user()->isAdmin(), 'secret-value'),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
@@ -522,7 +520,7 @@ php artisan make:resource UserCollection
 
 Метод `when` также принимает замыкание в качестве второго аргумента, позволяя вам вычислить результирующее значение, только если переданное условие истинно:
 
-    'secret' => $this->when(Auth::user()->isAdmin(), function () {
+    'secret' => $this->when($request->user()->isAdmin(), function () {
         return 'secret-value';
     }),
 
@@ -543,7 +541,7 @@ php artisan make:resource UserCollection
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            $this->mergeWhen(Auth::user()->isAdmin(), [
+            $this->mergeWhen($request->user()->isAdmin(), [
                 'first-secret' => 'value',
                 'second-secret' => 'value',
             ]),
