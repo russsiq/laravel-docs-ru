@@ -251,7 +251,7 @@ Laravel Breeze – это минимальная и простая реализ�
 
             return back()->withErrors([
                 'email' => 'The provided credentials do not match our records.',
-            ]);
+            ])->onlyInput(['email']);
         }
     }
 

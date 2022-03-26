@@ -1492,7 +1492,7 @@ Laravel содержит множество глобальных «вспомо�
 <a name="method-str-markdown"></a>
 #### `Str::markdown()`
 
-Метод `Str::markdown` конвертирует текст с разметкой [GitHub flavored Markdown](https://github.github.com/gfm/) в HTML:
+Метод `Str::markdown` конвертирует текст с разметкой [GitHub flavored Markdown](https://github.github.com/gfm/) в HTML с помощью [CommonMark](https://commonmark.thephpleague.com/):
 
     use Illuminate\Support\Str;
 
