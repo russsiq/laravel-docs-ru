@@ -119,6 +119,7 @@
 - [except](#method-except)
 - [filter](#method-filter)
 - [first](#method-first)
+- [firstOrFail](#method-first-or-fail)
 - [firstWhere](#method-first-where)
 - [flatMap](#method-flatmap)
 - [flatten](#method-flatten)
@@ -793,6 +794,23 @@
     collect([1, 2, 3, 4])->first();
 
     // 1
+
+<a name="method-first-or-fail"></a>
+#### `firstOrFail()`
+
+Метод `firstOrFail` идентичен методу `first`; однако, если результат не найден, то будет выброшено исключение `Illuminate\Support\ItemNotFoundException`:
+
+    collect([1, 2, 3, 4])->firstOrFail(function ($value, $key) {
+        return $value > 5;
+    });
+
+    // Выброшено исключение ItemNotFoundException ...
+
+Вы также можете вызвать метод `firstOrFail` без аргументов, чтобы получить первый элемент коллекции. Если коллекция пуста, то будет выброшено исключение `Illuminate\Support\ItemNotFoundException`:
+
+    collect([])->firstOrFail();
+
+    // Выброшено исключение ItemNotFoundException ...
 
 <a name="method-first-where"></a>
 #### `firstWhere()`
@@ -3260,6 +3278,7 @@
 - [except](#method-except)
 - [filter](#method-filter)
 - [first](#method-first)
+- [firstOrFail](#method-first-or-fail)
 - [firstWhere](#method-first-where)
 - [flatMap](#method-flatmap)
 - [flatten](#method-flatten)

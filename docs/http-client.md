@@ -181,13 +181,27 @@ composer require guzzlehttp/guzzle
 
 При необходимости вы можете передать третий аргумент методу `retry`. Третий аргумент должен быть вызываемым, и определять, следует ли на самом деле выполнять повторную попытку. Например, вы можете захотеть повторить запрос только в том случае, если в изначальном запросе было обнаружено исключение `ConnectionException`:
 
-    $response = Http::retry(3, 100, function ($exception) {
+    $response = Http::retry(3, 100, function ($exception, $request) {
         return $exception instanceof ConnectionException;
+    })->post(...);
+
+Если попытка запроса окажется неуспешной, то вы можете внести изменения в запрос до того, как будет сделана новая попытка. Вы можете добиться этого, изменив аргумент запроса, предоставленный вызываемому объекту, который вы предоставили методу `retry`. Например, вы можете повторить запрос с новым токеном авторизации, если первая попытка вернула ошибку аутентификации:
+
+    $response = Http::withToken($this->getToken())->retry(2, 0, function ($exception, $request) {
+        if (! $exception instanceof RequestException || $request->response->status() !== 401) {
+            return false;
+        }
+
+        $request->withToken($this->getNewToken());
+
+        return true;
     })->post(...);
 
 Если все запросы окажутся неуспешными, то будет выброшено исключение `Illuminate\Http\Client\RequestException`. Если вы хотите отключить это поведение, вы можете указать аргумент `throw` со значением `false`. Если отключено, то последний ответ, полученный клиентом, будет возвращен после всех повторных попыток:
 
     $response = Http::retry(3, 100, throw: false)->post(...);
+
+> {note} Если все запросы окажутся неуспешными из-за проблемы с соединением, то все равно будет выброшено исключение `Illuminate\Http\Client\ConnectionException`, даже если для аргумента `throw` установлено значение `false`.
 
 <a name="error-handling"></a>
 ### Обработка ошибок
@@ -380,7 +394,9 @@ $response = Http::github()->get('/');
 
 Если вам требуется более сложная логика для определения того, какие ответы возвращать для определенных адресов, то вы можете передать замыкание методу `fake`. Это замыкание получит экземпляр `Illuminate\Http\Client\Request` и должно вернуть экземпляр ответа. В замыкании вы можете выполнить любую логику, необходимую для определения типа ответа, который нужно вернуть:
 
-    Http::fake(function ($request) {
+    use Illuminate\Http\Client\Request;
+
+    Http::fake(function (Request $request) {
         return Http::response('Hello World', 200);
     });
 

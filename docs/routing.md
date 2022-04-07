@@ -221,6 +221,10 @@ php artisan route:list --except-vendor
         //
     })->whereUuid('id');
 
+    Route::get('/category/{category}', function ($category) {
+        //
+    })->whereIn(['movie', 'song', 'painting']);
+
 Если входящий запрос не соответствует ограничениям шаблона маршрута, то будет возвращен `404` HTTP-ответ.
 
 <a name="parameters-global-constraints"></a>

@@ -943,7 +943,7 @@ Laravel включает множество почтовых транспорт�
          */
         public function __construct(ApiClient $client)
         {
-            $this->client = $client
+            $this->client = $client;
         }
 
         /**

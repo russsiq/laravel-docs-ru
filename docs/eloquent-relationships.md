@@ -292,6 +292,12 @@ Eloquent определяет имя внешнего ключа по умолч
 
     $posts = Post::whereBelongsTo($user)->get();
 
+Вы также можете предоставить экземпляр [коллекции](eloquent-collections.md) методу `whereBelongsTo`. При этом Laravel извлечет модели, принадлежащие любой из родительских моделей в коллекции:
+
+    $users = User::where('vip', true)->get();
+
+    $posts = Post::whereBelongsTo($users)->get();
+
 По умолчанию Laravel будет определять отношения, связанные с переданной моделью, на основе имени класса модели; однако вы можете самостоятельно указать имя отношения в качестве второго аргумента метода `whereBelongsTo`:
 
     $posts = Post::whereBelongsTo($user, 'author')->get();

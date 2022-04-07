@@ -133,6 +133,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::singular](#method-str-singular)
 - [Str::slug](#method-str-slug)
 - [Str::snake](#method-snake-case)
+- [Str::squish](#method-str-squish)
 - [Str::start](#method-str-start)
 - [Str::startsWith](#method-starts-with)
 - [Str::studly](#method-studly-case)
@@ -192,6 +193,7 @@ Laravel содержит множество глобальных «вспомо�
 - [mask](#method-fluent-str-mask)
 - [match](#method-fluent-str-match)
 - [matchAll](#method-fluent-str-match-all)
+- [newLine](#method-fluent-str-new-line)
 - [padBoth](#method-fluent-str-padboth)
 - [padLeft](#method-fluent-str-padleft)
 - [padRight](#method-fluent-str-padright)
@@ -210,6 +212,7 @@ Laravel содержит множество глобальных «вспомо�
 - [slug](#method-fluent-str-slug)
 - [snake](#method-fluent-str-snake)
 - [split](#method-fluent-str-split)
+- [squish](#method-fluent-str-squish)
 - [start](#method-fluent-str-start)
 - [startsWith](#method-fluent-str-starts-with)
 - [studly](#method-fluent-str-studly)
@@ -1756,6 +1759,17 @@ Laravel содержит множество глобальных «вспомо�
 
     // foo-bar
 
+<a name="method-str-squish"></a>
+#### `Str::squish()`
+
+Метод `Str::squish` удаляет все лишние пробелы из строки, включая лишние пробелы между словами:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::squish('    laravel    framework    ');
+
+    // laravel framework
+
 <a name="method-str-start"></a>
 #### `Str::start()`
 
@@ -2321,6 +2335,7 @@ Str::wordCount('Hello, world!'); // 2
 
     // foo Bar
 
+<!--  -->
 <a name="method-fluent-str-length"></a>
 #### `length`
 
@@ -2445,7 +2460,19 @@ Str::wordCount('Hello, world!'); // 2
 
     // collect(['un', 'ly']);
 
-If no matches are found, an empty collection will be returned.
+Если совпадений не найдено, то будет возвращена пустая коллекция.
+
+<a name="method-fluent-str-new-line"></a>
+#### `newLine`
+
+Метод `newLine` добавляет к строке символ «конца строки»:
+
+    use Illuminate\Support\Str;
+
+    $padded = Str::of('Laravel')->newLine()->append('Framework');
+
+    // 'Laravel
+    //  Framework'
 
 <a name="method-fluent-str-padboth"></a>
 #### `padBoth`
@@ -2700,6 +2727,17 @@ If no matches are found, an empty collection will be returned.
     $segments = Str::of('one, two, three')->split('/[\s,]+/');
 
     // collect(["one", "two", "three"])
+
+<a name="method-fluent-str-squish"></a>
+#### `squish`
+
+Метод `squish` удаляет все лишние пробелы из строки, включая лишние пробелы между словами:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('    laravel    framework    ')->squish();
+
+    // laravel framework
 
 <a name="method-fluent-str-start"></a>
 #### `start`

@@ -524,6 +524,10 @@ php artisan make:resource UserCollection
         return 'secret-value';
     }),
 
+Кроме того, метод `whenNotNull` может использоваться для включения атрибута в ответ ресурса, если атрибут не равен `null`:
+
+    'name' => $this->whenNotNull($this->name),
+
 <a name="merging-conditional-attributes"></a>
 #### Слияние условных атрибутов
 

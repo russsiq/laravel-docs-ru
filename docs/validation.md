@@ -795,6 +795,7 @@ The credit card number field is required when payment type is credit card.
 - [Exclude](#rule-exclude)
 - [Exclude If](#rule-exclude-if)
 - [Exclude Unless](#rule-exclude-unless)
+- [Exclude With](#rule-exclude-with)
 - [Exclude Without](#rule-exclude-without)
 - [Exists (Database)](#rule-exists)
 - [File](#rule-file)
@@ -1090,10 +1091,28 @@ The credit card number field is required when payment type is credit card.
 
 Проверяемое поле будет исключено из данных запроса, возвращаемых методами `validate` и `validated`, если поле _anotherfield_ равно _value_.
 
+Если требуется сложная логика условного исключения, то вы можете использовать метод `Rule::excludeIf`. Этот метод принимает логическое значение или замыкание. При задании замыкания оно должно возвращать `true` или `false` для указания, следует ли исключить проверяемое поле:
+
+    use Illuminate\Support\Facades\Validator;
+    use Illuminate\Validation\Rule;
+
+    Validator::make($request->all(), [
+        'role_id' => Rule::excludeIf($request->user()->is_admin),
+    ]);
+
+    Validator::make($request->all(), [
+        'role_id' => Rule::excludeIf(fn () => $request->user()->is_admin),
+    ]);
+
 <a name="rule-exclude-unless"></a>
 #### exclude_unless:_anotherfield_,_value_
 
 Проверяемое поле будет исключено из данных запроса, возвращаемых методами `validate` и `validated`, если поле _anotherfield_ не равно _value_. Если _value_ равно `null` (т.е. `exclude_unless:name,null`), то проверяемое поле будет исключено, если поле сравнения не имеет значение `null` или поле сравнения отсутствует в данных запроса.
+
+<a name="rule-exclude-with"></a>
+#### exclude_with:_anotherfield_
+
+Проверяемое поле будет исключено из данных запроса, возвращаемых методами `validate` и `validated`, если присутствует поле _anotherfield_.
 
 <a name="rule-exclude-without"></a>
 #### exclude_without:_anotherfield_
@@ -1140,6 +1159,10 @@ The credit card number field is required when payment type is credit card.
             }),
         ],
     ]);
+
+Вы можете явно указать имя столбца базы данных, которое должно использоваться правилом `exists`, сгенерированным методом `Rule::exists`, указав имя столбца в качестве второго аргумента метода `exists`:
+
+    'state' => Rule::exists('states', 'abbreviation'),
 
 <a name="rule-file"></a>
 #### file
@@ -1339,6 +1362,19 @@ The credit card number field is required when payment type is credit card.
 #### prohibited_if:_anotherfield_,_value_,...
 
 Проверяемое поле должно быть пустым или отсутствовать, если поле _anotherfield_ равно любому _value_.
+
+Если требуется сложная логика условного запрета присутствия, то вы можете использовать метод `Rule::prohibitedIf`. Этот метод принимает логическое значение или замыкание. При задании замыкания оно должно возвращать `true` или `false` для указания, следует ли запретить присутствие проверяемого поля:
+
+    use Illuminate\Support\Facades\Validator;
+    use Illuminate\Validation\Rule;
+
+    Validator::make($request->all(), [
+        'role_id' => Rule::prohibitedIf($request->user()->is_admin),
+    ]);
+
+    Validator::make($request->all(), [
+        'role_id' => Rule::prohibitedIf(fn () => $request->user()->is_admin),
+    ]);
 
 <a name="rule-prohibited-unless"></a>
 #### prohibited_unless:_anotherfield_,_value_,...

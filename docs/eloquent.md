@@ -1385,6 +1385,17 @@ php artisan make:observer UserObserver --model=User
         }
 
         /**
+         * Обработать событие «restored» модели User.
+         *
+         * @param  \App\Models\User  $user
+         * @return void
+         */
+        public function restored(User $user)
+        {
+            //
+        }
+
+        /**
          * Обработать событие «forceDeleted» модели User.
          *
          * @param  \App\Models\User  $user

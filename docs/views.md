@@ -205,7 +205,6 @@
          */
         public function __construct(UserRepository $users)
         {
-            // Зависимости автоматически внедрятся контейнером служб ...
             $this->users = $users;
         }
 

@@ -1048,6 +1048,8 @@ Laravel также позволяет отображать шаблоны без
         'name' => 'The given name was invalid.'
     ]);
 
+> {tip} Более общий метод [`assertInvalid`](#assert-invalid) может использоваться для утверждения о том, что в ответе есть ошибки валидации, которые были возвращены в виде структуры JSON **или**, что ошибки были переданы в хранилище сессии.
+
 <a name="assert-session-has-errors-in"></a>
 #### assertSessionHasErrorsIn
 
@@ -1068,6 +1070,8 @@ Laravel также позволяет отображать шаблоны без
 Утверждение о том, что в сессии нет ошибок валидации для переданных ключей:
 
     $response->assertSessionDoesntHaveErrors($keys = [], $format = null, $errorBag = 'default');
+
+> {tip} Более общий метод [`assertValid`](#assert-valid) может использоваться для утверждения о том, что в ответе нет ошибок валидации, которые были возвращены в виде структуры JSON **и**, что ошибки не были переданы в хранилище сессии.
 
 <a name="assert-session-missing"></a>
 #### assertSessionMissing
