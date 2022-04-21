@@ -188,7 +188,7 @@ composer require guzzlehttp/guzzle
 Если попытка запроса окажется неуспешной, то вы можете внести изменения в запрос до того, как будет сделана новая попытка. Вы можете добиться этого, изменив аргумент запроса, предоставленный вызываемому объекту, который вы предоставили методу `retry`. Например, вы можете повторить запрос с новым токеном авторизации, если первая попытка вернула ошибку аутентификации:
 
     $response = Http::withToken($this->getToken())->retry(2, 0, function ($exception, $request) {
-        if (! $exception instanceof RequestException || $request->response->status() !== 401) {
+        if (! $exception instanceof RequestException || $exception->response->status() !== 401) {
             return false;
         }
 

@@ -223,7 +223,7 @@ php artisan route:list --except-vendor
 
     Route::get('/category/{category}', function ($category) {
         //
-    })->whereIn(['movie', 'song', 'painting']);
+    })->whereIn('category', ['movie', 'song', 'painting']);
 
 Если входящий запрос не соответствует ограничениям шаблона маршрута, то будет возвращен `404` HTTP-ответ.
 

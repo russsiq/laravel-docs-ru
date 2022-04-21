@@ -3,7 +3,7 @@
 - [Введение](#introduction)
 - [Laravel Breeze](#laravel-breeze)
     - [Установка](#laravel-breeze-installation)
-    - [Breeze и Inertia](#breeze-and-inertia)
+    - [Breeze и React / Vue](#breeze-and-inertia)
     - [Breeze и Next.js / API](#breeze-and-next)
 - [Laravel Jetstream](#laravel-jetstream)
 
@@ -55,14 +55,16 @@ php artisan migrate
 > {tip} Чтобы узнать больше о компиляции CSS и JavaScript вашего приложения, ознакомьтесь с [документацией Laravel Mix](mix.md#running-mix).
 
 <a name="breeze-and-inertia"></a>
-### Breeze и Inertia
+### Breeze и React / Vue
 
-Laravel Breeze также предлагает реализацию внешнего интерфейса [Inertia.js](https://inertiajs.com) на базе Vue или React. Чтобы использовать стек Inertia, укажите `vue` или `react` в качестве желаемого стека при выполнении команды `breeze:install` Artisan:
+Laravel Breeze также предлагает каркасы React и Vue через реализацию внешнего интерфейса [Inertia.js](https://inertiajs.com). Inertia позволяет создавать современные одностраничные приложения React и Vue, используя классическую маршрутизацию и контроллеры на стороне сервера.
+
+Inertia позволяет вам наслаждаться мощью внешнего интерфейса React и Vue в сочетании с невероятной производительностью Laravel. Чтобы использовать стек Inertia, укажите `vue` или `react` в качестве желаемого стека при выполнении команды `breeze:install` Artisan:
 
 ```shell
 php artisan breeze:install vue
 
-// Или ...
+# Или ...
 
 php artisan breeze:install react
 

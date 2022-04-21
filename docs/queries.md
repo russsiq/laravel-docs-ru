@@ -837,14 +837,20 @@ where exists (
         ['email' => 'janeway@example.com', 'votes' => 0],
     ]);
 
-Метод `insertOrIgnore` будет игнорировать ошибки при вставке записей в базу данных:
+Метод `insertOrIgnore` будет игнорировать ошибки при вставке записей в базу данных. При использовании этого метода вы должны знать, что ошибки повторяющихся записей будут игнорироваться, а также (в зависимости от движка базы данных) могут быть проигнорированы другие типы ошибок. Например, `insertOrIgnore` будет [обходить строгий режим MySQL](https://dev.mysql.com/doc/refman/en/sql-mode.html#ignore-effect-on-execution):
 
     DB::table('users')->insertOrIgnore([
         ['id' => 1, 'email' => 'sisko@example.com'],
         ['id' => 2, 'email' => 'archer@example.com'],
     ]);
 
-> {note} Метод `insertOrIgnore` будет игнорировать повторяющиеся записи, а также может игнорировать другие типы ошибок в зависимости от движка базы данных. Например, `insertOrIgnore` будет [обходить строгий режим MySQL](https://dev.mysql.com/doc/refman/en/sql-mode.html#ignore-effect-on-execution).
+Метод `insertUsing` будет вставлять новые записи в таблицу, используя подзапрос для определения данных, которые должны быть вставлены:
+
+    DB::table('pruned_users')->insertUsing([
+        'id', 'name', 'email', 'email_verified_at'
+    ], DB::table('users')->select(
+        'id', 'name', 'email', 'email_verified_at'
+    )->where('updated_at', '<=', now()->subMonth()));
 
 <a name="auto-incrementing-ids"></a>
 #### Автоинкрементирование идентификаторов

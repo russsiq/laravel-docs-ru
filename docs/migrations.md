@@ -104,20 +104,6 @@ php artisan schema:dump --prune
         }
     };
 
-<a name="anonymous-migrations"></a>
-#### Анонимные миграции
-
-Как вы могли заметить в приведенном выше примере, Laravel автоматически присваивает имя класса всем миграциям, которые вы генерируете с помощью команды `make:migration`. Однако при желании вы можете вернуть анонимный класс из файла миграции. Это в первую очередь полезно, если ваше приложение накапливает много миграций, и две из них имеют конфликт имен классов:
-
-    <?php
-
-    use Illuminate\Database\Migrations\Migration;
-
-    return new class extends Migration
-    {
-        //
-    };
-
 <a name="setting-the-migration-connection"></a>
 #### Указание соединения миграции
 

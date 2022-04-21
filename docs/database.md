@@ -153,6 +153,15 @@ driver://username:password@host:port/database?options
         echo $user->name;
     }
 
+<a name="selecting-scalar-values"></a>
+#### Выборка скалярных значений
+
+Иногда запрос к базе данных может вернуть единственное скалярное значение. Вместо того, чтобы извлекать результат из объекта записи, Laravel позволяет вам получить это значение напрямую, используя метод `scalar`:
+
+    $burgers = DB::scalar(
+        "select count(case when food = 'burger' then 1 end) as burgers from menu"
+    );
+
 <a name="using-named-bindings"></a>
 #### Использование именованных псевдопеременных
 

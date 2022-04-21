@@ -138,6 +138,7 @@
 - [keyBy](#method-keyby)
 - [keys](#method-keys)
 - [last](#method-last)
+- [lazy](#method-lazy)
 - [macro](#method-macro)
 - [make](#method-make)
 - [map](#method-map)
@@ -1033,7 +1034,7 @@
 
     $result = $data->groupBy(['skill', function ($item) {
         return $item['roles'];
-    }], $preserveKeys = true);
+    }], preserveKeys: true);
 
     /*
     [
@@ -1228,6 +1229,31 @@
     collect([1, 2, 3, 4])->last();
 
     // 4
+
+<a name="method-lazy"></a>
+#### `lazy()`
+
+Метод `lazy` возвращает новый экземпляр [`LazyCollection`](#lazy-collections) из массива элементов:
+
+    $lazyCollection = collect([1, 2, 3, 4])->lazy();
+
+    get_class($lazyCollection);
+
+    // Illuminate\Support\LazyCollection
+
+    $lazyCollection->all();
+
+    // [1, 2, 3, 4]
+
+Это особенно полезно, когда вам нужно выполнить преобразования «коллекции», содержащей много элементов:
+
+    $count = $hugeCollection
+        ->lazy()
+        ->where('country', 'FR')
+        ->where('balance', '>', '100')
+        ->count();
+
+Преобразовывая коллекцию в `LazyCollection`, мы избегаем необходимости в выделении дополнительной памяти. Хотя исходная коллекция по-прежнему сохраняет _свои_ значения в памяти, последующая фильтрация этого не делает. Поэтому при фильтрации результатов коллекции практически не выделяется дополнительная память.
 
 <a name="method-macro"></a>
 #### `macro()`

@@ -807,10 +807,10 @@ The credit card number field is required when payment type is credit card.
 - [In Array](#rule-in-array)
 - [Integer](#rule-integer)
 - [IP Address](#rule-ip)
-- [MAC Address](#rule-mac)
 - [JSON](#rule-json)
 - [Less Than](#rule-lt)
 - [Less Than Or Equal](#rule-lte)
+- [MAC Address](#rule-mac)
 - [Max](#rule-max)
 - [MIME Types](#rule-mimetypes)
 - [MIME Type By File Extension](#rule-mimes)
@@ -1248,11 +1248,6 @@ The credit card number field is required when payment type is credit card.
 
 Проверяемое поле должно быть адресом IPv6.
 
-<a name="rule-mac"></a>
-#### mac_address
-
-Проверяемое поле должно быть MAC-адресом.
-
 <a name="rule-json"></a>
 #### json
 
@@ -1267,6 +1262,11 @@ The credit card number field is required when payment type is credit card.
 #### lte:_field_
 
 Проверяемое поле должно быть меньше или равно переданному _field_. Два поля должны быть одного типа. Строки, числа, массивы и файлы оцениваются с использованием тех же соглашений, что и в правиле [`size`](#rule-size).
+
+<a name="rule-mac"></a>
+#### mac_address
+
+Проверяемое поле должно быть MAC-адресом.
 
 <a name="rule-max"></a>
 #### max:_value_

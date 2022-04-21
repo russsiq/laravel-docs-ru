@@ -486,7 +486,7 @@ composer require symfony/postmark-mailer symfony/http-client
 
 #### Обновлены возвращаемые типы
 
-Методы `send`, `html`, `text` и `plain` больше не возвращают количество получателей, получивших сообщение. Вместо этого возвращается экземпляр `Illuminate\Mail\SentMessage`. Этот объект содержит экземпляр `Symfony\Component\Mailer\SentMessage`, доступный через метод `getSymfonySentMessage` или путем динамического вызова методов объекта.
+Методы `send`, `html`, `raw` и `plain`, принадлежащие `Illuminate\Mail\Mailer` больше не возвращают `void`. Вместо этого возвращается экземпляр `Illuminate\Mail\SentMessage`. Этот объект содержит экземпляр `Symfony\Component\Mailer\SentMessage`, доступный через метод `getSymfonySentMessage` или путем динамического вызова методов объекта.
 
 #### Переименованы методы Swift
 
