@@ -146,6 +146,12 @@ php artisan route:list -v
 php artisan route:list --except-vendor
 ```
 
+Так же вы можете указать Laravel показывать только те маршруты, которые определены сторонними пакетами, указав параметр `--only-vendor` при выполнении команды `route:list`:
+
+```shell
+php artisan route:list --only-vendor
+```
+
 <a name="route-parameters"></a>
 ## Параметры маршрута
 
@@ -644,6 +650,7 @@ Laravel содержит мощные и настраиваемые службы
 Ограничители определяются с помощью метода `for` фасада `RateLimiter`. Метод `for` принимает имя ограничителя и замыкание, которое возвращает конфигурацию ограничений, применяемых к назначенным маршрутам. Конфигурация ограничений – это экземпляры класса `Illuminate\Cache\RateLimiting\Limit`. Этот класс содержит полезные методы «построения», чтобы вы могли быстро определить свой «лимит». Имя ограничителя может быть любой строкой по вашему желанию:
 
     use Illuminate\Cache\RateLimiting\Limit;
+    use Illuminate\Http\Request;
     use Illuminate\Support\Facades\RateLimiter;
 
     /**
@@ -661,8 +668,8 @@ Laravel содержит мощные и настраиваемые службы
 Если входящий запрос превышает указанный лимит, то Laravel автоматически вернет ответ с `429` кодом состояния HTTP. Если вы хотите определить свой собственный ответ, который должен возвращаться, то вы можете использовать метод `response`:
 
     RateLimiter::for('global', function (Request $request) {
-        return Limit::perMinute(1000)->response(function () {
-            return response('Custom response...', 429);
+        return Limit::perMinute(1000)->response(function (Request $request, array $headers) {
+            return response('Custom response...', 429, $headers);
         });
     });
 

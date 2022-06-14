@@ -79,17 +79,19 @@
 В большей части оставшейся документации по коллекциям мы обсудим каждый метод, доступный в классе `Collection`. Помните, что все эти методы можно объединить в цепочку для последовательного управления базовым массивом. Более того, почти каждый метод возвращает новый экземпляр `Collection`, позволяя вам при необходимости сохранить исходную копию коллекции:
 
 <!-- <style>
-    #collection-method-list > p {
-        column-count: 3; -moz-column-count: 3; -webkit-column-count: 3;
-        column-gap: 2em; -moz-column-gap: 2em; -webkit-column-gap: 2em;
+    .collection-method-list > p {
+        columns: 10.8em 3; -moz-columns: 10.8em 3; -webkit-columns: 10.8em 3;
     }
 
-    #collection-method-list a {
+    .collection-method-list a {
         display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 </style> -->
 
-<!-- <div id="collection-method-list" markdown="1"> -->
+<!-- <div class="collection-method-list" markdown="1"> -->
 
 - [all](#method-all)
 - [average](#method-average)
@@ -210,6 +212,7 @@
 - [unlessEmpty](#method-unlessempty)
 - [unlessNotEmpty](#method-unlessnotempty)
 - [unwrap](#method-unwrap)
+- [value](#method-value)
 - [values](#method-values)
 - [when](#method-when)
 - [whenEmpty](#method-whenempty)
@@ -1673,9 +1676,15 @@
 
     $collection = collect([
         [
+            'name' => 'Laracon',
             'speakers' => [
                 'first_day' => ['Rosa', 'Judith'],
-                'second_day' => ['Angela', 'Kathleen'],
+            ],
+        ],
+        [
+            'name' => 'VueConf',
+            'speakers' => [
+                'first_day' => ['Abigail', 'Joey'],
             ],
         ],
     ]);
@@ -1684,7 +1693,7 @@
 
     $plucked->all();
 
-    // ['Rosa', 'Judith']
+    // [['Rosa', 'Judith'], ['Abigail', 'Joey']]
 
 Если существуют повторяющиеся ключи, последний соответствующий элемент будет вставлен в результирующую коллекцию:
 
@@ -2789,6 +2798,20 @@
 
     // 'John Doe'
 
+<a name="method-value"></a>
+#### `value()`
+
+Метод `value` извлекает указанное значение первого элемента коллекции:
+
+    $collection = collect([
+        ['product' => 'Desk', 'price' => 200],
+        ['product' => 'Speaker', 'price' => 400],
+    ]);
+
+    $value = $collection->value('price');
+
+    // 200
+
 <a name="method-values"></a>
 #### `values()`
 
@@ -3351,6 +3374,7 @@
 - [shuffle](#method-shuffle)
 - [skip](#method-skip)
 - [slice](#method-slice)
+- [sole](#method-sole)
 - [some](#method-some)
 - [sort](#method-sort)
 - [sortBy](#method-sortby)

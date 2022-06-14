@@ -229,7 +229,7 @@
          */
         public function render($request)
         {
-            return response(...);
+            return response(/* ... */);
         }
     }
 

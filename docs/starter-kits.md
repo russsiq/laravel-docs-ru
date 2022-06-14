@@ -21,6 +21,8 @@
 
 Breeze является прекрасной отправной точкой для создания нового приложения Laravel, а также отличный выбор для проектов, которые планируют вывести использование шаблонов Blade на новый уровень с помощью [Laravel Livewire](https://laravel-livewire.com).
 
+<img src="./img/breeze-register.png">
+
 <a name="laravel-breeze-installation"></a>
 ### Установка
 

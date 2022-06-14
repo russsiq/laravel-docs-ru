@@ -987,7 +987,7 @@ Laravel включает множество почтовых транспорт�
     public function boot()
     {
         Mail::extend('mailchimp', function (array $config = []) {
-            return new MailchimpTransport(...);
+            return new MailchimpTransport(/* ... */);
         })
     }
 

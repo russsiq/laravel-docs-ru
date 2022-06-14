@@ -622,7 +622,7 @@ Laravel содержит посредника `Illuminate\Queue\Middleware\Throt
          */
         public function store(Request $request)
         {
-            $podcast = Podcast::create(...);
+            $podcast = Podcast::create(/* ... */);
 
             // ...
 
@@ -660,7 +660,7 @@ Laravel содержит посредника `Illuminate\Queue\Middleware\Throt
          */
         public function store(Request $request)
         {
-            $podcast = Podcast::create(...);
+            $podcast = Podcast::create(/* ... */);
 
             // ...
 
@@ -713,7 +713,7 @@ Laravel содержит посредника `Illuminate\Queue\Middleware\Throt
          */
         public function store(Request $request)
         {
-            $podcast = Podcast::create(...);
+            $podcast = Podcast::create(/* ... */);
 
             // Создание подкаста ...
 
@@ -775,7 +775,7 @@ Laravel содержит посредника `Illuminate\Queue\Middleware\Throt
         new ProcessPodcast,
         new OptimizePodcast,
         function () {
-            Podcast::update(...);
+            Podcast::update(/* ... */);
         },
     ])->dispatch();
 
@@ -835,7 +835,7 @@ Laravel содержит посредника `Illuminate\Queue\Middleware\Throt
          */
         public function store(Request $request)
         {
-            $podcast = Podcast::create(...);
+            $podcast = Podcast::create(/* ... */);
 
             // Создание подкаста ...
 
@@ -894,7 +894,7 @@ Laravel содержит посредника `Illuminate\Queue\Middleware\Throt
          */
         public function store(Request $request)
         {
-            $podcast = Podcast::create(...);
+            $podcast = Podcast::create(/* ... */);
 
             // Создание подкаста ...
 

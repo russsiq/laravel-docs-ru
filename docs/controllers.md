@@ -326,7 +326,7 @@ DELETE    | `/comments/{comment}`             | destroy      | comments.destroy
 <a name="restful-localizing-resource-uris"></a>
 ### Локализация URI ресурсов
 
-По умолчанию `Route::resource` создает URI ресурсов с использованием английских глаголов. Если вам нужно локализовать команды действия `create` и `edit`, вы можете использовать метод `Route::resourceVerbs`. Это можно сделать в начале метода `boot` поставщика `App\Providers\RouteServiceProvider`:
+По умолчанию `Route::resource` создает URI ресурсов с использованием английских глаголов и языковых правил множественного числа. Если вам нужно локализовать команды действий `create` и `edit`, то вы можете использовать метод `Route::resourceVerbs`. Это можно сделать в начале метода `boot` поставщика `App\Providers\RouteServiceProvider`:
 
     /**
      * Определить связывание модели и маршрута, фильтры шаблонов и т.д.
@@ -343,11 +343,11 @@ DELETE    | `/comments/{comment}`             | destroy      | comments.destroy
         // ...
     }
 
-После того, как глаголы были скорректированы, регистрация маршрута ресурса, например, `Route::resource('fotos', PhotoController::class)`, создаст следующие URI:
+Построитель слов во множественном числе Laravel поддерживает [несколько различных языков, которые вы можете изменить в зависимости от ваших потребностей](localization.md#pluralization-language). После того, как глаголы были скорректированы, а также изменены языковые правила множественного числа, регистрация маршрута ресурса, например, `Route::resource('publicacion', PublicacionController::class)`, создаст следующие URI:
 
-    /fotos/crear
+    /publicacion/crear
 
-    /fotos/{foto}/editar
+    /publicacion/{publicaciones}/editar
 
 <a name="restful-supplementing-resource-controllers"></a>
 ### Дополнение ресурсных контроллеров

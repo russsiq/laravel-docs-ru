@@ -449,7 +449,7 @@ $collection->when(function ($collection) {
 
 Если вы хотите указать более длительное время ожидания для конкретного запроса, то вы можете сделать это с помощью метода `timeout`:
 
-    $response = Http::timeout(120)->get(...);
+    $response = Http::timeout(120)->get(/* ... */);
 
 #### Имитация HTTP и посредник
 

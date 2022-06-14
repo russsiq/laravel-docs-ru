@@ -13,12 +13,14 @@ Laravel содержит множество глобальных «вспомо�
 
 <!-- <style>
     .collection-method-list > p {
-        column-count: 3; -moz-column-count: 3; -webkit-column-count: 3;
-        column-gap: 2em; -moz-column-gap: 2em; -webkit-column-gap: 2em;
+        columns: 10.8em 3; -moz-columns: 10.8em 3; -webkit-columns: 10.8em 3;
     }
 
     .collection-method-list a {
         display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 </style> -->
 
@@ -43,11 +45,14 @@ Laravel содержит множество глобальных «вспомо�
 - [Arr::hasAny](#method-array-hasany)
 - [Arr::isAssoc](#method-array-isassoc)
 - [Arr::isList](#method-array-islist)
+- [Arr::join](#method-array-join)
 - [Arr::keyBy](#method-array-keyby)
 - [Arr::last](#method-array-last)
+- [Arr::map](#method-array-map)
 - [Arr::only](#method-array-only)
 - [Arr::pluck](#method-array-pluck)
 - [Arr::prepend](#method-array-prepend)
+- [Arr::prependKeysWith](#method-array-prependkeyswith)
 - [Arr::pull](#method-array-pull)
 - [Arr::query](#method-array-query)
 - [Arr::random](#method-array-random)
@@ -109,6 +114,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::headline](#method-str-headline)
 - [Str::is](#method-str-is)
 - [Str::isAscii](#method-str-is-ascii)
+- [Str::isJson](#method-str-is-json)
 - [Str::isUuid](#method-str-is-uuid)
 - [Str::kebab](#method-kebab-case)
 - [Str::lcfirst](#method-str-lcfirst)
@@ -170,6 +176,7 @@ Laravel содержит множество глобальных «вспомо�
 - [between](#method-fluent-str-between)
 - [betweenFirst](#method-fluent-str-between-first)
 - [camel](#method-fluent-str-camel)
+- [classBasename](#method-fluent-str-class-basename)
 - [contains](#method-fluent-str-contains)
 - [containsAll](#method-fluent-str-contains-all)
 - [dirname](#method-fluent-str-dirname)
@@ -182,6 +189,7 @@ Laravel содержит множество глобальных «вспомо�
 - [isAscii](#method-fluent-str-is-ascii)
 - [isEmpty](#method-fluent-str-is-empty)
 - [isNotEmpty](#method-fluent-str-is-not-empty)
+- [isJson](#method-fluent-str-is-json)
 - [isUuid](#method-fluent-str-is-uuid)
 - [kebab](#method-fluent-str-kebab)
 - [lcfirst](#method-fluent-str-lcfirst)
@@ -607,6 +615,23 @@ Laravel содержит множество глобальных «вспомо�
 
     // false
 
+<a name="method-array-join"></a>
+#### `Arr::join()`
+
+Метод `Arr::join` объединяет элементы массива в строку. Используя третий аргумент метода, вы также можете указать объединяющую строку для последнего элемента массива:
+
+    use Illuminate\Support\Arr;
+
+    $array = ['Tailwind', 'Alpine', 'Laravel', 'Livewire'];
+
+    $joined = Arr::join($array, ', ');
+
+    // Tailwind, Alpine, Laravel, Livewire
+
+    $joined = Arr::join($array, ', ', ' and ');
+
+    // Tailwind, Alpine, Laravel and Livewire
+
 <a name="method-array-keyby"></a>
 #### `Arr::keyBy()`
 
@@ -648,6 +673,21 @@ Laravel содержит множество глобальных «вспомо�
     use Illuminate\Support\Arr;
 
     $last = Arr::last($array, $callback, $default);
+
+<a name="method-array-map"></a>
+#### `Arr::map()`
+
+Метод `Arr::map` перебирает массив и передает каждое значение и ключ указанному замыканию. Значение массива заменяется значением, которое было возвращено замыканием:
+
+    use Illuminate\Support\Arr;
+
+    $array = ['first' => 'james', 'last' => 'kirk'];
+
+    $mapped = Arr::map($array, function ($value, $key) {
+        return ucfirst($value);
+    });
+
+    // ['first' => 'James', 'last' => 'Kirk']
 
 <a name="method-array-only"></a>
 #### `Arr::only()`
@@ -708,6 +748,27 @@ Laravel содержит множество глобальных «вспомо�
     $array = Arr::prepend($array, 'Desk', 'name');
 
     // ['name' => 'Desk', 'price' => 100]
+
+<a name="method-array-prependkeyswith"></a>
+#### `Arr::prependKeysWith()`
+
+Метод `Arr::prependKeysWith` добавляет ко всем именам ключей ассоциативного массива переданный префикс:
+
+    use Illuminate\Support\Arr;
+
+    $array = [
+        'name' => 'Desk',
+        'price' => 100,
+    ];
+
+    $keyed = Arr::prependKeysWith($array, 'product.');
+
+    /*
+        [
+            'product.name' => 'Desk',
+            'product.price' => 100,
+        ]
+    */
 
 <a name="method-array-pull"></a>
 #### `Arr::pull()`
@@ -1414,6 +1475,25 @@ Laravel содержит множество глобальных «вспомо�
 
     // false
 
+<a name="method-str-is-json"></a>
+#### `Str::isJson()`
+
+Метод `Str::isJson` определяет, является ли переданная строка корректно закодированной в формат JSON:
+
+    use Illuminate\Support\Str;
+
+    $result = Str::isJson('[1,2,3]');
+
+    // true
+
+    $result = Str::isJson('{"first": "John", "last": "Doe"}');
+
+    // true
+
+    $result = Str::isJson('{first: "John", last: "Doe"}');
+
+    // false
+
 <a name="method-str-is-uuid"></a>
 #### `Str::isUuid()`
 
@@ -1583,7 +1663,7 @@ Laravel содержит множество глобальных «вспомо�
 <a name="method-str-plural"></a>
 #### `Str::plural()`
 
-Метод `Str::plural` преобразует слово в форму множественного числа. В настоящее время этот метод поддерживает только английский язык:
+Метод `Str::plural` преобразует слово в форму множественного числа. Этот метод поддерживает [любой из языков, доступных построителю слов во множественном числе Laravel](localization.md#pluralization-language):
 
     use Illuminate\Support\Str;
 
@@ -1610,7 +1690,7 @@ Laravel содержит множество глобальных «вспомо�
 <a name="method-str-plural-studly"></a>
 #### `Str::pluralStudly()`
 
-Метод `Str::pluralStudly` преобразует строку единственного числа формата `StudlyCase` в форму множественного числа. В настоящее время этот метод поддерживает только английский язык:
+Метод `Str::pluralStudly` преобразует строку единственного числа формата `StudlyCase` в форму множественного числа. Этот метод поддерживает [любой из языков, доступных построителю слов во множественном числе Laravel](localization.md#pluralization-language):
 
     use Illuminate\Support\Str;
 
@@ -1721,7 +1801,7 @@ Laravel содержит множество глобальных «вспомо�
 <a name="method-str-singular"></a>
 #### `Str::singular()`
 
-Метод `Str::singular` преобразует слово в форму единственного числа. В настоящее время этот метод поддерживает только английский язык:
+Метод `Str::singular` преобразует слово в форму единственного числа. Этот метод поддерживает [любой из языков, доступных построителю слов во множественном числе Laravel](localization.md#pluralization-language):
 
     use Illuminate\Support\Str;
 
@@ -2102,6 +2182,17 @@ Str::wordCount('Hello, world!'); // 2
 
     // fooBar
 
+<a name="method-fluent-str-class-basename"></a>
+#### `classBasename`
+
+Метод `classBasename` возвращает имя класса переданного класса с удаленным пространством имен класса:
+
+    use Illuminate\Support\Str;
+
+    $class = Str::of('Foo\Bar\Baz')->classBasename();
+
+    // Baz
+
 <a name="method-fluent-str-contains"></a>
 #### `contains`
 
@@ -2297,6 +2388,25 @@ Str::wordCount('Hello, world!'); // 2
     $result = Str::of('Laravel')->trim()->isNotEmpty();
 
     // true
+
+<a name="method-fluent-str-is-json"></a>
+#### `isJson`
+
+Метод `isJson` определяет, является ли переданная строка корректно закодированной в формат JSON:
+
+    use Illuminate\Support\Str;
+
+    $result = Str::of('[1,2,3]')->isJson();
+
+    // true
+
+    $result = Str::of('{"first": "John", "last": "Doe"}')->isJson();
+
+    // true
+
+    $result = Str::of('{first: "John", last: "Doe"}')->isJson();
+
+    // false
 
 <a name="method-fluent-str-is-uuid"></a>
 #### `isUuid`
@@ -2539,7 +2649,7 @@ Str::wordCount('Hello, world!'); // 2
 <a name="method-fluent-str-plural"></a>
 #### `plural`
 
-Метод `plural` преобразует слово в форму множественного числа. В настоящее время этот метод поддерживает только английский язык:
+Метод `plural` преобразует слово в форму множественного числа. Этот метод поддерживает [любой из языков, доступных построителю слов во множественном числе Laravel](localization.md#pluralization-language):
 
     use Illuminate\Support\Str;
 
@@ -2683,7 +2793,7 @@ Str::wordCount('Hello, world!'); // 2
 <a name="method-fluent-str-singular"></a>
 #### `singular`
 
-Метод `singular` преобразует слово в форму единственного числа. В настоящее время этот метод поддерживает только английский язык:
+Метод `singular` преобразует слово в форму единственного числа. Этот метод поддерживает [любой из языков, доступных построителю слов во множественном числе Laravel](localization.md#pluralization-language):
 
     use Illuminate\Support\Str;
 
@@ -3598,7 +3708,7 @@ Str::of('Hello, world!')->wordCount(); // 2
 
     return retry(5, function () {
         // ...
-    }, function ($attempt) {
+    }, function ($attempt, $exception) {
         return $attempt * 100;
     });
 

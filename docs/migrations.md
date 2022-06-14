@@ -269,6 +269,14 @@ php artisan migrate:fresh --seed
         // ...
     });
 
+Если вы хотите добавить «комментарий» к таблице базы данных, то вы можете вызвать метод `comment` для экземпляра `table`. Комментарии к таблицам в настоящее время поддерживаются только в MySQL и Postgres:
+
+    Schema::create('calculations', function (Blueprint $table) {
+        $table->comment('Business calculations');
+
+        // ...
+    });
+
 <a name="updating-tables"></a>
 ### Обновление таблиц
 
@@ -322,13 +330,15 @@ php artisan migrate:fresh --seed
 Построитель схем Blueprint предлагает множество методов, соответствующих различным типам столбцов, которые вы можете добавить в таблицы базы данных. Все доступные методы перечислены в таблице ниже:
 
 <!-- <style>
-    #collection-method-list > p {
-        column-count: 3; -moz-column-count: 3; -webkit-column-count: 3;
-        column-gap: 2em; -moz-column-gap: 2em; -webkit-column-gap: 2em;
+    .collection-method-list > p {
+        columns: 10.8em 3; -moz-columns: 10.8em 3; -webkit-columns: 10.8em 3;
     }
 
-    #collection-method-list a {
+    .collection-method-list a {
         display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .collection-method code {
@@ -340,7 +350,7 @@ php artisan migrate:fresh --seed
     }
 </style> -->
 
-<!-- <div id="collection-method-list" markdown="1"> -->
+<!-- <div class="collection-method-list" markdown="1"> -->
 
 - [bigIncrements](#column-method-bigIncrements)
 - [bigInteger](#column-method-bigInteger)
@@ -925,7 +935,7 @@ php artisan migrate:fresh --seed
         }
     };
 
-> {note} Поддержка выражений по умолчанию зависит от вашего драйвера базы данных, версии базы данных и типа поля. См. документацию к вашей базе данных.
+> {note} Поддержка выражений по умолчанию зависит от вашего драйвера базы данных, версии базы данных и типа поля. См. документацию к вашей базе данных. Кроме того, невозможно комбинировать необработанные выражения `default` (используя `DB::raw`) и изменения столбцов через метод `change`.
 
 <a name="column-order"></a>
 #### Порядок столбцов

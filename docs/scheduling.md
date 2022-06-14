@@ -262,6 +262,8 @@ php artisan schedule:list
 
     $schedule->command('emails:send')->withoutOverlapping(10);
 
+За кулисами метод `withoutOverlapping` использует [кэш](cache.md) вашего приложения для получения блокировок. При необходимости вы можете очистить этот кеш блокировок с помощью команды `schedule:clear-cache` Artisan. Обычно это необходимо только в том случае, если задача зависает из-за неожиданной проблемы с сервером.
+
 <a name="running-tasks-on-one-server"></a>
 ### Выполнение задач на одном сервере
 

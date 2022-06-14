@@ -258,7 +258,7 @@ DB::table('users')->where('active', false)
 <a name="selectraw"></a>
 #### `selectRaw`
 
-Метод `selectRaw` можно использовать вместо `addSelect(DB::raw(...))`. Этот метод принимает необязательный массив связываемых параметров в качестве второго аргумента:
+Метод `selectRaw` можно использовать вместо `addSelect(DB::raw(/* ... */))`. Этот метод принимает необязательный массив связываемых параметров в качестве второго аргумента:
 
     $orders = DB::table('orders')
                     ->selectRaw('price * ? as price_with_tax', [1.0825])
@@ -348,7 +348,7 @@ DB::table('users')->where('active', false)
 
     DB::table('users')
             ->join('contacts', function ($join) {
-                $join->on('users.id', '=', 'contacts.user_id')->orOn(...);
+                $join->on('users.id', '=', 'contacts.user_id')->orOn(/* ... */);
             })
             ->get();
 

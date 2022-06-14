@@ -748,9 +748,9 @@ Echo.channel(`orders.${this.order.id}`)
 
 ```js
 Echo.private(`orders.${this.order.id}`)
-    .listen(...)
-    .listen(...)
-    .listen(...);
+    .listen(/* ... */)
+    .listen(/* ... */)
+    .listen(/* ... */);
 ```
 
 <a name="stop-listening-for-events"></a>
@@ -865,9 +865,9 @@ Echo.join(`chat.${roomId}`)
 
 ```js
 Echo.join(`chat.${roomId}`)
-    .here(...)
-    .joining(...)
-    .leaving(...)
+    .here(/* ... */)
+    .joining(/* ... */)
+    .leaving(/* ... */)
     .listen('NewMessage', (e) => {
         //
     });

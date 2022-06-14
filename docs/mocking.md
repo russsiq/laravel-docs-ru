@@ -464,6 +464,9 @@ Laravel предлагает полезные методы для имитаци
             Notification::assertNotSentTo(
                 [$user], AnotherNotification::class
             );
+
+            // Утверждаем, что указанное количество уведомлений было отправлено ...
+            Notification::assertCount(3);
         }
     }
 
@@ -479,18 +482,13 @@ Laravel предлагает полезные методы для имитаци
 <a name="on-demand-notifications"></a>
 #### Уведомления по запросу
 
-Если код, который вы тестируете, отправляет [уведомления по запросу](notifications.md#on-demand-notifications), вам нужно будет подтвердить, что уведомление было отправлено в экземпляр `Illuminate\Notifications\AnonymousNotifiable`:
+Если код, который вы тестируете, отправляет [уведомления по запросу](notifications.md#on-demand-notifications), вам нужно будет тестировать отправку таких уведомлений через метод `assertSentOnDemand`:
 
-    use Illuminate\Notifications\AnonymousNotifiable;
+    Notification::assertSentOnDemand(OrderShipped::class);
 
-    Notification::assertSentTo(
-        new AnonymousNotifiable, OrderShipped::class
-    );
+Передав замыкание в качестве второго аргумента методу `assertSentOnDemand`, вы можете определить, было ли отправлено уведомление по запросу на правильный адрес «маршрута»:
 
-Передав замыкание в качестве третьего аргумента в методы утверждения уведомления, вы можете определить, было ли отправлено уведомление по запросу на правильный адрес «маршрута»:
-
-    Notification::assertSentTo(
-        new AnonymousNotifiable,
+    Notification::assertSentOnDemand(
         OrderShipped::class,
         function ($notification, $channels, $notifiable) use ($user) {
             return $notifiable->routes['mail'] === $user->email;

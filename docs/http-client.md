@@ -14,6 +14,7 @@
 - [Тестирование](#testing)
     - [Фиктивные ответы](#faking-responses)
     - [Инспектирование запросов](#inspecting-requests)
+    - [Предотвращение случайных запросов](#preventing-stray-requests)
 - [События](#events)
 
 <a name="introduction"></a>
@@ -147,43 +148,43 @@ composer require guzzlehttp/guzzle
 Вы можете указать данные **basic** и **digest** аутентификации, используя методы `withBasicAuth` и `withDigestAuth`, соответственно:
 
     // Basic HTTP-аутентификация ...
-    $response = Http::withBasicAuth('taylor@laravel.com', 'secret')->post(...);
+    $response = Http::withBasicAuth('taylor@laravel.com', 'secret')->post(/* ... */);
 
     // Digest HTTP-аутентификация ...
-    $response = Http::withDigestAuth('taylor@laravel.com', 'secret')->post(...);
+    $response = Http::withDigestAuth('taylor@laravel.com', 'secret')->post(/* ... */);
 
 <a name="bearer-tokens"></a>
 #### Токены Bearer
 
 Если вы хотите добавить токен в заголовок `Authorization` запроса, то используйте метод `withToken`:
 
-    $response = Http::withToken('token')->post(...);
+    $response = Http::withToken('token')->post(/* ... */);
 
 <a name="timeout"></a>
 ### Время ожидания
 
 Метод `timeout` используется для указания максимального количества секунд ожидания ответа:
 
-    $response = Http::timeout(3)->get(...);
+    $response = Http::timeout(3)->get(/* ... */);
 
 Если указанный тайм-аут превышен, то будет выброшено исключение `Illuminate\Http\Client\ConnectionException`.
 
 Вы можете указать максимальное количество секунд ожидания при попытке подключения к серверу с помощью метода `connectTimeout`:
 
-    $response = Http::connectTimeout(3)->get(...);
+    $response = Http::connectTimeout(3)->get(/* ... */);
 
 <a name="retries"></a>
 ### Повторные попытки
 
 Если вы хотите, чтобы HTTP-клиент автоматически повторял запрос при возникновении ошибки клиента или сервера, то используйте метод `retry`. Метод `retry` принимает максимальное количество попыток выполнения запроса и количество миллисекунд, которые Laravel должен ждать между попытками:
 
-    $response = Http::retry(3, 100)->post(...);
+    $response = Http::retry(3, 100)->post(/* ... */);
 
 При необходимости вы можете передать третий аргумент методу `retry`. Третий аргумент должен быть вызываемым, и определять, следует ли на самом деле выполнять повторную попытку. Например, вы можете захотеть повторить запрос только в том случае, если в изначальном запросе было обнаружено исключение `ConnectionException`:
 
     $response = Http::retry(3, 100, function ($exception, $request) {
         return $exception instanceof ConnectionException;
-    })->post(...);
+    })->post(/* ... */);
 
 Если попытка запроса окажется неуспешной, то вы можете внести изменения в запрос до того, как будет сделана новая попытка. Вы можете добиться этого, изменив аргумент запроса, предоставленный вызываемому объекту, который вы предоставили методу `retry`. Например, вы можете повторить запрос с новым токеном авторизации, если первая попытка вернула ошибку аутентификации:
 
@@ -195,11 +196,11 @@ composer require guzzlehttp/guzzle
         $request->withToken($this->getNewToken());
 
         return true;
-    })->post(...);
+    })->post(/* ... */);
 
 Если все запросы окажутся неуспешными, то будет выброшено исключение `Illuminate\Http\Client\RequestException`. Если вы хотите отключить это поведение, вы можете указать аргумент `throw` со значением `false`. Если отключено, то последний ответ, полученный клиентом, будет возвращен после всех повторных попыток:
 
-    $response = Http::retry(3, 100, throw: false)->post(...);
+    $response = Http::retry(3, 100, throw: false)->post(/* ... */);
 
 > {note} Если все запросы окажутся неуспешными из-за проблемы с соединением, то все равно будет выброшено исключение `Illuminate\Http\Client\ConnectionException`, даже если для аргумента `throw` установлено значение `false`.
 
@@ -228,7 +229,7 @@ composer require guzzlehttp/guzzle
 
 Если у вас есть экземпляр ответа и вы хотите выбросить исключение `Illuminate\Http\Client\RequestException`, если код состояния ответа указывает на ошибку клиента или сервера, используйте метод `throw` или `throwIf`:
 
-    $response = Http::post(...);
+    $response = Http::post(/* ... */);
 
     // Выбросить исключение, если произошла ошибка клиента или сервера ...
     $response->throw();
@@ -242,11 +243,11 @@ composer require guzzlehttp/guzzle
 
 Метод `throw` возвращает экземпляр ответа, если ошибки не произошло, что позволяет вам использовать цепочку вызовов после метода `throw`:
 
-    return Http::post(...)->throw()->json();
+    return Http::post(/* ... */)->throw()->json();
 
 Если вы хотите выполнить некоторую дополнительную логику до того, как будет сгенерировано исключение, вы можете передать замыкание методу `throw`. Исключение будет сгенерировано автоматически после вызова замыкания, поэтому вам не нужно повторно генерировать исключение изнутри замыкания:
 
-    return Http::post(...)->throw(function ($response, $e) {
+    return Http::post(/* ... */)->throw(function ($response, $e) {
         //
     })->json();
 
@@ -335,7 +336,7 @@ $response = Http::github()->get('/');
 
     Http::fake();
 
-    $response = Http::post(...);
+    $response = Http::post(/* ... */);
 
 <a name="faking-specific-urls"></a>
 #### Фальсификация конкретных URL
@@ -399,6 +400,25 @@ $response = Http::github()->get('/');
     Http::fake(function (Request $request) {
         return Http::response('Hello World', 200);
     });
+
+<a name="preventing-stray-requests"></a>
+### Предотвращение случайных запросов
+
+Если вы хотите убедиться, что все запросы, отправленные через HTTP-клиент, были сфальсифицированы в рамках вашего отдельного теста или всего набора тестов, то вы можете вызвать метод `preventStrayRequests`. После вызова этого метода любые запросы, которые не имеют соответствующего фиктивного ответа, то будет вызвано исключение вместо фактического HTTP-запроса:
+
+    use Illuminate\Support\Facades\Http;
+
+    Http::preventStrayRequests();
+
+    Http::fake([
+        'github.com/*' => Http::response('ok'),
+    ]);
+
+    // Возвращается ответ «ok» ...
+    Http::get('https://github.com/laravel/framework');
+
+    // Выбрасывается исключение ...
+    Http::get('https://laravel.com');
 
 <a name="inspecting-requests"></a>
 ### Инспектирование запросов

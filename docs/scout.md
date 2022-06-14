@@ -8,6 +8,7 @@
     - [Настройка индекса модели](#configuring-model-indexes)
     - [Настройка индексируемых сведений](#configuring-searchable-data)
     - [Настройка идентификатора модели](#configuring-the-model-id)
+    - [Настройка поисковых систем для каждой модели](#configuring-search-engines-per-model)
     - [Идентификация пользователей](#identifying-users)
 - [Поисковые системы `database` / `collection`](#database-and-collection-engines)
     - [Поисковая система `database`](#database-engine)
@@ -206,6 +207,34 @@ MEILISEARCH_KEY=masterKey
         public function getScoutKeyName()
         {
             return 'email';
+        }
+    }
+
+<a name="configuring-search-engines-per-model"></a>
+### Настройка поисковых систем для каждой модели
+
+При поиске Scout обычно использует поисковую систему по умолчанию, указанную в конфигурационном файле `scout` вашего приложения. Однако поисковую систему для конкретной модели можно изменить, переопределив метод `searchableUsing` модели:
+
+    <?php
+
+    namespace App\Models;
+
+    use Illuminate\Database\Eloquent\Model;
+    use Laravel\Scout\EngineManager;
+    use Laravel\Scout\Searchable;
+
+    class User extends Model
+    {
+        use Searchable;
+
+        /**
+         * Получить поисковую систему, используемую для индексации модели.
+         *
+         * @return \Laravel\Scout\Engines\Engine
+         */
+        public function searchableUsing()
+        {
+            return app(EngineManager::class)->engine('meilisearch');
         }
     }
 

@@ -165,6 +165,14 @@ php artisan make:factory PostFactory
         });
     }
 
+#### Состояние `trashed` (временно удаленных)
+
+Если ваша модель Eloquent поддерживает [программное удаление](eloquent.md#soft-deleting), то вы можете вызвать метод состояния `trashed` для указания, что созданная модель уже должна быть «программно удаленной». Вам не нужно самостоятельно определять состояние `trashed`, так как оно автоматически доступно для всех фабрик:
+
+    use App\Models\User;
+
+    $user = User::factory()->trashed()->create();
+
 <a name="factory-callbacks"></a>
 ### Хуки фабрик
 

@@ -386,8 +386,8 @@ Laravel также предлагает прекрасный способ пос
 Кроме того, методы `hasAll` и `missingAll` позволяют одновременно делать утверждения о наличии или отсутствия нескольких атрибутов:
 
     $response->assertJson(fn (AssertableJson $json) =>
-        $json->hasAll('status', 'data')
-             ->missingAll('message', 'code')
+        $json->hasAll(['status', 'data'])
+             ->missingAll(['message', 'code'])
     );
 
 Вы можете использовать метод `hasAny`, чтобы определить, присутствует ли хотя бы один атрибут, из указанных в списке:
@@ -602,12 +602,14 @@ Laravel также позволяет отображать шаблоны без
 
 <!-- <style>
     .collection-method-list > p {
-        column-count: 2; -moz-column-count: 2; -webkit-column-count: 2;
-        column-gap: 2em; -moz-column-gap: 2em; -webkit-column-gap: 2em;
+        columns: 14.4em 2; -moz-columns: 14.4em 2; -webkit-columns: 14.4em 2;
     }
 
     .collection-method-list a {
         display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 </style> -->
 
@@ -632,6 +634,7 @@ Laravel также позволяет отображать шаблоны без
 - [assertJsonMissingExact](#assert-json-missing-exact)
 - [assertJsonMissingValidationErrors](#assert-json-missing-validation-errors)
 - [assertJsonPath](#assert-json-path)
+- [assertJsonMissingPath](#assert-json-missing-path)
 - [assertJsonStructure](#assert-json-structure)
 - [assertJsonValidationErrors](#assert-json-validation-errors)
 - [assertJsonValidationErrorFor](#assert-json-validation-error-for)
@@ -819,7 +822,7 @@ Laravel также позволяет отображать шаблоны без
 
     $response->assertJsonPath($path, $expectedValue);
 
-Например, если ответ JSON, возвращаемый вашим приложением, содержит следующие данные:
+Например, если ваше приложение возвращает следующий ответ JSON:
 
 ```js
 {
@@ -832,6 +835,27 @@ Laravel также позволяет отображать шаблоны без
 Вы можете утверждать, что свойство `name` объекта `user` соответствует переданному значению следующим образом:
 
     $response->assertJsonPath('user.name', 'Steve Schoger');
+
+<a name="assert-json-missing-path"></a>
+#### assertJsonMissingPath
+
+Утверждение о том, что ответ не содержит указанный путь:
+
+    $response->assertJsonMissingPath($path);
+
+Например, если ваше приложение возвращает следующий ответ JSON:
+
+```js
+{
+    "user": {
+        "name": "Steve Schoger"
+    }
+}
+```
+
+Вы можете утверждать, что ответ не содержит свойства `email` объекта `user`:
+
+    $response->assertJsonMissingPath('user.email');
 
 <a name="assert-json-structure"></a>
 #### assertJsonStructure

@@ -80,7 +80,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  *
  * @return  \Illuminate\Database\Eloquent\Casts\Attribute
  */
-public function address(): Attribute
+protected function address(): Attribute
 {
     return Attribute::make(
         get: fn ($value, $attributes) => new Address(
@@ -108,7 +108,7 @@ public function address(): Attribute
 Иногда требуется включить кэширование для примитивных значений, таких как строки и логические значения, особенно если они требуют больших вычислительных ресурсов. Для этого вы можете вызвать метод `shouldCache` при определении вашего аксессора:
 
 ```php
-public function hash(): Attribute
+protected function hash(): Attribute
 {
     return Attribute::make(
         get: fn ($value) => bcrypt(gzuncompress($value)),
@@ -124,7 +124,7 @@ public function hash(): Attribute
  *
  * @return  \Illuminate\Database\Eloquent\Casts\Attribute
  */
-public function address(): Attribute
+protected function address(): Attribute
 {
     return Attribute::make(
         get: fn ($value, $attributes) => new Address(

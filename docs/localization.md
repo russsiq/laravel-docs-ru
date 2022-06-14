@@ -2,6 +2,7 @@
 
 - [Введение](#introduction)
     - [Конфигурирование языка по умолчанию](#configuring-the-locale)
+    - [Построитель слов во множественном числе](#pluralization-language)
 - [Определение строк перевода](#defining-translation-strings)
     - [Использование коротких ключей](#using-short-keys)
     - [Использование строк перевода в качестве ключей](#using-translation-strings-as-keys)
@@ -66,6 +67,27 @@ Laravel предлагает два способа управления стро
     if (App::isLocale('en')) {
         //
     }
+
+<a name="pluralization-language"></a>
+### Построитель слов во множественном числе
+
+Вы можете указать построителю слов во множественном числе Laravel, который используется Eloquent и другими частями фреймворка для преобразования строк единственного числа в строки множественного числа, использовать язык, отличный от английского. Этого можно добиться, вызвав метод `useLanguage` в методе `boot` [поставщика служб](providers.md). В настоящее время построитель слов во множественном числе поддерживает следующие языки: `french`, `norwegian-bokmal`, `portuguese`, `spanish` и `turkish`:
+
+    use Illuminate\Support\Pluralizer;
+
+    /**
+     * Загрузка любых служб приложения.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Pluralizer::useLanguage('spanish');
+
+        // ...
+    }
+
+> {note} Если вы изменяете язык построителя слов во множественном числе, то вы должны явно определять [имена таблиц](eloquent.md#table-names) моделей Eloquent.
 
 <a name="defining-translation-strings"></a>
 ## Определение строк перевода
