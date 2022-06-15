@@ -62,6 +62,7 @@
 
 <!-- <div class="collection-method-list" markdown="1"> -->
 
+- [append](#method-append)
 - [contains](#method-contains)
 - [diff](#method-diff)
 - [except](#method-except)
@@ -78,6 +79,15 @@
 - [unique](#method-unique)
 
 <!-- </div> -->
+
+<a name="method-append"></a>
+#### `append($attributes)`
+
+Метод `append`используется для указания того, что атрибут должен быть [добавлен](eloquent-serialization.md#appending-values-to-json) для каждой модели в коллекции. Этот метод принимает один атрибут или массив атрибутов:
+
+    $users->append('team');
+
+    $users->append(['team', 'is_admin']);
 
 <a name="method-contains"></a>
 #### `contains($key, $operator = null, $value = null)`

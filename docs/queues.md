@@ -183,7 +183,7 @@ php artisan make:job ProcessPodcast
          *
          * @var \App\Models\Podcast
          */
-        protected $podcast;
+        public $podcast;
 
         /**
          * Создать новый экземпляр задания.
@@ -1711,7 +1711,7 @@ php artisan queue:work redis --tries=3 --backoff=3
          *
          * @var \App\Podcast
          */
-        protected $podcast;
+        public $podcast;
 
         /**
          * Создать новый экземпляр задания.
