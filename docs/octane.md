@@ -1,8 +1,8 @@
 # Laravel Octane
 
-- [Introduction](#introduction)
-- [Installation](#installation)
-- [Server Prerequisites](#server-prerequisites)
+- [Вступление](#introduction)
+- [Установка](#installation)
+- [Системные требования](#server-prerequisites)
     - [RoadRunner](#roadrunner)
     - [Swoole](#swoole)
 - [Serving Your Application](#serving-your-application)
@@ -24,39 +24,39 @@
 - [Tables](#tables)
 
 <a name="introduction"></a>
-## Introduction
+## Вступление
 
-[Laravel Octane](https://github.com/laravel/octane) supercharges your application's performance by serving your application using high-powered application servers, including [Open Swoole](https://swoole.co.uk), [Swoole](https://github.com/swoole/swoole-src), and [RoadRunner](https://roadrunner.dev). Octane boots your application once, keeps it in memory, and then feeds it requests at supersonic speeds.
+Laravel Octane повышает производительность вашего приложения, обслуживая его с помощью мощных серверов приложений, таких как [Swoole](https://swoole.co.uk) и [RoadRunner](https://roadrunner.dev). Octane единожды стартует ваше приложение, сохраняет его в памяти, а затем отправляет ему запросы на сверхзвуковой скорости.
 
 <a name="installation"></a>
-## Installation
+## Установка
 
-Octane may be installed via the Composer package manager:
+Octane можно установить через Composer:
 
 ```shell
 composer require laravel/octane
 ```
 
-After installing Octane, you may execute the `octane:install` Artisan command, which will install Octane's configuration file into your application:
+После установки Octane вы можете выполнить Artisan команду `octane:install`, которая установит файл конфигурации Octane в ваше приложение:
 
 ```shell
 php artisan octane:install
 ```
 
 <a name="server-prerequisites"></a>
-## Server Prerequisites
+## Системные требования
 
-> {note} Laravel Octane requires [PHP 8.0+](https://php.net/releases/).
+> {note} Laravel Octane требует [PHP 8.0+](https://php.net/releases/).
 
 <a name="roadrunner"></a>
 ### RoadRunner
 
-[RoadRunner](https://roadrunner.dev) is powered by the RoadRunner binary, which is built using Go. The first time you start a RoadRunner based Octane server, Octane will offer to download and install the RoadRunner binary for you.
+[RoadRunner](https://roadrunner.dev) работает на бинарном файле RoadRunner, который написан на языке Go. При первом запуске сервера Octane на базе RoadRunner Octane предложит загрузить и установить для вас бинарный файл RoadRunner.
 
 <a name="roadrunner-via-laravel-sail"></a>
-#### RoadRunner Via Laravel Sail
+#### RoadRunner С Помощью Laravel Sail
 
-If you plan to develop your application using [Laravel Sail](/docs/{{version}}/sail), you should run the following commands to install Octane and RoadRunner:
+Если вы планируете разрабатывать свое приложение используя [Laravel Sail](/docs/{{version}}/sail), то вам следует выполнить следующие команды для установки Octane и RoadRunner:
 
 ```shell
 ./vendor/bin/sail up
@@ -64,16 +64,16 @@ If you plan to develop your application using [Laravel Sail](/docs/{{version}}/s
 ./vendor/bin/sail composer require laravel/octane spiral/roadrunner
 ```
 
-Next, you should start a Sail shell and use the `rr` executable to retrieve the latest Linux based build of the RoadRunner binary:
+Затем вы должны запустить командную оболочку Sail и используя исполняемый файл `rr` получить последнюю сборку бинарного файла RoadRunner на основе Linux:
 
 ```shell
 ./vendor/bin/sail shell
 
-# Within the Sail shell...
+# В командной оболочке Sail...
 ./vendor/bin/rr get-binary
 ```
 
-After installing the RoadRunner binary, you may exit your Sail shell session. You will now need to adjust the `supervisor.conf` file used by Sail to keep your application running. To get started, execute the `sail:publish` Artisan command:
+После установки бинарного файла RoadRunner вы можете выйти из командной оболочки Sail. Теперь вам нужно настроить файл `supervisor.conf`, который используется Sail для работы вашего приложения. Для начала выполните Artisan команду `sail:publish`:
 
 ```shell
 ./vendor/bin/sail artisan sail:publish
