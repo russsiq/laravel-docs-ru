@@ -16,7 +16,8 @@
 
 Помимо типичной аутентификации на основе форм, Laravel также предлагает простой и удобный способ аутентификации через провайдеров OAuth с помощью [Laravel Socialite](https://github.com/laravel/socialite). Socialite в настоящее время поддерживает аутентификацию через Facebook, Twitter, LinkedIn, Google, GitHub, GitLab, и Bitbucket.
 
-> {tip} Адаптеры для других платформ перечислены на веб-сайте [Socialite Providers](https://socialiteproviders.com/), управляемом сообществом.
+> **Примечание**\
+> Адаптеры для других платформ перечислены на веб-сайте [Socialite Providers](https://socialiteproviders.com/), управляемом сообществом.
 
 <a name="installation"></a>
 ## Установка
@@ -45,7 +46,8 @@ composer require laravel/socialite
         'redirect' => 'http://example.com/callback-url',
     ],
 
-> {tip} Если параметр `redirect` содержит относительный путь, то он будет автоматически преобразован в абсолютный URL.
+> **Примечание**\
+> Если параметр `redirect` содержит относительный путь, то он будет автоматически преобразован в абсолютный URL.
 
 <a name="authentication"></a>
 ## Аутентификация
@@ -95,7 +97,8 @@ composer require laravel/socialite
         return redirect('/dashboard');
     });
 
-> {tip} О том, какая информация о пользователе доступна у конкретных провайдеров OAuth, ознакомьтесь с документацией по [получению сведений о пользователе](#retrieving-user-details).
+> **Примечание**\
+> О том, какая информация о пользователе доступна у конкретных провайдеров OAuth, ознакомьтесь с документацией по [получению сведений о пользователе](#retrieving-user-details).
 
 <a name="access-scopes"></a>
 ### Права доступа
@@ -125,7 +128,8 @@ composer require laravel/socialite
         ->with(['hd' => 'example.com'])
         ->redirect();
 
-> {note} При использовании метода `with` будьте осторожны, чтобы не передавать какие-либо зарезервированные ключевые слова, такие как `state` или `response_type`.
+> **Предупреждение**\
+> При использовании метода `with` будьте осторожны, чтобы не передавать какие-либо зарезервированные ключевые слова, такие как `state` или `response_type`.
 
 <a name="retrieving-user-details"></a>
 ## Получение сведений о пользователе
@@ -183,4 +187,5 @@ composer require laravel/socialite
 
     return Socialite::driver('google')->stateless()->user();
 
-> {note} Аутентификация без сохранения состояния недоступна для драйвера Twitter OAuth 1.0.
+> **Предупреждение**\
+> Аутентификация без сохранения состояния недоступна для драйвера Twitter OAuth 1.0.

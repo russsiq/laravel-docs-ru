@@ -8,6 +8,7 @@
     - [Время ожидания](#timeout)
     - [Повторные попытки](#retries)
     - [Обработка ошибок](#error-handling)
+    - [Посредники Guzzle](#guzzle-middleware)
     - [Параметры Guzzle](#guzzle-options)
     - [Параллельные запросы](#concurrent-requests)
 - [Макрокоманды](#macros)
@@ -202,7 +203,8 @@ composer require guzzlehttp/guzzle
 
     $response = Http::retry(3, 100, throw: false)->post(/* ... */);
 
-> {note} Если все запросы окажутся неуспешными из-за проблемы с соединением, то все равно будет выброшено исключение `Illuminate\Http\Client\ConnectionException`, даже если для аргумента `throw` установлено значение `false`.
+> **Предупреждение**\
+> Если все запросы окажутся неуспешными из-за проблемы с соединением, то все равно будет выброшено исключение `Illuminate\Http\Client\ConnectionException`, даже если для аргумента `throw` установлено значение `false`.
 
 <a name="error-handling"></a>
 ### Обработка ошибок
@@ -237,6 +239,15 @@ composer require guzzlehttp/guzzle
     // Выбросить исключение, если произошла ошибка и переданное условие является истинным
     $response->throwIf($condition);
 
+    // Выбросить исключение, если произошла ошибка и переданное замыкание возвращает `true`
+    $response->throwIf(fn ($response) => true);
+
+    // Выбросить исключение, если произошла ошибка и переданное условие не является истинным
+    $response->throwUnless($condition);
+
+    // Выбросить исключение, если произошла ошибка и переданное замыкание возвращает `false`
+    $response->throwUnless(fn ($response) => false);
+
     return $response['user']['id'];
 
 Экземпляр `Illuminate\Http\Client\RequestException` имеет свойство `$response`, которое позволит вам проверить возвращенный ответ.
@@ -250,6 +261,39 @@ composer require guzzlehttp/guzzle
     return Http::post(/* ... */)->throw(function ($response, $e) {
         //
     })->json();
+
+<a name="guzzle-middleware"></a>
+### Посредники Guzzle
+
+Поскольку HTTP-клиент Laravel использует Guzzle, то вы можете воспользоваться [посредниками Guzzle](https://docs.guzzlephp.org/en/stable/handlers-and-middleware.html), чтобы манипулировать исходящими запросами или проверять входящие. Чтобы манипулировать исходящим запросом, зарегистрируйте посредника Guzzle с помощью метода `withMiddleware` в сочетании с фабричным методом `mapRequest` посредника Guzzle:
+
+    use GuzzleHttp\Middleware;
+    use Illuminate\Support\Facades\Http;
+    use Psr\Http\Message\RequestInterface;
+
+    $response = Http::withMiddleware(
+        Middleware::mapRequest(function (RequestInterface $request) {
+            $request = $request->withHeader('X-Example', 'Value');
+
+            return $request;
+        })
+    )->get('http://example.com');
+
+Точно так же вы можете проверить входящий HTTP-ответ, зарегистрировав посредника с помощью метода `withMiddleware` в сочетании с фабричным методом `mapResponse` посредника  Guzzle:
+
+    use GuzzleHttp\Middleware;
+    use Illuminate\Support\Facades\Http;
+    use Psr\Http\Message\ResponseInterface;
+
+    $response = Http::withMiddleware(
+        Middleware::mapResponse(function (ResponseInterface $response) {
+            $header = $response->getHeader('X-Example');
+
+            // ...
+
+            return $response;
+        })
+    )->get('http://example.com');
 
 <a name="guzzle-options"></a>
 ### Параметры Guzzle
@@ -374,7 +418,7 @@ $response = Http::github()->get('/');
                                 ->pushStatus(404),
     ]);
 
-Когда все ответы в этой последовательности будут использованы, любые дальнейшие запросы приведут к выбросу исключения. Если вы хотите указать ответ по умолчанию, который должен возвращаться, когда последовательность пуста, то используйте метод `whenEmpty`:
+Когда все ответы в последовательности будут использованы, тогда любые дальнейшие запросы приведут к выбросу исключения. Если вы хотите указать ответ по умолчанию, который должен возвращаться, когда последовательность пуста, то используйте метод `whenEmpty`:
 
     Http::fake([
         // Заглушка серии ответов для адресов GitHub ...
@@ -473,6 +517,45 @@ $response = Http::github()->get('/');
     Http::fake();
 
     Http::assertNothingSent();
+
+<a name="recording-requests-and-responses"></a>
+#### Запись запросов/ответов
+
+Вы можете использовать метод `recorded` для сбора всех запросов и соответствующих им ответов. Метод `recorded` возвращает коллекцию массивов, содержащих экземпляры `Illuminate\Http\Client\Request` и `Illuminate\Http\Client\Response`:
+
+```php
+Http::fake([
+    'https://laravel.com' => Http::response(status: 500),
+    'https://nova.laravel.com/' => Http::response(),
+]);
+
+Http::get('https://laravel.com');
+Http::get('https://nova.laravel.com/');
+
+$recorded = Http::recorded();
+
+[$request, $response] = $recorded[0];
+```
+
+Кроме того, метод `recorded` принимает замыкание, которое получит экземпляр `Illuminate\Http\Client\Request` и `Illuminate\Http\Client\Response` и может использоваться для фильтрации пар запрос/ответ на основе ваших ожиданий:
+
+```php
+use Illuminate\Http\Client\Request;
+use Illuminate\Http\Client\Response;
+
+Http::fake([
+    'https://laravel.com' => Http::response(status: 500),
+    'https://nova.laravel.com/' => Http::response(),
+]);
+
+Http::get('https://laravel.com');
+Http::get('https://nova.laravel.com/');
+
+$recorded = Http::recorded(function (Request $request, Response $response) {
+    return $request->url() !== 'https://laravel.com' &&
+           $response->successful();
+});
+```
 
 <a name="events"></a>
 ## События

@@ -19,6 +19,7 @@
     - [x] [Установка](./docs/installation.md)
     - [x] [Конфигурирование](./docs/configuration.md)
     - [x] [Структура каталогов](./docs/structure.md)
+    - [ ] [Внешний интерфейс приложения](./docs/frontend.md)
     - [x] [Стартовые комплекты](./docs/starter-kits.md)
     - [x] [Развертывание](./docs/deployment.md)
 - #### Архитектурные концепции
@@ -35,6 +36,7 @@
     - [x] [HTTP-ответы](./docs/responses.md)
     - [x] [HTML-шаблоны](./docs/views.md)
     - [x] [Шаблонизатор Blade](./docs/blade.md)
+    - [ ] [Объединение веб-активов](./docs/vite.md)
     - [x] [Генерация URL-адресов](./docs/urls.md)
     - [x] [Сессия HTTP](./docs/session.md)
     - [x] [Валидация](./docs/validation.md)
@@ -45,7 +47,6 @@
     - [x] [Трансляция событий](./docs/broadcasting.md)
     - [x] [Кеш приложения](./docs/cache.md)
     - [x] [Коллекции](./docs/collections.md)
-    - [x] [Компиляция веб-активов с помощью Mix](./docs/mix.md)
     - [x] [Контракты](./docs/contracts.md)
     - [x] [События](./docs/events.md)
     - [x] [Файловое хранилище](./docs/filesystem.md)
@@ -79,6 +80,7 @@
     - [x] [Мутаторы и типизация](./docs/eloquent-mutators.md)
     - [x] [Ресурсы API](./docs/eloquent-resources.md)
     - [x] [Сериализация](./docs/eloquent-serialization.md)
+    - [ ] [Фабрики](./docs/eloquent-factories.md)
 - #### Тестирование
     - [x] [Начало работы](./docs/testing.md)
     - [x] [Тесты HTTP](./docs/http-tests.md)
@@ -96,8 +98,10 @@
     - [x] [*Homestead*](./docs/homestead.md) – официальный образ Vagrant для приложений Laravel.
     - [x] [*Horizon*](./docs/horizon.md) – панель управления и конфигурация очередей, использующих Redis.
     - [ ] [*Jetstream*](https://jetstream.laravel.com) – красиво оформленный каркас приложений. Включает в себя Fortify и Sanctum.
+    - [x] [*Mix*](./docs/mix.md) – гибкий API для определения шагов сборки Webpack; упрощает компиляцию и минимизацию файлов CSS и JavaScript.
     - [ ] [*Octane*](./docs/octane.md) – повышает производительность вашего приложения с использованием мощных серверов [Swoole](https://swoole.co.uk) и [RoadRunner](https://roadrunner.dev)
     - [ ] [*Passport*](./docs/passport.md) – реализация сервера OAuth2 для вашего приложения Laravel на основе [League OAuth2](https://github.com/thephpleague/oauth2-server).
+    - [ ] [*Pint*](./docs/pint.md) – is an opinionated PHP code style fixer for minimalists.
     - [x] [*Sail*](./docs/sail.md) – CLI для взаимодействия со средой разработки Docker.
     - [x] [*Sanctum*](./docs/sanctum.md) – легковесная система аутентификации для SPA (одностраничных приложений), мобильных приложений и простых API на основе токенов. Управление токенами API, аутентификация сессии. Не содержит никаких шаблонов. Используется в Laravel Jetstream.
     - [x] [*Scout*](./docs/scout.md) – «простое» решение на основе драйверов для добавления полнотекстового поиска моделям Eloquent.

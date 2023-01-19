@@ -93,7 +93,8 @@ php artisan make:notification InvoicePaid
 
     $user->notify(new InvoicePaid($invoice));
 
-> {tip} Помните, что вы можете использовать трейт `Notifiable` в любой из ваших моделей. Вы не ограничены использованием его только в модели `User`.
+> **Примечание**\
+> Помните, что вы можете использовать трейт `Notifiable` в любой из ваших моделей. Вы не ограничены использованием его только в модели `User`.
 
 <a name="using-the-notification-facade"></a>
 ### Использование фасада `Notification`
@@ -113,7 +114,8 @@ php artisan make:notification InvoicePaid
 
 Каждый класс уведомлений имеет метод `via`, который определяет, по каким каналам будет доставлено уведомление. Уведомления можно отправлять по каналам `mail`, `database`, `broadcast`, `vonage` и `slack`.
 
-> {tip} Если вы хотите использовать другие каналы доставки, такие как Telegram или Pusher, то посетите веб-сайт сообщества [Laravel Notification Channels](http://laravel-notification-channels.com).
+> **Примечание**\
+> Если вы хотите использовать другие каналы доставки, такие как Telegram или Pusher, то посетите веб-сайт сообщества [Laravel Notification Channels](http://laravel-notification-channels.com).
 
 Метод `via` получает экземпляр `$notifiable`, который будет экземпляром класса, которому отправляется уведомление. Вы можете использовать `$notifiable`, чтобы определить, по каким каналам должно доставляться уведомление:
 
@@ -131,7 +133,8 @@ php artisan make:notification InvoicePaid
 <a name="queueing-notifications"></a>
 ### Очереди уведомлений
 
-> {note} Перед отправкой уведомлений в очередь вы должны настроить и запустить [обработчик очереди](queues.md).
+> **Предупреждение**\
+> Перед отправкой уведомлений в очередь вы должны настроить и запустить [обработчик очереди](queues.md).
 
 Отправка уведомлений может занять время, особенно если каналу необходимо выполнить внешний вызов API для доставки уведомления. Чтобы ускорить время отклика вашего приложения, поместите ваше уведомление в очередь, добавив интерфейс `ShouldQueue` и трейт `Queueable` в ваш класс. Интерфейс и трейт уже импортированы для всех уведомлений, сгенерированных с помощью команды `make:notification`, поэтому вы можете сразу добавить их в свой класс уведомлений:
 
@@ -203,6 +206,21 @@ php artisan make:notification InvoicePaid
      */
     public $connection = 'redis';
 
+Или, если вы хотите указать конкретное соединение с очередью, которое должно использоваться для каждого канала уведомления, поддерживаемого уведомлением, вы можете определить метод `viaConnections` в своем уведомлении. Этот метод должен возвращать массив пар имя канала / имя подключения к очереди:
+
+    /**
+     * Определить, какие соединения следует использовать для каждого канала уведомлений.
+     *
+     * @return array
+     */
+    public function viaConnections()
+    {
+        return [
+            'mail' => 'redis',
+            'database' => 'sync',
+        ];
+    }
+
 <a name="customizing-notification-channel-queues"></a>
 #### Изменение очереди канала уведомлений
 
@@ -257,7 +275,8 @@ php artisan make:notification InvoicePaid
         }
     }
 
-> {tip} Чтобы узнать больше о том, как обойти эти проблемы, просмотрите документацию, касающуюся [заданий в очереди и транзакций базы данных](queues.md#jobs-and-database-transactions).
+> **Примечание**\
+> Чтобы узнать больше о том, как обойти эти проблемы, просмотрите документацию, касающуюся [заданий в очереди и транзакций базы данных](queues.md#jobs-and-database-transactions).
 
 <a name="determining-if-the-queued-notification-should-be-sent"></a>
 #### Определение необходимости отправки уведомления в очереди
@@ -283,9 +302,12 @@ php artisan make:notification InvoicePaid
 
 По желанию можно отправить уведомление кому-то, кто не сохранен как «пользователь» вашего приложения. Используя метод `route` фасада `Notification`, вы можете указать информацию о маршрутизации специального уведомления перед отправкой уведомления:
 
+    use Illuminate\Broadcasting\Channel;
+
     Notification::route('mail', 'taylor@example.com')
                 ->route('vonage', '5555555555')
                 ->route('slack', 'https://hooks.slack.com/services/...')
+                ->route('broadcast', [new Channel('channel-name')])
                 ->notify(new InvoicePaid($invoice));
 
 Если вы хотите указать имя получателя при отправке такого уведомления на маршрут `mail`, вы можете предоставить массив, содержащий адрес электронной почты в качестве ключа и имя в качестве значения первого элемента в массиве:
@@ -317,17 +339,39 @@ php artisan make:notification InvoicePaid
         return (new MailMessage)
                     ->greeting('Hello!')
                     ->line('One of your invoices has been paid!')
+                    ->lineIf($this->amount > 0, "Amount paid: {$this->amount}")
                     ->action('View Invoice', $url)
                     ->line('Thank you for using our application!');
     }
 
-> {tip} Обратите внимание, что мы используем `$this->invoice->id` в нашем методе `toMail`. Вы можете передать любые данные, которые необходимы вашему уведомлению для генерации сообщения, в конструктор уведомления.
+> **Примечание**\
+> Обратите внимание, что мы используем `$this->invoice->id` в нашем методе `toMail`. Вы можете передать любые данные, которые необходимы вашему уведомлению для генерации сообщения, в конструктор уведомления.
 
 В этом примере мы регистрируем приветствие, строку текста, призыв к действию, а затем еще одну строку текста. Эти методы, предоставляемые объектом `MailMessage`, упрощают и ускоряют формирование небольших транзакционных электронных писем. Затем канал `mail` преобразует компоненты сообщения в красивый, отзывчивый HTML-шаблон сообщения электронной почты с аналогом в виде обычного текста. Вот пример электронного письма, созданного каналом `mail`:
 
 <img src="./img/notification-example-2.png">
 
-> {tip} При отправке почтовых уведомлений не забудьте установить параметр `name` в вашем конфигурационном файле `config/app.php`. Это значение будет использоваться в верхнем и нижнем колонтитулах ваших почтовых уведомлений.
+> **Примечание**\
+> При отправке почтовых уведомлений не забудьте установить параметр `name` в вашем конфигурационном файле `config/app.php`. Это значение будет использоваться в верхнем и нижнем колонтитулах ваших почтовых уведомлений.
+
+<a name="error-messages"></a>
+#### Сообщения об ошибках
+
+Некоторые уведомления информируют пользователей об ошибках, например о неудачной оплате счета. Вы можете указать, что почтовое сообщение касается ошибки, вызвав метод `error` при построении вашего сообщения. При использовании метода `error` в почтовом сообщении кнопка призыва к действию будет красной вместо черной:
+
+    /**
+     * Получить содержимое почтового уведомления.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
+                    ->error()
+                    ->subject('Invoice Payment Failed')
+                    ->line('...');
+    }
 
 <a name="other-mail-notification-formatting-options"></a>
 #### Другие параметры формирования почтовых уведомлений
@@ -361,25 +405,6 @@ php artisan make:notification InvoicePaid
             ['emails.name.html', 'emails.name.plain'],
             ['invoice' => $this->invoice]
         );
-    }
-
-<a name="error-messages"></a>
-#### Сообщения об ошибках
-
-Некоторые уведомления информируют пользователей об ошибках, например о неудачной оплате счета. Вы можете указать, что почтовое сообщение касается ошибки, вызвав метод `error` при построении вашего сообщения. При использовании метода `error` в почтовом сообщении кнопка призыва к действию будет красной вместо черной:
-
-    /**
-     * Получить содержимое почтового уведомления.
-     *
-     * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
-     */
-    public function toMail($notifiable)
-    {
-        return (new MailMessage)
-                    ->error()
-                    ->subject('Notification Subject')
-                    ->line('...');
     }
 
 <a name="customizing-the-sender"></a>
@@ -495,6 +520,9 @@ php artisan vendor:publish --tag=laravel-notifications
                     ->attach('/path/to/file');
     }
 
+> **Примечание**\
+> Метод `attach` почтовых уведомлений также принимает [прикрепляемые объекты](mail.md#attachable-objects).
+
 При прикреплении файлов к сообщению вы также можете указать отображаемое имя и / или MIME-тип, передав массив в качестве второго аргумента методу `attach`:
 
     /**
@@ -528,6 +556,27 @@ php artisan vendor:publish --tag=laravel-notifications
         return (new InvoicePaidMailable($this->invoice))
                     ->to($notifiable->email)
                     ->attachFromStorage('/path/to/file');
+    }
+
+При необходимости к сообщению можно прикрепить несколько файлов с помощью метода `attachMany`:
+
+    /**
+     * Получить содержимое почтового уведомления.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
+                    ->greeting('Hello!')
+                    ->attachMany([
+                        '/path/to/forge.svg',
+                        '/path/to/vapor.svg' => [
+                            'as' => 'Logo.svg',
+                            'mime' => 'image/svg+xml',
+                        ],
+                    ]);
     }
 
 <a name="raw-data-attachments"></a>
@@ -572,7 +621,6 @@ php artisan vendor:publish --tag=laravel-notifications
 Если ваше приложение использует драйвер Mailgun, то вы можете обратиться к документации Mailgun для получения дополнительной информации о [тегах](https://documentation.mailgun.com/en/latest/user_manual.html#tagging-1) и [метаданных](https://documentation.mailgun.com/en/latest/user_manual.html#attaching-data-to-messages). Кроме того, можно также обратиться к документации Postmark для получения дополнительной информации об их поддержке [тегов](https://postmarkapp.com/blog/tags-support-for-smtp) и [метаданных](https://postmarkapp.com/support/article/1125-custom-metadata-faq).
 
 Если ваше приложение использует Amazon SES для отправки электронных писем, то вам следует использовать метод `metadata` для прикрепления [тегов SES](https://docs.aws.amazon.com/ses/latest/APIReference/API_MessageTag.html) к сообщению.
-Теги и метаданные могут быть добавлены в `MailMessage` – они используются вашей почтовой службой для фильтрации/обработки.
 
 <a name="customizing-the-symfony-message"></a>
 ### Настройка сообщения Symfony
@@ -692,18 +740,18 @@ php artisan make:notification InvoicePaid --markdown=mail.invoice.paid
 Почтовые уведомления Markdown используют комбинацию компонентов Blade и синтаксиса Markdown, которые позволяют легко создавать почтовые уведомления, используя предварительно созданные компоненты уведомлений Laravel:
 
 ```blade
-@component('mail::message')
+<x-mail::message>
 # Invoice Paid
 
 Your invoice has been paid!
 
-@component('mail::button', ['url' => $url])
+<x-mail::button :url="$url">
 View Invoice
-@endcomponent
+</x-mail::button>
 
 Thanks,<br>
 {{ config('app.name') }}
-@endcomponent
+</x-mail::message>
 ```
 
 <a name="button-component"></a>
@@ -712,9 +760,9 @@ Thanks,<br>
 Компонент кнопки отображает ссылку на кнопку по центру. Компонент принимает два аргумента: `url` и необязательный `color`. Поддерживаемые цвета: `primary`, `green` и `red`. Вы можете добавить к уведомлению столько компонентов кнопки, сколько захотите:
 
 ```blade
-@component('mail::button', ['url' => $url, 'color' => 'green'])
+<x-mail::button :url="$url" color="green">
 View Invoice
-@endcomponent
+</x-mail::button>
 ```
 
 <a name="panel-component"></a>
@@ -723,9 +771,9 @@ View Invoice
 Компонент панели отображает указанный блок текста на панели, цвет фона которой немного отличается от цвета остальной части сообщения. Это позволяет привлечь внимание к указанному блоку текста:
 
 ```blade
-@component('mail::panel')
+<x-mail::panel>
 This is the panel content.
-@endcomponent
+</x-mail::panel>
 ```
 
 <a name="table-component"></a>
@@ -734,12 +782,12 @@ This is the panel content.
 Компонент таблицы позволяет преобразовать таблицу Markdown в таблицу HTML. Компонент принимает в качестве содержимого таблицу Markdown. Выравнивание столбцов таблицы поддерживается с использованием синтаксиса выравнивания таблицы Markdown по умолчанию:
 
 ```blade
-@component('mail::table')
+<x-mail::table>
 | Laravel       | Table         | Example  |
 | ------------- |:-------------:| --------:|
 | Col 2 is      | Centered      | $10      |
 | Col 3 is      | Right-Aligned | $20      |
-@endcomponent
+</x-mail::table>
 ```
 
 <a name="customizing-the-components"></a>
@@ -835,7 +883,8 @@ php artisan migrate
         echo $notification->type;
     }
 
-> {tip} Чтобы получить доступ к уведомлениям в JavaScript-приложении на клиентской стороне, вы должны определить контроллер уведомлений для своего приложения, который возвращает уведомления для уведомляемого объекта, такого как текущий пользователь. Затем вы можете сделать HTTP-запрос к URL-адресу этого контроллера из своего JavaScript-приложения на клиентской стороне.
+> **Примечание**\
+> Чтобы получить доступ к уведомлениям в JavaScript-приложении на клиентской стороне, вы должны определить контроллер уведомлений для своего приложения, который возвращает уведомления для уведомляемого объекта, такого как текущий пользователь. Затем вы можете сделать HTTP-запрос к URL-адресу этого контроллера из своего JavaScript-приложения на клиентской стороне.
 
 <a name="marking-notifications-as-read"></a>
 ### Отметка прочитанных уведомлений
@@ -1251,14 +1300,17 @@ Laravel позволяет отправлять уведомления, испо
 
 При отправке уведомления система уведомлений запускает [событие](events.md) `Illuminate\Notifications\Events\NotificationSending`. Событие содержит «уведомляемую» сущность и сам экземпляр уведомления. Как правило, регистрация слушателей этого события осуществляется в поставщике `App\Providers\EventServiceProvider`:
 
+    use App\Listeners\CheckNotificationStatus;
+    use Illuminate\Notifications\Events\NotificationSending;
+
     /**
      * Карта слушателей событий приложения.
      *
      * @var array
      */
     protected $listen = [
-        'Illuminate\Notifications\Events\NotificationSending' => [
-            'App\Listeners\CheckNotificationStatus',
+        NotificationSending::class => [
+            CheckNotificationStatus::class,
         ],
     ];
 
@@ -1297,18 +1349,22 @@ Laravel позволяет отправлять уведомления, испо
 
 После отправки уведомления система уведомлений запускает [событие](events.md) `Illuminate\Notifications\Events\NotificationSent`. Событие содержит «уведомляемую» сущность и сам экземпляр уведомления. Как правило, регистрация слушателей этого события осуществляется в поставщике `App\Providers\EventServiceProvider`:
 
+    use App\Listeners\LogNotification;
+    use Illuminate\Notifications\Events\NotificationSent;
+
     /**
      * Карта слушателей событий приложения.
      *
      * @var array
      */
     protected $listen = [
-        'Illuminate\Notifications\Events\NotificationSent' => [
-            'App\Listeners\LogNotification',
+        NotificationSent::class => [
+            LogNotification::class,
         ],
     ];
 
-> {tip} После регистрации слушателей в вашем `EventServiceProvider` используйте команду `event:generate` Artisan, чтобы быстро сгенерировать классы слушателей.
+> **Примечание**\
+> После регистрации слушателей в вашем `EventServiceProvider` используйте команду `event:generate` Artisan, чтобы быстро сгенерировать классы слушателей.
 
 В слушателе события вы можете получить доступ к свойствам `notifiable`, `notification`, `channel` и `response` события для получения сведений о получателе уведомления или о самом уведомлении:
 

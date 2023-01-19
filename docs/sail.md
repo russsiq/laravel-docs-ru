@@ -3,7 +3,7 @@
 - [Введение](#introduction)
 - [Установка и настройка](#installation)
     - [Установка Sail в существующие приложения](#installing-sail-into-existing-applications)
-    - [Настройка псевдонима Bash](#configuring-a-bash-alias)
+    - [Настройка псевдонима Shell](#configuring-a-shell-alias)
 - [Запуск и остановка Sail](#starting-and-stopping-sail)
 - [Выполнение команд](#executing-sail-commands)
     - [Выполнение команд PHP](#executing-php-commands)
@@ -71,8 +71,8 @@ php artisan sail:install
 php artisan sail:install --devcontainer
 ```
 
-<a name="configuring-a-bash-alias"></a>
-### Настройка псевдонима Bash
+<a name="configuring-a-shell-alias"></a>
+### Настройка псевдонима Shell
 
 По умолчанию команды Sail вызываются с помощью скрипта `vendor/bin/sail`, который включен во все новые приложения Laravel:
 
@@ -80,13 +80,15 @@ php artisan sail:install --devcontainer
 ./vendor/bin/sail up
 ```
 
-Но вместо многократно повторяющегося набора `vendor/bin/sail` для выполнения команд Sail, вы можете задать псевдоним Bash, который позволит вам легче выполнять команды Sail:
+Но вместо многократно повторяющегося набора `vendor/bin/sail` для выполнения команд Sail, вы можете задать псевдоним Shell, который позволит вам легче выполнять команды Sail:
 
 ```shell
-alias sail='[ -f sail ] && bash sail || bash vendor/bin/sail'
+alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
 ```
 
-После задания псевдонима Bash вы можете выполнять команды Sail, просто набрав `sail`. В остальных примерах документации предполагается, что вы настроили этот псевдоним:
+Чтобы убедиться, что это всегда доступно, вы можете добавить это в файл конфигурации Shell в вашем домашнем каталоге, например, `~/.zshrc` или `~/.bashrc`, а затем перезапустить Shell.
+
+После задания псевдонима Shell вы можете выполнять команды Sail, просто набрав `sail`. В остальных примерах документации предполагается, что вы настроили этот псевдоним:
 
 ```shell
 sail up
@@ -162,13 +164,13 @@ sail composer require laravel/sanctum
 ```shell
 docker run --rm \
     -u "$(id -u):$(id -g)" \
-    -v $(pwd):/var/www/html \
+    -v "$(pwd):/var/www/html" \
     -w /var/www/html \
-    laravelsail/php81-composer:latest \
+    laravelsail/php82-composer:latest \
     composer install --ignore-platform-reqs
 ```
 
-При использовании образа `laravelsail/phpXX-composer` вам следует использовать ту же версию PHP, которую вы планируете использовать для своего приложения (`74`, `80` или `81`).
+При использовании образа `laravelsail/phpXX-composer` вам следует использовать ту же версию PHP, которую вы планируете использовать для своего приложения (`74`, `80`, `81` или `82`).
 
 <a name="executing-artisan-commands"></a>
 ### Выполнение команд Artisan
@@ -187,7 +189,7 @@ sail artisan queue:work
 ```shell
 sail node --version
 
-sail npm run prod
+sail npm run dev
 ```
 
 Если вы хотите, то можете использовать Yarn вместо NPM:
@@ -240,6 +242,17 @@ AWS_BUCKET=local
 AWS_ENDPOINT=http://minio:9000
 AWS_USE_PATH_STYLE_ENDPOINT=true
 ```
+
+Чтобы интеграция Laravel Flysystem генерировала правильные URL-адреса при использовании MinIO, вы должны определить переменную среды `AWS_URL`, чтобы она соответствовала локальному URL-адресу вашего приложения и включала имя корзины в путь URL-адреса:
+
+```ini
+AWS_URL=http://localhost:9000/local
+```
+
+Вы можете создавать корзины через консоль MinIO, которая доступна по адресу `http://localhost:8900`. Имя пользователя по умолчанию для консоли MinIO — `sail`, а пароль по умолчанию — `password`.
+
+> **Предупреждение**\
+> Генерация URL-адресов временного хранилища с помощью метода `temporaryUrl` не поддерживается при использовании MinIO.
 
 <a name="running-tests"></a>
 ## Запуск тестов
@@ -340,9 +353,12 @@ sail tinker
 <a name="sail-php-versions"></a>
 ## Выбор версии PHP
 
-В настоящее время Sail поддерживает обслуживание вашего приложения с использованием PHP версий 8.1 / 8.0 / 7.4. Версия PHP, используемая по умолчанию Sail, в настоящее время – 8.1. Чтобы изменить версию PHP, которая используется для обслуживания вашего приложения, вы должны обновить определение `build` контейнера `laravel.test` в файле `docker-compose.yml` вашего приложения:
+В настоящее время Sail поддерживает обслуживание вашего приложения с использованием PHP версий 8.2 / 8.1 / 8.0 / 7.4. Версия PHP, используемая по умолчанию Sail, в настоящее время – 8.1. Чтобы изменить версию PHP, которая используется для обслуживания вашего приложения, вы должны обновить определение `build` контейнера `laravel.test` в файле `docker-compose.yml` вашего приложения:
 
 ```yaml
+# PHP 8.2
+context: ./vendor/laravel/sail/runtimes/8.2
+
 # PHP 8.1
 context: ./vendor/laravel/sail/runtimes/8.1
 
@@ -370,7 +386,7 @@ sail up
 <a name="sail-node-versions"></a>
 ## Выбор версии Node
 
-Sail по умолчанию устанавливает Node 16. Чтобы изменить версию Node, установленную при создании образов, вы можете обновить определение `build.args` службы `laravel.test` в файле `docker-compose.yml` вашего приложения:
+Sail по умолчанию устанавливает Node 18. Чтобы изменить версию Node, установленную при создании образов, вы можете обновить определение `build.args` службы `laravel.test` в файле `docker-compose.yml` вашего приложения:
 
 ```yaml
 build:
@@ -411,7 +427,8 @@ sail share
 sail share --subdomain=my-sail-site
 ```
 
-> {tip} Команда `share` поддерживается [Expose](https://github.com/beyondcode/expose), службой туннелирования с открытым исходным кодом от [BeyondCode](https://beyondco.de).
+> **Примечание**\
+> Команда `share` поддерживается [Expose](https://github.com/beyondcode/expose), службой туннелирования с открытым исходным кодом от [BeyondCode](https://beyondco.de).
 
 <a name="debugging-with-xdebug"></a>
 ## Отладка с помощью Xdebug
@@ -458,7 +475,8 @@ sail debug migrate
 
 Если вы используете PhpStorm, то просмотрите документацию JetBrain относительно [отладки с нулевой конфигурацией](https://www.jetbrains.com/help/phpstorm/zero-configuration-debugging.html).
 
-> {note} Laravel Sail полагается на `artisan serve` для обслуживания вашего приложения. Команда `artisan serve` принимает только переменные `XDEBUG_CONFIG` и `XDEBUG_MODE` начиная с версии Laravel 8.53.0. Старые версии Laravel (8.52.0 и ниже) не поддерживают эти переменные и не принимают отладочные соединения.
+> **Предупреждение**\
+> Laravel Sail полагается на `artisan serve` для обслуживания вашего приложения. Команда `artisan serve` принимает только переменные `XDEBUG_CONFIG` и `XDEBUG_MODE` начиная с версии Laravel 8.53.0. Старые версии Laravel (8.52.0 и ниже) не поддерживают эти переменные и не принимают отладочные соединения.
 
 <a name="sail-customization"></a>
 ## Изменение конфигурационных файлов Docker
