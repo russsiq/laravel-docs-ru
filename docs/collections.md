@@ -31,7 +31,8 @@
 
     $collection = collect([1, 2, 3]);
 
-> {tip} Результаты запросов [Eloquent](eloquent.md) всегда возвращаются как экземпляры `Collection`.
+> **Примечание**\
+> Результаты запросов [Eloquent](eloquent.md) всегда возвращаются как экземпляры `Collection`.
 
 <a name="extending-collections"></a>
 ### Расширение коллекций
@@ -103,6 +104,7 @@
 - [combine](#method-combine)
 - [concat](#method-concat)
 - [contains](#method-contains)
+- [containsOneItem](#method-containsoneitem)
 - [containsStrict](#method-containsstrict)
 - [count](#method-count)
 - [countBy](#method-countBy)
@@ -131,6 +133,7 @@
 - [get](#method-get)
 - [groupBy](#method-groupby)
 - [has](#method-has)
+- [hasAny](#method-hasany)
 - [implode](#method-implode)
 - [intersect](#method-intersect)
 - [intersectByKeys](#method-intersectbykeys)
@@ -366,7 +369,8 @@
 
     // [1, 2, 3]
 
-> {tip} Метод `collect` особенно полезен, когда у вас есть экземпляр `Enumerable` и вам нужен «не-отложенный» экземпляр коллекции. Так как `collect()` является частью контракта `Enumerable`, вы можете безопасно использовать его для получения экземпляра `Collection`.
+> **Примечание**\
+> Метод `collect` особенно полезен, когда у вас есть экземпляр `Enumerable` и вам нужен «не-отложенный» экземпляр коллекции. Так как `collect()` является частью контракта `Enumerable`, вы можете безопасно использовать его для получения экземпляра `Collection`.
 
 <a name="method-combine"></a>
 #### `combine()`
@@ -436,12 +440,30 @@
 
 Противоположным методу `contains` является метод [doesntContain](#method-doesntcontain).
 
+<a name="method-containsoneitem"></a>
+#### `containsOneItem()`
+
+Метод `containsOneItem` определяет, содержит ли коллекция единственный элемент:
+
+    collect([])->containsOneItem();
+
+    // false
+
+    collect(['1'])->containsOneItem();
+
+    // true
+
+    collect(['1', '2'])->containsOneItem();
+
+    // false
+
 <a name="method-containsstrict"></a>
 #### `containsStrict()`
 
 Этот метод имеет ту же сигнатуру, что и метод [`contains`](#method-contains); однако, все значения сравниваются с использованием «жесткого» сравнения.
 
-> {tip} Поведение этого метода изменяется при использовании [коллекций Eloquent](eloquent-collections.md#method-contains).
+> **Примечание**\
+> Поведение этого метода изменяется при использовании [коллекций Eloquent](eloquent-collections.md#method-contains).
 
 <a name="method-count"></a>
 #### `count()`
@@ -551,7 +573,8 @@
 
     // [1, 3, 5]
 
-> {tip} Поведение этого метода изменяется при использовании [коллекций Eloquent](eloquent-collections.md#method-diff).
+> **Примечание**\
+> Поведение этого метода изменяется при использовании [коллекций Eloquent](eloquent-collections.md#method-diff).
 
 <a name="method-diffassoc"></a>
 #### `diffAssoc()`
@@ -755,7 +778,8 @@
 
 Противоположным методу `except` является метод [only](#method-only).
 
-> {tip} Поведение этого метода изменяется при использовании [коллекций Eloquent](eloquent-collections.md#method-except).
+> **Примечание**\
+> Поведение этого метода изменяется при использовании [коллекций Eloquent](eloquent-collections.md#method-except).
 
 <a name="method-filter"></a>
 #### `filter()`
@@ -937,7 +961,8 @@
 
     // ['framework' => 'laravel']
 
-> {note} В отличие от большинства других методов коллекции, `forget` модифицирует коллекцию.
+> **Предупреждение**\
+> В отличие от большинства других методов коллекции, `forget` модифицирует коллекцию.
 
 <a name="method-forpage"></a>
 #### `forPage()`
@@ -1083,6 +1108,21 @@
 
     // false
 
+<a name="method-hasany"></a>
+#### `hasAny()`
+
+Метод `hasAny` определяет, существует ли какой-либо из переданных ключей в коллекции:
+
+    $collection = collect(['account_id' => 1, 'product' => 'Desk', 'amount' => 5]);
+
+    $collection->hasAny(['product', 'price']);
+
+    // true
+
+    $collection->hasAny(['name', 'price']);
+
+    // false
+
 <a name="method-implode"></a>
 #### `implode()`
 
@@ -1103,6 +1143,14 @@
 
     // '1-2-3-4-5'
 
+Вы можете передать замыкание методу `implode`, если хотите отформатировать значения, которые будут объединены:
+
+    $collection->implode(function ($item, $key) {
+        return strtoupper($item['product']);
+    }, ', ');
+
+    // DESK, CHAIR
+
 <a name="method-intersect"></a>
 #### `intersect()`
 
@@ -1116,7 +1164,8 @@
 
     // [0 => 'Desk', 2 => 'Chair']
 
-> {tip} Поведение этого метода изменяется при использовании [коллекций Eloquent](eloquent-collections.md#method-intersect).
+> **Примечание**\
+> Поведение этого метода изменяется при использовании [коллекций Eloquent](eloquent-collections.md#method-intersect).
 
 <a name="method-intersectbykeys"></a>
 #### `intersectByKeys()`
@@ -1185,9 +1234,9 @@
         ]
     */
 
-Вы также можете передать методу замыкание. Замыкание должно возвращать имя для ключа коллекции:
+Вы также можете передать методу замыкание. Замыкание должно возвращать значение для ключа коллекции:
 
-    $keyed = $collection->keyBy(function ($item) {
+    $keyed = $collection->keyBy(function ($item, $key) {
         return strtoupper($item['product_id']);
     });
 
@@ -1283,7 +1332,8 @@
 
     // [2, 4, 6, 8, 10]
 
-> {note} Как и большинство других методов коллекции, `map` возвращает новый экземпляр коллекции; он не модифицирует коллекцию. Если вы хотите преобразовать исходную коллекцию, используйте метод [`transform`](#method-transform).
+> **Предупреждение**\
+> Как и большинство других методов коллекции, `map` возвращает новый экземпляр коллекции; он не модифицирует коллекцию. Если вы хотите преобразовать исходную коллекцию, используйте метод [`transform`](#method-transform).
 
 <a name="method-mapinto"></a>
 #### `mapInto()`
@@ -1434,7 +1484,7 @@
 <a name="method-merge"></a>
 #### `merge()`
 
-Метод `merge` объединяет переданный массив или коллекцию с исходной коллекцией. Если строковый ключ в переданных элементах соответствует строковому ключу в исходной коллекции, значение переданного элемента перезапишет значение в исходной коллекции:
+Метод `merge` объединяет переданный массив или коллекцию с исходной коллекцией. Если строковый ключ в переданных элементах соответствует строковому ключу в исходной коллекции, то значение переданного элемента перезапишет значение в исходной коллекции:
 
     $collection = collect(['product_id' => 1, 'price' => 100]);
 
@@ -1444,7 +1494,7 @@
 
     // ['product_id' => 1, 'price' => 200, 'discount' => false]
 
-Если ключи переданных элементов являются числовыми, значения будут добавлены в конец коллекции:
+Если ключи переданных элементов являются числовыми, то значения будут добавлены в конец коллекции:
 
     $collection = collect(['Desk', 'Chair']);
 
@@ -1543,7 +1593,8 @@
 
 Противоположным методу `only` является метод [except](#method-except).
 
-> {tip} Поведение этого метода изменяется при использовании [коллекций Eloquent](eloquent-collections.md#method-only).
+> **Примечание**\
+> Поведение этого метода изменяется при использовании [коллекций Eloquent](eloquent-collections.md#method-only).
 
 <a name="method-pad"></a>
 #### `pad()`
@@ -1822,6 +1873,14 @@
 
 Если в экземпляре коллекции меньше элементов, чем запрошено, метод `random` сгенерирует исключение `InvalidArgumentException`.
 
+Метод `random` также принимает замыкание, которое получит текущий экземпляр коллекции:
+
+    $random = $collection->random(fn ($items) => min(10, count($items)));
+
+    $random->all();
+
+    // [1, 2, 3, 4, 5] - (retrieved randomly)
+
 <a name="method-range"></a>
 #### `range()`
 
@@ -2031,35 +2090,6 @@
 
     // [3, 2, 5, 1, 4] - (generated randomly)
 
-<a name="method-sliding"></a>
-#### `sliding()`
-
-Метод `sliding` возвращает новую фрагментированную коллекцию, представляющих вид «скользящего окна» элементов:
-
-    $collection = collect([1, 2, 3, 4, 5]);
-
-    $chunks = $collection->sliding(2);
-
-    $chunks->toArray();
-
-    // [[1, 2], [2, 3], [3, 4], [4, 5]]
-
-Это особенно полезно в сочетании с методом [`eachSpread`](#method-eachspread):
-
-    $transactions->sliding(2)->eachSpread(function ($previous, $current) {
-        $current->total = $previous->total + $current->amount;
-    });
-
-При желании вы можете передать второе значение `step`, которое определяет расстояние между первым элементом каждого фрагмента:
-
-    $collection = collect([1, 2, 3, 4, 5]);
-
-    $chunks = $collection->sliding(3, step: 2);
-
-    $chunks->toArray();
-
-    // [[1, 2, 3], [3, 4, 5]]
-
 <a name="method-skip"></a>
 #### `skip()`
 
@@ -2098,7 +2128,8 @@
 
     // [3, 4]
 
-> {note} Если указанное значение не найдено или замыкание никогда не возвращает `true`, то метод `skipUntil` вернет пустую коллекцию.
+> **Предупреждение**\
+> Если указанное значение не найдено или замыкание никогда не возвращает `true`, то метод `skipUntil` вернет пустую коллекцию.
 
 <a name="method-skipwhile"></a>
 #### `skipWhile()`
@@ -2115,7 +2146,8 @@
 
     // [4]
 
-> {note} Если замыкание никогда не возвращает `false`, то метод `skipWhile` вернет пустую коллекцию.
+> **Предупреждение**\
+> Если замыкание никогда не возвращает `false`, то метод `skipWhile` вернет пустую коллекцию.
 
 <a name="method-slice"></a>
 #### `slice()`
@@ -2139,6 +2171,35 @@
     // [5, 6]
 
 Возвращенный фрагмент по умолчанию сохранит ключи. Если вы не хотите сохранять исходные ключи, вы можете использовать метод [`values`](#method-values), чтобы переиндексировать их.
+
+<a name="method-sliding"></a>
+#### `sliding()`
+
+Метод `sliding` возвращает новую фрагментированную коллекцию, представляющих вид «скользящего окна» элементов:
+
+    $collection = collect([1, 2, 3, 4, 5]);
+
+    $chunks = $collection->sliding(2);
+
+    $chunks->toArray();
+
+    // [[1, 2], [2, 3], [3, 4], [4, 5]]
+
+Это особенно полезно в сочетании с методом [`eachSpread`](#method-eachspread):
+
+    $transactions->sliding(2)->eachSpread(function ($previous, $current) {
+        $current->total = $previous->total + $current->amount;
+    });
+
+При желании вы можете передать второе значение `step`, которое определяет расстояние между первым элементом каждого фрагмента:
+
+    $collection = collect([1, 2, 3, 4, 5]);
+
+    $chunks = $collection->sliding(3, step: 2);
+
+    $chunks->toArray();
+
+    // [[1, 2, 3], [3, 4, 5]]
 
 <a name="method-sole"></a>
 #### `sole()`
@@ -2194,7 +2255,8 @@
 
 Если ваши потребности в сортировке более сложны, вы можете передать замыкание методу `sort` с вашим собственным алгоритмом. Обратитесь к документации PHP по [`uasort`](https://www.php.net/manual/ru/function.uasort.php#refsect1-function.uasort-parameters), который используется внутри метода `sort`.
 
-> {tip} Если вам нужно отсортировать коллекцию вложенных массивов или объектов, то см. методы [`sortBy`](#method-sortby) и [`sortByDesc`](#method-sortbydesc).
+> **Примечание**\
+> Если вам нужно отсортировать коллекцию вложенных массивов или объектов, то см. методы [`sortBy`](#method-sortby) и [`sortByDesc`](#method-sortbydesc).
 
 <a name="method-sortby"></a>
 #### `sortBy()`
@@ -2537,7 +2599,8 @@
 
     // [1, 2]
 
-> {note} Если указанное значение не найдено или замыкание никогда не возвращает `true`, то метод `takeUntil` вернет все элементы коллекции.
+> **Предупреждение**\
+> Если указанное значение не найдено или замыкание никогда не возвращает `true`, то метод `takeUntil` вернет все элементы коллекции.
 
 <a name="method-takewhile"></a>
 #### `takeWhile()`
@@ -2554,7 +2617,8 @@
 
     // [1, 2]
 
-> {note} Если замыкание никогда не возвращает `false`, метод `takeWhile` вернет все элементы коллекции.
+> **Предупреждение**\
+> Если замыкание никогда не возвращает `false`, метод `takeWhile` вернет все элементы коллекции.
 
 <a name="method-tap"></a>
 #### `tap()`
@@ -2598,7 +2662,8 @@
         ]
     */
 
-> {note} Метод `toArray` также преобразует все вложенные объекты коллекции, которые являются экземпляром `Arrayable`, в массив. Если вы хотите получить необработанный массив, лежащий в основе коллекции, используйте вместо этого метод [`all`](#method-all).
+> **Предупреждение**\
+> Метод `toArray` также преобразует все вложенные объекты коллекции, которые являются экземпляром `Arrayable`, в массив. Если вы хотите получить необработанный массив, лежащий в основе коллекции, используйте вместо этого метод [`all`](#method-all).
 
 <a name="method-tojson"></a>
 #### `toJson()`
@@ -2626,7 +2691,8 @@
 
     // [2, 4, 6, 8, 10]
 
-> {note} В отличие от большинства других методов коллекции, `transform` модифицирует коллекцию. Если вы хотите вместо этого создать новую коллекцию, используйте метод [`map`](#method-map).
+> **Предупреждение**\
+> В отличие от большинства других методов коллекции, `transform` модифицирует коллекцию. Если вы хотите вместо этого создать новую коллекцию, используйте метод [`map`](#method-map).
 
 <a name="method-undot"></a>
 #### `undot()`
@@ -2641,7 +2707,7 @@
         'address.suburb' => 'Detroit',
         'address.state' => 'MI',
         'address.postcode' => '48219'
-    ])
+    ]);
 
     $person = $person->undot();
 
@@ -2729,7 +2795,8 @@
 
 Метод `unique` использует «гибкое» сравнение при проверке значений элементов, то есть строка с целым значением будет считаться равной целому числу того же значения. Используйте метод [`uniqueStrict`](#method-uniquestrict) для фильтрации с использованием «жесткого» сравнения.
 
-> {tip} Поведение этого метода изменяется при использовании [коллекций Eloquent](eloquent-collections.md#method-unique).
+> **Примечание**\
+> Поведение этого метода изменяется при использовании [коллекций Eloquent](eloquent-collections.md#method-unique).
 
 <a name="method-uniquestrict"></a>
 #### `uniqueStrict()`
@@ -2977,7 +3044,7 @@
 
 Метод `where` использует «гибкое» сравнение при проверке значений элементов, что означает, что строка с целым значением будет считаться равной целому числу того же значения. Используйте метод [`whereStrict`](#method-wherestrict) для фильтрации с использованием «жесткого» сравнения.
 
-При желании вы можете передать оператор сравнения в качестве второго параметра.
+При желании вы можете передать оператор сравнения в качестве второго параметра. Поддерживаются следующие операторы: `===`, `!==`, `!=`, `==`, `=`, `<>`, `>`, `<`, `>=` и `<=`:
 
     $collection = collect([
         ['name' => 'Jim', 'deleted_at' => '2019-01-01 00:00:00'],
@@ -3237,7 +3304,8 @@
 <a name="lazy-collection-introduction"></a>
 ### Введение в отложенные коллекции
 
-> {note} Прежде чем узнать больше об отложенных коллекциях Laravel, потратьте некоторое время на то, чтобы ознакомиться с [генераторами PHP](https://www.php.net/manual/ru/language.generators.overview.php).
+> **Предупреждение**\
+> Прежде чем узнать больше об отложенных коллекциях Laravel, потратьте некоторое время на то, чтобы ознакомиться с [генераторами PHP](https://www.php.net/manual/ru/language.generators.overview.php).
 
 В дополнении к мощному классу `Collection`, класс `LazyCollection` использует [генераторы](https://www.php.net/manual/ru/language.generators.overview.php) PHP, чтобы вы могли работать с очень большим наборы данных при низком потреблении памяти.
 
@@ -3298,7 +3366,20 @@
 
 Почти все методы, доступные в классе `Collection`, также доступны в классе `LazyCollection`. Оба эти класса реализуют контракт `Illuminate\Support\Enumerable`, который определяет следующие методы:
 
-<!-- <div id="collection-method-list" markdown="1"> -->
+<!--style>
+    .collection-method-list > p {
+        columns: 10.8em 3; -moz-columns: 10.8em 3; -webkit-columns: 10.8em 3;
+    }
+
+    .collection-method-list a {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style>
+
+<div class="collection-method-list" markdown="1"-->
 
 - [all](#method-all)
 - [average](#method-average)
@@ -3413,7 +3494,8 @@
 
 <!-- </div> -->
 
-> {note} Методы, которые изменяют коллекцию (такие как `shift`, `pop`, `prepend` и т.д.), **недоступны** в классе `LazyCollection`.
+> **Предупреждение**\
+> Методы, которые изменяют коллекцию (такие как `shift`, `pop`, `prepend` и т.д.), **недоступны** в классе `LazyCollection`.
 
 <a name="lazy-collection-methods"></a>
 ### Методы отложенных коллекций

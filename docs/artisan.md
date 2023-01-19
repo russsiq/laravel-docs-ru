@@ -6,6 +6,7 @@
     - [Генерация команд](#generating-commands)
     - [Структура команды](#command-structure)
     - [Анонимные команды](#closure-commands)
+    - [Изолируемые команды](#isolatable-commands)
 - [Определение вводимых данных](#defining-input-expectations)
     - [Аргументы](#arguments)
     - [Параметры](#options)
@@ -60,7 +61,8 @@ Laravel Tinker – это мощный REPL для фреймворка Laravel,
 composer require laravel/tinker
 ```
 
-> {tip} Ищете графический интерфейс для взаимодействия с приложением Laravel? Зацените [Tinkerwell](https://tinkerwell.app)!
+> **Примечание**\
+> Ищете графический интерфейс для взаимодействия с приложением Laravel? Зацените [Tinkerwell](https://tinkerwell.app)!
 
 <a name="usage"></a>
 #### Использование
@@ -77,7 +79,8 @@ php artisan tinker
 php artisan vendor:publish --provider="Laravel\Tinker\TinkerServiceProvider"
 ```
 
-> {note} Глобальный помощник `dispatch` и метод `dispatch` класса `Dispatchable` зависят от "garbage collection" для помещения задания в очередь. Следовательно, при использовании Tinker вы должны использовать `Bus::dispatch` или `Queue::push` для отправки заданий.
+> **Предупреждение**\
+> Глобальный помощник `dispatch` и метод `dispatch` класса `Dispatchable` зависят от "garbage collection" для помещения задания в очередь. Следовательно, при использовании Tinker вы должны использовать `Bus::dispatch` или `Queue::push` для отправки заданий.
 
 <a name="command-allow-list"></a>
 #### Список разрешенных команд
@@ -154,7 +157,8 @@ php artisan make:command SendEmails
         }
     }
 
-> {tip} Хорошей практикой повторного использования кода считается создание «простых» консольных команд с делегированием своих задач службам приложения. В приведенном примере мы внедряем класс службы для выполнения «затратной» отправки электронных писем.
+> **Примечание**\
+> Хорошей практикой повторного использования кода считается создание «простых» консольных команд с делегированием своих задач службам приложения. В приведенном примере мы внедряем класс службы для выполнения «затратной» отправки электронных писем.
 
 <a name="closure-commands"></a>
 ### Анонимные команды
@@ -199,6 +203,55 @@ php artisan make:command SendEmails
     Artisan::command('mail:send {user}', function ($user) {
         // ...
     })->purpose('Send a marketing email to a user');
+
+<a name="isolatable-commands"></a>
+### Изолируемые команды
+
+> **Предупреждение**\
+> Чтобы использовать этот функционал, ваше приложение должно использовать в качестве драйвера кеша по умолчанию `memcached`, `redis`, `dynamodb`, `database`, `file`, `array`. Кроме того, все серверы должны обмениваться данными с одним и тем же сервером центрального кэша.
+
+Иногда необходимо гарантировать, что только один экземпляр команды может выполняться одновременно. Для этого вы можете реализовать интерфейс `Illuminate\Contracts\Console\Isolatable` в своем классе команд:
+
+    <?php
+
+    namespace App\Console\Commands;
+
+    use Illuminate\Console\Command;
+    use Illuminate\Contracts\Console\Isolatable;
+
+    class SendEmails extends Command implements Isolatable
+    {
+        // ...
+    }
+
+Когда команда помечена как `Isolatable`, Laravel автоматически добавит к команде параметр `--isolated`. Когда команда вызывается с этим параметром, то Laravel гарантирует, что никакие другие экземпляры этой команды еще не запущены. Laravel достигает этого, пытаясь получить атомарную блокировку, используя драйвер кеша вашего приложения по умолчанию. Если запущены другие экземпляры команды, то команда не будет выполняться; однако, команда все равно завершится с успешным кодом выхода:
+
+```shell
+php artisan mail:send 1 --isolated
+```
+
+Если вы хотите указать код состояния выхода, который должна возвращать команда, если она не может быть выполнена, то вы можете указать желаемый код состояния с помощью опции `isolated`:
+
+```shell
+php artisan mail:send 1 --isolated=12
+```
+
+<a name="lock-expiration-time"></a>
+#### Время действия блокировки
+
+По умолчанию время действия изоляционных блокировок истекает после завершения команды. Или, если команда прервана и не может быть завершена, блокировка истечет через один час. Однако вы можете настроить время истечения блокировки, определив метод `isolationLockExpiresAt` в вашей команде:
+
+```php
+/**
+ * Определить, когда истечет время действия блокировки изоляции команды.
+ *
+ * @return \DateTimeInterface|\DateInterval
+ */
+public function isolationLockExpiresAt()
+{
+    return now()->addMinutes(5);
+}
+```
 
 <a name="defining-input-expectations"></a>
 ## Определение вводимых данных
@@ -495,7 +548,8 @@ php artisan mail:send --id=1 --id=2
 
     $bar->finish();
 
-> {tip} Для получения дополнительной информации ознакомьтесь с [разделом документации компонента Symfony Progress Bar](https://symfony.com/doc/current/components/console/helpers/progressbar.html).
+> **Примечание**\
+> Для получения дополнительной информации ознакомьтесь с [разделом документации компонента Symfony Progress Bar](https://symfony.com/doc/current/components/console/helpers/progressbar.html).
 
 <a name="registering-commands"></a>
 ## Регистрация команд
@@ -611,47 +665,29 @@ php artisan mail:send --id=1 --id=2
 <a name="signal-handling"></a>
 ## Обработка сигналов
 
-Компонент Symfony Console, на котором работает консоль Artisan, позволяет вам указать, какие [сигналы процесса](https://ru.wikipedia.org/wiki/Сигнал_(Unix)) (если есть) может обрабатывать ваша команда. Например, вы можете указать, что ваша команда может обрабатывать сигналы `SIGINT` и `SIGTERM`.
-
-Для начала вы должны реализовать интерфейс `Symfony\Component\Console\Command\SignalableCommandInterface` в классе своей команды Artisan. Этот интерфейс требует от вас определения двух методов: `getSubscribedSignals` и `handleSignal`:
-
-```php
-<?php
-
-use Symfony\Component\Console\Command\SignalableCommandInterface;
-
-class StartServer extends Command implements SignalableCommandInterface
-{
-    // ...
+Как вы, возможно, знаете, операционные системы позволяют отправлять сигналы запущенным процессам. Например, сигнал `SIGTERM` — это то, как операционные системы запрашивают завершение программы. Если вы хотите прослушивать сигналы в консольных командах Artisan и выполнять код при их появлении, вы можете использовать метод `trap`:
 
     /**
-     * Получить список сигналов, обрабатываемых командой.
+     * Выполнить консольную команду.
      *
-     * @return array
+     * @return mixed
      */
-    public function getSubscribedSignals(): array
+    public function handle()
     {
-        return [SIGINT, SIGTERM];
-    }
+        $this->trap(SIGTERM, fn () => $this->shouldKeepRunning = false);
 
-    /**
-     * Обработка входящего сигнала.
-     *
-     * @param  int  $signal
-     * @return void
-     */
-    public function handleSignal(int $signal): void
-    {
-        if ($signal === SIGINT) {
-            $this->stopServer();
-
-            return;
+        while ($this->shouldKeepRunning) {
+            // ...
         }
     }
-}
-```
 
-Метод `getSubscribedSignals` должен возвращать массив сигналов, которые может обработать ваша команда, в то время как метод `handleSignal` принимает сигнал и может реагировать на него в соответствии с определенной вами логикой.
+Чтобы прослушивать несколько сигналов одновременно, вы можете передать массив сигналов методу `trap`:
+
+    $this->trap([SIGTERM, SIGQUIT], function ($signal) {
+        $this->shouldKeepRunning = false;
+
+        dump($signal); // SIGTERM / SIGQUIT
+    });
 
 <a name="stub-customization"></a>
 ## Настройка заготовок
