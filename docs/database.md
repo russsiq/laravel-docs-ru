@@ -6,8 +6,11 @@
 - [Выполнение SQL-запросов](#running-queries)
     - [Использование нескольких соединений к базе данных](#using-multiple-database-connections)
     - [Прослушивание событий запроса](#listening-for-query-events)
+    - [Мониторинг совокупного времени запроса](#monitoring-cumulative-query-time)
 - [Транзакции базы данных](#database-transactions)
 - [Подключение к базе данных с помощью интерфейса командной строки](#connecting-to-the-database-cli)
+- [Просмотр сведений ваших баз данных](#inspecting-your-databases)
+- [Мониторинг ваших баз данных](#monitoring-your-databases)
 
 <a name="introduction"></a>
 ## Введение
@@ -16,7 +19,7 @@
 
 <!-- <div class="content-list" markdown="1"> -->
 
-- MariaDB 10.2+ ([Политика версий](https://mariadb.org/about/#maintenance-policy))
+- MariaDB 10.3+ ([Политика версий](https://mariadb.org/about/#maintenance-policy))
 - MySQL 5.7+ ([Политика версий](https://en.wikipedia.org/wiki/MySQL#Release_history))
 - PostgreSQL 10.0+ ([Политика версий](https://www.postgresql.org/support/versioning/))
 - SQLite 3.8.8+
@@ -213,7 +216,8 @@ driver://username:password@host:port/database?options
 
     DB::unprepared('update users set votes = 100 where name = "Dries"');
 
-> {note} Поскольку неподготовленные запросы не связывают параметры, они могут быть уязвимы для SQL-инъекций. Вы никогда не должны пропускать в неподготовленное выражение значения, управляемые пользователем.
+> **Предупреждение**\
+> Поскольку неподготовленные запросы не связывают параметры, они могут быть уязвимы для SQL-инъекций. Вы никогда не должны пропускать в неподготовленное выражение значения, управляемые пользователем.
 
 <a name="implicit-commits-in-transactions"></a>
 #### Неявные фиксации
@@ -276,6 +280,45 @@ driver://username:password@host:port/database?options
         }
     }
 
+<a name="monitoring-cumulative-query-time"></a>
+### Мониторинг совокупного времени запроса
+
+Общим узким местом производительности современных веб-приложений является количество времени, которое они тратят на запросы к базам данных. К счастью, Laravel может вызвать замыкание, когда тратится слишком много времени на запросы к базе данных в рамках одного запроса к приложению. Для начала укажите пороговое значение времени запроса (в миллисекундах) и замыкание для метода `whenQueryingForLongerThan`. Как правило, вызов этого метода осуществляется в методе `boot` [поставщика служб](providers.md):
+
+    <?php
+
+    namespace App\Providers;
+
+    use Illuminate\Database\Connection;
+    use Illuminate\Support\Facades\DB;
+    use Illuminate\Support\ServiceProvider;
+    use Illuminate\Database\Events\QueryExecuted;
+
+    class AppServiceProvider extends ServiceProvider
+    {
+        /**
+         * Регистрация любых служб приложения.
+         *
+         * @return void
+         */
+        public function register()
+        {
+            //
+        }
+
+        /**
+         * Загрузка любых служб приложения.
+         *
+         * @return void
+         */
+        public function boot()
+        {
+            DB::whenQueryingForLongerThan(500, function (Connection $connection, QueryExecuted $event) {
+                // Уведомить команду разработчиков ...
+            });
+        }
+    }
+
 <a name="database-transactions"></a>
 ## Транзакции базы данных
 
@@ -319,7 +362,8 @@ driver://username:password@host:port/database?options
 
     DB::commit();
 
-> {tip} Методы транзакций фасада `DB` контролируют транзакции как для [построителя запросов](queries.md), так и для [Eloquent ORM](eloquent.md).
+> **Примечание**\
+> Методы транзакций фасада `DB` контролируют транзакции как для [построителя запросов](queries.md), так и для [Eloquent ORM](eloquent.md).
 
 <a name="connecting-to-the-database-cli"></a>
 ## Подключение к базе данных с помощью интерфейса командной строки
@@ -334,4 +378,70 @@ php artisan db
 
 ```shell
 php artisan db mysql
+```
+
+<a name="inspecting-your-databases"></a>
+## Просмотр сведений ваших баз данных
+
+Используя команды `db:show` и `db:table` Artisan, вы можете получить ценную информацию о своей базе данных и связанных с ней таблицах. Чтобы просмотреть свойства вашей базы данных, включая ее размер, тип, количество открытых подключений и сводку по таблицам, вы можете использовать команду `db:show`:
+
+```shell
+php artisan db:show
+```
+
+Вы можете указать, какое соединение с базой данных следует просмотреть, указав имя соединения с базой данных с помощью параметра `--database`:
+
+```shell
+php artisan db:show --database=pgsql
+```
+
+Если вы хотите включить количество строк в таблице и сведения о представлении базы данных в вывод команды, то вы можете указать параметры `--counts` и `--views` соответственно. В больших базах данных получение количества строк и сведений о представлениях может быть медленным:
+
+```shell
+php artisan db:show --counts --views
+```
+
+<a name="table-overview"></a>
+#### Table Overview
+
+Если вы хотите получить обзор отдельной таблицы в вашей базе данных, то вы можете выполнить команду `db:table` Artisan. Эта команда предоставляет общий обзор таблицы базы данных, включая ее столбцы, типы, атрибуты, ключи и индексы:
+
+```shell
+php artisan db:table users
+```
+
+<a name="monitoring-your-databases"></a>
+## Мониторинг ваших баз данных
+
+Используя команду `db:monitor` Artisan, вы можете указать Laravel инициировать событие `Illuminate\Database\Events\DatabaseBusy`, если ваша база данных управляет более чем указанным количеством открытых соединений.
+
+Для начала вы должны запланировать команду `db:monitor` так, чтобы она [запускалась каждую минуту](scheduling.md). Команда принимает имена конфигураций подключения к базе данных, которые вы хотите отслеживать, а также максимальное количество открытых подключений, которое должно быть разрешено перед отправкой события:
+
+```shell
+php artisan db:monitor --databases=mysql,pgsql --max=100
+```
+
+Одного планирования этой команды недостаточно, чтобы отправить уведомление, предупреждающее вас о количестве открытых подключений. Когда команда обнаруживает базу данных, количество открытых подключений которой превышает пороговое значение, тогда будет инициировано событие `DatabaseBusy`. Вы должны прослушивать это событие в `EventServiceProvider` вашего приложения, чтобы отправить уведомление вам или вашей команде разработчиков:
+
+```php
+use App\Notifications\DatabaseApproachingMaxConnections;
+use Illuminate\Database\Events\DatabaseBusy;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Notification;
+
+/**
+ * Регистрация любых событий вашего приложения.
+ *
+ * @return void
+ */
+public function boot()
+{
+    Event::listen(function (DatabaseBusy $event) {
+        Notification::route('mail', 'dev@example.com')
+                ->notify(new DatabaseApproachingMaxConnections(
+                    $event->connectionName,
+                    $event->connections
+                ));
+    });
+}
 ```

@@ -51,7 +51,7 @@ Laravel позволяет вам легко «имитировать» ввод
         $this->line('Your name is '.$name.' and you prefer '.$language.'.');
     });
 
-Вы можете протестировать эту команду с помощью следующего теста, который использует методы `expectsQuestion`, `expectsOutput`, `doesntExpectOutput` и `assertExitCode`:
+Вы можете протестировать эту команду с помощью следующего теста, который использует методы `expectsQuestion`, `expectsOutput`, `doesntExpectOutput`, `expectsOutputToContain`, `doesntExpectOutputToContain` и `assertExitCode`:
 
     /**
      * Тестирование консольной команды.
@@ -65,6 +65,8 @@ Laravel позволяет вам легко «имитировать» ввод
              ->expectsQuestion('Which language do you prefer?', 'PHP')
              ->expectsOutput('Your name is Taylor Otwell and you prefer PHP.')
              ->doesntExpectOutput('Your name is Taylor Otwell and you prefer Ruby.')
+             ->expectsOutputToContain('Taylor Otwell')
+             ->doesntExpectOutputToContain('you prefer Ruby')
              ->assertExitCode(0);
     }
 

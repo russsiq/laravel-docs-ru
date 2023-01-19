@@ -38,7 +38,8 @@ Laravel предлагает два основных способа автори
 <a name="writing-gates"></a>
 ### Написание шлюзов
 
-> {note} Шлюзы – отличный способ изучить основы функционала авторизации Laravel; однако при создании надежных приложений Laravel, вам следует рассмотреть возможность использования [политик](#creating-policies) для организации ваших правил авторизации.
+> **Предупреждение**\
+> Шлюзы – отличный способ изучить основы функционала авторизации Laravel; однако при создании надежных приложений Laravel, вам следует рассмотреть возможность использования [политик](#creating-policies) для организации ваших правил авторизации.
 
 Шлюз – это просто замыкание, которое определяет, имеет ли пользователь право выполнять указанное действие. Как правило, шлюзы определяются в методе `boot` поставщика `App\Providers\AuthServiceProvider` с использованием фасада `Gate`. Шлюзы всегда получают экземпляр пользователя в качестве своего первого аргумента и могут получать дополнительные аргументы, например, модель Eloquent.
 
@@ -195,6 +196,33 @@ Laravel предлагает два основных способа автори
 
     // Действие разрешено ...
 
+<a name="customizing-gate-response-status"></a>
+#### Корректировка статуса HTTP-ответа
+
+Когда действие запрещено шлюзом, тогда возвращается HTTP-ответ `403`; но иногда необходимо вернуть альтернативный код состояния HTTP. Вы можете изменить код состояния HTTP, возвращаемый при неуспешной авторизации, используя статический метод `denyWithStatus` класса `Illuminate\Auth\Access\Response`:
+
+    use App\Models\User;
+    use Illuminate\Auth\Access\Response;
+    use Illuminate\Support\Facades\Gate;
+
+    Gate::define('edit-settings', function (User $user) {
+        return $user->isAdmin
+                    ? Response::allow()
+                    : Response::denyWithStatus(404);
+    });
+
+Поскольку сокрытие ресурсов приложения с помощью ответа `404` является распространенным шаблоном для веб-приложений, то для удобства предлагается метод `denyAsNotFound`:
+
+    use App\Models\User;
+    use Illuminate\Auth\Access\Response;
+    use Illuminate\Support\Facades\Gate;
+
+    Gate::define('edit-settings', function (User $user) {
+        return $user->isAdmin
+                    ? Response::allow()
+                    : Response::denyAsNotFound();
+    });
+
 <a name="intercepting-gate-checks"></a>
 ### Хуки шлюзов
 
@@ -308,7 +336,8 @@ php artisan make:policy PostPolicy --model=Post
         // Возвращаем имя класса политики для переданной модели ...
     });
 
-> {note} Любые политики, которые явно отображены в вашем `AuthServiceProvider`, будут иметь **приоритет** над любыми потенциально автоматически обнаруженными политиками.
+> **Предупреждение**\
+> Любые политики, которые явно отображены в вашем `AuthServiceProvider`, будут иметь **приоритет** над любыми потенциально автоматически обнаруженными политиками.
 
 <a name="writing-policies"></a>
 ## Написание политик
@@ -346,7 +375,8 @@ php artisan make:policy PostPolicy --model=Post
 
 Если вы использовали опцию `--model` при создании своей политики через Artisan, то она уже будет содержать методы для следующих действий: `viewAny`, `view`, `create`, `update`, `delete`, `restore` и `forceDelete`.
 
-> {tip} Все политики извлекаются через [контейнер служб](container.md) Laravel, что позволяет вам объявлять любые необходимые зависимости в конструкторе политики для их автоматического внедрения.
+> **Примечание**\
+> Все политики извлекаются через [контейнер служб](container.md) Laravel, что позволяет вам объявлять любые необходимые зависимости в конструкторе политики для их автоматического внедрения.
 
 <a name="policy-responses"></a>
 ### Ответы политики
@@ -388,6 +418,49 @@ php artisan make:policy PostPolicy --model=Post
     Gate::authorize('update', $post);
 
     // Действие разрешено ...
+
+<a name="customizing-policy-response-status"></a>
+#### Корректировка статуса HTTP-ответа
+
+Когда действие запрещено методом политики, тогда возвращается HTTP-ответ `403`; но иногда необходимо вернуть альтернативный код состояния HTTP. Вы можете изменить код состояния HTTP, возвращаемый при неуспешной авторизации, используя статический метод `denyWithStatus` класса `Illuminate\Auth\Access\Response`:
+
+    use App\Models\Post;
+    use App\Models\User;
+    use Illuminate\Auth\Access\Response;
+
+    /**
+     * Определить, может ли пользователь обновить пост.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Auth\Access\Response
+     */
+    public function update(User $user, Post $post)
+    {
+        return $user->id === $post->user_id
+                    ? Response::allow()
+                    : Response::denyWithStatus(404);
+    }
+
+Поскольку сокрытие ресурсов приложения с помощью ответа `404` является распространенным шаблоном для веб-приложений, то для удобства предлагается метод `denyAsNotFound`:
+
+    use App\Models\Post;
+    use App\Models\User;
+    use Illuminate\Auth\Access\Response;
+
+    /**
+     * Определить, может ли пользователь обновить пост.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Auth\Access\Response
+     */
+    public function update(User $user, Post $post)
+    {
+        return $user->id === $post->user_id
+                    ? Response::allow()
+                    : Response::denyAsNotFound();
+    }
 
 <a name="methods-without-models"></a>
 ### Методы политики без моделей
@@ -455,7 +528,8 @@ php artisan make:policy PostPolicy --model=Post
 
 Если вы хотите отклонить все проверки авторизации для определенного типа пользователей, вы можете вернуть `false` из метода `before`. Если возвращается `null`, то проверка авторизации перейдет к методу политики.
 
-> {note} Метод `before` класса политики не будет вызываться, если класс не содержит метода с именем, совпадающим с именем проверяемого полномочия.
+> **Предупреждение**\
+> Метод `before` класса политики не будет вызываться, если класс не содержит метода с именем, совпадающим с именем проверяемого полномочия.
 
 <a name="authorizing-actions-using-policies"></a>
 ## Авторизация действий с помощью политик
@@ -622,7 +696,8 @@ php artisan make:policy PostPolicy --model=Post
 | update | update |
 | destroy | delete |
 
-> {tip} Вы можете использовать команду `make:policy` с параметром `--model`, чтобы сгенерировать класс политики для указанной модели: `php artisan make:policy PostPolicy --model=Post`.
+> **Примечание**\
+> Вы можете использовать команду `make:policy` с параметром `--model`, чтобы сгенерировать класс политики для указанной модели: `php artisan make:policy PostPolicy --model=Post`.
 
 <a name="via-middleware"></a>
 ### Авторизация действий с помощью политик через посредника

@@ -202,7 +202,8 @@ composer require guzzlehttp/guzzle
 
     $response = Http::retry(3, 100, throw: false)->post(/* ... */);
 
-> {note} Если все запросы окажутся неуспешными из-за проблемы с соединением, то все равно будет выброшено исключение `Illuminate\Http\Client\ConnectionException`, даже если для аргумента `throw` установлено значение `false`.
+> **Предупреждение**\
+> Если все запросы окажутся неуспешными из-за проблемы с соединением, то все равно будет выброшено исключение `Illuminate\Http\Client\ConnectionException`, даже если для аргумента `throw` установлено значение `false`.
 
 <a name="error-handling"></a>
 ### Обработка ошибок
