@@ -411,7 +411,8 @@ sail share
 sail share --subdomain=my-sail-site
 ```
 
-> {tip} Команда `share` поддерживается [Expose](https://github.com/beyondcode/expose), службой туннелирования с открытым исходным кодом от [BeyondCode](https://beyondco.de).
+> **Примечание**\
+> Команда `share` поддерживается [Expose](https://github.com/beyondcode/expose), службой туннелирования с открытым исходным кодом от [BeyondCode](https://beyondco.de).
 
 <a name="debugging-with-xdebug"></a>
 ## Отладка с помощью Xdebug
@@ -458,7 +459,8 @@ sail debug migrate
 
 Если вы используете PhpStorm, то просмотрите документацию JetBrain относительно [отладки с нулевой конфигурацией](https://www.jetbrains.com/help/phpstorm/zero-configuration-debugging.html).
 
-> {note} Laravel Sail полагается на `artisan serve` для обслуживания вашего приложения. Команда `artisan serve` принимает только переменные `XDEBUG_CONFIG` и `XDEBUG_MODE` начиная с версии Laravel 8.53.0. Старые версии Laravel (8.52.0 и ниже) не поддерживают эти переменные и не принимают отладочные соединения.
+> **Предупреждение**\
+> Laravel Sail полагается на `artisan serve` для обслуживания вашего приложения. Команда `artisan serve` принимает только переменные `XDEBUG_CONFIG` и `XDEBUG_MODE` начиная с версии Laravel 8.53.0. Старые версии Laravel (8.52.0 и ниже) не поддерживают эти переменные и не принимают отладочные соединения.
 
 <a name="sail-customization"></a>
 ## Изменение конфигурационных файлов Docker

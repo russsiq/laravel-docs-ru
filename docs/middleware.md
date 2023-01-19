@@ -57,7 +57,8 @@ php artisan make:middleware EnsureTokenIsValid
 
 Лучше всего представить себе посредников как серию «слоев» для HTTP-запроса, которые необходимо пройти, прежде чем запрос попадет в ваше приложение. Каждый слой может рассмотреть запрос и даже полностью отклонить его.
 
-> {tip} Все посредники извлекаются из [контейнера служб](container.md), поэтому вы можете объявить необходимые вам зависимости в конструкторе посредника.
+> **Примечание**\
+> Все посредники извлекаются из [контейнера служб](container.md), поэтому вы можете объявить необходимые вам зависимости в конструкторе посредника.
 
 <a name="before-after-middleware"></a>
 <a name="middleware-and-responses"></a>
@@ -182,7 +183,7 @@ php artisan make:middleware EnsureTokenIsValid
 
 По желанию можно сгруппировать несколько посредников под одним ключом, чтобы упростить их назначение маршрутам. Вы можете сделать это, используя свойство `$middlewareGroups` вашего HTTP-ядра.
 
-По умолчанию Laravel поставляется с группами посредников `web` и `api`, которые содержат основных посредников, которые вы, возможно, захотите применить к своим веб- и  API-маршрутам. Помните, что эти группы посредников автоматически применяются поставщиком служб `App\Providers\RouteServiceProvider` вашего приложения к маршрутам, определенным в файлах маршрутов `web` и `api`, соответственно:
+Laravel включает предопределенные группы посредников `web` и `api`, которые содержат основных посредников, которые вы, возможно, захотите применить к своим веб- и  API-маршрутам. Помните, что эти группы посредников автоматически применяются поставщиком служб `App\Providers\RouteServiceProvider` вашего приложения к маршрутам, определенным в файлах маршрутов `web` и `api`, соответственно:
 
     /**
      * Группы посредников маршрутов приложения.
@@ -215,7 +216,8 @@ php artisan make:middleware EnsureTokenIsValid
         //
     });
 
-> {tip} Из коробки группы посредников `web` и `api` автоматически применяются к соответствующим файлам вашего приложения `routes/web.php` и `routes/api.php` с помощью `App\Providers\RouteServiceProvider`.
+> **Примечание**\
+> Из коробки группы посредников `web` и `api` автоматически применяются к соответствующим файлам вашего приложения `routes/web.php` и `routes/api.php` с помощью `App\Providers\RouteServiceProvider`.
 
 <a name="sorting-middleware"></a>
 ### Сортировка посредников
@@ -230,6 +232,7 @@ php artisan make:middleware EnsureTokenIsValid
      * @var string[]
      */
     protected $middlewarePriority = [
+        \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
         \Illuminate\Cookie\Middleware\EncryptCookies::class,
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,

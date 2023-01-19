@@ -214,7 +214,8 @@ composer require nyholm/psr7
         //
     });
 
-> {tip} Если вы вернете экземпляр ответа PSR-7 из маршрута или контроллера, он будет автоматически преобразован обратно в экземпляр ответа Laravel и отобразится фреймворком.
+> **Примечание**\
+> Если вы вернете экземпляр ответа PSR-7 из маршрута или контроллера, он будет автоматически преобразован обратно в экземпляр ответа Laravel и отобразится фреймворком.
 
 <a name="input"></a>
 ## Данные полей ввода
@@ -331,7 +332,8 @@ composer require nyholm/psr7
 
     $input = $request->except('credit_card');
 
-> {note} Метод `only` возвращает все пары ключ / значение, которые вы запрашиваете; однако, он не вернет пары ключ / значение, которых нет в запросе.
+> **Предупреждение**\
+> Метод `only` возвращает все пары ключ / значение, которые вы запрашиваете; однако, он не вернет пары ключ / значение, которых нет в запросе.
 
 <a name="determining-if-input-is-present"></a>
 ### Определение наличия требуемых данных
@@ -549,7 +551,8 @@ public function boot()
 
     $path = $request->photo->storeAs('images', 'filename.jpg', 's3');
 
-> {tip} Для получения дополнительной информации о хранилище файлов в Laravel, ознакомьтесь с полной [документацией по файловому хранилищу](filesystem.md).
+> **Примечание**\
+> Для получения дополнительной информации о хранилище файлов в Laravel, ознакомьтесь с полной [документацией по файловому хранилищу](filesystem.md).
 
 <a name="configuring-trusted-proxies"></a>
 ## Конфигурирование доверенных прокси
@@ -585,7 +588,8 @@ public function boot()
         protected $headers = Request::HEADER_X_FORWARDED_FOR | Request::HEADER_X_FORWARDED_HOST | Request::HEADER_X_FORWARDED_PORT | Request::HEADER_X_FORWARDED_PROTO;
     }
 
-> {tip} Если вы используете AWS Elastic Load Balancing, значение `$headers` должно быть `Request::HEADER_X_FORWARDED_AWS_ELB`. Для получения дополнительной информации о константах, которые могут использоваться в свойстве `$headers`, ознакомьтесь с документацией Symfony о [доверенных прокси-серверах](https://symfony.com/doc/current/deployment/proxies.html).
+> **Примечание**\
+> Если вы используете AWS Elastic Load Balancing, значение `$headers` должно быть `Request::HEADER_X_FORWARDED_AWS_ELB`. Для получения дополнительной информации о константах, которые могут использоваться в свойстве `$headers`, ознакомьтесь с документацией Symfony о [доверенных прокси-серверах](https://symfony.com/doc/current/deployment/proxies.html).
 
 <a name="trusting-all-proxies"></a>
 #### Доверие ко всем прокси

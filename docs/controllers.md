@@ -13,6 +13,7 @@
     - [Ограничение ресурсных маршрутов](#restful-scoping-resource-routes)
     - [Локализация URI ресурсов](#restful-localizing-resource-uris)
     - [Дополнение ресурсных контроллеров](#restful-supplementing-resource-controllers)
+    - [Контроллеры одиночного ресурса](#singleton-resource-controllers)
 - [Внедрение зависимостей и контроллеры](#dependency-injection-and-controllers)
 
 <a name="introduction"></a>
@@ -32,7 +33,6 @@
 
     namespace App\Http\Controllers;
 
-    use App\Http\Controllers\Controller;
     use App\Models\User;
 
     class UserController extends Controller
@@ -59,7 +59,8 @@
 
 Когда входящий запрос совпадает с указанным URI маршрута, будет вызван метод `show` класса `App\Http\Controllers\UserController`, и параметры маршрута будут переданы методу.
 
-> {tip} Контроллеры **не требуют** расширения базового класса. Однако у вас не будет доступа к удобным функциям, таким как методы `middleware` и `authorize`.
+> **Примечание**\
+> Контроллеры **не требуют** расширения базового класса. Однако у вас не будет доступа к удобным функциям, таким как методы `middleware` и `authorize`.
 
 <a name="single-action-controllers"></a>
 ### Контроллеры одиночного действия
@@ -70,7 +71,6 @@
 
     namespace App\Http\Controllers;
 
-    use App\Http\Controllers\Controller;
     use App\Models\User;
 
     class ProvisionServer extends Controller
@@ -98,7 +98,8 @@
 php artisan make:controller ProvisionServer --invokable
 ```
 
-> {tip} Заготовки контроллера можно настроить с помощью [публикации заготовок](artisan.md#stub-customization).
+> **Примечание**\
+> Заготовки контроллера можно настроить с помощью [публикации заготовок](artisan.md#stub-customization).
 
 <a name="controller-middleware"></a>
 ## Посредник контроллера
@@ -182,6 +183,19 @@ DELETE    | `/photos/{photo}`      | destroy      | photos.destroy
             ->missing(function (Request $request) {
                 return Redirect::route('photos.index');
             });
+
+<a name="soft-deleted-models"></a>
+#### Программно удаляемые модели
+
+Как правило, неявная привязка модели не извлекает модели, которые были [программно удалены](eloquent.md#soft-deleting), а вместо этого возвращает HTTP-ответ 404. Тем не менее, вы можете указать Laravel разрешить извлечение таких моделей, вызвав метод `withTrashed` при определении маршрута ресурса:
+
+    use App\Http\Controllers\PhotoController;
+
+    Route::resource('photos', PhotoController::class)->withTrashed();
+
+Вызов `withTrashed` без аргументов позволит извлечение таких моделей для маршрутов `show`, `edit` и `update` ресурса. Вы можете указать подмножество этих маршрутов, передав массив методу `withTrashed`:
+
+    Route::resource('photos', PhotoController::class)->withTrashed(['show']);
 
 <a name="specifying-the-resource-model"></a>
 #### Указание модели ресурса
@@ -359,7 +373,83 @@ DELETE    | `/comments/{comment}`             | destroy      | comments.destroy
     Route::get('/photos/popular', [PhotoController::class, 'popular']);
     Route::resource('photos', PhotoController::class);
 
-> {tip} Помните, что ваши контроллеры должны быть сосредоточенными. Если вам постоянно требуются методы, выходящие за рамки типичного набора действий с ресурсами, рассмотрите возможность разделения вашего контроллера на два меньших контроллера.
+> **Примечание**\
+> Помните, что ваши контроллеры должны быть сосредоточенными. Если вам постоянно требуются методы, выходящие за рамки типичного набора действий с ресурсами, рассмотрите возможность разделения вашего контроллера на два меньших контроллера.
+
+<a name="singleton-resource-controllers"></a>
+### Контроллеры одиночного ресурса
+
+Иногда ваше приложение будет иметь ресурсы, содержащие только один экземпляр. Например, «профиль» пользователя можно редактировать или обновлять, но у пользователя не может быть более одного «профиля». Точно так же изображение может иметь одну «миниатюру». Эти ресурсы называются «одиночными ресурсами», что означает, что может существовать один и только один экземпляр ресурса. В этих сценариях вы можете зарегистрировать контроллер «одиночного» ресурса:
+
+```php
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
+
+Route::singleton('profile', ProfileController::class);
+```
+
+Приведенное выше определение одиночного ресурса зарегистрирует следующие маршруты. Как видите, маршруты «создания» не регистрируются для одиночных ресурсов, а зарегистрированные маршруты не принимают идентификатор, поскольку может существовать только один экземпляр ресурса:
+
+| Метод     | URI                               | Действие | Имя маршрута    |
+|-----------|-----------------------------------|----------|-----------------|
+| GET       | `/profile`                        | show     | profile.show    |
+| GET       | `/profile/edit`                   | edit     | profile.edit    |
+| PUT/PATCH | `/profile`                        | update   | profile.update  |
+
+Одиночные ресурсы также могут быть вложены в стандартный ресурс:
+
+```php
+Route::singleton('photos.thumbnail', ThumbnailController::class);
+```
+
+В этом примере ресурс `photos` получит все [стандартные ресурсные маршруты](#actions-handled-by-resource-controller); однако ресурс `thumbnail` будет одиночным ресурсом со следующими маршрутами:
+
+| Метод     | URI                              | Действие | Имя маршрута             |
+|-----------|----------------------------------|----------|--------------------------|
+| GET       | `/photos/{photo}/thumbnail`      | show     | photos.thumbnail.show    |
+| GET       | `/photos/{photo}/thumbnail/edit` | edit     | photos.thumbnail.edit    |
+| PUT/PATCH | `/photos/{photo}/thumbnail`      | update   | photos.thumbnail.update  |
+
+<a name="creatable-singleton-resources"></a>
+#### Расширенные одиночные ресурсы
+
+Иногда требуется определить маршруты создания и сохранения для одиночного ресурса. Для этого вы можете вызвать метод `creatable` при регистрации маршрутов одиночного ресурса:
+
+```php
+Route::singleton('photos.thumbnail', ThumbnailController::class)->creatable();
+```
+
+В этом примере будут зарегистрированы следующие маршруты. Для расширенных одиночных ресурсов также будет зарегистрирован маршрут `DELETE`:
+
+| Метод     | URI                                | Действие | Имя маршрута             |
+|-----------|------------------------------------|----------|--------------------------|
+| GET       | `/photos/{photo}/thumbnail/create` | create   | photos.thumbnail.create  |
+| POST      | `/photos/{photo}/thumbnail`        | store    | photos.thumbnail.store   |
+| GET       | `/photos/{photo}/thumbnail`        | show     | photos.thumbnail.show    |
+| GET       | `/photos/{photo}/thumbnail/edit`   | edit     | photos.thumbnail.edit    |
+| PUT/PATCH | `/photos/{photo}/thumbnail`        | update   | photos.thumbnail.update  |
+| DELETE    | `/photos/{photo}/thumbnail`        | destroy  | photos.thumbnail.destroy |
+
+Если вы хотите, чтобы Laravel зарегистрировал маршрут `DELETE` для одиночного ресурса, но не регистрировал маршруты создания или сохранения, то вы можете использовать метод `destroyable`:
+
+```php
+Route::singleton(...)->destroyable();
+```
+
+<a name="api-singleton-resources"></a>
+#### Одиночные ресурсы API-маршрутов
+
+Метод `apiSingleton` может использоваться для регистрации одиночного ресурса API, исключающим маршруты `create` и `edit`:
+
+```php
+Route::apiSingleton('profile', ProfileController::class);
+```
+
+Конечно, одиночные ресурсы API также могут быть расширенными, содержать маршруты `store` и `destroy` ресурса:
+
+```php
+Route::apiSingleton('photos.thumbnail', ProfileController::class)->creatable();
+```
 
 <a name="dependency-injection-and-controllers"></a>
 ## Внедрение зависимостей и контроллеры

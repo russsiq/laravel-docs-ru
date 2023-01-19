@@ -2,6 +2,9 @@
 
 - [Введение](#introduction)
 - [Доступные методы](#available-methods)
+- [Другие утилиты](#other-utilities)
+    - [Класс Benchmark](#benchmarking)
+    - [Класс Lottery](#lottery)
 
 <a name="introduction"></a>
 ## Введение
@@ -112,9 +115,11 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::excerpt](#method-excerpt)
 - [Str::finish](#method-str-finish)
 - [Str::headline](#method-str-headline)
+- [Str::inlineMarkdown](#method-str-inline-markdown)
 - [Str::is](#method-str-is)
 - [Str::isAscii](#method-str-is-ascii)
 - [Str::isJson](#method-str-is-json)
+- [Str::isUlid](#method-str-is-ulid)
 - [Str::isUuid](#method-str-is-uuid)
 - [Str::kebab](#method-kebab-case)
 - [Str::lcfirst](#method-str-lcfirst)
@@ -152,6 +157,7 @@ Laravel содержит множество глобальных «вспомо�
 - [Str::ucfirst](#method-str-ucfirst)
 - [Str::ucsplit](#method-str-ucsplit)
 - [Str::upper](#method-str-upper)
+- [Str::ulid](#method-str-ulid)
 - [Str::uuid](#method-str-uuid)
 - [Str::wordCount](#method-str-word-count)
 - [Str::words](#method-str-words)
@@ -185,11 +191,14 @@ Laravel содержит множество глобальных «вспомо�
 - [exactly](#method-fluent-str-exactly)
 - [explode](#method-fluent-str-explode)
 - [finish](#method-fluent-str-finish)
+- [headline](#method-fluent-str-headline)
+- [inlineMarkdown](#method-fluent-str-inline-markdown)
 - [is](#method-fluent-str-is)
 - [isAscii](#method-fluent-str-is-ascii)
 - [isEmpty](#method-fluent-str-is-empty)
 - [isNotEmpty](#method-fluent-str-is-not-empty)
 - [isJson](#method-fluent-str-is-json)
+- [isUlid](#method-fluent-str-is-ulid)
 - [isUuid](#method-fluent-str-is-uuid)
 - [kebab](#method-fluent-str-kebab)
 - [lcfirst](#method-fluent-str-lcfirst)
@@ -242,8 +251,10 @@ Laravel содержит множество глобальных «вспомо�
 - [whenStartsWith](#method-fluent-str-when-starts-with)
 - [whenEndsWith](#method-fluent-str-when-ends-with)
 - [whenExactly](#method-fluent-str-when-exactly)
+- [whenNotExactly](#method-fluent-str-when-not-exactly)
 - [whenIs](#method-fluent-str-when-is)
 - [whenIsAscii](#method-fluent-str-when-is-ascii)
+- [whenIsUlid](#method-fluent-str-when-is-ulid)
 - [whenIsUuid](#method-fluent-str-when-is-uuid)
 - [whenTest](#method-fluent-str-when-test)
 - [wordCount](#method-fluent-str-word-count)
@@ -294,6 +305,7 @@ Laravel содержит множество глобальных «вспомо�
 - [encrypt](#method-encrypt)
 - [env](#method-env)
 - [event](#method-event)
+- [fake](#method-fake)
 - [filled](#method-filled)
 - [info](#method-info)
 - [logger](#method-logger)
@@ -304,6 +316,8 @@ Laravel содержит множество глобальных «вспомо�
 - [policy](#method-policy)
 - [redirect](#method-redirect)
 - [report](#method-report)
+- [report_if](#method-report-if)
+- [report_unless](#method-report-unless)
 - [request](#method-request)
 - [rescue](#method-rescue)
 - [resolve](#method-resolve)
@@ -607,11 +621,11 @@ Laravel содержит множество глобальных «вспомо�
 
     use Illuminate\Support\Arr;
 
-    $isAssoc = Arr::isList(['foo', 'bar', 'baz']);
+    $isList = Arr::isList(['foo', 'bar', 'baz']);
 
     // true
 
-    $isAssoc = Arr::isList(['product' => ['name' => 'Desk', 'price' => 100]]);
+    $isList = Arr::isList(['product' => ['name' => 'Desk', 'price' => 100]]);
 
     // false
 
@@ -1096,7 +1110,7 @@ Laravel содержит множество глобальных «вспомо�
 
     $data = ['products' => ['desk' => ['price' => 100]]];
 
-    data_set($data, 'products.desk.price', 200, $overwrite = false);
+    data_set($data, 'products.desk.price', 200, overwrite: false);
 
     // ['products' => ['desk' => ['price' => 100]]]
 
@@ -1445,6 +1459,17 @@ Laravel содержит множество глобальных «вспомо�
 
     // Email Notification Sent
 
+<a name="method-str-inline-markdown"></a>
+#### `Str::inlineMarkdown()`
+
+Метод `Str::inlineMarkdown` конвертирует текст с разметкой [GitHub flavored Markdown](https://github.github.com/gfm/) в строку HTML с помощью [CommonMark](https://commonmark.thephpleague.com/). Однако, в отличие от метода [`markdown`](#method-str-markdown), он не заключает весь сгенерированный HTML в блочный элемент:
+
+    use Illuminate\Support\Str;
+
+    $html = Str::inlineMarkdown('**Laravel**');
+
+    // <strong>Laravel</strong>
+
 <a name="method-str-is"></a>
 #### `Str::is()`
 
@@ -1491,6 +1516,21 @@ Laravel содержит множество глобальных «вспомо�
     // true
 
     $result = Str::isJson('{first: "John", last: "Doe"}');
+
+    // false
+
+<a name="method-str-is-ulid"></a>
+#### `Str::isUlid()`
+
+Метод `Str::isUlid` определяет, является ли переданная строка допустимым ULID:
+
+    use Illuminate\Support\Str;
+
+    $isUlid = Str::isUlid('01gd6r360bp37zj17nxb55yv40');
+
+    // true
+
+    $isUlid = Str::isUlid('laravel');
 
     // false
 
@@ -1995,6 +2035,17 @@ Laravel содержит множество глобальных «вспомо�
 
     // LARAVEL
 
+<a name="method-str-ulid"></a>
+#### `Str::ulid()`
+
+Метод `Str::ulid` генерирует ULID:
+
+    use Illuminate\Support\Str;
+
+    return (string) Str::ulid();
+
+    // 01gd6r360bp37zj17nxb55yv40
+
 <a name="method-str-uuid"></a>
 #### `Str::uuid()`
 
@@ -2328,6 +2379,32 @@ Str::wordCount('Hello, world!'); // 2
 
     // this/string/
 
+<a name="method-fluent-str-headline"></a>
+#### `headline`
+
+The `headline` method will convert strings delimited by casing, hyphens, or underscores into a space delimited string with each word's first letter capitalized:
+
+    use Illuminate\Support\Str;
+
+    $headline = Str::of('taylor_otwell')->headline();
+
+    // Taylor Otwell
+
+    $headline = Str::of('EmailNotificationSent')->headline();
+
+    // Email Notification Sent
+
+<a name="method-fluent-str-inline-markdown"></a>
+#### `inlineMarkdown`
+
+Метод `inlineMarkdown` конвертирует текст с разметкой [GitHub flavored Markdown](https://github.github.com/gfm/) в строку HTML с помощью [CommonMark](https://commonmark.thephpleague.com/). Однако, в отличие от метода [`markdown`](#method-fluent-str-markdown), он не заключает весь сгенерированный HTML в блочный элемент:
+
+    use Illuminate\Support\Str;
+
+    $html = Str::of('**Laravel**')->inlineMarkdown();
+
+    // <strong>Laravel</strong>
+
 <a name="method-fluent-str-is"></a>
 #### `is`
 
@@ -2405,6 +2482,21 @@ Str::wordCount('Hello, world!'); // 2
     // true
 
     $result = Str::of('{first: "John", last: "Doe"}')->isJson();
+
+    // false
+
+<a name="method-fluent-str-is-ulid"></a>
+#### `isUlid`
+
+Метод `isUlid` определяет, является ли переданная строка допустимым ULID:
+
+    use Illuminate\Support\Str;
+
+    $result = Str::of('01gd6r360bp37zj17nxb55yv40')->isUlid();
+
+    // true
+
+    $result = Str::of('Taylor')->isUlid();
 
     // false
 
@@ -2941,7 +3033,7 @@ Str::wordCount('Hello, world!'); // 2
     $string = Str::of('Laravel')
         ->append(' Framework')
         ->tap(function ($string) {
-            dump('String after append: ' . $string);
+            dump('String after append: '.$string);
         })
         ->upper();
 
@@ -3141,6 +3233,19 @@ Str::wordCount('Hello, world!'); // 2
 
     // 'Laravel'
 
+<a name="method-fluent-str-when-not-exactly"></a>
+#### `whenNotExactly`
+
+Метод `whenNotExactly` вызывает переданное замыкание, если строка имеет не точное соответствие указанной строке. Замыкание получит экземпляр Fluent:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('framework')->whenNotExactly('laravel', function ($string) {
+        return $string->title();
+    });
+
+    // 'Framework'
+
 <a name="method-fluent-str-when-is"></a>
 #### `whenIs`
 
@@ -3161,11 +3266,24 @@ Str::wordCount('Hello, world!'); // 2
 
     use Illuminate\Support\Str;
 
-    $string = Str::of('foo/bar')->whenIsAscii('laravel', function ($string) {
+    $string = Str::of('laravel')->whenIsAscii(function ($string) {
         return $string->title();
     });
 
     // 'Laravel'
+
+<a name="method-fluent-str-when-is-ulid"></a>
+#### `whenIsUlid`
+
+Метод `whenIsUlid` вызывает переданное замыкание, если строка является допустимым ULID. Замыкание получит экземпляр Fluent:
+
+    use Illuminate\Support\Str;
+
+    $string = Str::of('01gd6r360bp37zj17nxb55yv40')->whenIsUlid(function ($string) {
+        return $string->substr(0, 8);
+    });
+
+    // '01gd6r36'
 
 <a name="method-fluent-str-when-is-uuid"></a>
 #### `whenIsUuid`
@@ -3174,7 +3292,7 @@ Str::wordCount('Hello, world!'); // 2
 
     use Illuminate\Support\Str;
 
-    $string = Str::of('foo/bar')->whenIsUuid('a0a2a2d2-0b87-4a18-83f2-2529882be2de', function ($string) {
+    $string = Str::of('a0a2a2d2-0b87-4a18-83f2-2529882be2de')->whenIsUuid(function ($string) {
         return $string->substr(0, 8);
     });
 
@@ -3517,7 +3635,8 @@ Str::of('Hello, world!')->wordCount(); // 2
 
     $env = env('APP_ENV', 'production');
 
-> {note} Если вы выполнили команду `config:cache` во время процесса развертывания, вы должны быть уверены, что вызываете функцию `env` только из файлов конфигурации. Как только конфигурации будут кешированы, файл `.env` не будет загружаться, и все вызовы функции `env` будут возвращать `null`.
+> **Предупреждение**\
+> Если вы выполнили команду `config:cache` во время процесса развертывания, вы должны быть уверены, что вызываете функцию `env` только из файлов конфигурации. Как только конфигурации будут кешированы, файл `.env` не будет загружаться, и все вызовы функции `env` будут возвращать `null`.
 
 <a name="method-event"></a>
 #### `event()`
@@ -3525,6 +3644,27 @@ Str::of('Hello, world!')->wordCount(); // 2
 Функция `event` отправляет переданное [событие](events.md) своим слушателям:
 
     event(new UserRegistered($user));
+
+<a name="method-fake"></a>
+#### `fake()`
+
+Функция `fake` извлекает из контейнера синглтон [Faker](https://github.com/FakerPHP/Faker), что может быть полезно при создании фиктивных данных в фабриках моделей, заполнении баз данных, тестах и прототипировании шаблонов:
+
+```blade
+@for($i = 0; $i < 10; $i++)
+    <dl>
+        <dt>Name</dt>
+        <dd>{{ fake()->name() }}</dd>
+
+        <dt>Email</dt>
+        <dd>{{ fake()->unique()->safeEmail() }}</dd>
+    </dl>
+@endfor
+```
+
+По умолчанию функция `fake` будет использовать параметр конфигурации `faker_locale` вашего конфигурационного файла `config/app.php`; вы также можете указать языковой стандарт, передав его функции `fake`. Каждому языковому стандарту соответствует свой синглтон:
+
+    fake('nl_NL')->name()
 
 <a name="method-filled"></a>
 #### `filled()`
@@ -3649,6 +3789,24 @@ Str::of('Hello, world!')->wordCount(); // 2
 
     report('Something went wrong.');
 
+<a name="method-report-if"></a>
+#### `report_if()`
+
+Функция `report_if` сообщит об исключении, используя ваш [обработчик исключений](errors.md#the-exception-handler), если переданное условие истинно:
+
+    report_if($shouldReport, $e);
+
+    report_if($shouldReport, 'Something went wrong.');
+
+<a name="method-report-unless"></a>
+#### `report_unless()`
+
+Функция `report_unless` сообщит об исключении, используя ваш [обработчик исключений](errors.md#the-exception-handler), если переданное условие не является истинным:
+
+    report_unless($reportingDisabled, $e);
+
+    report_unless($reportingDisabled, 'Something went wrong.');
+
 <a name="method-request"></a>
 #### `request()`
 
@@ -3714,7 +3872,7 @@ Str::of('Hello, world!')->wordCount(); // 2
 
 Для удобства вы можете предоставить массив в качестве первого аргумента функции `retry`. Этот массив будет использоваться для определения количества миллисекунд ожидания между последующими попытками:
 
-    return retry([100, 200] function () {
+    return retry([100, 200], function () {
         // Ждем 100 мс при первой попытке, 200 мс при второй попытке ...
     });
 
@@ -3875,3 +4033,69 @@ Str::of('Hello, world!')->wordCount(); // 2
     $result = with(5, null);
 
     // 5
+
+<a name="other-utilities"></a>
+## Другие утилиты
+
+<a name="benchmarking"></a>
+### Класс Benchmark
+
+Иногда требуется быстро протестировать производительность определенных частей вашего приложения. В таких случаях вы можете использовать класс `Benchmark` для измерения количества миллисекунд, которое требуется для выполнения переданных замыканий:
+
+    <?php
+
+    use App\Models\User;
+    use Illuminate\Support\Benchmark;
+
+    Benchmark::dd(fn () => User::find(1)); // 0.1 ms
+
+    Benchmark::dd([
+        'Scenario 1' => fn () => User::count(), // 0.5 ms
+        'Scenario 2' => fn () => User::all()->count(), // 20.0 ms
+    ]);
+
+По умолчанию переданные замыкания будут выполняться один раз (одна итерация), а их продолжительность будет отображаться в браузере или консоли.
+
+Чтобы вызвать замыкание более одного раза, вы можете указать количество итераций в качестве второго аргумента метода. При выполнении замыкания более одного раза класс `Benchmark` вернет среднее количество миллисекунд, которое потребовалось для выполнения замыкания во всех итерациях:
+
+    Benchmark::dd(fn () => User::count(), iterations: 10); // 0.5 ms
+
+<a name="lottery"></a>
+### Класс Lottery
+
+Класс Laravel Lottery может использоваться для выполнения замыканий, основываясь на выборе целого числа из переданных в замкнутом интервале. Это может быть особенно полезно, когда вы хотите выполнять код только для процента ваших входящих запросов:
+
+    use Illuminate\Support\Lottery;
+
+    Lottery::odds(1, 20)
+        ->winner(fn () => $user->won())
+        ->loser(fn () => $user->lost())
+        ->choose();
+
+Вы можете комбинировать класс Laravel Lottery с другими функциями. Например, вы можете сообщить обработчику исключений только о небольшом проценте медленных запросов. И, поскольку класс Lottery является вызываемым, мы можем передать экземпляр класса в любой метод, который принимает вызываемые объекты:
+
+    use Carbon\CarbonInterval;
+    use Illuminate\Support\Facades\DB;
+    use Illuminate\Support\Lottery;
+
+    DB::whenQueryingForLongerThan(
+        CarbonInterval::seconds(2),
+        Lottery::odds(1, 100)->winner(fn () => report('Querying > 2 seconds.')),
+    );
+
+<a name="testing-lotteries"></a>
+#### Тестирование Lottery
+
+Laravel предоставляет несколько простых методов, позволяющих легко тестировать вызовы Lottery вашего приложения:
+
+    // Всегда выигрышная ситуация ...
+    Lottery::alwaysWin();
+
+    // Всегда проигрышная ситуация ...
+    Lottery::alwaysLose();
+
+    // Сначала выигрышная ситуация, затем проигрышная и далее обычное поведение ...
+    Lottery::fix([true, false]);
+
+    // Возврат к обычному поведению ...
+    Lottery::determineResultNormally();

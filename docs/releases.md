@@ -131,7 +131,8 @@ public function address(): Attribute
 <a name="enum-casting"></a>
 ### Типизация `Enum` атрибутов модели Eloquent
 
-> {note} Перечисляемые типы доступны только в [PHP 8.1+](https://www.php.net/manual/ru/language.enumerations.php).
+> **Предупреждение**\
+> Перечисляемые типы доступны только в [PHP 8.1+](https://www.php.net/manual/ru/language.enumerations.php).
 
 _Автор: [Mohamed Said](https://github.com/themsaid)_.
 

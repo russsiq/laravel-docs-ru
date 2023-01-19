@@ -57,7 +57,8 @@ php artisan make:test UserTest --pest
 php artisan make:test UserTest --unit --pest
 ```
 
-> {tip} Заготовки тестов можно настроить с помощью [публикации заготовок](artisan.md#stub-customization).
+> **Примечание**\
+> Заготовки тестов можно настроить с помощью [публикации заготовок](artisan.md#stub-customization).
 
 После того, как тест был сгенерирован, вы можете определить методы тестирования, как обычно, используя [PHPUnit](https://phpunit.de). Чтобы запустить ваши тесты, выполните команду `vendor/bin/phpunit` или `php artisan test` из вашего терминала:
 
@@ -80,7 +81,8 @@ php artisan make:test UserTest --unit --pest
         }
     }
 
-> {note} Если вы определяете свои собственные методы `setUp` / `tearDown` в тестовом классе, обязательно вызывайте соответствующие методы `parent::setUp()` / `parent::tearDown()` родительского класса.
+> **Предупреждение**\
+> Если вы определяете свои собственные методы `setUp` / `tearDown` в тестовом классе, обязательно вызывайте соответствующие методы `parent::setUp()` / `parent::tearDown()` родительского класса.
 
 <a name="running-tests"></a>
 ## Запуск тестов
@@ -118,7 +120,8 @@ php artisan test --parallel
 php artisan test --parallel --processes=4
 ```
 
-> {note} При параллельном запуске тестов некоторые параметры PHPUnit (такие как `--do-not-cache-result`) могут быть недоступны.
+> **Предупреждение**\
+> При параллельном запуске тестов некоторые параметры PHPUnit (такие как `--do-not-cache-result`) могут быть недоступны.
 
 <a name="parallel-testing-and-databases"></a>
 #### Параллельное тестирование и базы данных
@@ -188,7 +191,8 @@ php artisan test --parallel --recreate-databases
 <a name="reporting-test-coverage"></a>
 ### Отчет о покрытии тестами
 
-> {note} Данный функционал требует [Xdebug](https://xdebug.org) или [PCOV](https://pecl.php.net/package/pcov).
+> **Предупреждение**\
+> Данный функционал требует [Xdebug](https://xdebug.org) или [PCOV](https://pecl.php.net/package/pcov).
 
 При выполнении тестов приложения вы можете определить, действительно ли ваши тесты охватывают код приложения и сколько кода приложения используется при выполнении ваших тестов. Для этого вы можете указать флаг `--coverage` при вызове команды `test`:
 
