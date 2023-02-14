@@ -304,19 +304,21 @@ Once you have updated your Nginx configuration, run the `valet restart` command 
 
 Some applications using other frameworks may depend on server environment variables but do not provide a way for those variables to be configured within your project. Valet allows you to configure site specific environment variables by adding a `.valet-env.php` file within the root of your project. This file should return an array of site / environment variable pairs which will be added to the global `$_SERVER` array for each site specified in the array:
 
-    <?php
+```php
+<?php
 
-    return [
-        // Set $_SERVER['key'] to "value" for the laravel.test site...
-        'laravel' => [
-            'key' => 'value',
-        ],
+return [
+    // Set $_SERVER['key'] to "value" for the laravel.test site...
+    'laravel' => [
+        'key' => 'value',
+    ],
 
-        // Set $_SERVER['key'] to "value" for all sites...
-        '*' => [
-            'key' => 'value',
-        ],
-    ];
+    // Set $_SERVER['key'] to "value" for all sites...
+    '*' => [
+        'key' => 'value',
+    ],
+];
+```
 
 <a name="proxying-services"></a>
 ## Proxying Services
@@ -363,6 +365,76 @@ The `serves` method should return `true` if your driver should handle the incomi
 
 For example, let's imagine we are writing a `WordPressValetDriver`. Our `serves` method might look something like this:
 
+```php
+/**
+ * Determine if the driver serves the request.
+ *
+ * @param  string  $sitePath
+ * @param  string  $siteName
+ * @param  string  $uri
+ * @return bool
+ */
+public function serves($sitePath, $siteName, $uri)
+{
+    return is_dir($sitePath.'/wp-admin');
+}
+```
+
+<a name="the-isstaticfile-method"></a>
+#### The `isStaticFile` Method
+
+The `isStaticFile` should determine if the incoming request is for a file that is "static", such as an image or a stylesheet. If the file is static, the method should return the fully qualified path to the static file on disk. If the incoming request is not for a static file, the method should return `false`:
+
+```php
+/**
+ * Determine if the incoming request is for a static file.
+ *
+ * @param  string  $sitePath
+ * @param  string  $siteName
+ * @param  string  $uri
+ * @return string|false
+ */
+public function isStaticFile($sitePath, $siteName, $uri)
+{
+    if (file_exists($staticFilePath = $sitePath.'/public/'.$uri)) {
+        return $staticFilePath;
+    }
+
+    return false;
+}
+```
+
+> **Предупреждение**\
+> The `isStaticFile` method will only be called if the `serves` method returns `true` for the incoming request and the request URI is not `/`.
+
+<a name="the-frontcontrollerpath-method"></a>
+#### The `frontControllerPath` Method
+
+The `frontControllerPath` method should return the fully qualified path to your application's "front controller", which is typically an "index.php" file or equivalent:
+
+```php
+/**
+ * Get the fully resolved path to the application's front controller.
+ *
+ * @param  string  $sitePath
+ * @param  string  $siteName
+ * @param  string  $uri
+ * @return string
+ */
+public function frontControllerPath($sitePath, $siteName, $uri)
+{
+    return $sitePath.'/public/index.php';
+}
+```
+
+<a name="local-drivers"></a>
+### Local Drivers
+
+If you would like to define a custom Valet driver for a single application, create a `LocalValetDriver.php` file in the application's root directory. Your custom driver may extend the base `ValetDriver` class or extend an existing application specific driver such as the `LaravelValetDriver`:
+
+```php
+class LocalValetDriver extends LaravelValetDriver
+{
     /**
      * Determine if the driver serves the request.
      *
@@ -373,38 +445,8 @@ For example, let's imagine we are writing a `WordPressValetDriver`. Our `serves`
      */
     public function serves($sitePath, $siteName, $uri)
     {
-        return is_dir($sitePath.'/wp-admin');
+        return true;
     }
-
-<a name="the-isstaticfile-method"></a>
-#### The `isStaticFile` Method
-
-The `isStaticFile` should determine if the incoming request is for a file that is "static", such as an image or a stylesheet. If the file is static, the method should return the fully qualified path to the static file on disk. If the incoming request is not for a static file, the method should return `false`:
-
-    /**
-     * Determine if the incoming request is for a static file.
-     *
-     * @param  string  $sitePath
-     * @param  string  $siteName
-     * @param  string  $uri
-     * @return string|false
-     */
-    public function isStaticFile($sitePath, $siteName, $uri)
-    {
-        if (file_exists($staticFilePath = $sitePath.'/public/'.$uri)) {
-            return $staticFilePath;
-        }
-
-        return false;
-    }
-
-> **Предупреждение**\
-> The `isStaticFile` method will only be called if the `serves` method returns `true` for the incoming request and the request URI is not `/`.
-
-<a name="the-frontcontrollerpath-method"></a>
-#### The `frontControllerPath` Method
-
-The `frontControllerPath` method should return the fully qualified path to your application's "front controller", which is typically an "index.php" file or equivalent:
 
     /**
      * Get the fully resolved path to the application's front controller.
@@ -416,42 +458,10 @@ The `frontControllerPath` method should return the fully qualified path to your 
      */
     public function frontControllerPath($sitePath, $siteName, $uri)
     {
-        return $sitePath.'/public/index.php';
+        return $sitePath.'/public_html/index.php';
     }
-
-<a name="local-drivers"></a>
-### Local Drivers
-
-If you would like to define a custom Valet driver for a single application, create a `LocalValetDriver.php` file in the application's root directory. Your custom driver may extend the base `ValetDriver` class or extend an existing application specific driver such as the `LaravelValetDriver`:
-
-    class LocalValetDriver extends LaravelValetDriver
-    {
-        /**
-         * Determine if the driver serves the request.
-         *
-         * @param  string  $sitePath
-         * @param  string  $siteName
-         * @param  string  $uri
-         * @return bool
-         */
-        public function serves($sitePath, $siteName, $uri)
-        {
-            return true;
-        }
-
-        /**
-         * Get the fully resolved path to the application's front controller.
-         *
-         * @param  string  $sitePath
-         * @param  string  $siteName
-         * @param  string  $uri
-         * @return string
-         */
-        public function frontControllerPath($sitePath, $siteName, $uri)
-        {
-            return $sitePath.'/public_html/index.php';
-        }
-    }
+}
+```
 
 <a name="other-valet-commands"></a>
 ## Other Valet Commands

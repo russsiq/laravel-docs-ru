@@ -28,31 +28,33 @@ php artisan make:seeder UserSeeder
 
 В качестве примера давайте изменим класс `DatabaseSeeder`, созданный по умолчанию, и добавим выражение вставки фасада `DB` в методе `run`:
 
-    <?php
+```php
+<?php
 
-    namespace Database\Seeders;
+namespace Database\Seeders;
 
-    use Illuminate\Database\Seeder;
-    use Illuminate\Support\Facades\DB;
-    use Illuminate\Support\Facades\Hash;
-    use Illuminate\Support\Str;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
-    class DatabaseSeeder extends Seeder
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Запустить наполнение базы данных.
+     *
+     * @return void
+     */
+    public function run()
     {
-        /**
-         * Запустить наполнение базы данных.
-         *
-         * @return void
-         */
-        public function run()
-        {
-            DB::table('users')->insert([
-                'name' => Str::random(10),
-                'email' => Str::random(10).'@gmail.com',
-                'password' => Hash::make('password'),
-            ]);
-        }
+        DB::table('users')->insert([
+            'name' => Str::random(10),
+            'email' => Str::random(10).'@gmail.com',
+            'password' => Hash::make('password'),
+        ]);
     }
+}
+```
 
 > **Примечание**\
 > В методе `run` вы можете объявить любые необходимые типы зависимостей. Они будут автоматически извлечены и внедрены через [контейнер служб](container.md) Laravel.
@@ -64,25 +66,60 @@ php artisan make:seeder UserSeeder
 
 Например, давайте создадим 50 пользователей, у каждого из которых будет по одному посту:
 
-    use App\Models\User;
+```php
+use App\Models\User;
 
-    /**
-     * Запустить наполнение базы данных.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        User::factory()
-                ->count(50)
-                ->hasPosts(1)
-                ->create();
-    }
+/**
+ * Запустить наполнение базы данных.
+ *
+ * @return void
+ */
+public function run()
+{
+    User::factory()
+            ->count(50)
+            ->hasPosts(1)
+            ->create();
+}
+```
 
 <a name="calling-additional-seeders"></a>
 ### Вызов дополнительных наполнителей
 
 Внутри класса `DatabaseSeeder` вы можете использовать метод `call` для запуска других наполнителей. Использование метода `call` позволяет вам разбить ваши наполнители БД на несколько файлов, так что ни один класс наполнителя не станет слишком большим. Метод `call` принимает массив классов, которые должны быть выполнены:
+
+```php
+/**
+ * Запустить наполнение базы данных.
+ *
+ * @return void
+ */
+public function run()
+{
+    $this->call([
+        UserSeeder::class,
+        PostSeeder::class,
+        CommentSeeder::class,
+    ]);
+}
+```
+
+<a name="muting-model-events"></a>
+### Подавление событий моделей
+
+Во время наполнения вы можете запретить моделям отправлять события. Вы можете добиться этого, используя трейт `WithoutModelEvents`. При использовании трейта `WithoutModelEvents` гарантирует, что события модели не инициируются, даже если дополнительные классы наполнителей выполняются с помощью метода `call`:
+
+```php
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+class DatabaseSeeder extends Seeder
+{
+    use WithoutModelEvents;
 
     /**
      * Запустить наполнение базы данных.
@@ -93,39 +130,10 @@ php artisan make:seeder UserSeeder
     {
         $this->call([
             UserSeeder::class,
-            PostSeeder::class,
-            CommentSeeder::class,
         ]);
     }
-
-<a name="muting-model-events"></a>
-### Подавление событий моделей
-
-Во время наполнения вы можете запретить моделям отправлять события. Вы можете добиться этого, используя трейт `WithoutModelEvents`. При использовании трейта `WithoutModelEvents` гарантирует, что события модели не инициируются, даже если дополнительные классы наполнителей выполняются с помощью метода `call`:
-
-    <?php
-
-    namespace Database\Seeders;
-
-    use Illuminate\Database\Seeder;
-    use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-
-    class DatabaseSeeder extends Seeder
-    {
-        use WithoutModelEvents;
-
-        /**
-         * Запустить наполнение базы данных.
-         *
-         * @return void
-         */
-        public function run()
-        {
-            $this->call([
-                UserSeeder::class,
-            ]);
-        }
-    }
+}
+```
 
 <a name="running-seeders"></a>
 ## Запуск наполнителей

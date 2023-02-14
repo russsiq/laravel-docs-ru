@@ -52,17 +52,19 @@ php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
 
 Наконец, добавьте трейт `Laravel\Scout\Searchable` модели, которую вы хотите сделать доступной для поиска. Этот трейт зарегистрирует наблюдателя модели, который будет автоматически синхронизировать модель с вашим драйвером поиска:
 
-    <?php
+```php
+<?php
 
-    namespace App\Models;
+namespace App\Models;
 
-    use Illuminate\Database\Eloquent\Model;
-    use Laravel\Scout\Searchable;
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
-    class Post extends Model
-    {
-        use Searchable;
-    }
+class Post extends Model
+{
+    use Searchable;
+}
+```
 
 <a name="driver-prerequisites"></a>
 ### Предварительная подготовка драйверов
@@ -109,16 +111,20 @@ MEILISEARCH_KEY=masterKey
 
 После того, как вы настроили драйвер очереди, установите значение `true` для параметра `queue` в вашем конфигурационном файле `config/scout.php`:
 
-    'queue' => true,
+```php
+'queue' => true,
+```
 
 Даже когда для параметра `queue` установлено значение `false`, важно помнить, что некоторые драйверы Scout, такие как Algolia и MeiliSearch, всегда индексируют записи асинхронно. Это означает, что даже если операция индексирования завершена в вашем приложении Laravel, то сама поисковая система может не сразу отображать новые и обновленные записи.
 
 Чтобы указать соединение и очередь, которые используют ваши задания Scout, вы можете определить параметр конфигурации `queue` как массив:
 
-    'queue' => [
-        'connection' => 'redis',
-        'queue' => 'scout'
-    ],
+```php
+'queue' => [
+    'connection' => 'redis',
+    'queue' => 'scout'
+],
+```
 
 <a name="configuration"></a>
 ## Конфигурирование
@@ -128,69 +134,75 @@ MEILISEARCH_KEY=masterKey
 
 Каждая модель Eloquent синхронизируется с конкретным поисковым «индексом», который содержит все доступные для поиска записи данной модели. Другими словами, вы можете думать о каждом индексе как о таблице MySQL. По умолчанию каждая модель будет сохранена в индексе, соответствующем типичному «табличному» имени модели. Обычно это форма множественного числа от названия модели; однако вы можете изменить индекс модели, переопределив метод `searchableAs` модели:
 
-    <?php
+```php
+<?php
 
-    namespace App\Models;
+namespace App\Models;
 
-    use Illuminate\Database\Eloquent\Model;
-    use Laravel\Scout\Searchable;
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
-    class Post extends Model
+class Post extends Model
+{
+    use Searchable;
+
+    /**
+     * Получить имя индекса, связанного с моделью.
+     *
+     * @return string
+     */
+    public function searchableAs()
     {
-        use Searchable;
-
-        /**
-         * Получить имя индекса, связанного с моделью.
-         *
-         * @return string
-         */
-        public function searchableAs()
-        {
-            return 'posts_index';
-        }
+        return 'posts_index';
     }
+}
+```
 
 <a name="configuring-searchable-data"></a>
 ### Настройка индексируемых сведений
 
 По умолчанию все результаты метода `toArray` модели будут сохранены в поисковом индексе. Если вы хотите изменить синхронизируемые с поисковым индексом данные, то вы можете переопределить метод `toSearchableArray` модели:
 
-    <?php
+```php
+<?php
 
-    namespace App\Models;
+namespace App\Models;
 
-    use Illuminate\Database\Eloquent\Model;
-    use Laravel\Scout\Searchable;
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
-    class Post extends Model
+class Post extends Model
+{
+    use Searchable;
+
+    /**
+     * Получить индексируемый массив данных модели.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
     {
-        use Searchable;
+        $array = $this->toArray();
 
-        /**
-         * Получить индексируемый массив данных модели.
-         *
-         * @return array
-         */
-        public function toSearchableArray()
-        {
-            $array = $this->toArray();
+        // Изменение массива данных ...
 
-            // Изменение массива данных ...
-
-            return $array;
-        }
+        return $array;
     }
+}
+```
 
 Некоторые поисковые системы, такие как MeiliSearch, будут выполнять операции фильтрации (`>`, `<` и т. д.) только для корректных данных. Итак, при использовании этих поисковых систем и настройке поисковых данных вы должны убедиться, что числовые значения приведены к корректному типу:
 
-    public function toSearchableArray()
-    {
-        return [
-            'id' => (int) $this->id,
-            'name' => $this->name,
-            'price' => (float) $this->price,
-        ];
-    }
+```php
+public function toSearchableArray()
+{
+    return [
+        'id' => (int) $this->id,
+        'name' => $this->name,
+        'price' => (float) $this->price,
+    ];
+}
+```
 
 <a name="configuring-filterable-data-for-meilisearch"></a>
 #### Настройка фильтруемых данных и параметров индекса (MeiliSearch)
@@ -239,65 +251,69 @@ php artisan scout:sync-index-settings
 
 По умолчанию Scout будет использовать первичный ключ модели в качестве уникального идентификатора / ключа модели для сохранения в поисковом индексе. Если вам нужно изменить это поведение, то вы можете переопределить методы `getScoutKey` и `getScoutKeyName` модели:
 
-    <?php
+```php
+<?php
 
-    namespace App\Models;
+namespace App\Models;
 
-    use Illuminate\Database\Eloquent\Model;
-    use Laravel\Scout\Searchable;
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
-    class User extends Model
+class User extends Model
+{
+    use Searchable;
+
+    /**
+     * Получить значение ключа, используемое для индексации модели.
+     *
+     * @return mixed
+     */
+    public function getScoutKey()
     {
-        use Searchable;
-
-        /**
-         * Получить значение ключа, используемое для индексации модели.
-         *
-         * @return mixed
-         */
-        public function getScoutKey()
-        {
-            return $this->email;
-        }
-
-        /**
-         * Получить имя ключа, используемое для индексации модели.
-         *
-         * @return mixed
-         */
-        public function getScoutKeyName()
-        {
-            return 'email';
-        }
+        return $this->email;
     }
+
+    /**
+     * Получить имя ключа, используемое для индексации модели.
+     *
+     * @return mixed
+     */
+    public function getScoutKeyName()
+    {
+        return 'email';
+    }
+}
+```
 
 <a name="configuring-search-engines-per-model"></a>
 ### Настройка поисковых систем для каждой модели
 
 При поиске Scout обычно использует поисковую систему по умолчанию, указанную в конфигурационном файле `scout` вашего приложения. Однако поисковую систему для конкретной модели можно изменить, переопределив метод `searchableUsing` модели:
 
-    <?php
+```php
+<?php
 
-    namespace App\Models;
+namespace App\Models;
 
-    use Illuminate\Database\Eloquent\Model;
-    use Laravel\Scout\EngineManager;
-    use Laravel\Scout\Searchable;
+use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\EngineManager;
+use Laravel\Scout\Searchable;
 
-    class User extends Model
+class User extends Model
+{
+    use Searchable;
+
+    /**
+     * Получить поисковую систему, используемую для индексации модели.
+     *
+     * @return \Laravel\Scout\Engines\Engine
+     */
+    public function searchableUsing()
     {
-        use Searchable;
-
-        /**
-         * Получить поисковую систему, используемую для индексации модели.
-         *
-         * @return \Laravel\Scout\Engines\Engine
-         */
-        public function searchableUsing()
-        {
-            return app(EngineManager::class)->engine('meilisearch');
-        }
+        return app(EngineManager::class)->engine('meilisearch');
     }
+}
+```
 
 <a name="identifying-users"></a>
 ### Идентификация пользователей
@@ -402,46 +418,56 @@ php artisan scout:flush "App\Models\Post"
 
 Если вы хотите изменить запрос, используемый для получения всех ваших моделей при пакетном импорте, то вы можете определить метод `makeAllSearchableUsing` своей модели. Это отличное место для добавления любой [нетерпеливой загрузки отношений](eloquent-relationships.md#eager-loading), которая может потребоваться перед импортом ваших моделей:
 
-    /**
-     * Изменить запрос, используемый для получения всех индексируемых моделей.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    protected function makeAllSearchableUsing($query)
-    {
-        return $query->with('author');
-    }
+```php
+/**
+ * Изменить запрос, используемый для получения всех индексируемых моделей.
+ *
+ * @param  \Illuminate\Database\Eloquent\Builder  $query
+ * @return \Illuminate\Database\Eloquent\Builder
+ */
+protected function makeAllSearchableUsing($query)
+{
+    return $query->with('author');
+}
+```
 
 <a name="adding-records"></a>
 ### Добавление записей
 
 После добавления в модель трейта `Laravel\Scout\Searchable`, все, что вам нужно сделать, это вызвать методы `save` или `create` экземпляра модели, и она будет автоматически добавлена в ваш поисковый индекс. Если вы настроили [использование очередей](#queueing), то эта операция будет выполняться в фоновом режиме вашим обработчиком очереди:
 
-    use App\Models\Order;
+```php
+use App\Models\Order;
 
-    $order = new Order;
+$order = new Order;
 
-    // ...
+// ...
 
-    $order->save();
+$order->save();
+```
 
 <a name="adding-records-via-query"></a>
 #### Добавление записей через запрос
 
 Если вы хотите добавить коллекцию моделей в поисковый индекс с помощью запроса Eloquent, то вы можете связать метод `searchable` с запросом Eloquent. Метод `searchable` [разбивает результаты](eloquent.md#chunking-results) запроса и добавляет записи в поисковый индекс. Опять же, если вы настроили использование очередей, то все подмножества моделей будут импортированы в фоновом режиме вашим обработчиком очереди:
 
-    use App\Models\Order;
+```php
+use App\Models\Order;
 
-    Order::where('price', '>', 100)->searchable();
+Order::where('price', '>', 100)->searchable();
+```
 
 Вы также можете вызвать метод `searchable` экземпляра отношения Eloquent:
 
-    $user->orders()->searchable();
+```php
+$user->orders()->searchable();
+```
 
 Или, если у вас уже имеется в наличии коллекция моделей Eloquent, то вы можете вызвать метод `searchable` экземпляра коллекции, чтобы добавить экземпляры модели в соответствующий индекс:
 
-    $orders->searchable();
+```php
+$orders->searchable();
+```
 
 > **Примечание**\
 > Метод `searchable` можно считать операцией «обновления-вставки». Другими словами, если запись модели уже есть в вашем индексе, то она будет обновлена. Если записи нет в поисковом индексе, то она будет добавлен в индекс.
@@ -451,74 +477,94 @@ php artisan scout:flush "App\Models\Post"
 
 Чтобы обновить модель в поиске, то вам нужно только обновить свойства экземпляра модели и вызвать метод `save` модели. Scout автоматически сохранит изменения в вашем поисковом индексе:
 
-    use App\Models\Order;
+```php
+use App\Models\Order;
 
-    $order = Order::find(1);
+$order = Order::find(1);
 
-    // Обновление заказа ...
+// Обновление заказа ...
 
-    $order->save();
+$order->save();
+```
 
 Вы также можете вызвать метод `searchable` экземпляра запроса Eloquent, чтобы обновить коллекцию моделей. Если моделей нет в поисковом индексе, то они будут созданы:
 
-    Order::where('price', '>', 100)->searchable();
+```php
+Order::where('price', '>', 100)->searchable();
+```
 
 Если вы хотите обновить записи поискового индекса для всех моделей отношения, то вы можете вызвать `searchable` экземпляра отношения:
 
-    $user->orders()->searchable();
+```php
+$user->orders()->searchable();
+```
 
 Или, если у вас уже имеется в наличии коллекция моделей Eloquent, то вы можете вызвать метод `searchable` экземпляра коллекции, чтобы обновить экземпляры модели в соответствующем индексе:
 
-    $orders->searchable();
+```php
+$orders->searchable();
+```
 
 <a name="removing-records"></a>
 ### Удаление записей
 
 Чтобы удалить запись из поискового индекса с сопутствующим удалением из базы данных, то вы можете просто вызвать метод `delete` модели. Это можно сделать, даже если вы используете [программное удаление](eloquent.md#soft-deleting) моделей:
 
-    use App\Models\Order;
+```php
+use App\Models\Order;
 
-    $order = Order::find(1);
+$order = Order::find(1);
 
-    $order->delete();
+$order->delete();
+```
 
 Если вы не хотите извлекать модель перед удалением записи, то вы можете использовать метод `unsearchable` экземпляра запроса Eloquent:
 
-    Order::where('price', '>', 100)->unsearchable();
+```php
+Order::where('price', '>', 100)->unsearchable();
+```
 
 Если вы хотите удалить записи поискового индекса для всех моделей в отношении, то вы можете вызвать `unsearchable` экземпляра отношения:
 
-    $user->orders()->unsearchable();
+```php
+$user->orders()->unsearchable();
+```
 
 Или, если у вас уже имеется в наличии коллекция моделей Eloquent, то вы можете вызвать метод `unsearchable` экземпляра коллекции, чтобы удалить экземпляры модели из соответствующего индекса:
 
-    $orders->unsearchable();
+```php
+$orders->unsearchable();
+```
 
 <a name="pausing-indexing"></a>
 ### Приостановка индексирования
 
 Иногда требуется выполнить пакет действий Eloquent с моделью без синхронизации данных модели с поисковым индексом. Вы можете сделать это, используя метод `withoutSyncingToSearch`. Этот метод принимает замыкание, которое будет немедленно выполнено. Любые операции модели, выполняемые внутри замыкания, не будут синхронизированы с поисковым индексом модели:
 
-    use App\Models\Order;
+```php
+use App\Models\Order;
 
-    Order::withoutSyncingToSearch(function () {
-        // Выполнение действий с моделью ...
-    });
+Order::withoutSyncingToSearch(function () {
+    // Выполнение действий с моделью ...
+});
+```
 
 <a name="conditionally-searchable-model-instances"></a>
 ### Условное индексирование экземпляров модели
 
 Иногда требуется сделать модель доступной для поиска только при определенных условиях. Например, представьте, что у вас есть модель поста `App\Models\Post`, который может находиться в одном из двух состояний: «черновик» и «опубликован». Вы можете разрешить поиск только «опубликованных» постов. Для этого вы можете определить метод `shouldBeSearchable` модели:
 
-    /**
-     * Определить, должна ли модель индексироваться.
-     *
-     * @return bool
-     */
-    public function shouldBeSearchable()
-    {
-        return $this->isPublished();
-    }
+```php
+/**
+ * Определить, должна ли модель индексироваться.
+ *
+ * @return bool
+ */
+public function shouldBeSearchable()
+{
+    return $this->isPublished();
+}
+```
 
 Метод `shouldBeSearchable` учитывается при манипулировании моделями через запросы, отношения или методы `save` и `create`. Непосредственное указание доступности моделей или коллекций для поиска с помощью метода `searchable` переопределит результат метода `shouldBeSearchable`.
 
@@ -530,46 +576,58 @@ php artisan scout:flush "App\Models\Post"
 
 Вы можете начать поиск модели, используя метод `search`. Метод `search` принимает одну строку, которая будет использоваться для поиска ваших моделей. Затем вы должны связать метод `get` с поисковым запросом, чтобы получить модели Eloquent, соответствующие указанному поисковому запросу:
 
-    use App\Models\Order;
+```php
+use App\Models\Order;
 
-    $orders = Order::search('Star Trek')->get();
+$orders = Order::search('Star Trek')->get();
+```
 
 Поскольку поисковые запросы Scout возвращают коллекцию моделей Eloquent, то вы даже можете возвращать результаты непосредственно из маршрута или контроллера, и они будут автоматически преобразованы в JSON:
 
-    use App\Models\Order;
-    use Illuminate\Http\Request;
+```php
+use App\Models\Order;
+use Illuminate\Http\Request;
 
-    Route::get('/search', function (Request $request) {
-        return Order::search($request->search)->get();
-    });
+Route::get('/search', function (Request $request) {
+    return Order::search($request->search)->get();
+});
+```
 
 Если вы хотите получить необработанные результаты поиска до того, как они будут преобразованы в модели Eloquent, то вы можете использовать метод `raw`:
 
-    $orders = Order::search('Star Trek')->raw();
+```php
+$orders = Order::search('Star Trek')->raw();
+```
 
 <a name="custom-indexes"></a>
 #### Изменение индекса
 
 Поисковые запросы обычно выполняются по индексу, указанному в методе [`searchableAs`](#configuring-model-indexes) модели. Однако вы можете использовать метод `within`, чтобы указать необходимый поисковый индекс:
 
-    $orders = Order::search('Star Trek')
-        ->within('tv_shows_popularity_desc')
-        ->get();
+```php
+$orders = Order::search('Star Trek')
+    ->within('tv_shows_popularity_desc')
+    ->get();
+```
 
 <a name="where-clauses"></a>
 ### Выражения Where
 
 Scout позволяет добавлять к поисковым запросам простые выражения `WHERE`. В настоящее время эти выражения поддерживают только базовые проверки числового равенства и в первую очередь полезны для определения области поисковых запросов по идентификатору владельца:
 
-    use App\Models\Order;
+```php
+use App\Models\Order;
 
-    $orders = Order::search('Star Trek')->where('user_id', 1)->get();
+$orders = Order::search('Star Trek')->where('user_id', 1)->get();
+```
 
 Вы можете использовать метод `whereIn`, чтобы ограничить результаты заданным набором значений:
 
-    $orders = Order::search('Star Trek')->whereIn(
-        'status', ['paid', 'open']
-    )->get();
+```php
+$orders = Order::search('Star Trek')->whereIn(
+    'status', ['paid', 'open']
+)->get();
+```
 
 Поскольку поисковый индекс не является реляционной базой данных, более сложные выражения `WHERE` в настоящее время не поддерживаются.
 
@@ -581,13 +639,17 @@ Scout позволяет добавлять к поисковым запроса
 
 Помимо получения коллекции моделей, вы можете разбить результаты поиска постранично, используя метод `paginate`. Этот метод вернет экземпляр `Illuminate\Pagination\LengthAwarePaginator`, как если бы это был [обычный постраничный запрос Eloquent](pagination.md):
 
-    use App\Models\Order;
+```php
+use App\Models\Order;
 
-    $orders = Order::search('Star Trek')->paginate();
+$orders = Order::search('Star Trek')->paginate();
+```
 
 Вы можете указать, сколько моделей необходимо извлекать на каждой странице, передав их количество методу `paginate`:
 
-    $orders = Order::search('Star Trek')->paginate(15);
+```php
+$orders = Order::search('Star Trek')->paginate(15);
+```
 
 Получив результаты, вы можете отобразить их, а также ссылки на страницы с помощью [Blade](blade.md), как если бы это был обычный постраничный запрос Eloquent:
 
@@ -603,12 +665,14 @@ Scout позволяет добавлять к поисковым запроса
 
 Конечно, если вы хотите получить результаты постраничной разбивки в виде JSON, то вы можете вернуть экземпляр пагинатора прямо из маршрута или контроллера:
 
-    use App\Models\Order;
-    use Illuminate\Http\Request;
+```php
+use App\Models\Order;
+use Illuminate\Http\Request;
 
-    Route::get('/orders', function (Request $request) {
-        return Order::search($request->input('query'))->paginate(15);
-    });
+Route::get('/orders', function (Request $request) {
+    return Order::search($request->input('query'))->paginate(15);
+});
+```
 
 > **Предупреждение**\
 > Поскольку поисковые системы не знают об определениях [глобальных областей запроса](eloquent.md#global-scopes) вашей модели Eloquent, вам не следует использовать глобальные области в приложениях, использующих разбиение на страницы Scout. Или вам следует воссоздать ограничения глобальной области запроса при поиске через Scout.
@@ -618,17 +682,21 @@ Scout позволяет добавлять к поисковым запроса
 
 Если ваши индексируемые модели поддерживают [программное удаление](eloquent.md#soft-deleting) и вам необходимо выполнять поиск по таким моделям, то установите значение `true` для параметра `soft_delete` конфигурационного файла `config/scout.php`:
 
-    'soft_delete' => true,
+```php
+'soft_delete' => true,
+```
 
 Когда этот параметр конфигурации имеет значение `true`, тогда Scout не будет удалять такие модели из поискового индекса. Вместо этого он установит скрытый атрибут `__soft_deleted` для проиндексированной записи. Затем вы можете использовать методы `withTrashed` или `onlyTrashed` для взаимодействия с программно удаленными записями при поиске:
 
-    use App\Models\Order;
+```php
+use App\Models\Order;
 
-    // Добавить удаленные записи при получении результатов ...
-    $orders = Order::search('Star Trek')->withTrashed()->get();
+// Добавить удаленные записи при получении результатов ...
+$orders = Order::search('Star Trek')->withTrashed()->get();
 
-    // Вывести только удаленные записи при получении результатов ...
-    $orders = Order::search('Star Trek')->onlyTrashed()->get();
+// Вывести только удаленные записи при получении результатов ...
+$orders = Order::search('Star Trek')->onlyTrashed()->get();
+```
 
 > **Примечание**\
 > Если модель будет окончательно удалена с помощью `forceDelete`, то Scout автоматически удалит ее из поискового индекса.
@@ -638,20 +706,22 @@ Scout позволяет добавлять к поисковым запроса
 
 Если вам нужно выполнить расширенный поиск, доступный для поисковой системы, то вы можете передать замыкание в качестве второго аргумента методу `search`. Например, вы можете использовать это замыкание, чтобы добавить данные о геолокации в параметры поиска до того, как поисковый запрос будет передан в Algolia:
 
-    use Algolia\AlgoliaSearch\SearchIndex;
-    use App\Models\Order;
+```php
+use Algolia\AlgoliaSearch\SearchIndex;
+use App\Models\Order;
 
-    Order::search(
-        'Star Trek',
-        function (SearchIndex $algolia, string $query, array $options) {
-            $options['body']['query']['bool']['filter']['geo_distance'] = [
-                'distance' => '1000km',
-                'location' => ['lat' => 36, 'lon' => 111],
-            ];
+Order::search(
+    'Star Trek',
+    function (SearchIndex $algolia, string $query, array $options) {
+        $options['body']['query']['bool']['filter']['geo_distance'] = [
+            'distance' => '1000km',
+            'location' => ['lat' => 36, 'lon' => 111],
+        ];
 
-            return $algolia->search($query, $options);
-        }
-    )->get();
+        return $algolia->search($query, $options);
+    }
+)->get();
+```
 
 <a name="customizing-the-eloquent-results-query"></a>
 #### Настройка запроса результатов Eloquent
@@ -676,16 +746,18 @@ $orders = Order::search('Star Trek')
 
 Если ни одна из встроенных поисковых систем Scout не соответствует вашим потребностям, то вы можете написать свою собственную поисковую систему и зарегистрировать ее в Scout. Ваша система должна расширять абстрактный класс `Laravel\Scout\Engines\Engine`. Этот абстрактный класс содержит восемь методов, которые должны быть реализованы в вашей поисковой системе:
 
-    use Laravel\Scout\Builder;
+```php
+use Laravel\Scout\Builder;
 
-    abstract public function update($models);
-    abstract public function delete($models);
-    abstract public function search(Builder $builder);
-    abstract public function paginate(Builder $builder, $perPage, $page);
-    abstract public function mapIds($results);
-    abstract public function map(Builder $builder, $results, $model);
-    abstract public function getTotalCount($results);
-    abstract public function flush($model);
+abstract public function update($models);
+abstract public function delete($models);
+abstract public function search(Builder $builder);
+abstract public function paginate(Builder $builder, $perPage, $page);
+abstract public function mapIds($results);
+abstract public function map(Builder $builder, $results, $model);
+abstract public function getTotalCount($results);
+abstract public function flush($model);
+```
 
 Вы можете просмотреть реализации этих методов в классе `Laravel\Scout\Engines\AlgoliaEngine`. Этот класс предоставит вам хорошую отправную точку в изучении того, как можно реализовать каждый из этих методов в своей поисковой системе.
 
@@ -694,50 +766,58 @@ $orders = Order::search('Star Trek')
 
 После реализации поисковой системы вы можете зарегистрировать ее в Scout, используя метод `extend` менеджера поисковых систем Scout. Менеджер поисковых систем Scout может быть извлечен из контейнера служб Laravel. Вы должны вызвать метод `extend` в методе `boot` поставщика `App\Providers\AppServiceProvider` или любого другого поставщика служб, используемого вашим приложением:
 
-    use App\ScoutExtensions\MySqlSearchEngine
-    use Laravel\Scout\EngineManager;
+```php
+use App\ScoutExtensions\MySqlSearchEngine
+use Laravel\Scout\EngineManager;
 
-    /**
-     * Загрузка любых служб приложения.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        resolve(EngineManager::class)->extend('mysql', function () {
-            return new MySqlSearchEngine;
-        });
-    }
+/**
+ * Загрузка любых служб приложения.
+ *
+ * @return void
+ */
+public function boot()
+{
+    resolve(EngineManager::class)->extend('mysql', function () {
+        return new MySqlSearchEngine;
+    });
+}
+```
 
 После регистрации вашей поисковой системы вы можете указать ее в параметре `driver` конфигурационного файла `config/scout.php` вашего приложения в качестве драйвера, используемого по умолчанию в Scout:
 
-    'driver' => 'mysql',
+```php
+'driver' => 'mysql',
+```
 
 <a name="builder-macros"></a>
 ## Макрокоманды построителя поискового запроса
 
 Если вы хотите определить собственный метод построителя поискового запроса Scout, то вы можете использовать метод `macro` класса `Laravel\Scout\Builder`. Как правило, вызов этого метода осуществляется в методе `boot` одного из [поставщиков служб](providers.md) вашего приложения:
 
-    use Illuminate\Support\Facades\Response;
-    use Illuminate\Support\ServiceProvider;
-    use Laravel\Scout\Builder;
+```php
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\ServiceProvider;
+use Laravel\Scout\Builder;
 
-    /**
-     * Загрузка любых служб приложения.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        Builder::macro('count', function () {
-            return $this->engine()->getTotalCount(
-                $this->engine()->search($this)
-            );
-        });
-    }
+/**
+ * Загрузка любых служб приложения.
+ *
+ * @return void
+ */
+public function boot()
+{
+    Builder::macro('count', function () {
+        return $this->engine()->getTotalCount(
+            $this->engine()->search($this)
+        );
+    });
+}
+```
 
 Метод `macro` принимает имя макрокоманды как свой первый аргумент и замыкание – как второй аргумент. Замыкание макрокоманды будет выполнено при вызове имени макрокоманды из реализации `Laravel\Scout\Builder`:
 
-    use App\Models\Order;
+```php
+use App\Models\Order;
 
-    Order::search('Star Trek')->count();
+Order::search('Star Trek')->count();
+```

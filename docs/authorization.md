@@ -45,206 +45,234 @@ Laravel предлагает два основных способа автори
 
 В этом примере мы определим шлюз, решающий, может ли пользователь обновить указанную модель `App\Models\Post`. Шлюз выполнит это, сравнив идентификатор пользователя с идентификатором `user_id` пользователя, создавшего пост:
 
-    use App\Models\Post;
-    use App\Models\User;
-    use Illuminate\Support\Facades\Gate;
+```php
+use App\Models\Post;
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 
-    /**
-     * Регистрация любых служб аутентификации / авторизации.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->registerPolicies();
+/**
+ * Регистрация любых служб аутентификации / авторизации.
+ *
+ * @return void
+ */
+public function boot()
+{
+    $this->registerPolicies();
 
-        Gate::define('update-post', function (User $user, Post $post) {
-            return $user->id === $post->user_id;
-        });
-    }
+    Gate::define('update-post', function (User $user, Post $post) {
+        return $user->id === $post->user_id;
+    });
+}
+```
 
 Шлюзы также могут быть определены с использованием callback-массива:<!--Like controllers, gates may also be defined using a class callback array:-->
 
-    use App\Policies\PostPolicy;
-    use Illuminate\Support\Facades\Gate;
+```php
+use App\Policies\PostPolicy;
+use Illuminate\Support\Facades\Gate;
 
-    /**
-     * Регистрация любых служб аутентификации / авторизации.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->registerPolicies();
+/**
+ * Регистрация любых служб аутентификации / авторизации.
+ *
+ * @return void
+ */
+public function boot()
+{
+    $this->registerPolicies();
 
-        Gate::define('update-post', [PostPolicy::class, 'update']);
-    }
+    Gate::define('update-post', [PostPolicy::class, 'update']);
+}
+```
 
 <a name="authorizing-actions-via-gates"></a>
 ### Авторизация действий через шлюзы
 
 Чтобы авторизовать действие с помощью шлюзов, вы должны использовать методы `allows` или `denies` фасада `Gate`. Обратите внимание, что вам не требуется передавать в эти методы аутентифицированного в данный момент пользователя. Laravel автоматически позаботится о передаче пользователя в замыкание шлюза. Обычно методы авторизации шлюза вызываются в контроллерах вашего приложения перед выполнением действия, требующего авторизации:
 
-    <?php
+```php
+<?php
 
-    namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
-    use App\Http\Controllers\Controller;
-    use App\Models\Post;
-    use Illuminate\Http\Request;
-    use Illuminate\Support\Facades\Gate;
+use App\Http\Controllers\Controller;
+use App\Models\Post;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
-    class PostController extends Controller
+class PostController extends Controller
+{
+    /**
+     * Обновить переданный пост.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Post $post)
     {
-        /**
-         * Обновить переданный пост.
-         *
-         * @param  \Illuminate\Http\Request  $request
-         * @param  \App\Models\Post  $post
-         * @return \Illuminate\Http\Response
-         */
-        public function update(Request $request, Post $post)
-        {
-            if (! Gate::allows('update-post', $post)) {
-                abort(403);
-            }
-
-            // Обновление поста ...
+        if (! Gate::allows('update-post', $post)) {
+            abort(403);
         }
+
+        // Обновление поста ...
     }
+}
+```
 
 Если вы хотите определить, авторизован ли другой (не аутентифицированный в настоящий момент) пользователь для выполнения действия, то вы можете использовать метод `forUser` фасада `Gate`:
 
-    if (Gate::forUser($user)->allows('update-post', $post)) {
-        // Пользователь может обновить пост ...
-    }
+```php
+if (Gate::forUser($user)->allows('update-post', $post)) {
+    // Пользователь может обновить пост ...
+}
 
-    if (Gate::forUser($user)->denies('update-post', $post)) {
-        // Пользователь не может обновить пост ...
-    }
+if (Gate::forUser($user)->denies('update-post', $post)) {
+    // Пользователь не может обновить пост ...
+}
+```
 
 Вы можете определить авторизацию нескольких действий одновременно, используя методы `any` или `none`:
 
-    if (Gate::any(['update-post', 'delete-post'], $post)) {
-        // Пользователь может обновить или удалить пост ...
-    }
+```php
+if (Gate::any(['update-post', 'delete-post'], $post)) {
+    // Пользователь может обновить или удалить пост ...
+}
 
-    if (Gate::none(['update-post', 'delete-post'], $post)) {
-        // Пользователь не может обновить или удалить пост ...
-    }
+if (Gate::none(['update-post', 'delete-post'], $post)) {
+    // Пользователь не может обновить или удалить пост ...
+}
+```
 
 <a name="authorizing-or-throwing-exceptions"></a>
 #### Авторизация или выброс исключений
 
 Если вы хотите попытаться авторизовать действие и автоматически выбросить исключение `Illuminate\Auth\Access\AuthorizationException` при не авторизованном действии пользователя, то вы можете использовать метод `authorize` фасада `Gate`. Экземпляры `AuthorizationException` автоматически преобразуются в `403` HTTP-ответ обработчиком исключений Laravel:
 
-    Gate::authorize('update-post', $post);
+```php
+Gate::authorize('update-post', $post);
 
-    // Действие разрешено ...
+// Действие разрешено ...
+```
 
 <a name="gates-supplying-additional-context"></a>
 #### Предоставление дополнительного контекста шлюзам
 
 Методы шлюза для авторизации полномочий (`allows`, `denies`, `check`, `any`, `none`, `authorize`, `can`, `cannot`) и [директивы авторизации Blade](#via-blade-templates) (`@can`, `@cannot`, `@canany`) могут получать массив в качестве второго аргумента. Эти элементы массива передаются в качестве параметров замыканию шлюза и могут использоваться как дополнительный контекст при принятии решений об авторизации:
 
-    use App\Models\Category;
-    use App\Models\User;
-    use Illuminate\Support\Facades\Gate;
+```php
+use App\Models\Category;
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 
-    Gate::define('create-post', function (User $user, Category $category, $pinned) {
-        if (! $user->canPublishToGroup($category->group)) {
-            return false;
-        } elseif ($pinned && ! $user->canPinPosts()) {
-            return false;
-        }
-
-        return true;
-    });
-
-    if (Gate::check('create-post', [$category, $pinned])) {
-        // Пользователь может создать пост ...
+Gate::define('create-post', function (User $user, Category $category, $pinned) {
+    if (! $user->canPublishToGroup($category->group)) {
+        return false;
+    } elseif ($pinned && ! $user->canPinPosts()) {
+        return false;
     }
+
+    return true;
+});
+
+if (Gate::check('create-post', [$category, $pinned])) {
+    // Пользователь может создать пост ...
+}
+```
 
 <a name="gate-responses"></a>
 ### Ответы шлюза
 
 До сих пор мы рассматривали шлюзы, возвращающие простые логические значения. По желанию можно вернуть более подробный ответ, содержащий также сообщение об ошибке. Для этого вы можете вернуть экземпляр `Illuminate\Auth\Access\Response` из вашего шлюза:
 
-    use App\Models\User;
-    use Illuminate\Auth\Access\Response;
-    use Illuminate\Support\Facades\Gate;
+```php
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Gate;
 
-    Gate::define('edit-settings', function (User $user) {
-        return $user->isAdmin
-                    ? Response::allow()
-                    : Response::deny('Вы должны быть администратором.');
-    });
+Gate::define('edit-settings', function (User $user) {
+    return $user->isAdmin
+                ? Response::allow()
+                : Response::deny('Вы должны быть администратором.');
+});
+```
 
 Даже когда вы возвращаете ответ авторизации из вашего шлюза, метод `Gate::allows` все равно будет возвращать простое логическое значение; однако вы можете использовать метод `Gate::inspect`, чтобы получить полный возвращенный шлюзом ответ авторизации:
 
-    $response = Gate::inspect('edit-settings');
+```php
+$response = Gate::inspect('edit-settings');
 
-    if ($response->allowed()) {
-        // Действие разрешено ...
-    } else {
-        echo $response->message();
-    }
+if ($response->allowed()) {
+    // Действие разрешено ...
+} else {
+    echo $response->message();
+}
+```
 
 При использовании метода `Gate::authorize`, который генерирует исключение `AuthorizationException` при не авторизованном действие, сообщение об ошибке ответа авторизации будет передано в HTTP-ответ:
 
-    Gate::authorize('edit-settings');
+```php
+Gate::authorize('edit-settings');
 
-    // Действие разрешено ...
+// Действие разрешено ...
+```
 
 <a name="customizing-gate-response-status"></a>
 #### Корректировка статуса HTTP-ответа
 
 Когда действие запрещено шлюзом, тогда возвращается HTTP-ответ `403`; но иногда необходимо вернуть альтернативный код состояния HTTP. Вы можете изменить код состояния HTTP, возвращаемый при неуспешной авторизации, используя статический метод `denyWithStatus` класса `Illuminate\Auth\Access\Response`:
 
-    use App\Models\User;
-    use Illuminate\Auth\Access\Response;
-    use Illuminate\Support\Facades\Gate;
+```php
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Gate;
 
-    Gate::define('edit-settings', function (User $user) {
-        return $user->isAdmin
-                    ? Response::allow()
-                    : Response::denyWithStatus(404);
-    });
+Gate::define('edit-settings', function (User $user) {
+    return $user->isAdmin
+                ? Response::allow()
+                : Response::denyWithStatus(404);
+});
+```
 
 Поскольку сокрытие ресурсов приложения с помощью ответа `404` является распространенным шаблоном для веб-приложений, то для удобства предлагается метод `denyAsNotFound`:
 
-    use App\Models\User;
-    use Illuminate\Auth\Access\Response;
-    use Illuminate\Support\Facades\Gate;
+```php
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Gate;
 
-    Gate::define('edit-settings', function (User $user) {
-        return $user->isAdmin
-                    ? Response::allow()
-                    : Response::denyAsNotFound();
-    });
+Gate::define('edit-settings', function (User $user) {
+    return $user->isAdmin
+                ? Response::allow()
+                : Response::denyAsNotFound();
+});
+```
 
 <a name="intercepting-gate-checks"></a>
 ### Хуки шлюзов
 
 Иногда бывает необходимо предоставить все полномочия конкретному пользователю. Вы можете использовать метод `before` для определения замыкания, которое выполняется перед всеми другими проверками авторизации:
 
-    use Illuminate\Support\Facades\Gate;
+```php
+use Illuminate\Support\Facades\Gate;
 
-    Gate::before(function ($user, $ability) {
-        if ($user->isAdministrator()) {
-            return true;
-        }
-    });
+Gate::before(function ($user, $ability) {
+    if ($user->isAdministrator()) {
+        return true;
+    }
+});
+```
 
 Если замыкание `before` возвращает результат, отличный от `null`, то этот результат и будет считаться результатом проверки авторизации.
 
 Вы можете использовать метод `after` для определения замыкания, которое будет выполнено после всех других проверок авторизации:
 
-    Gate::after(function ($user, $ability, $result, $arguments) {
-        if ($user->isAdministrator()) {
-            return true;
-        }
-    });
+```php
+Gate::after(function ($user, $ability, $result, $arguments) {
+    if ($user->isAdministrator()) {
+        return true;
+    }
+});
+```
 
 Подобно методу `before`, если замыкание `after` возвращает результат, отличный от `null`, то этот результат и будет считаться результатом проверки авторизации.
 
@@ -290,38 +318,40 @@ php artisan make:policy PostPolicy --model=Post
 
 Поставщик `App\Providers\AuthServiceProvider` содержит свойство `$policies`, которое сопоставляет ваши модели Eloquent с соответствующими политиками. Регистрация политики укажет Laravel, какую политику использовать при авторизации действий для конкретной модели Eloquent:
 
-    <?php
+```php
+<?php
 
-    namespace App\Providers;
+namespace App\Providers;
 
-    use App\Models\Post;
-    use App\Policies\PostPolicy;
-    use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-    use Illuminate\Support\Facades\Gate;
+use App\Models\Post;
+use App\Policies\PostPolicy;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
-    class AuthServiceProvider extends ServiceProvider
+class AuthServiceProvider extends ServiceProvider
+{
+    /**
+     * Карта политик приложения.
+     *
+     * @var array
+     */
+    protected $policies = [
+        Post::class => PostPolicy::class,
+    ];
+
+    /**
+     * Регистрация любых служб аутентификации / авторизации.
+     *
+     * @return void
+     */
+    public function boot()
     {
-        /**
-         * Карта политик приложения.
-         *
-         * @var array
-         */
-        protected $policies = [
-            Post::class => PostPolicy::class,
-        ];
+        $this->registerPolicies();
 
-        /**
-         * Регистрация любых служб аутентификации / авторизации.
-         *
-         * @return void
-         */
-        public function boot()
-        {
-            $this->registerPolicies();
-
-            //
-        }
+        //
     }
+}
+```
 
 <a name="policy-auto-discovery"></a>
 #### Автообнаружение политики
@@ -330,11 +360,13 @@ php artisan make:policy PostPolicy --model=Post
 
 Если вы хотите определить свою собственную логику обнаружения политики, то вы можете зарегистрировать замыкание обнаружения политики, используя метод `Gate::guessPolicyNamesUsing`. Как правило, вызов этого метода осуществляется в методе `boot` поставщика `App\Providers\AuthServiceProvider`:
 
-    use Illuminate\Support\Facades\Gate;
+```php
+use Illuminate\Support\Facades\Gate;
 
-    Gate::guessPolicyNamesUsing(function ($modelClass) {
-        // Возвращаем имя класса политики для переданной модели ...
-    });
+Gate::guessPolicyNamesUsing(function ($modelClass) {
+    // Возвращаем имя класса политики для переданной модели ...
+});
+```
 
 > **Предупреждение**\
 > Любые политики, которые явно отображены в вашем `AuthServiceProvider`, будут иметь **приоритет** над любыми потенциально автоматически обнаруженными политиками.
@@ -349,27 +381,29 @@ php artisan make:policy PostPolicy --model=Post
 
 Метод `update` получит в качестве аргументов экземпляры `User` и `Post` и должен вернуть `true` или `false`, которые будут указывать, авторизован ли пользователь обновлять указанный пост. Итак, в этом примере мы проверим, что идентификатор пользователя совпадает с `user_id` поста:
 
-    <?php
+```php
+<?php
 
-    namespace App\Policies;
+namespace App\Policies;
 
-    use App\Models\Post;
-    use App\Models\User;
+use App\Models\Post;
+use App\Models\User;
 
-    class PostPolicy
+class PostPolicy
+{
+    /**
+     * Определить, может ли пользователь обновить пост.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Post  $post
+     * @return bool
+     */
+    public function update(User $user, Post $post)
     {
-        /**
-         * Определить, может ли пользователь обновить пост.
-         *
-         * @param  \App\Models\User  $user
-         * @param  \App\Models\Post  $post
-         * @return bool
-         */
-        public function update(User $user, Post $post)
-        {
-            return $user->id === $post->user_id;
-        }
+        return $user->id === $post->user_id;
     }
+}
+```
 
 Вы можете продолжить определение в политике необходимых методов дополнительных авторизуемых действий. Например, вы можете определить методы `view` или `delete` для авторизации различных действий, связанных с `Post`. Помните, что вы можете дать своим методам политики любые желаемые имена.
 
@@ -383,148 +417,164 @@ php artisan make:policy PostPolicy --model=Post
 
 До сих пор мы рассматривали методы политики, возвращающие простые логические значения. По желанию можно вернуть более подробный ответ, содержащий также сообщение об ошибке. Для этого вы можете вернуть экземпляр `Illuminate\Auth\Access\Response` из вашего метода политики:
 
-    use App\Models\Post;
-    use App\Models\User;
-    use Illuminate\Auth\Access\Response;
+```php
+use App\Models\Post;
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
 
-    /**
-     * Определить, может ли пользователь обновить пост.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Auth\Access\Response
-     */
-    public function update(User $user, Post $post)
-    {
-        return $user->id === $post->user_id
-                    ? Response::allow()
-                    : Response::deny('You do not own this post.');
-    }
+/**
+ * Определить, может ли пользователь обновить пост.
+ *
+ * @param  \App\Models\User  $user
+ * @param  \App\Models\Post  $post
+ * @return \Illuminate\Auth\Access\Response
+ */
+public function update(User $user, Post $post)
+{
+    return $user->id === $post->user_id
+                ? Response::allow()
+                : Response::deny('You do not own this post.');
+}
+```
 
 При возврате ответа авторизации из вашей политики метод `Gate::allows` все равно будет возвращать простое логическое значение; однако вы можете использовать метод `Gate::inspect`, чтобы получить полный возвращенный шлюзом ответ авторизации:
 
-    use Illuminate\Support\Facades\Gate;
+```php
+use Illuminate\Support\Facades\Gate;
 
-    $response = Gate::inspect('update', $post);
+$response = Gate::inspect('update', $post);
 
-    if ($response->allowed()) {
-        // Действие разрешено ...
-    } else {
-        echo $response->message();
-    }
+if ($response->allowed()) {
+    // Действие разрешено ...
+} else {
+    echo $response->message();
+}
+```
 
 При использовании метода `Gate::authorize`, который генерирует исключение `AuthorizationException` при не авторизованном действие, сообщение об ошибке ответа авторизации будет передано в HTTP-ответ:
 
-    Gate::authorize('update', $post);
+```php
+Gate::authorize('update', $post);
 
-    // Действие разрешено ...
+// Действие разрешено ...
+```
 
 <a name="customizing-policy-response-status"></a>
 #### Корректировка статуса HTTP-ответа
 
 Когда действие запрещено методом политики, тогда возвращается HTTP-ответ `403`; но иногда необходимо вернуть альтернативный код состояния HTTP. Вы можете изменить код состояния HTTP, возвращаемый при неуспешной авторизации, используя статический метод `denyWithStatus` класса `Illuminate\Auth\Access\Response`:
 
-    use App\Models\Post;
-    use App\Models\User;
-    use Illuminate\Auth\Access\Response;
+```php
+use App\Models\Post;
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
 
-    /**
-     * Определить, может ли пользователь обновить пост.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Auth\Access\Response
-     */
-    public function update(User $user, Post $post)
-    {
-        return $user->id === $post->user_id
-                    ? Response::allow()
-                    : Response::denyWithStatus(404);
-    }
+/**
+ * Определить, может ли пользователь обновить пост.
+ *
+ * @param  \App\Models\User  $user
+ * @param  \App\Models\Post  $post
+ * @return \Illuminate\Auth\Access\Response
+ */
+public function update(User $user, Post $post)
+{
+    return $user->id === $post->user_id
+                ? Response::allow()
+                : Response::denyWithStatus(404);
+}
+```
 
 Поскольку сокрытие ресурсов приложения с помощью ответа `404` является распространенным шаблоном для веб-приложений, то для удобства предлагается метод `denyAsNotFound`:
 
-    use App\Models\Post;
-    use App\Models\User;
-    use Illuminate\Auth\Access\Response;
+```php
+use App\Models\Post;
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
 
-    /**
-     * Определить, может ли пользователь обновить пост.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Auth\Access\Response
-     */
-    public function update(User $user, Post $post)
-    {
-        return $user->id === $post->user_id
-                    ? Response::allow()
-                    : Response::denyAsNotFound();
-    }
+/**
+ * Определить, может ли пользователь обновить пост.
+ *
+ * @param  \App\Models\User  $user
+ * @param  \App\Models\Post  $post
+ * @return \Illuminate\Auth\Access\Response
+ */
+public function update(User $user, Post $post)
+{
+    return $user->id === $post->user_id
+                ? Response::allow()
+                : Response::denyAsNotFound();
+}
+```
 
 <a name="methods-without-models"></a>
 ### Методы политики без моделей
 
 Некоторые методы политики получают только экземпляр аутентифицированного в данный момент пользователя. Эта ситуация наиболее распространена при авторизации действий `create`. Например, если вы создаете блог, то вы можете определить, имеет ли пользователь право вообще создавать какие-либо посты. В этих ситуациях ваш метод политики должен рассчитывать только на получение экземпляра пользователя:
 
-    /**
-     * Определить, может ли пользователь создать пост.
-     *
-     * @param  \App\Models\User  $user
-     * @return bool
-     */
-    public function create(User $user)
-    {
-        return $user->role == 'writer';
-    }
+```php
+/**
+ * Определить, может ли пользователь создать пост.
+ *
+ * @param  \App\Models\User  $user
+ * @return bool
+ */
+public function create(User $user)
+{
+    return $user->role == 'writer';
+}
+```
 
 <a name="guest-users"></a>
 ### Гостевые пользователи
 
 По умолчанию все шлюзы и политики автоматически возвращают `false`, если входящий HTTP-запрос был инициирован не аутентифицированным пользователем. Однако вы можете разрешить прохождение этих проверок авторизации к вашим шлюзам и политикам, пометив в аргументе метода объявленный тип `User` как [обнуляемый](https://www.php.net/manual/ru/language.types.declarations.php#language.types.declarations.nullable), путём добавления префикса в виде знака вопроса (`?`). Это означает, что значение может быть как объявленного типа `User`, так и быть равным `null`:
 
-    <?php
+```php
+<?php
 
-    namespace App\Policies;
+namespace App\Policies;
 
-    use App\Models\Post;
-    use App\Models\User;
+use App\Models\Post;
+use App\Models\User;
 
-    class PostPolicy
+class PostPolicy
+{
+    /**
+     * Определить, может ли пользователь обновить пост.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Post  $post
+     * @return bool
+     */
+    public function update(?User $user, Post $post)
     {
-        /**
-         * Определить, может ли пользователь обновить пост.
-         *
-         * @param  \App\Models\User  $user
-         * @param  \App\Models\Post  $post
-         * @return bool
-         */
-        public function update(?User $user, Post $post)
-        {
-            return optional($user)->id === $post->user_id;
-        }
+        return optional($user)->id === $post->user_id;
     }
+}
+```
 
 <a name="policy-filters"></a>
 ### Фильтры политики
 
 Для определенных пользователей вы можете разрешить все действия в рамках конкретной политики. Для этого определите в политике метод `before`. Метод `before` будет выполнен перед любыми другими методами в политике, что даст вам возможность авторизовать действие до фактического вызова предполагаемого метода политики. Этот функционал чаще всего используется для авторизации администраторов приложения на выполнение любых действий:
 
-    use App\Models\User;
+```php
+use App\Models\User;
 
-    /**
-     * Выполнить предварительную авторизацию.
-     *
-     * @param  \App\Models\User  $user
-     * @param  string  $ability
-     * @return void|bool
-     */
-    public function before(User $user, $ability)
-    {
-        if ($user->isAdministrator()) {
-            return true;
-        }
+/**
+ * Выполнить предварительную авторизацию.
+ *
+ * @param  \App\Models\User  $user
+ * @param  string  $ability
+ * @return void|bool
+ */
+public function before(User $user, $ability)
+{
+    if ($user->isAdministrator()) {
+        return true;
     }
+}
+```
 
 Если вы хотите отклонить все проверки авторизации для определенного типа пользователей, вы можете вернуть `false` из метода `before`. Если возвращается `null`, то проверка авторизации перейдет к методу политики.
 
@@ -539,32 +589,34 @@ php artisan make:policy PostPolicy --model=Post
 
 Модель `App\Models\User` приложения Laravel включает два полезных метода авторизации действий: `can` и `cannot`. Методы `can` и `cannot` получают имя действия, которое вы хотите авторизовать, и соответствующую модель. Например, давайте определим, авторизован ли пользователь для обновления переданной модели `App\Models\Post`. Обычно это делается в методе контроллера:
 
-    <?php
+```php
+<?php
 
-    namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
-    use App\Http\Controllers\Controller;
-    use App\Models\Post;
-    use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\Post;
+use Illuminate\Http\Request;
 
-    class PostController extends Controller
+class PostController extends Controller
+{
+    /**
+     * Обновить переданный пост.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Post $post)
     {
-        /**
-         * Обновить переданный пост.
-         *
-         * @param  \Illuminate\Http\Request  $request
-         * @param  \App\Models\Post  $post
-         * @return \Illuminate\Http\Response
-         */
-        public function update(Request $request, Post $post)
-        {
-            if ($request->user()->cannot('update', $post)) {
-                abort(403);
-            }
-
-            // Обновление поста ...
+        if ($request->user()->cannot('update', $post)) {
+            abort(403);
         }
+
+        // Обновление поста ...
     }
+}
+```
 
 Если [политика зарегистрирована](#registering-policies) для данной модели, то метод `can` автоматически вызовет соответствующую политику и вернет логический результат. Если для модели не зарегистрирована политика, то метод `can` попытается вызвать шлюз, основанный на замыкании, соответствующий переданному имени действия.
 
@@ -573,31 +625,33 @@ php artisan make:policy PostPolicy --model=Post
 
 Помните, что некоторые действия могут соответствовать методам политики, например `create`, которые не требуют экземпляра модели. В этих ситуациях вы можете передать имя класса методу `can`. Имя класса будет использоваться для определения того, какую политику использовать при авторизации действия:
 
-    <?php
+```php
+<?php
 
-    namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
-    use App\Http\Controllers\Controller;
-    use App\Models\Post;
-    use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\Post;
+use Illuminate\Http\Request;
 
-    class PostController extends Controller
+class PostController extends Controller
+{
+    /**
+     * Сохранить пост.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
-        /**
-         * Сохранить пост.
-         *
-         * @param  \Illuminate\Http\Request  $request
-         * @return \Illuminate\Http\Response
-         */
-        public function store(Request $request)
-        {
-            if ($request->user()->cannot('create', Post::class)) {
-                abort(403);
-            }
-
-            // Сохранение поста ...
+        if ($request->user()->cannot('create', Post::class)) {
+            abort(403);
         }
+
+        // Сохранение поста ...
     }
+}
+```
 
 <a name="via-controller-helpers"></a>
 ### Авторизация действий с помощью политик через помощников контроллера
@@ -606,55 +660,59 @@ php artisan make:policy PostPolicy --model=Post
 
 Подобно методу `can`, этот метод принимает имя действия, которое вы хотите авторизовать, и соответствующую модель. Если действие не авторизовано, то метод `authorize` выбросит исключение `Illuminate\Auth\Access\AuthorizationException`, которое обработчик исключений Laravel автоматически преобразует в `403` HTTP-ответ:
 
-    <?php
+```php
+<?php
 
-    namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
-    use App\Http\Controllers\Controller;
-    use App\Models\Post;
-    use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\Post;
+use Illuminate\Http\Request;
 
-    class PostController extends Controller
+class PostController extends Controller
+{
+    /**
+     * Обновить переданный пост.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\Response
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function update(Request $request, Post $post)
     {
-        /**
-         * Обновить переданный пост.
-         *
-         * @param  \Illuminate\Http\Request  $request
-         * @param  \App\Models\Post  $post
-         * @return \Illuminate\Http\Response
-         *
-         * @throws \Illuminate\Auth\Access\AuthorizationException
-         */
-        public function update(Request $request, Post $post)
-        {
-            $this->authorize('update', $post);
+        $this->authorize('update', $post);
 
-            // Текущий пользователь может обновить пост в блоге ...
-        }
+        // Текущий пользователь может обновить пост в блоге ...
     }
+}
+```
 
 <a name="controller-actions-that-dont-require-models"></a>
 #### Авторизация действий, не требующих моделей, с помощью политик через помощников контроллера
 
 Как обсуждалось ранее, некоторые методы политики, например `create`, не требуют экземпляра модели. В таких ситуациях вы должны передать имя класса методу `authorize`. Имя класса будет использоваться для определения того, какую политику использовать при авторизации действия:
 
-    use App\Models\Post;
-    use Illuminate\Http\Request;
+```php
+use App\Models\Post;
+use Illuminate\Http\Request;
 
-    /**
-     * Создайте новый пост в блоге.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     *
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
-    public function create(Request $request)
-    {
-        $this->authorize('create', Post::class);
+/**
+ * Создайте новый пост в блоге.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @return \Illuminate\Http\Response
+ *
+ * @throws \Illuminate\Auth\Access\AuthorizationException
+ */
+public function create(Request $request)
+{
+    $this->authorize('create', Post::class);
 
-        // Текущий пользователь может создавать посты в блоге ...
-    }
+    // Текущий пользователь может создавать посты в блоге ...
+}
+```
 
 <a name="authorizing-resource-controllers"></a>
 #### Авторизация ресурсных контроллеров с помощью политик
@@ -663,26 +721,28 @@ php artisan make:policy PostPolicy --model=Post
 
 Метод `authorizeResource` принимает имя класса модели в качестве своего первого аргумента и имя параметра маршрута / запроса, который будет содержать идентификатор модели, в качестве второго аргумента. Вы должны убедиться, что ваш ресурсный контроллер создан с использованием флага `--model`, чтобы он имел необходимые сигнатуры методов и объявления типов:
 
-    <?php
+```php
+<?php
 
-    namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
-    use App\Http\Controllers\Controller;
-    use App\Models\Post;
-    use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\Post;
+use Illuminate\Http\Request;
 
-    class PostController extends Controller
+class PostController extends Controller
+{
+    /**
+     * Создать экземпляр контроллера.
+     *
+     * @return void
+     */
+    public function __construct()
     {
-        /**
-         * Создать экземпляр контроллера.
-         *
-         * @return void
-         */
-        public function __construct()
-        {
-            $this->authorizeResource(Post::class, 'post');
-        }
+        $this->authorizeResource(Post::class, 'post');
     }
+}
+```
 
 Следующие методы контроллера будут сопоставлены соответствующим методам политики. Когда запросы направляются к методу контроллера, тогда перед выполнением метода контроллера будет автоматически вызываться соответствующий метод политики:
 
@@ -704,38 +764,46 @@ php artisan make:policy PostPolicy --model=Post
 
 Laravel содержит посредника, который может авторизовать действия до того, как входящий запрос достигнет ваших маршрутов или контроллеров. По умолчанию посреднику `Illuminate\Auth\Middleware\Authorize` назначается ключ `can` в вашем классе `App\Http\Kernel`. Давайте рассмотрим пример использования посредника `can` для авторизации того, что пользователь может обновлять пост:
 
-    use App\Models\Post;
+```php
+use App\Models\Post;
 
-    Route::put('/post/{post}', function (Post $post) {
-        // Текущий пользователь может обновить пост ...
-    })->middleware('can:update,post');
+Route::put('/post/{post}', function (Post $post) {
+    // Текущий пользователь может обновить пост ...
+})->middleware('can:update,post');
+```
 
 В этом примере мы передаем посреднику `can` два аргумента. Первый – это имя действия, которое мы хотим авторизовать, а второй – параметр маршрута, который мы хотим передать методу политики. В этом случае, поскольку мы используем [неявную привязку модели](routing.md#implicit-binding), то методу политики будет передана модель `App\Models\Post`. Если пользователь не авторизован для выполнения указанного действия, то посредник вернет ответ HTTP с кодом состояния `403`.
 
 Для удобства вы также можете назначить посредник `can` вашему маршруту, используя метод `can`:
 
-    use App\Models\Post;
+```php
+use App\Models\Post;
 
-    Route::put('/post/{post}', function (Post $post) {
-        // Текущий пользователь может обновить пост ...
-    })->can('update', 'post');
+Route::put('/post/{post}', function (Post $post) {
+    // Текущий пользователь может обновить пост ...
+})->can('update', 'post');
+```
 
 <a name="middleware-actions-that-dont-require-models"></a>
 #### Авторизация действий, не требующих моделей, с помощью политик через посредника
 
 Опять же, некоторые методы политики, например `create`, не требуют экземпляра модели. В этих ситуациях вы можете передать имя класса посреднику. Имя класса будет использоваться для определения того, какую политику использовать при авторизации действия:
 
-    Route::post('/post', function () {
-        // Текущий пользователь может создавать посты ...
-    })->middleware('can:create,App\Models\Post');
+```php
+Route::post('/post', function () {
+    // Текущий пользователь может создавать посты ...
+})->middleware('can:create,App\Models\Post');
+```
 
 Указание полного имени класса строкой в определении посредника может стать громоздким. По этой причине вы можете назначить посредник `can` вашему маршруту, используя метод `can`:
 
-    use App\Models\Post;
+```php
+use App\Models\Post;
 
-    Route::post('/post', function () {
-        // Текущий пользователь может создавать посты ...
-    })->can('create', Post::class);
+Route::post('/post', function () {
+    // Текущий пользователь может создавать посты ...
+})->can('create', Post::class);
+```
 
 <a name="via-blade-templates"></a>
 ### Авторизация действий с помощью политик через шаблоны Blade
@@ -800,34 +868,38 @@ Laravel содержит посредника, который может авт�
 
 При авторизации действий с использованием политик вы можете передать массив в качестве второго аргумента различным функциям авторизации и помощникам. Первый элемент в массиве будет использоваться для определения того, какая политика должна быть вызвана, в то время как остальные элементы массива передаются как параметры методу политики и могут использоваться как дополнительный контекст при принятии решений об авторизации. Например, рассмотрим `PostPolicy` и следующее определение метода, содержащего дополнительный параметр `$category`:
 
-    /**
-     * Определить, может ли пользователь обновить пост.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Post  $post
-     * @param  int  $category
-     * @return bool
-     */
-    public function update(User $user, Post $post, int $category)
-    {
-        return $user->id === $post->user_id &&
-               $user->canUpdateCategory($category);
-    }
+```php
+/**
+ * Определить, может ли пользователь обновить пост.
+ *
+ * @param  \App\Models\User  $user
+ * @param  \App\Models\Post  $post
+ * @param  int  $category
+ * @return bool
+ */
+public function update(User $user, Post $post, int $category)
+{
+    return $user->id === $post->user_id &&
+           $user->canUpdateCategory($category);
+}
+```
 
 При попытке определить, может ли аутентифицированный пользователь обновить указанный пост, мы можем вызвать этот метод политики следующим образом:
 
-    /**
-     * Обновить конкретный пост.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     *
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
-    public function update(Request $request, Post $post)
-    {
-        $this->authorize('update', [$post, $request->category]);
+```php
+/**
+ * Обновить конкретный пост.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @param  \App\Models\Post  $post
+ * @return \Illuminate\Http\Response
+ *
+ * @throws \Illuminate\Auth\Access\AuthorizationException
+ */
+public function update(Request $request, Post $post)
+{
+    $this->authorize('update', [$post, $request->category]);
 
-        // Текущий пользователь может обновить пост в блоге ...
-    }
+    // Текущий пользователь может обновить пост в блоге ...
+}
+```

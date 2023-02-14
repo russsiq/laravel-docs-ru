@@ -62,24 +62,26 @@ php artisan make:test UserTest --unit --pest
 
 После того, как тест был сгенерирован, вы можете определить методы тестирования, как обычно, используя [PHPUnit](https://phpunit.de). Чтобы запустить ваши тесты, выполните команду `vendor/bin/phpunit` или `php artisan test` из вашего терминала:
 
-    <?php
+```php
+<?php
 
-    namespace Tests\Unit;
+namespace Tests\Unit;
 
-    use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestCase;
 
-    class ExampleTest extends TestCase
+class ExampleTest extends TestCase
+{
+    /**
+     * Отвлеченный пример модульного теста.
+     *
+     * @return void
+     */
+    public function test_basic_test()
     {
-        /**
-         * Отвлеченный пример модульного теста.
-         *
-         * @return void
-         */
-        public function test_basic_test()
-        {
-            $this->assertTrue(true);
-        }
+        $this->assertTrue(true);
     }
+}
+```
 
 > **Предупреждение**\
 > Если вы определяете свои собственные методы `setUp` / `tearDown` в тестовом классе, обязательно вызывайте соответствующие методы `parent::setUp()` / `parent::tearDown()` родительского класса.
@@ -141,52 +143,56 @@ php artisan test --parallel --recreate-databases
 
 Используя фасад `ParallelTesting`, вы можете указать код, который будет выполняться в `setUp` и `tearDown` процесса или тестового класса. Переданные замыкания получат переменные `$token` и `$testCase`, которые содержат токен процесса и текущий тестовый класс, соответственно:
 
-    <?php
+```php
+<?php
 
-    namespace App\Providers;
+namespace App\Providers;
 
-    use Illuminate\Support\Facades\Artisan;
-    use Illuminate\Support\Facades\ParallelTesting;
-    use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\ParallelTesting;
+use Illuminate\Support\ServiceProvider;
 
-    class AppServiceProvider extends ServiceProvider
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Загрузка любых служб приложения.
+     *
+     * @return void
+     */
+    public function boot()
     {
-        /**
-         * Загрузка любых служб приложения.
-         *
-         * @return void
-         */
-        public function boot()
-        {
-            ParallelTesting::setUpProcess(function ($token) {
-                // ...
-            });
+        ParallelTesting::setUpProcess(function ($token) {
+            // ...
+        });
 
-            ParallelTesting::setUpTestCase(function ($token, $testCase) {
-                // ...
-            });
+        ParallelTesting::setUpTestCase(function ($token, $testCase) {
+            // ...
+        });
 
-            // Выполнится при создании тестовой базы данных ...
-            ParallelTesting::setUpTestDatabase(function ($database, $token) {
-                Artisan::call('db:seed');
-            });
+        // Выполнится при создании тестовой базы данных ...
+        ParallelTesting::setUpTestDatabase(function ($database, $token) {
+            Artisan::call('db:seed');
+        });
 
-            ParallelTesting::tearDownTestCase(function ($token, $testCase) {
-                // ...
-            });
+        ParallelTesting::tearDownTestCase(function ($token, $testCase) {
+            // ...
+        });
 
-            ParallelTesting::tearDownProcess(function ($token) {
-                // ...
-            });
-        }
+        ParallelTesting::tearDownProcess(function ($token) {
+            // ...
+        });
     }
+}
+```
 
 <a name="accessing-the-parallel-testing-token"></a>
 #### Доступ к токену процесса параллельного тестирования
 
 Если вы хотите получить доступ к «токену» текущего процесса из любого другого места в коде теста вашего приложения, то вы можете использовать метод `token`. Этот токен представляет собой уникальный строковый идентификатор для каждого из процессов тестирования и может использоваться для разделения [подготавливаемых ресурсов](#parallel-testing-hooks) процессов параллельного тестирования. Например, Laravel автоматически добавляет этот токен в конец тестовых баз данных, создаваемых каждым процессом параллельного тестирования:
 
-    $token = ParallelTesting::token();
+```php
+$token = ParallelTesting::token();
+```
 
 <a name="reporting-test-coverage"></a>
 ### Отчет о покрытии тестами

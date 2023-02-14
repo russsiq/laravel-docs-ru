@@ -130,21 +130,23 @@ php artisan migrate
 
 Вся логика отрисовки шаблонов аутентификации может быть настроена с использованием соответствующих методов, доступных через класс `Laravel\Fortify\Fortify`. Как правило, вызов соответствующего метода осуществляется в методе `boot` поставщика `App\Providers\FortifyServiceProvider`. Fortify позаботится об определении маршрута `/login`, который возвращает этот шаблон:
 
-    use Laravel\Fortify\Fortify;
+```php
+use Laravel\Fortify\Fortify;
 
-    /**
-     * Загрузка любых служб приложения.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        Fortify::loginView(function () {
-            return view('auth.login');
-        });
+/**
+ * Загрузка любых служб приложения.
+ *
+ * @return void
+ */
+public function boot()
+{
+    Fortify::loginView(function () {
+        return view('auth.login');
+    });
 
-        // ...
-    }
+    // ...
+}
+```
 
 Ваш шаблон входа в систему должен включать форму, которая отправляет POST-запрос в `/login`. Конечная точка `/login` ожидает строковые поля `email` / `username` и `password`. Имя поля `email` / `username` должно соответствовать значению `username` в конфигурационном файле `config/fortify.php`. Кроме того, может быть предусмотрено логическое поле «Запомнить меня», чтобы указать, что пользователь хотел бы использовать функционал «Запомнить меня», предоставляемый Laravel.
 

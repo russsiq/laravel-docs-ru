@@ -29,33 +29,37 @@
 
 Вы можете определить все свои запланированные задачи в методе `schedule` класса `App\Console\Kernel` вашего приложения. Для начала рассмотрим пример. В этом примере мы определим замыкание, которое будет вызываться каждый день в полночь. В замыкании мы выполним запрос к базе данных для очистки таблицы:
 
-    <?php
+```php
+<?php
 
-    namespace App\Console;
+namespace App\Console;
 
-    use Illuminate\Console\Scheduling\Schedule;
-    use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-    use Illuminate\Support\Facades\DB;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\DB;
 
-    class Kernel extends ConsoleKernel
+class Kernel extends ConsoleKernel
+{
+    /**
+     * Определить расписание выполнения команд приложения.
+     *
+     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @return void
+     */
+    protected function schedule(Schedule $schedule)
     {
-        /**
-         * Определить расписание выполнения команд приложения.
-         *
-         * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-         * @return void
-         */
-        protected function schedule(Schedule $schedule)
-        {
-            $schedule->call(function () {
-                DB::table('recent_users')->delete();
-            })->daily();
-        }
+        $schedule->call(function () {
+            DB::table('recent_users')->delete();
+        })->daily();
     }
+}
+```
 
 В дополнение к планированию с использованием замыканий вы также можете использовать [вызываемые объекты](https://www.php.net/manual/ru/language.oop5.magic.php#language.oop5.magic.invoke). Вызываемые объекты – это простые классы PHP, содержащие метод `__invoke`:
 
-    $schedule->call(new DeleteRecentUsers)->daily();
+```php
+$schedule->call(new DeleteRecentUsers)->daily();
+```
 
 Если вы хотите просмотреть список ваших запланированных задач и их последующего запуска, то вы можете использовать команду `schedule:list` Artisan:
 
@@ -70,34 +74,42 @@ php artisan schedule:list
 
 При планировании команд Artisan с использованием имени класса команды вы можете передать массив дополнительных аргументов командной строки, которые должны быть переданы команде при ее вызове:
 
-    use App\Console\Commands\SendEmailsCommand;
+```php
+use App\Console\Commands\SendEmailsCommand;
 
-    $schedule->command('emails:send Taylor --force')->daily();
+$schedule->command('emails:send Taylor --force')->daily();
 
-    $schedule->command(SendEmailsCommand::class, ['Taylor', '--force'])->daily();
+$schedule->command(SendEmailsCommand::class, ['Taylor', '--force'])->daily();
+```
 
 <a name="scheduling-queued-jobs"></a>
 ### Планирование отправки заданий в очереди
 
 Метод `job` используется для планирования отправки [задания в очередь](queues.md). Этот метод обеспечивает удобный способ планирования таких заданий без использования метода `call` с замыканием:
 
-    use App\Jobs\Heartbeat;
+```php
+use App\Jobs\Heartbeat;
 
-    $schedule->job(new Heartbeat)->everyFiveMinutes();
+$schedule->job(new Heartbeat)->everyFiveMinutes();
+```
 
 Необязательные второй и третий аргументы могут быть переданы методу `job` для указания имени очереди и соединения очереди, которые должны использоваться для постановки задания в очередь:
 
-    use App\Jobs\Heartbeat;
+```php
+use App\Jobs\Heartbeat;
 
-    // Отправляем задание в очередь «heartbeats» соединения «sqs» ...
-    $schedule->job(new Heartbeat, 'heartbeats', 'sqs')->everyFiveMinutes();
+// Отправляем задание в очередь «heartbeats» соединения «sqs» ...
+$schedule->job(new Heartbeat, 'heartbeats', 'sqs')->everyFiveMinutes();
+```
 
 <a name="scheduling-shell-commands"></a>
 ### Планирование команд операционной системы
 
 Метод `exec` используется для передачи команды операционной системе:
 
-    $schedule->exec('node /home/forge/script.js')->daily();
+```php
+$schedule->exec('node /home/forge/script.js')->daily();
+```
 
 <a name="schedule-frequency-options"></a>
 ### Параметры периодичности расписания
@@ -140,17 +152,19 @@ php artisan schedule:list
 
 Эти методы можно комбинировать с дополнительными ограничениями для создания еще более точных расписаний, которые выполняются только в определенные дни недели. Например, вы можете запланировать выполнение команды еженедельно в понедельник:
 
-    // Запускаем раз в неделю в понедельник в 13:00 ...
-    $schedule->call(function () {
-        //
-    })->weekly()->mondays()->at('13:00');
+```php
+// Запускаем раз в неделю в понедельник в 13:00 ...
+$schedule->call(function () {
+    //
+})->weekly()->mondays()->at('13:00');
 
-    // Запускаем по будням ежечасно с 8 утра до 5 вечера ...
-    $schedule->command('foo')
-              ->weekdays()
-              ->hourly()
-              ->timezone('America/Chicago')
-              ->between('8:00', '17:00');
+// Запускаем по будням ежечасно с 8 утра до 5 вечера ...
+$schedule->command('foo')
+          ->weekdays()
+          ->hourly()
+          ->timezone('America/Chicago')
+          ->between('8:00', '17:00');
+```
 
 Список дополнительных ограничений расписания можно найти ниже:
 
@@ -176,47 +190,59 @@ php artisan schedule:list
 
 Метод `days` можно использовать для ограничения выполнения задачи определенными днями недели. Например, вы можете запланировать выполнение команды ежечасно по воскресеньям и четвергам:
 
-    $schedule->command('emails:send')
-                    ->hourly()
-                    ->days([0, 3]);
+```php
+$schedule->command('emails:send')
+                ->hourly()
+                ->days([0, 3]);
+```
 
 В качестве альтернативы вы можете использовать константы, доступные в классе `Illuminate\Console\Scheduling\Schedule`, при указании дней, в которые должна выполняться задача:
 
-    use Illuminate\Console\Scheduling\Schedule;
+```php
+use Illuminate\Console\Scheduling\Schedule;
 
-    $schedule->command('emails:send')
-                    ->hourly()
-                    ->days([Schedule::SUNDAY, Schedule::WEDNESDAY]);
+$schedule->command('emails:send')
+                ->hourly()
+                ->days([Schedule::SUNDAY, Schedule::WEDNESDAY]);
+```
 
 <a name="between-time-constraints"></a>
 #### Ограничения с временными интервалами
 
 Метод `between` может использоваться для ограничения выполнения задачи в зависимости от времени суток:
 
-    $schedule->command('emails:send')
-                        ->hourly()
-                        ->between('7:00', '22:00');
+```php
+$schedule->command('emails:send')
+                    ->hourly()
+                    ->between('7:00', '22:00');
+```
 
 Точно так же метод `unlessBetween` может использоваться для исключения определенных периодов времени выполнения задачи:
 
-    $schedule->command('emails:send')
-                        ->hourly()
-                        ->unlessBetween('23:00', '4:00');
+```php
+$schedule->command('emails:send')
+                    ->hourly()
+                    ->unlessBetween('23:00', '4:00');
+```
 
 <a name="truth-test-constraints"></a>
 #### Условные ограничения
 
 Метод `when` может использоваться для ограничения выполнения задачи на основе истинности результата выполненного замыкания. Другими словами, если переданное замыкание возвращает `true`, то задача будет выполняться до тех пор, пока никакие другие ограничивающие условия не препятствуют ее запуску:
 
-    $schedule->command('emails:send')->daily()->when(function () {
-        return true;
-    });
+```php
+$schedule->command('emails:send')->daily()->when(function () {
+    return true;
+});
+```
 
 Метод `skip` можно рассматривать как противоположный методу `when`. Если метод `skip` возвращает `true`, то запланированная задача не будет выполнена:
 
-    $schedule->command('emails:send')->daily()->skip(function () {
-        return true;
-    });
+```php
+$schedule->command('emails:send')->daily()->skip(function () {
+    return true;
+});
+```
 
 При использовании цепочки методов `when`, запланированная команда будет выполняться только в том случае, если все условия `when` возвращают значение `true`.
 
@@ -225,30 +251,36 @@ php artisan schedule:list
 
 Метод `environment` может использоваться для выполнения задач только в указанных окружениях, согласно определению [переменной `APP_ENV` окружения](configuration.md#environment-configuration):
 
-    $schedule->command('emails:send')
-                ->daily()
-                ->environments(['staging', 'production']);
+```php
+$schedule->command('emails:send')
+            ->daily()
+            ->environments(['staging', 'production']);
+```
 
 <a name="timezones"></a>
 ### Часовые пояса
 
 Используя метод `timezone`, вы можете указать, что время запланированной задачи должно интерпретироваться в рамках переданного часового пояса:
 
-    $schedule->command('report:generate')
-             ->timezone('America/New_York')
-             ->at('2:00')
+```php
+$schedule->command('report:generate')
+         ->timezone('America/New_York')
+         ->at('2:00')
+```
 
 Если вы постоянно назначаете один и тот же часовой пояс для всех запланированных задач, то вы можете определить метод `scheduleTimezone` в своем классе `App\Console\Kernel`. Этот метод должен возвращать часовой пояс, назначаемый по умолчанию для всех запланированных задач:
 
-    /**
-     * Получить часовой пояс, который должен использоваться по умолчанию для запланированных событий.
-     *
-     * @return \DateTimeZone|string|null
-     */
-    protected function scheduleTimezone()
-    {
-        return 'America/Chicago';
-    }
+```php
+/**
+ * Получить часовой пояс, который должен использоваться по умолчанию для запланированных событий.
+ *
+ * @return \DateTimeZone|string|null
+ */
+protected function scheduleTimezone()
+{
+    return 'America/Chicago';
+}
+```
 
 > **Предупреждение**\
 > Помните, что в некоторых часовых поясах используется летнее время. Когда происходит переход на летнее время, ваша запланированная задача может запускаться дважды или даже не запускаться вообще. По этой причине мы рекомендуем по возможности избегать указаний часовых поясов при планировании.
@@ -258,13 +290,17 @@ php artisan schedule:list
 
 По умолчанию запланированные задачи будут выполняться, даже если предыдущий экземпляр задачи все еще выполняется. Чтобы предотвратить это, вы можете использовать метод `withoutOverlapping`:
 
-    $schedule->command('emails:send')->withoutOverlapping();
+```php
+$schedule->command('emails:send')->withoutOverlapping();
+```
 
 В этом примере команда `emails:send` [Artisan](artisan.md) будет запускаться каждую минуту при условии, что она еще не запущена. Метод `withoutOverlapping` особенно полезен, если у вас есть задачи, которые разнятся по времени выполнения, что не позволяет вам точно предсказать, сколько времени займет текущая задача.
 
 При необходимости вы можете указать, сколько минут должно пройти до окончания блокировки «перекрывающихся» задач. По умолчанию срок блокировки истекает через 24 часа:
 
-    $schedule->command('emails:send')->withoutOverlapping(10);
+```php
+$schedule->command('emails:send')->withoutOverlapping(10);
+```
 
 За кулисами метод `withoutOverlapping` использует [кэш](cache.md) вашего приложения для получения блокировок. При необходимости вы можете очистить этот кеш блокировок с помощью команды `schedule:clear-cache` Artisan. Обычно это необходимо только в том случае, если задача зависает из-за неожиданной проблемы с сервером.
 
@@ -278,10 +314,12 @@ php artisan schedule:list
 
 Чтобы указать, что задача должна выполняться только на одном сервере, используйте метод `onOneServer` при определении запланированной задачи. Первый сервер, который получит задачу, обеспечит атомарную блокировку задания, чтобы другие серверы не могли одновременно выполнять ту же задачу:
 
-    $schedule->command('report:generate')
-                    ->fridays()
-                    ->at('17:00')
-                    ->onOneServer();
+```php
+$schedule->command('report:generate')
+                ->fridays()
+                ->at('17:00')
+                ->onOneServer();
+```
 
 <a name="naming-unique-jobs"></a>
 #### Именование заданий на одном сервере
@@ -315,9 +353,11 @@ $schedule->call(fn () => User::resetApiRequestCount())
 
 По умолчанию, несколько задач, запланированных одновременно, будут выполняться последовательно в соответствии с порядком, которым они определены в вашем методе `schedule`. Если у вас есть длительные задачи, это может привести к тому, что последующие задачи начнутся намного позже, чем ожидалось. Если вы хотите запускать задачи в фоновом режиме в соответствии с планом, то вы можете использовать метод `runInBackground`:
 
-    $schedule->command('analytics:report')
-             ->daily()
-             ->runInBackground();
+```php
+$schedule->command('analytics:report')
+         ->daily()
+         ->runInBackground();
+```
 
 > **Предупреждение**\
 > Метод `runInBackground` может использоваться только при планировании задач с помощью методов `command` и `exec`.
@@ -327,7 +367,9 @@ $schedule->call(fn () => User::resetApiRequestCount())
 
 Запланированные задачи вашего приложения не будут выполняться, когда приложение находится в [режиме обслуживания](configuration.md#maintenance-mode), поскольку мы не хотим, чтобы ваши задачи мешали любому незавершенному процессу обслуживания, выполняющемуся на вашем сервере. Однако, если вы хотите принудительно запустить задачу даже в режиме обслуживания, то используйте метод `evenInMaintenanceMode` при определении задачи:
 
-    $schedule->command('emails:send')->evenInMaintenanceMode();
+```php
+$schedule->command('emails:send')->evenInMaintenanceMode();
+```
 
 <a name="running-the-scheduler"></a>
 ## Запуск планировщика
@@ -354,28 +396,36 @@ php artisan schedule:work
 
 Планировщик Laravel предлагает несколько удобных методов для работы с выводом результатов, созданных запланированными задачами. Во-первых, используя метод `sendOutputTo`, вы можете отправить результат в файл для последующей просмотра:
 
-    $schedule->command('emails:send')
-             ->daily()
-             ->sendOutputTo($filePath);
+```php
+$schedule->command('emails:send')
+         ->daily()
+         ->sendOutputTo($filePath);
+```
 
 Если вы хотите добавить результат в указанный файл, то используйте метод `appendOutputTo`:
 
-    $schedule->command('emails:send')
-             ->daily()
-             ->appendOutputTo($filePath);
+```php
+$schedule->command('emails:send')
+         ->daily()
+         ->appendOutputTo($filePath);
+```
 
 Используя метод `emailOutputTo`, вы можете отправить результат по электронной почте на любой адрес. Перед отправкой результатов выполнения задачи по электронной почте вам следует настроить [почтовые службы](mail.md) Laravel:
 
-    $schedule->command('report:generate')
-             ->daily()
-             ->sendOutputTo($filePath)
-             ->emailOutputTo('taylor@example.com');
+```php
+$schedule->command('report:generate')
+         ->daily()
+         ->sendOutputTo($filePath)
+         ->emailOutputTo('taylor@example.com');
+```
 
 Если вы хотите отправить результат по электронной почте только в том случае, если запланированная (Artisan или системная) команда завершается ненулевым кодом возврата, используйте метод `emailOutputOnFailure`:
 
-    $schedule->command('report:generate')
-             ->daily()
-             ->emailOutputOnFailure('taylor@example.com');
+```php
+$schedule->command('report:generate')
+         ->daily()
+         ->emailOutputOnFailure('taylor@example.com');
+```
 
 > **Предупреждение**\
 > Методы `emailOutputTo`, `emailOutputOnFailure`, `sendOutputTo` и `appendOutputTo` могут использоваться только при планировании задач с помощью методов `command` и `exec`.
@@ -385,62 +435,74 @@ php artisan schedule:work
 
 Используя методы `before` и `after`, вы можете указать замыкания, которые будут выполняться до и после выполнения запланированной задачи:
 
-    $schedule->command('emails:send')
-             ->daily()
-             ->before(function () {
-                 // Задача готова к выполнению ...
-             })
-             ->after(function () {
-                 // Задача выполнена ...
-             });
+```php
+$schedule->command('emails:send')
+         ->daily()
+         ->before(function () {
+             // Задача готова к выполнению ...
+         })
+         ->after(function () {
+             // Задача выполнена ...
+         });
+```
 
 Методы `onSuccess` и `onFailure` позволяют указать замыкания, которые будут выполняться в случае успешного или неудачного выполнения запланированной задачи. Ошибка означает, что запланированная (Artisan или системная) команда завершилась ненулевым кодом возврата:
 
-    $schedule->command('emails:send')
-             ->daily()
-             ->onSuccess(function () {
-                 // Задача успешно выполнена ...
-             })
-             ->onFailure(function () {
-                 // Не удалось выполнить задачу ...
-             });
+```php
+$schedule->command('emails:send')
+         ->daily()
+         ->onSuccess(function () {
+             // Задача успешно выполнена ...
+         })
+         ->onFailure(function () {
+             // Не удалось выполнить задачу ...
+         });
+```
 
 Если из вашей команды доступен вывод результата, то вы можете получить к нему доступ в ваших хуках `after`, `onSuccess` или `onFailure`, указав тип экземпляра `Illuminate\Support\Stringable` в качестве аргумента `$output` замыкания при определении вашего хука:
 
-    use Illuminate\Support\Stringable;
+```php
+use Illuminate\Support\Stringable;
 
-    $schedule->command('emails:send')
-             ->daily()
-             ->onSuccess(function (Stringable $output) {
-                 // Задача успешно выполнена ...
-             })
-             ->onFailure(function (Stringable $output) {
-                 // Не удалось выполнить задачу ...
-             });
+$schedule->command('emails:send')
+         ->daily()
+         ->onSuccess(function (Stringable $output) {
+             // Задача успешно выполнена ...
+         })
+         ->onFailure(function (Stringable $output) {
+             // Не удалось выполнить задачу ...
+         });
+```
 
 <a name="pinging-urls"></a>
 #### Пингование URL-адресов
 
 Используя методы `pingBefore` и `thenPing`, планировщик может автоматически пинговать по указанному URL до или после выполнения задачи. Этот метод полезен для уведомления внешней службы, такой как [Envoyer](https://envoyer.io), о том, что ваша запланированная задача запущена или завершена:
 
-    $schedule->command('emails:send')
-             ->daily()
-             ->pingBefore($url)
-             ->thenPing($url);
+```php
+$schedule->command('emails:send')
+         ->daily()
+         ->pingBefore($url)
+         ->thenPing($url);
+```
 
 Методы `pingBeforeIf` и `thenPingIf` могут использоваться для пингования по указанному URL, только если переданное условие `$condition` истинно:
 
-    $schedule->command('emails:send')
-             ->daily()
-             ->pingBeforeIf($condition, $url)
-             ->thenPingIf($condition, $url);
+```php
+$schedule->command('emails:send')
+         ->daily()
+         ->pingBeforeIf($condition, $url)
+         ->thenPingIf($condition, $url);
+```
 
 Методы `pingOnSuccess` и `pingOnFailure` могут использоваться для пингования по указанному URL только в случае успешного или неудачного выполнения задачи. Ошибка означает, что запланированная (Artisan или системная) команда завершилась ненулевым кодом возврата:
 
-    $schedule->command('emails:send')
-             ->daily()
-             ->pingOnSuccess($successUrl)
-             ->pingOnFailure($failureUrl);
+```php
+$schedule->command('emails:send')
+         ->daily()
+         ->pingOnSuccess($successUrl)
+         ->pingOnFailure($failureUrl);
+```
 
 Для всех методов пингования требуется библиотека Guzzle HTTP. Guzzle обычно устанавливается во всех новых проектах Laravel по умолчанию, но вы можете вручную установить Guzzle в свой проект с помощью менеджера пакетов Composer, если он был удален:
 
@@ -453,29 +515,31 @@ composer require guzzlehttp/guzzle
 
 При необходимости вы можете прослушивать [события](events.md), запускаемые планировщиком. Как правило, регистрация слушателей этих событий осуществляется в поставщике `App\Providers\EventServiceProvider`:
 
-    /**
-     * Карта слушателей событий приложения.
-     *
-     * @var array
-     */
-    protected $listen = [
-        'Illuminate\Console\Events\ScheduledTaskStarting' => [
-            'App\Listeners\LogScheduledTaskStarting',
-        ],
+```php
+/**
+ * Карта слушателей событий приложения.
+ *
+ * @var array
+ */
+protected $listen = [
+    'Illuminate\Console\Events\ScheduledTaskStarting' => [
+        'App\Listeners\LogScheduledTaskStarting',
+    ],
 
-        'Illuminate\Console\Events\ScheduledTaskFinished' => [
-            'App\Listeners\LogScheduledTaskFinished',
-        ],
+    'Illuminate\Console\Events\ScheduledTaskFinished' => [
+        'App\Listeners\LogScheduledTaskFinished',
+    ],
 
-        'Illuminate\Console\Events\ScheduledBackgroundTaskFinished' => [
-            'App\Listeners\LogScheduledBackgroundTaskFinished',
-        ],
+    'Illuminate\Console\Events\ScheduledBackgroundTaskFinished' => [
+        'App\Listeners\LogScheduledBackgroundTaskFinished',
+    ],
 
-        'Illuminate\Console\Events\ScheduledTaskSkipped' => [
-            'App\Listeners\LogScheduledTaskSkipped',
-        ],
+    'Illuminate\Console\Events\ScheduledTaskSkipped' => [
+        'App\Listeners\LogScheduledTaskSkipped',
+    ],
 
-        'Illuminate\Console\Events\ScheduledTaskFailed' => [
-            'App\Listeners\LogScheduledTaskFailed',
-        ],
-    ];
+    'Illuminate\Console\Events\ScheduledTaskFailed' => [
+        'App\Listeners\LogScheduledTaskFailed',
+    ],
+];
+```

@@ -29,99 +29,111 @@ Laravel предлагает полезные методы для имитаци
 
 При имитации объекта, который будет внедрен в ваше приложение через [контейнер служб](container.md) Laravel, вам нужно будет привязать ваш подставной экземпляр к контейнеру с помощью `instance`. Это даст указание контейнеру использовать ваш подставной экземпляр объекта вместо создания самого объекта:
 
-    use App\Service;
-    use Mockery;
-    use Mockery\MockInterface;
+```php
+use App\Service;
+use Mockery;
+use Mockery\MockInterface;
 
-    public function test_something_can_be_mocked()
-    {
-        $this->instance(
-            Service::class,
-            Mockery::mock(Service::class, function (MockInterface $mock) {
-                $mock->shouldReceive('process')->once();
-            })
-        );
-    }
+public function test_something_can_be_mocked()
+{
+    $this->instance(
+        Service::class,
+        Mockery::mock(Service::class, function (MockInterface $mock) {
+            $mock->shouldReceive('process')->once();
+        })
+    );
+}
+```
 
 Чтобы сделать это более удобным, вы можете использовать метод `mock`, который обеспечен базовым классом тестов Laravel. Например, следующий пример эквивалентен приведенному выше примеру:
 
-    use App\Service;
-    use Mockery\MockInterface;
+```php
+use App\Service;
+use Mockery\MockInterface;
 
-    $mock = $this->mock(Service::class, function (MockInterface $mock) {
-        $mock->shouldReceive('process')->once();
-    });
+$mock = $this->mock(Service::class, function (MockInterface $mock) {
+    $mock->shouldReceive('process')->once();
+});
+```
 
 Вы можете использовать метод `partialMock`, когда вам нужно только имитировать несколько методов объекта. Методы, которые не являются сымитированными, при вызове будут выполняться в обычном режиме:
 
-    use App\Service;
-    use Mockery\MockInterface;
+```php
+use App\Service;
+use Mockery\MockInterface;
 
-    $mock = $this->partialMock(Service::class, function (MockInterface $mock) {
-        $mock->shouldReceive('process')->once();
-    });
+$mock = $this->partialMock(Service::class, function (MockInterface $mock) {
+    $mock->shouldReceive('process')->once();
+});
+```
 
 Точно так же, если вы хотите [шпионить](http://docs.mockery.io/en/latest/reference/spies.html) за объектом, базовый класс тестов Laravel содержит метод `spy` в качестве удобной обертки для метода `Mockery::spy`. Шпионы похожи на подставные объекты; однако, шпионы записывают любое взаимодействие между шпионом и тестируемым кодом, позволяя вам делать утверждения после выполнения кода:
 
-    use App\Service;
+```php
+use App\Service;
 
-    $spy = $this->spy(Service::class);
+$spy = $this->spy(Service::class);
 
-    // ...
+// ...
 
-    $spy->shouldHaveReceived('process');
+$spy->shouldHaveReceived('process');
+```
 
 <a name="mocking-facades"></a>
 ## Имитация фасадов
 
 В отличие от традиционных вызовов статических методов, [фасады](facades.md), включая [фасады в реальном времени](facades.md#real-time-facades) можно имитировать. Это дает большое преимущество перед традиционными статическими методами и дает вам такую же возможность тестирования, как если бы вы использовали традиционное внедрение зависимостей. При тестировании вы часто можете имитировать вызов фасада Laravel, происходящий в одном из ваших контроллеров. Например, рассмотрим следующее действие контроллера:
 
-    <?php
+```php
+<?php
 
-    namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
-    use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Cache;
 
-    class UserController extends Controller
+class UserController extends Controller
+{
+    /**
+     * Получить список всех пользователей приложения.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
     {
-        /**
-         * Получить список всех пользователей приложения.
-         *
-         * @return \Illuminate\Http\Response
-         */
-        public function index()
-        {
-            $value = Cache::get('key');
+        $value = Cache::get('key');
 
-            //
-        }
+        //
     }
+}
+```
 
 Мы можем имитировать вызов фасада `Cache`, используя метод `shouldReceive`, который вернет экземпляр [Mockery](https://github.com/padraic/mockery). Поскольку фасады фактически извлекаются и управляются [контейнером служб](container.md) Laravel, то они имеют гораздо большую тестируемость, чем типичный статический класс. Например, давайте сымитируем наш вызов метода `get` фасада `Cache`:
 
-    <?php
+```php
+<?php
 
-    namespace Tests\Feature;
+namespace Tests\Feature;
 
-    use Illuminate\Foundation\Testing\RefreshDatabase;
-    use Illuminate\Foundation\Testing\WithoutMiddleware;
-    use Illuminate\Support\Facades\Cache;
-    use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Support\Facades\Cache;
+use Tests\TestCase;
 
-    class UserControllerTest extends TestCase
+class UserControllerTest extends TestCase
+{
+    public function testGetIndex()
     {
-        public function testGetIndex()
-        {
-            Cache::shouldReceive('get')
-                        ->once()
-                        ->with('key')
-                        ->andReturn('value');
+        Cache::shouldReceive('get')
+                    ->once()
+                    ->with('key')
+                    ->andReturn('value');
 
-            $response = $this->get('/users');
+        $response = $this->get('/users');
 
-            // ...
-        }
+        // ...
     }
+}
+```
 
 > **Предупреждение**\
 > Вы не должны имитировать фасад `Request`. Вместо этого передайте требуемые данные в [методы тестирования HTTP](http-tests.md), такие как `get` и `post`, при запуске вашего теста. Аналогично, вместо имитации фасада `Config`, вызовите метод `Config::set` в ваших тестах.
@@ -131,18 +143,20 @@ Laravel предлагает полезные методы для имитаци
 
 Если вы хотите [шпионить](http://docs.mockery.io/en/latest/reference/spies.html) за фасадом, то вы можете вызвать метод `spy` на соответствующем фасаде. Шпионы похожи на подставные объекты; однако, шпионы записывают любое взаимодействие между шпионом и тестируемым кодом, позволяя вам делать утверждения после выполнения кода:
 
-    use Illuminate\Support\Facades\Cache;
+```php
+use Illuminate\Support\Facades\Cache;
 
-    public function test_values_are_be_stored_in_cache()
-    {
-        Cache::spy();
+public function test_values_are_be_stored_in_cache()
+{
+    Cache::spy();
 
-        $response = $this->get('/');
+    $response = $this->get('/');
 
-        $response->assertStatus(200);
+    $response->assertStatus(200);
 
-        Cache::shouldHaveReceived('put')->once()->with('name', 'Taylor', 10);
-    }
+    Cache::shouldHaveReceived('put')->once()->with('name', 'Taylor', 10);
+}
+```
 
 <a name="bus-fake"></a>
 ## Фальсификация Bus
@@ -151,178 +165,200 @@ Laravel предлагает полезные методы для имитаци
 
 Вы можете использовать метод `fake` фасада `Bus` для предотвращения отправки заданий в очередь. Затем, после выполнения тестируемого кода, вы можете проверить, какие задания приложение пыталось отправить, используя методы `assertDispatched` и `assertNotDispatched`:
 
-    <?php
+```php
+<?php
 
-    namespace Tests\Feature;
+namespace Tests\Feature;
 
-    use App\Jobs\ShipOrder;
-    use Illuminate\Foundation\Testing\RefreshDatabase;
-    use Illuminate\Foundation\Testing\WithoutMiddleware;
-    use Illuminate\Support\Facades\Bus;
-    use Tests\TestCase;
+use App\Jobs\ShipOrder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Support\Facades\Bus;
+use Tests\TestCase;
 
-    class ExampleTest extends TestCase
+class ExampleTest extends TestCase
+{
+    public function test_orders_can_be_shipped()
     {
-        public function test_orders_can_be_shipped()
-        {
-            Bus::fake();
+        Bus::fake();
 
-            // Осуществляем доставку заказа ...
+        // Осуществляем доставку заказа ...
 
-            // Утверждаем, что задание было отправлено ...
-            Bus::assertDispatched(ShipOrder::class);
+        // Утверждаем, что задание было отправлено ...
+        Bus::assertDispatched(ShipOrder::class);
 
-            // Утверждаем, что задание не было отправлено ...
-            Bus::assertNotDispatched(AnotherJob::class);
+        // Утверждаем, что задание не было отправлено ...
+        Bus::assertNotDispatched(AnotherJob::class);
 
-            // Утверждаем, что задание было отправлено синхронно ...
-            Bus::assertDispatchedSync(AnotherJob::class);
+        // Утверждаем, что задание было отправлено синхронно ...
+        Bus::assertDispatchedSync(AnotherJob::class);
 
-            // Утверждаем, что задание не было отправлено синхронно ...
-            Bus::assertNotDispatchedSync(AnotherJob::class);
+        // Утверждаем, что задание не было отправлено синхронно ...
+        Bus::assertNotDispatchedSync(AnotherJob::class);
 
-            // Утверждаем, что задание было отправлено после отправки ответа ...
-            Bus::assertDispatchedAfterResponse(AnotherJob::class);
+        // Утверждаем, что задание было отправлено после отправки ответа ...
+        Bus::assertDispatchedAfterResponse(AnotherJob::class);
 
-            // Утверждаем, что задание не было отправлено после отправки ответа...
-            Bus::assertNotDispatchedAfterResponse(AnotherJob::class);
+        // Утверждаем, что задание не было отправлено после отправки ответа...
+        Bus::assertNotDispatchedAfterResponse(AnotherJob::class);
 
-            // Утверждаем, что никаких заданий не было отправлено ...
-            Bus::assertNothingDispatched();
-        }
+        // Утверждаем, что никаких заданий не было отправлено ...
+        Bus::assertNothingDispatched();
     }
+}
+```
 
 Вы можете передать замыкание в доступные методы, чтобы утверждать, что было отправлено задание, которое проходит переданный «тест истинности». Если было отправлено хотя бы одно задание, которое проходит указанный тест на истинность, то и утверждение будет считаться успешным. Например, вы можете утверждать, что задание было отправлено для определенного заказа:
 
-    Bus::assertDispatched(function (ShipOrder $job) use ($order) {
-        return $job->order->id === $order->id;
-    });
+```php
+Bus::assertDispatched(function (ShipOrder $job) use ($order) {
+    return $job->order->id === $order->id;
+});
+```
 
 <a name="faking-a-subset-of-jobs"></a>
 #### Фальсификация подмножества заданий
 
 Если вы хотите предотвратить отправку только определенных заданий, вы можете передать задания, которые должны быть сфальсифицированы, методу `fake`:
 
-    /**
-     * Тест доставки заказа.
-     */
-    public function test_orders_can_be_shipped()
-    {
-        Bus::fake([
-            ShipOrder::class,
-        ]);
+```php
+/**
+ * Тест доставки заказа.
+ */
+public function test_orders_can_be_shipped()
+{
+    Bus::fake([
+        ShipOrder::class,
+    ]);
 
-        // ...
-    }
+    // ...
+}
+```
 
 Вы можете сфальсифицировать все задания, кроме набора указанных, используя метод `except`:
 
-    Bus::fake()->except([
-        ShipOrder::class,
-    ]);
+```php
+Bus::fake()->except([
+    ShipOrder::class,
+]);
+```
 
 <a name="bus-job-chains"></a>
 ### Цепочка заданий
 
 Метод `assertChained` фасада `Bus` используется для подтверждения отправки [цепочки заданий](queues.md#job-chaining). Метод `assertChained` принимает массив связанных заданий в качестве первого аргумента:
 
-    use App\Jobs\RecordShipment;
-    use App\Jobs\ShipOrder;
-    use App\Jobs\UpdateInventory;
-    use Illuminate\Support\Facades\Bus;
+```php
+use App\Jobs\RecordShipment;
+use App\Jobs\ShipOrder;
+use App\Jobs\UpdateInventory;
+use Illuminate\Support\Facades\Bus;
 
-    Bus::assertChained([
-        ShipOrder::class,
-        RecordShipment::class,
-        UpdateInventory::class
-    ]);
+Bus::assertChained([
+    ShipOrder::class,
+    RecordShipment::class,
+    UpdateInventory::class
+]);
+```
 
 Как вы можете видеть в приведенном выше примере, массив связанных заданий может быть массивом имен классов заданий. Однако, вы также можете предоставить массив фактических экземпляров задания. При этом Laravel гарантирует, что экземпляры задания относятся к одному классу и имеют те же значения свойств, что и связанные задания, отправленные вашим приложением:
 
-    Bus::assertChained([
-        new ShipOrder,
-        new RecordShipment,
-        new UpdateInventory,
-    ]);
+```php
+Bus::assertChained([
+    new ShipOrder,
+    new RecordShipment,
+    new UpdateInventory,
+]);
+```
 
 <a name="job-batches"></a>
 ### Пакетная обработка заданий
 
 Метод `assertBatched` фасада `Bus` используется для подтверждения того, что [пакет заданий](queues.md#job-batching) был отправлен. Замыкание, переданное методу `assertBatched`, получает экземпляр `Illuminate\Bus\PendingBatch`, который может использоваться для инспектирования заданий в пакете:
 
-    use Illuminate\Bus\PendingBatch;
-    use Illuminate\Support\Facades\Bus;
+```php
+use Illuminate\Bus\PendingBatch;
+use Illuminate\Support\Facades\Bus;
 
-    Bus::assertBatched(function (PendingBatch $batch) {
-        return $batch->name == 'import-csv' &&
-               $batch->jobs->count() === 10;
-    });
+Bus::assertBatched(function (PendingBatch $batch) {
+    return $batch->name == 'import-csv' &&
+           $batch->jobs->count() === 10;
+});
+```
 
 <a name="testing-job-batch-interaction"></a>
 #### Тестирование взаимодействия задания и пакета заданий
 
 Кроме того, иногда требуется протестировать взаимодействие отдельного задания с пакетом заданий, частью которого тот является. Например, может потребоваться протестировать, не была ли отменена заданием дальнейшая обработка пакета заданий. Для этого вам нужно назначить заданию фальсифицированный пакет с помощью метода `withFakeBatch`. Метод `withFakeBatch` возвращает массив, содержащий экземпляр задания и фальсифицированный пакет:
 
-    [$job, $batch] = (new ShipOrder)->withFakeBatch();
+```php
+[$job, $batch] = (new ShipOrder)->withFakeBatch();
 
-    $job->handle();
+$job->handle();
 
-    $this->assertTrue($batch->cancelled());
-    $this->assertEmpty($batch->added);
+$this->assertTrue($batch->cancelled());
+$this->assertEmpty($batch->added);
+```
 
 <a name="event-fake"></a>
 ## Фальсификация Event
 
 При тестировании кода, отправляющего события, вы можете указать Laravel не выполнять слушателей событий. Используя метод `fake` фасада `Event`, вы можете запретить выполнение слушателей, выполнить тестируемый код, а затем утверждать, какие события были отправлены вашим приложением, используя методы `assertDispatched`, `assertNotDispatched` и `assertNothingDispatched`:
 
-    <?php
+```php
+<?php
 
-    namespace Tests\Feature;
+namespace Tests\Feature;
 
-    use App\Events\OrderFailedToShip;
-    use App\Events\OrderShipped;
-    use Illuminate\Foundation\Testing\RefreshDatabase;
-    use Illuminate\Foundation\Testing\WithoutMiddleware;
-    use Illuminate\Support\Facades\Event;
-    use Tests\TestCase;
+use App\Events\OrderFailedToShip;
+use App\Events\OrderShipped;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Support\Facades\Event;
+use Tests\TestCase;
 
-    class ExampleTest extends TestCase
+class ExampleTest extends TestCase
+{
+    /**
+     * Тест доставки заказа.
+     */
+    public function test_orders_can_be_shipped()
     {
-        /**
-         * Тест доставки заказа.
-         */
-        public function test_orders_can_be_shipped()
-        {
-            Event::fake();
+        Event::fake();
 
-            // Осуществляем доставку заказа ...
+        // Осуществляем доставку заказа ...
 
-            // Утверждаем, что событие было отправлено ...
-            Event::assertDispatched(OrderShipped::class);
+        // Утверждаем, что событие было отправлено ...
+        Event::assertDispatched(OrderShipped::class);
 
-            // Утверждаем, что событие было отправлено дважды ...
-            Event::assertDispatchedTimes(OrderShipped::class, 2);
+        // Утверждаем, что событие было отправлено дважды ...
+        Event::assertDispatchedTimes(OrderShipped::class, 2);
 
-            // Утверждаем, что событие не было отправлено ...
-            Event::assertNotDispatched(OrderFailedToShip::class);
+        // Утверждаем, что событие не было отправлено ...
+        Event::assertNotDispatched(OrderFailedToShip::class);
 
-            // Утверждаем, что никаких событий не было отправлено ...
-            Event::assertNothingDispatched();
-        }
+        // Утверждаем, что никаких событий не было отправлено ...
+        Event::assertNothingDispatched();
     }
+}
+```
 
 Вы можете передать замыкание в методы `assertDispatched` или `assertNotDispatched`, чтобы утверждать, что было отправлено событие, которое проходит данный «тест истинности». Если было отправлено хотя бы одно событие, которое проходит заданный тест на истинность, то и утверждение будет считаться успешным:
 
-    Event::assertDispatched(function (OrderShipped $event) use ($order) {
-        return $event->order->id === $order->id;
-    });
+```php
+Event::assertDispatched(function (OrderShipped $event) use ($order) {
+    return $event->order->id === $order->id;
+});
+```
 
 Если требуется простое утверждение того, что слушатель события прослушивает конкретное событие, то можно использовать метод `assertListening`:
 
-    Event::assertListening(
-        OrderShipped::class,
-        SendShipmentNotification::class
-    );
+```php
+Event::assertListening(
+    OrderShipped::class,
+    SendShipmentNotification::class
+);
+```
 
 > **Предупреждение**\
 > После вызова `Event::fake()` никакие слушатели событий выполняться не будут. Итак, если в ваших тестах используются фабрики моделей, которые полагаются на события, такие как создание UUID во время события `creating` модели, вы должны вызвать `Event::fake()` **после** использования ваших фабрик.
@@ -332,64 +368,70 @@ Laravel предлагает полезные методы для имитаци
 
 Если вы хотите сфальсифицировать слушателей событий только для определенного набора событий, вы можете передать их методу `fake` или `fakeFor`:
 
-    /**
-     * Тест обработки заказа.
-     */
-    public function test_orders_can_be_processed()
-    {
-        Event::fake([
-            OrderCreated::class,
-        ]);
+```php
+/**
+ * Тест обработки заказа.
+ */
+public function test_orders_can_be_processed()
+{
+    Event::fake([
+        OrderCreated::class,
+    ]);
 
-        $order = Order::factory()->create();
+    $order = Order::factory()->create();
 
-        Event::assertDispatched(OrderCreated::class);
+    Event::assertDispatched(OrderCreated::class);
 
-        // Другие события отправляются как обычно ...
-        $order->update([...]);
-    }
+    // Другие события отправляются как обычно ...
+    $order->update([...]);
+}
+```
 
 Вы можете сфальсифицировать все события, кроме набора указанных, используя метод `except`:
 
-    Event::fake()->except([
-        OrderCreated::class,
-    ]);
+```php
+Event::fake()->except([
+    OrderCreated::class,
+]);
+```
 
 <a name="scoped-event-fakes"></a>
 ### Ограниченная фальсификация событий
 
 Если вы хотите сфальсифицировать слушателей событий только для части вашего теста, вы можете использовать метод `fakeFor`:
 
-    <?php
+```php
+<?php
 
-    namespace Tests\Feature;
+namespace Tests\Feature;
 
-    use App\Events\OrderCreated;
-    use App\Models\Order;
-    use Illuminate\Foundation\Testing\RefreshDatabase;
-    use Illuminate\Support\Facades\Event;
-    use Illuminate\Foundation\Testing\WithoutMiddleware;
-    use Tests\TestCase;
+use App\Events\OrderCreated;
+use App\Models\Order;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
-    class ExampleTest extends TestCase
+class ExampleTest extends TestCase
+{
+    /**
+     * Тест обработки заказа.
+     */
+    public function test_orders_can_be_processed()
     {
-        /**
-         * Тест обработки заказа.
-         */
-        public function test_orders_can_be_processed()
-        {
-            $order = Event::fakeFor(function () {
-                $order = Order::factory()->create();
+        $order = Event::fakeFor(function () {
+            $order = Order::factory()->create();
 
-                Event::assertDispatched(OrderCreated::class);
+            Event::assertDispatched(OrderCreated::class);
 
-                return $order;
-            });
+            return $order;
+        });
 
-            // События отправляются как обычно, и наблюдатели запускаются ...
-            $order->update([...]);
-        }
+        // События отправляются как обычно, и наблюдатели запускаются ...
+        $order->update([...]);
     }
+}
+```
 
 <a name="http-fake"></a>
 ## Фальсификация HTTP
@@ -403,94 +445,106 @@ Laravel предлагает полезные методы для имитаци
 
 После вызова метода `fake` фасада `Mail` вы можете утверждать, что [почтовые службы](mail.md) были проинструктированы об отправке пользователям, и даже проверять данные, полученные почтовыми службами:
 
-    <?php
+```php
+<?php
 
-    namespace Tests\Feature;
+namespace Tests\Feature;
 
-    use App\Mail\OrderShipped;
-    use Illuminate\Foundation\Testing\RefreshDatabase;
-    use Illuminate\Foundation\Testing\WithoutMiddleware;
-    use Illuminate\Support\Facades\Mail;
-    use Tests\TestCase;
+use App\Mail\OrderShipped;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Support\Facades\Mail;
+use Tests\TestCase;
 
-    class ExampleTest extends TestCase
+class ExampleTest extends TestCase
+{
+    public function test_orders_can_be_shipped()
     {
-        public function test_orders_can_be_shipped()
-        {
-            Mail::fake();
+        Mail::fake();
 
-            // Осуществляем доставку заказа ...
+        // Осуществляем доставку заказа ...
 
-            // Утверждаем, что почтовые сообщения не были отправлены ...
-            Mail::assertNothingSent();
+        // Утверждаем, что почтовые сообщения не были отправлены ...
+        Mail::assertNothingSent();
 
-            // Утверждаем, что почтовое сообщение было отправлено ...
-            Mail::assertSent(OrderShipped::class);
+        // Утверждаем, что почтовое сообщение было отправлено ...
+        Mail::assertSent(OrderShipped::class);
 
-            // Утверждаем, что почтовое сообщение было отправлено дважды ...
-            Mail::assertSent(OrderShipped::class, 2);
+        // Утверждаем, что почтовое сообщение было отправлено дважды ...
+        Mail::assertSent(OrderShipped::class, 2);
 
-            // Утверждаем, что конкретное почтовое сообщение не было отправлено ...
-            Mail::assertNotSent(AnotherMailable::class);
-        }
+        // Утверждаем, что конкретное почтовое сообщение не было отправлено ...
+        Mail::assertNotSent(AnotherMailable::class);
     }
+}
+```
 
 Если вы ставите почтовые сообщения в очередь для доставки в фоновом режиме, вы должны использовать метод `assertQueued` вместо `assertSent`:
 
-    Mail::assertQueued(OrderShipped::class);
+```php
+Mail::assertQueued(OrderShipped::class);
 
-    Mail::assertNotQueued(OrderShipped::class);
+Mail::assertNotQueued(OrderShipped::class);
 
-    Mail::assertNothingQueued();
+Mail::assertNothingQueued();
+```
 
 Вы можете передать замыкание в методы `assertSent`, `assertNotSent`, `assertQueued` или `assertNotQueued`, чтобы утверждать, что было отправлено почтовое сообщение, которое проходит данный «тест истинности». Если было отправлено хотя бы одно почтовое сообщение, которое проходит заданный тест на истинность, то и утверждение будет считаться успешным:
 
-    Mail::assertSent(function (OrderShipped $mail) use ($order) {
-        return $mail->order->id === $order->id;
-    });
+```php
+Mail::assertSent(function (OrderShipped $mail) use ($order) {
+    return $mail->order->id === $order->id;
+});
+```
 
 При вызове методов утверждений фасада `Mail` экземпляр почтового сообщения, переданный замыканию, содержит полезные методы:
 
-    Mail::assertSent(OrderShipped::class, function ($mail) use ($user) {
-        return $mail->hasTo($user->email) &&
-               $mail->hasCc('...') &&
-               $mail->hasBcc('...') &&
-               $mail->hasReplyTo('...') &&
-               $mail->hasFrom('...') &&
-               $mail->hasSubject('...');
-    });
+```php
+Mail::assertSent(OrderShipped::class, function ($mail) use ($user) {
+    return $mail->hasTo($user->email) &&
+           $mail->hasCc('...') &&
+           $mail->hasBcc('...') &&
+           $mail->hasReplyTo('...') &&
+           $mail->hasFrom('...') &&
+           $mail->hasSubject('...');
+});
+```
 
 Экземпляр почтового отправления также содержит несколько полезных методов для проверки вложений в сообщении:
 
-    use Illuminate\Mail\Mailables\Attachment;
+```php
+use Illuminate\Mail\Mailables\Attachment;
 
-    Mail::assertSent(OrderShipped::class, function ($mail) {
-        return $mail->hasAttachment(
-            Attachment::fromPath('/path/to/file')
-                    ->as('name.pdf')
-                    ->withMime('application/pdf')
-        );
-    });
+Mail::assertSent(OrderShipped::class, function ($mail) {
+    return $mail->hasAttachment(
+        Attachment::fromPath('/path/to/file')
+                ->as('name.pdf')
+                ->withMime('application/pdf')
+    );
+});
 
-    Mail::assertSent(OrderShipped::class, function ($mail) {
-        return $mail->hasAttachment(
-            Attachment::fromStorageDisk('s3', '/path/to/file')
-        );
-    });
+Mail::assertSent(OrderShipped::class, function ($mail) {
+    return $mail->hasAttachment(
+        Attachment::fromStorageDisk('s3', '/path/to/file')
+    );
+});
 
-    Mail::assertSent(OrderShipped::class, function ($mail) use ($pdfData) {
-        return $mail->hasAttachment(
-            Attachment::fromData(fn () => $pdfData, 'name.pdf')
-        );
-    });
+Mail::assertSent(OrderShipped::class, function ($mail) use ($pdfData) {
+    return $mail->hasAttachment(
+        Attachment::fromData(fn () => $pdfData, 'name.pdf')
+    );
+});
+```
 
 Вы могли заметить, что есть два метода утверждения о том, что письмо не было отправлено: `assertNotSent` и `assertNotQueued`. При желании вы можете утверждать о том, что почта не была отправлена ​​**или** поставлена ​​в очередь. Для этого вы можете использовать методы `assertNothingOutgoing` и `assertNotOutgoing`:
 
-    Mail::assertNothingOutgoing();
+```php
+Mail::assertNothingOutgoing();
 
-    Mail::assertNotOutgoing(function (OrderShipped $mail) use ($order) {
-        return $mail->order->id === $order->id;
-    });
+Mail::assertNotOutgoing(function (OrderShipped $mail) use ($order) {
+    return $mail->order->id === $order->id;
+});
+```
 
 <a name="testing-mailable-content"></a>
 #### Тестирование содержимого почтового отправления
@@ -504,66 +558,74 @@ Laravel предлагает полезные методы для имитаци
 
 После вызова метода `fake` фасада `Notification` вы можете утверждать, что [службы уведомлений](notifications.md) были проинструктированы об отправке пользователям, и даже проверять данные, полученные в уведомлениях:
 
-    <?php
+```php
+<?php
 
-    namespace Tests\Feature;
+namespace Tests\Feature;
 
-    use App\Notifications\OrderShipped;
-    use Illuminate\Foundation\Testing\RefreshDatabase;
-    use Illuminate\Foundation\Testing\WithoutMiddleware;
-    use Illuminate\Support\Facades\Notification;
-    use Tests\TestCase;
+use App\Notifications\OrderShipped;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Support\Facades\Notification;
+use Tests\TestCase;
 
-    class ExampleTest extends TestCase
+class ExampleTest extends TestCase
+{
+    public function test_orders_can_be_shipped()
     {
-        public function test_orders_can_be_shipped()
-        {
-            Notification::fake();
+        Notification::fake();
 
-            // Осуществляем доставку заказа ...
+        // Осуществляем доставку заказа ...
 
-            // Утверждаем, что уведомления не были отправлены ...
-            Notification::assertNothingSent();
+        // Утверждаем, что уведомления не были отправлены ...
+        Notification::assertNothingSent();
 
-            // Утверждаем, что указанным пользователям было отправлено уведомление ...
-            Notification::assertSentTo(
-                [$user], OrderShipped::class
-            );
+        // Утверждаем, что указанным пользователям было отправлено уведомление ...
+        Notification::assertSentTo(
+            [$user], OrderShipped::class
+        );
 
-            // Утверждаем, что уведомление не было отправлено ...
-            Notification::assertNotSentTo(
-                [$user], AnotherNotification::class
-            );
+        // Утверждаем, что уведомление не было отправлено ...
+        Notification::assertNotSentTo(
+            [$user], AnotherNotification::class
+        );
 
-            // Утверждаем, что указанное количество уведомлений было отправлено ...
-            Notification::assertCount(3);
-        }
+        // Утверждаем, что указанное количество уведомлений было отправлено ...
+        Notification::assertCount(3);
     }
+}
+```
 
 Вы можете передать замыкание в методы `assertSentTo` или `assertNotSentTo`, чтобы утверждать, что было отправлено уведомление, которое проходит данный «тест истинности». Если было отправлено хотя бы одно уведомление, которое проходит заданный тест на истинность, то и утверждение будет считаться успешным:
 
-    Notification::assertSentTo(
-        $user,
-        function (OrderShipped $notification, $channels) use ($order) {
-            return $notification->order->id === $order->id;
-        }
-    );
+```php
+Notification::assertSentTo(
+    $user,
+    function (OrderShipped $notification, $channels) use ($order) {
+        return $notification->order->id === $order->id;
+    }
+);
+```
 
 <a name="on-demand-notifications"></a>
 #### Уведомления по запросу
 
 Если код, который вы тестируете, отправляет [уведомления по запросу](notifications.md#on-demand-notifications), вам нужно будет тестировать отправку таких уведомлений через метод `assertSentOnDemand`:
 
-    Notification::assertSentOnDemand(OrderShipped::class);
+```php
+Notification::assertSentOnDemand(OrderShipped::class);
+```
 
 Передав замыкание в качестве второго аргумента методу `assertSentOnDemand`, вы можете определить, было ли отправлено уведомление по запросу на правильный адрес «маршрута»:
 
-    Notification::assertSentOnDemand(
-        OrderShipped::class,
-        function ($notification, $channels, $notifiable) use ($user) {
-            return $notifiable->routes['mail'] === $user->email;
-        }
-    );
+```php
+Notification::assertSentOnDemand(
+    OrderShipped::class,
+    function ($notification, $channels, $notifiable) use ($user) {
+        return $notifiable->routes['mail'] === $user->email;
+    }
+);
+```
 
 <a name="queue-fake"></a>
 ## Фальсификация Queue
@@ -572,124 +634,138 @@ Laravel предлагает полезные методы для имитаци
 
 После вызова метода `fake` фасада `Queue` вы можете утверждать, что приложение пыталось поместить задания в очередь:
 
-    <?php
+```php
+<?php
 
-    namespace Tests\Feature;
+namespace Tests\Feature;
 
-    use App\Jobs\AnotherJob;
-    use App\Jobs\FinalJob;
-    use App\Jobs\ShipOrder;
-    use Illuminate\Foundation\Testing\RefreshDatabase;
-    use Illuminate\Foundation\Testing\WithoutMiddleware;
-    use Illuminate\Support\Facades\Queue;
-    use Tests\TestCase;
+use App\Jobs\AnotherJob;
+use App\Jobs\FinalJob;
+use App\Jobs\ShipOrder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Support\Facades\Queue;
+use Tests\TestCase;
 
-    class ExampleTest extends TestCase
-    {
-        public function test_orders_can_be_shipped()
-        {
-            Queue::fake();
-
-            // Осуществляем доставку заказа ...
-
-            // Утверждаем, что задания не были помещены ...
-            Queue::assertNothingPushed();
-
-            // Утверждаем, что задание было помещено в конкретную очередь ...
-            Queue::assertPushedOn('queue-name', ShipOrder::class);
-
-            // Утверждаем, что задание было помещено дважды ...
-            Queue::assertPushed(ShipOrder::class, 2);
-
-            // Утверждаем, что задание не было помещено ...
-            Queue::assertNotPushed(AnotherJob::class);
-        }
-    }
-
-Вы можете передать замыкание в методы `assertPushed` или `assertNotPushed`, чтобы утверждать, что было отправлено задание, которое проходит данный «тест истинности». Если было отправлено хотя бы одно задание, которое проходит заданный тест на истинность, то и утверждение будет считаться успешным:
-
-    Queue::assertPushed(function (ShipOrder $job) use ($order) {
-        return $job->order->id === $order->id;
-    });
-
-Если вам нужно сфальсифицировать только определенные задания, позволив другим заданиям выполниться нормально, то вы можете передать имена классов заданий, которые должны быть сфальсифицированы, в метод `fake`:
-
+class ExampleTest extends TestCase
+{
     public function test_orders_can_be_shipped()
     {
-        Queue::fake([
-            ShipOrder::class,
-        ]);
+        Queue::fake();
 
-        // Выполняем доставку заказа...
+        // Осуществляем доставку заказа ...
+
+        // Утверждаем, что задания не были помещены ...
+        Queue::assertNothingPushed();
+
+        // Утверждаем, что задание было помещено в конкретную очередь ...
+        Queue::assertPushedOn('queue-name', ShipOrder::class);
 
         // Утверждаем, что задание было помещено дважды ...
         Queue::assertPushed(ShipOrder::class, 2);
+
+        // Утверждаем, что задание не было помещено ...
+        Queue::assertNotPushed(AnotherJob::class);
     }
+}
+```
+
+Вы можете передать замыкание в методы `assertPushed` или `assertNotPushed`, чтобы утверждать, что было отправлено задание, которое проходит данный «тест истинности». Если было отправлено хотя бы одно задание, которое проходит заданный тест на истинность, то и утверждение будет считаться успешным:
+
+```php
+Queue::assertPushed(function (ShipOrder $job) use ($order) {
+    return $job->order->id === $order->id;
+});
+```
+
+Если вам нужно сфальсифицировать только определенные задания, позволив другим заданиям выполниться нормально, то вы можете передать имена классов заданий, которые должны быть сфальсифицированы, в метод `fake`:
+
+```php
+public function test_orders_can_be_shipped()
+{
+    Queue::fake([
+        ShipOrder::class,
+    ]);
+
+    // Выполняем доставку заказа...
+
+    // Утверждаем, что задание было помещено дважды ...
+    Queue::assertPushed(ShipOrder::class, 2);
+}
+```
 
 <a name="job-chains"></a>
 ### Цепочка заданий
 
 Методы `assertPushedWithChain` и `assertPushedWithoutChain` фасада `Queue` могут использоваться для проверки цепочки заданий отправляемого задания. Метод `assertPushedWithChain` принимает основное задание в качестве своего первого аргумента и массив связанных заданий в качестве второго аргумента:
 
-    use App\Jobs\RecordShipment;
-    use App\Jobs\ShipOrder;
-    use App\Jobs\UpdateInventory;
-    use Illuminate\Support\Facades\Queue;
+```php
+use App\Jobs\RecordShipment;
+use App\Jobs\ShipOrder;
+use App\Jobs\UpdateInventory;
+use Illuminate\Support\Facades\Queue;
 
-    Queue::assertPushedWithChain(ShipOrder::class, [
-        RecordShipment::class,
-        UpdateInventory::class
-    ]);
+Queue::assertPushedWithChain(ShipOrder::class, [
+    RecordShipment::class,
+    UpdateInventory::class
+]);
+```
 
 Как вы можете видеть в приведенном выше примере, массив связанных заданий может быть массивом имен классов заданий. Однако, вы также можете предоставить массив фактических экземпляров задания. При этом Laravel гарантирует, что экземпляры задания относятся к одному классу и имеют те же значения свойств, что и связанные задания, отправленные вашим приложением:
 
-    Queue::assertPushedWithChain(ShipOrder::class, [
-        new RecordShipment,
-        new UpdateInventory,
-    ]);
+```php
+Queue::assertPushedWithChain(ShipOrder::class, [
+    new RecordShipment,
+    new UpdateInventory,
+]);
+```
 
 Вы можете использовать метод `assertPushedWithoutChain`, чтобы подтвердить, что задание было отправлено без цепочки заданий:
 
-    Queue::assertPushedWithoutChain(ShipOrder::class);
+```php
+Queue::assertPushedWithoutChain(ShipOrder::class);
+```
 
 <a name="storage-fake"></a>
 ## Фальсификация Storage
 
 Метод `fake` фасада `Storage` позволяет легко сгенерировать фиктивный диск, который в сочетании с утилитами генерации файлов класса `Illuminate\Http\UploadedFile` значительно упрощает тестирование загрузки файлов. Например:
 
-    <?php
+```php
+<?php
 
-    namespace Tests\Feature;
+namespace Tests\Feature;
 
-    use Illuminate\Foundation\Testing\RefreshDatabase;
-    use Illuminate\Foundation\Testing\WithoutMiddleware;
-    use Illuminate\Http\UploadedFile;
-    use Illuminate\Support\Facades\Storage;
-    use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
 
-    class ExampleTest extends TestCase
+class ExampleTest extends TestCase
+{
+    public function test_albums_can_be_uploaded()
     {
-        public function test_albums_can_be_uploaded()
-        {
-            Storage::fake('photos');
+        Storage::fake('photos');
 
-            $response = $this->json('POST', '/photos', [
-                UploadedFile::fake()->image('photo1.jpg'),
-                UploadedFile::fake()->image('photo2.jpg')
-            ]);
+        $response = $this->json('POST', '/photos', [
+            UploadedFile::fake()->image('photo1.jpg'),
+            UploadedFile::fake()->image('photo2.jpg')
+        ]);
 
-            // Утверждаем, что один или несколько файлов были сохранены ...
-            Storage::disk('photos')->assertExists('photo1.jpg');
-            Storage::disk('photos')->assertExists(['photo1.jpg', 'photo2.jpg']);
+        // Утверждаем, что один или несколько файлов были сохранены ...
+        Storage::disk('photos')->assertExists('photo1.jpg');
+        Storage::disk('photos')->assertExists(['photo1.jpg', 'photo2.jpg']);
 
-            // Утверждаем, что один или несколько файлов не были сохранены ...
-            Storage::disk('photos')->assertMissing('missing.jpg');
-            Storage::disk('photos')->assertMissing(['missing.jpg', 'non-existing.jpg']);
+        // Утверждаем, что один или несколько файлов не были сохранены ...
+        Storage::disk('photos')->assertMissing('missing.jpg');
+        Storage::disk('photos')->assertMissing(['missing.jpg', 'non-existing.jpg']);
 
-            // Утверждаем, что указанный каталог пуст...
-            Storage::disk('photos')->assertDirectoryEmpty('/wallpapers');
-        }
+        // Утверждаем, что указанный каталог пуст...
+        Storage::disk('photos')->assertDirectoryEmpty('/wallpapers');
     }
+}
+```
 
 По умолчанию метод `fake` удалит все файлы во временном каталоге. Если вы хотите сохранить эти файлы, то вы можете вместо этого использовать метод `persistentFake`. Для получения дополнительной информации о тестировании загрузки файлов вы можете ознакомиться с [информацией по загрузке файлов из документации тестирования HTTP](http-tests.md#testing-file-uploads).
 
@@ -701,30 +777,32 @@ Laravel предлагает полезные методы для имитаци
 
 При тестировании вам может иногда потребоваться изменить время, возвращаемое такими помощниками, как `now` или `Illuminate\Support\Carbon::now()`. К счастью, базовый класс тестирования функций Laravel включает помощников, которые позволяют вам управлять текущим временем:
 
-    use Illuminate\Support\Carbon;
+```php
+use Illuminate\Support\Carbon;
 
-    public function testTimeCanBeManipulated()
-    {
-        // Путешествие в будущее ...
-        $this->travel(5)->milliseconds();
-        $this->travel(5)->seconds();
-        $this->travel(5)->minutes();
-        $this->travel(5)->hours();
-        $this->travel(5)->days();
-        $this->travel(5)->weeks();
-        $this->travel(5)->years();
+public function testTimeCanBeManipulated()
+{
+    // Путешествие в будущее ...
+    $this->travel(5)->milliseconds();
+    $this->travel(5)->seconds();
+    $this->travel(5)->minutes();
+    $this->travel(5)->hours();
+    $this->travel(5)->days();
+    $this->travel(5)->weeks();
+    $this->travel(5)->years();
 
-        // Заморозить время и возобновить его после выполнения замыкания ...
-        $this->freezeTime(function (Carbon $time) {
-            // ...
-        });
+    // Заморозить время и возобновить его после выполнения замыкания ...
+    $this->freezeTime(function (Carbon $time) {
+        // ...
+    });
 
-        // Путешествие в прошлое ...
-        $this->travel(-5)->hours();
+    // Путешествие в прошлое ...
+    $this->travel(-5)->hours();
 
-        // Путешествие в определенное время ...
-        $this->travelTo(now()->subHours(6));
+    // Путешествие в определенное время ...
+    $this->travelTo(now()->subHours(6));
 
-        // Вернуться в настоящее время ...
-        $this->travelBack();
-    }
+    // Вернуться в настоящее время ...
+    $this->travelBack();
+}
+```

@@ -138,24 +138,28 @@ _Автор: [Mohamed Said](https://github.com/themsaid)_.
 
 Eloquent также позволяет вам преобразовывать значения ваших атрибутов в [типизированные перечисления](https://www.php.net/manual/ru/language.enumerations.backed.php) PHP. Для этого вы можете указать атрибут, который вы хотите типизировать, и соответствующий класс перечисления в массиве `$casts` вашей модели:
 
-    use App\Enums\ServerStatus;
+```php
+use App\Enums\ServerStatus;
 
-    /**
-     * Атрибуты, которые должны быть типизированы.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'status' => ServerStatus::class,
-    ];
+/**
+* Атрибуты, которые должны быть типизированы.
+*
+* @var array
+*/
+protected $casts = [
+'status' => ServerStatus::class,
+];
+```
 
 После того, как вы определили типизацию в своей модели, указанный атрибут будет автоматически преобразован в перечисляемый тип и из него при взаимодействии с атрибутом:
 
-    if ($server->status == ServerStatus::Provisioned) {
-        $server->status = ServerStatus::Ready;
+```php
+if ($server->status == ServerStatus::Provisioned) {
+    $server->status = ServerStatus::Ready;
 
-        $server->save();
-    }
+    $server->save();
+}
+```
 
 <a name="implicit-route-bindings-with-enums"></a>
 ### Неявная привязка в маршрутах с типизированными перечислениями
@@ -187,31 +191,37 @@ _Автор: [Claudio Dekker](https://github.com/claudiodekker)_.
 
 В предыдущих релизах Laravel при желании можно было ограничить вторую модель Eloquent в определении маршрута, чтобы она была дочерней по отношению к предыдущей модели Eloquent. Например, рассмотрим это определение маршрута, которое извлекает пост в блоге по `slug` для конкретного пользователя:
 
-    use App\Models\Post;
-    use App\Models\User;
+```php
+use App\Models\Post;
+use App\Models\User;
 
-    Route::get('/users/{user}/posts/{post:slug}', function (User $user, Post $post) {
-        return $post;
-    });
+Route::get('/users/{user}/posts/{post:slug}', function (User $user, Post $post) {
+    return $post;
+});
+```
 
 При использовании неявной привязки с измененным ключом в качестве параметра вложенного маршрута, Laravel автоматически задает ограничение запроса для получения вложенной модели своим родителем, используя соглашения, чтобы угадать имя отношения родительской модели. Однако такое поведение ранее поддерживалось Laravel только тогда, когда для привязки дочернего маршрута использовался пользовательский ключ.
 
 Однако в Laravel 9.x теперь вы можете указать Laravel ограничить «дочерние» привязки, даже если ключ не был предоставлен. Для этого вы можете вызвать метод `scopeBindings` при определении вашего маршрута:
 
-    use App\Models\Post;
-    use App\Models\User;
+```php
+use App\Models\Post;
+use App\Models\User;
 
-    Route::get('/users/{user}/posts/{post}', function (User $user, Post $post) {
-        return $post;
-    })->scopeBindings();
+Route::get('/users/{user}/posts/{post}', function (User $user, Post $post) {
+    return $post;
+})->scopeBindings();
+```
 
 Или вы можете указать в определении группы маршрутов использовать ограничения привязки:
 
-    Route::scopeBindings()->group(function () {
-        Route::get('/users/{user}/posts/{post}', function (User $user, Post $post) {
-            return $post;
-        });
+```php
+Route::scopeBindings()->group(function () {
+    Route::get('/users/{user}/posts/{post}', function (User $user, Post $post) {
+        return $post;
     });
+});
+```
 
 <a name="controller-route-groups"></a>
 ### Контроллер для группы маршрутов
@@ -220,12 +230,14 @@ _Автор: [Luke Downing](https://github.com/lukeraymonddowning)_.
 
 Вы можете использовать метод `controller`, чтобы определить общий контроллер для всех маршрутов в группе. Затем при определении маршрутов вам нужно только указать метод контроллера, который они вызывают:
 
-    use App\Http\Controllers\OrderController;
+```php
+use App\Http\Controllers\OrderController;
 
-    Route::controller(OrderController::class)->group(function () {
-        Route::get('/orders/{id}', 'show');
-        Route::post('/orders', 'store');
-    });
+Route::controller(OrderController::class)->group(function () {
+    Route::get('/orders/{id}', 'show');
+    Route::post('/orders', 'store');
+});
+```
 
 <a name="full-text"></a>
 ### Полнотекстовые индексы и выражения `where`
@@ -234,13 +246,17 @@ _Авторы: [Taylor Otwell](https://github.com/taylorotwell) и [Dries Vints]
 
 При использовании MySQL или PostgreSQL теперь для создания полнотекстовых индексов может быть добавлен метод `fullText` к определениям столбцов:
 
-    $table->text('bio')->fullText();
+```php
+$table->text('bio')->fullText();
+```
 
 Методы `whereFullText` и `orWhereFullText` полнотекстового поиска можно использовать для добавления условий `where` в запрос для столбцов, которые имеют [полнотекстовые индексы](migrations.md#available-index-types). Эти методы будут преобразованы Laravel в соответствующий SQL базы данных. Например, предложение `MATCH AGAINST` будет создано для приложений, использующих MySQL:
 
-    $users = DB::table('users')
-               ->whereFullText('bio', 'web developer')
-               ->get();
+```php
+$users = DB::table('users')
+           ->whereFullText('bio', 'web developer')
+           ->get();
+```
 
 <a name="laravel-scout-database-engine"></a>
 ### Поисковая система `database` для Laravel Scout
@@ -330,17 +346,19 @@ _Автор: [Jared Lewis](https://github.com/jrd-lewis)_.
 
 Laravel теперь содержит шаблоны для постраничной навигации, созданные с помощью [Bootstrap 5](https://getbootstrap.com/). Чтобы использовать эти шаблоны вместо шаблонов Tailwind по умолчанию, вы можете вызвать метод пагинатора `useBootstrapFive` в методе `boot` поставщика `App\Providers\AppServiceProvider`:
 
-    use Illuminate\Pagination\Paginator;
+```php
+use Illuminate\Pagination\Paginator;
 
-    /**
-     * Загрузка любых служб приложения.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        Paginator::useBootstrapFive();
-    }
+/**
+ * Загрузка любых служб приложения.
+ *
+ * @return void
+ */
+public function boot()
+{
+    Paginator::useBootstrapFive();
+}
+```
 
 <a name="improved-validation-of-nested-array-data"></a>
 ### Улучшенная валидация данных вложенного массива
@@ -349,18 +367,20 @@ _Автор: [Steve Bauman](https://github.com/stevebauman)_.
 
 Иногда требуется получить доступ к значению переданного вложенного элемента массива при назначении правил валидации для атрибута. Вы можете сделать это, используя метод `Rule::foreEach`. Метод `forEach` принимает замыкание, которое будет вызываться для каждой итерации проверяемого атрибута массива, и будет получать значение атрибута и явное, полностью развернутое имя атрибута. Замыкание должно возвращать массив правил предназначенных элементу массива:
 
-    use App\Rules\HasPermission;
-    use Illuminate\Support\Facades\Validator;
-    use Illuminate\Validation\Rule;
+```php
+use App\Rules\HasPermission;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
-    $validator = Validator::make($request->all(), [
-        'companies.*.id' => Rule::forEach(function ($value, $attribute) {
-            return [
-                Rule::exists(Company::class, 'id'),
-                new HasPermission('manage-company', $value),
-            ];
-        }),
-    ]);
+$validator = Validator::make($request->all(), [
+    'companies.*.id' => Rule::forEach(function ($value, $attribute) {
+        return [
+            Rule::exists(Company::class, 'id'),
+            new HasPermission('manage-company', $value),
+        ];
+    }),
+]);
+```
 
 <a name="laravel-breeze-api"></a>
 ### Laravel Breeze API и Next.js
@@ -448,23 +468,31 @@ Laravel 9.x представляет две новые удобные вспом
 
 Функция `str` возвращает новый экземпляр `Illuminate\Support\Stringable` переданной строки. Эта функция эквивалентна методу `Str::of`:
 
-    $string = str('Taylor')->append(' Otwell');
+```php
+$string = str('Taylor')->append(' Otwell');
 
-    // 'Taylor Otwell'
+// 'Taylor Otwell'
+```
 
 Если для функции `str` не указан аргумент, то функция возвращает экземпляр `Illuminate\Support\Str`:
 
-    $snake = str()->snake('LaravelFramework');
+```php
+$snake = str()->snake('LaravelFramework');
 
-    // 'laravel_framework'
+// 'laravel_framework'
+```
 
 <a name="new-helpers-to-route"></a>
 #### `to_route`
 
 Функция `to_route` генерирует [HTTP-ответ перенаправления](responses.md#redirects) на [именованный маршрут](routing.md#named-routes):
 
-    return to_route('users.show', ['user' => 1]);
+```php
+return to_route('users.show', ['user' => 1]);
+```
 
 При необходимости вы можете передать код состояния HTTP, который должен быть назначен перенаправлению, и любые дополнительные заголовки ответа в качестве третьего и четвертого аргументов метода `to_route`, соответственно:
 
-    return to_route('users.show', ['user' => 1], 302, ['X-Framework' => 'Laravel']);
+```php
+return to_route('users.show', ['user' => 1], 302, ['X-Framework' => 'Laravel']);
+```

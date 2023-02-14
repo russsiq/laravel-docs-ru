@@ -81,27 +81,29 @@ driver://username:password@host:port/database?options
 
 Чтобы увидеть, как должны быть настроены соединения для чтения / записи, давайте посмотрим на этот пример:
 
-    'mysql' => [
-        'read' => [
-            'host' => [
-                '192.168.1.1',
-                '196.168.1.2',
-            ],
+```php
+'mysql' => [
+    'read' => [
+        'host' => [
+            '192.168.1.1',
+            '196.168.1.2',
         ],
-        'write' => [
-            'host' => [
-                '196.168.1.3',
-            ],
-        ],
-        'sticky' => true,
-        'driver' => 'mysql',
-        'database' => 'database',
-        'username' => 'root',
-        'password' => '',
-        'charset' => 'utf8mb4',
-        'collation' => 'utf8mb4_unicode_ci',
-        'prefix' => '',
     ],
+    'write' => [
+        'host' => [
+            '196.168.1.3',
+        ],
+    ],
+    'sticky' => true,
+    'driver' => 'mysql',
+    'database' => 'database',
+    'username' => 'root',
+    'password' => '',
+    'charset' => 'utf8mb4',
+    'collation' => 'utf8mb4_unicode_ci',
+    'prefix' => '',
+],
+```
 
 Обратите внимание, что в массив конфигурации были добавлены три ключа: `read`, `write` и `sticky`. Ключи `read` и `write` имеют значения массива, содержащие один ключ: `host`. Остальные параметры базы данных для соединений `read` и `write` будут объединены из основного массива конфигурации `mysql`.
 
@@ -122,99 +124,117 @@ driver://username:password@host:port/database?options
 
 Чтобы выполнить базовый запрос `SELECT`, вы можете использовать метод `select` фасада `DB`:
 
-    <?php
+```php
+<?php
 
-    namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
-    use App\Http\Controllers\Controller;
-    use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
-    class UserController extends Controller
+class UserController extends Controller
+{
+    /**
+     * Показать список всех пользователей приложения.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
     {
-        /**
-         * Показать список всех пользователей приложения.
-         *
-         * @return \Illuminate\Http\Response
-         */
-        public function index()
-        {
-            $users = DB::select('select * from users where active = ?', [1]);
+        $users = DB::select('select * from users where active = ?', [1]);
 
-            return view('user.index', ['users' => $users]);
-        }
+        return view('user.index', ['users' => $users]);
     }
+}
+```
 
 Первым аргументом, переданным методу `select`, является SQL-запрос, а вторым аргументом – любые привязки параметров, необходимые для запроса. Обычно это значения ограничений выражений `where`. Привязка параметров обеспечивает защиту от SQL-инъекций.
 
 Метод `select` всегда возвращает «массив» результатов. Каждый результат в массиве будет объектом `stdClass` PHP, представляющим запись из базы данных:
 
-    use Illuminate\Support\Facades\DB;
+```php
+use Illuminate\Support\Facades\DB;
 
-    $users = DB::select('select * from users');
+$users = DB::select('select * from users');
 
-    foreach ($users as $user) {
-        echo $user->name;
-    }
+foreach ($users as $user) {
+    echo $user->name;
+}
+```
 
 <a name="selecting-scalar-values"></a>
 #### Выборка скалярных значений
 
 Иногда запрос к базе данных может вернуть единственное скалярное значение. Вместо того, чтобы извлекать результат из объекта записи, Laravel позволяет вам получить это значение напрямую, используя метод `scalar`:
 
-    $burgers = DB::scalar(
-        "select count(case when food = 'burger' then 1 end) as burgers from menu"
-    );
+```php
+$burgers = DB::scalar(
+    "select count(case when food = 'burger' then 1 end) as burgers from menu"
+);
+```
 
 <a name="using-named-bindings"></a>
 #### Использование именованных псевдопеременных
 
 Вместо использования символа `?` для связывания параметров вы можете выполнить запрос, используя именованные привязки:
 
-    $results = DB::select('select * from users where id = :id', ['id' => 1]);
+```php
+$results = DB::select('select * from users where id = :id', ['id' => 1]);
+```
 
 <a name="running-an-insert-statement"></a>
 #### Выполнение Insert-запроса
 
 Чтобы выполнить запрос с `INSERT`, вы можете использовать метод `insert` фасада `DB`. Как и `select`, этот метод принимает запрос SQL в качестве первого аргумента, а привязки – в качестве второго аргумента:
 
-    use Illuminate\Support\Facades\DB;
+```php
+use Illuminate\Support\Facades\DB;
 
-    DB::insert('insert into users (id, name) values (?, ?)', [1, 'Marc']);
+DB::insert('insert into users (id, name) values (?, ?)', [1, 'Marc']);
+```
 
 <a name="running-an-update-statement"></a>
 #### Выполнение Update-запроса
 
 Метод `update` следует использовать для обновления существующих записей в базе данных. Количество затронутых выражением строк будут возвращены этим методом:
 
-    use Illuminate\Support\Facades\DB;
+```php
+use Illuminate\Support\Facades\DB;
 
-    $affected = DB::update(
-        'update users set votes = 100 where name = ?',
-        ['Anita']
-    );
+$affected = DB::update(
+    'update users set votes = 100 where name = ?',
+    ['Anita']
+);
+```
 
 <a name="running-a-delete-statement"></a>
 #### Выполнение Delete-запроса
 
 Для удаления записей из базы данных следует использовать метод `delete`. Как и `update`, количество затронутых выражением строк будут возвращены этим методом:
 
-    use Illuminate\Support\Facades\DB;
+```php
+use Illuminate\Support\Facades\DB;
 
-    $deleted = DB::delete('delete from users');
+$deleted = DB::delete('delete from users');
+```
 
 <a name="running-a-general-statement"></a>
 #### Выполнение запроса общего типа
 
 Некоторые операторы базы данных не возвращают никакого значения. Для этих типов операций вы можете использовать метод `statement` фасада `DB`:
 
-    DB::statement('drop table users');
+```php
+DB::statement('drop table users');
+```
 
 <a name="running-an-unprepared-statement"></a>
 #### Выполнение неподготовленного запроса
 
 Иногда требуется выполнить запрос SQL без привязки каких-либо значений. Для этого используйте метод `unprepared` фасада `DB`:
 
-    DB::unprepared('update users set votes = 100 where name = "Dries"');
+```php
+DB::unprepared('update users set votes = 100 where name = "Dries"');
+```
 
 > **Предупреждение**\
 > Поскольку неподготовленные запросы не связывают параметры, они могут быть уязвимы для SQL-инъекций. Вы никогда не должны пропускать в неподготовленное выражение значения, управляемые пользователем.
@@ -224,7 +244,9 @@ driver://username:password@host:port/database?options
 
 При использовании в транзакциях методов `statement` и `unprepared` фасада `DB` вы должны быть осторожны, чтобы избежать операторов, которые вызывают [неявные фиксации](https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html). Эти операторы заставят ядро базы данных косвенно зафиксировать всю транзакцию, в результате чего Laravel не будет знать об уровне транзакции базы данных. Примером такого оператора является создание таблицы базы данных:
 
-    DB::unprepared('create table a (col varchar(1) null)');
+```php
+DB::unprepared('create table a (col varchar(1) null)');
+```
 
 Пожалуйста, обратитесь к руководству по MySQL для ознакомления со [списком всех операторов](https://dev.mysql.com/doc/refman/8.0/en/implicit-commit.html), которые выполняют неявные фиксации.
 
@@ -233,135 +255,152 @@ driver://username:password@host:port/database?options
 
 Если ваше приложение определяет несколько соединений в конфигурационном файле `config/database.php`, то вы можете получить доступ к каждому соединению с помощью метода `connection` фасада `DB`. Имя соединения, передаваемое методу `connection`, должно соответствовать одному из подключений, перечисленных в вашем конфигурационном файле `config/database.php`, включая переопределенные с помощью глобального помощника `config` во время выполнения скрипта:
 
-    use Illuminate\Support\Facades\DB;
+```php
+use Illuminate\Support\Facades\DB;
 
-    $users = DB::connection('sqlite')->select(/* ... */);
+$users = DB::connection('sqlite')->select(/* ... */);
+```
 
 Вы можете получить доступ к сырому, базовому экземпляру PDO текущего соединения, используя метод `getPdo` экземпляра соединения:
 
-    $pdo = DB::connection()->getPdo();
+```php
+$pdo = DB::connection()->getPdo();
+```
 
 <a name="listening-for-query-events"></a>
 ### Прослушивание событий запроса
 
 По желанию можно указать замыкание, которое будет вызываться для каждого SQL-запроса, выполняемого вашим приложением, используя метод `listen` фасада `DB`. Этот метод может быть полезен для логирования запросов или их отладки. Как правило, регистрация замыкания слушателя запросов осуществляется в методе `boot` [поставщика служб](providers.md):
 
-    <?php
+```php
+<?php
 
-    namespace App\Providers;
+namespace App\Providers;
 
-    use Illuminate\Support\Facades\DB;
-    use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\ServiceProvider;
 
-    class AppServiceProvider extends ServiceProvider
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Регистрация любых служб приложения.
+     *
+     * @return void
+     */
+    public function register()
     {
-        /**
-         * Регистрация любых служб приложения.
-         *
-         * @return void
-         */
-        public function register()
-        {
-            //
-        }
-
-        /**
-         * Загрузка любых служб приложения.
-         *
-         * @return void
-         */
-        public function boot()
-        {
-            DB::listen(function ($query) {
-                // $query->sql;
-                // $query->bindings;
-                // $query->time;
-            });
-        }
+        //
     }
+
+    /**
+     * Загрузка любых служб приложения.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        DB::listen(function ($query) {
+            // $query->sql;
+            // $query->bindings;
+            // $query->time;
+        });
+    }
+}
+```
 
 <a name="monitoring-cumulative-query-time"></a>
 ### Мониторинг совокупного времени запроса
 
 Общим узким местом производительности современных веб-приложений является количество времени, которое они тратят на запросы к базам данных. К счастью, Laravel может вызвать замыкание, когда тратится слишком много времени на запросы к базе данных в рамках одного запроса к приложению. Для начала укажите пороговое значение времени запроса (в миллисекундах) и замыкание для метода `whenQueryingForLongerThan`. Как правило, вызов этого метода осуществляется в методе `boot` [поставщика служб](providers.md):
 
-    <?php
+```php
+<?php
 
-    namespace App\Providers;
+namespace App\Providers;
 
-    use Illuminate\Database\Connection;
-    use Illuminate\Support\Facades\DB;
-    use Illuminate\Support\ServiceProvider;
-    use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Database\Connection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Events\QueryExecuted;
 
-    class AppServiceProvider extends ServiceProvider
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Регистрация любых служб приложения.
+     *
+     * @return void
+     */
+    public function register()
     {
-        /**
-         * Регистрация любых служб приложения.
-         *
-         * @return void
-         */
-        public function register()
-        {
-            //
-        }
-
-        /**
-         * Загрузка любых служб приложения.
-         *
-         * @return void
-         */
-        public function boot()
-        {
-            DB::whenQueryingForLongerThan(500, function (Connection $connection, QueryExecuted $event) {
-                // Уведомить команду разработчиков ...
-            });
-        }
+        //
     }
+
+    /**
+     * Загрузка любых служб приложения.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        DB::whenQueryingForLongerThan(500, function (Connection $connection, QueryExecuted $event) {
+            // Уведомить команду разработчиков ...
+        });
+    }
+}
+```
 
 <a name="database-transactions"></a>
 ## Транзакции базы данных
 
 Вы можете использовать метод `transaction` фасада `DB`, для выполнения набора операций в транзакции базы данных. Если внутри замыкания транзакции возникает исключение, то транзакция автоматически откатывается, а исключение генерируется повторно. Если замыкание выполнено успешно, то транзакция будет автоматически зафиксирована. Вам не нужно беспокоиться о ручном откате или фиксации при использовании метода `transaction`:
 
-    use Illuminate\Support\Facades\DB;
+```php
+use Illuminate\Support\Facades\DB;
 
-    DB::transaction(function () {
-        DB::update('update users set votes = 1');
+DB::transaction(function () {
+    DB::update('update users set votes = 1');
 
-        DB::delete('delete from posts');
-    });
+    DB::delete('delete from posts');
+});
+```
 
 <a name="handling-deadlocks"></a>
 #### Обработка взаимоблокировок
 
 Метод `transaction` принимает необязательный второй аргумент, который определяет, сколько раз транзакция должна быть повторена при возникновении взаимоблокировок. Как только эти попытки будут исчерпаны, будет выброшено исключение:
 
-    use Illuminate\Support\Facades\DB;
+```php
+use Illuminate\Support\Facades\DB;
 
-    DB::transaction(function () {
-        DB::update('update users set votes = 1');
+DB::transaction(function () {
+    DB::update('update users set votes = 1');
 
-        DB::delete('delete from posts');
-    }, 5);
+    DB::delete('delete from posts');
+}, 5);
+```
 
 <a name="manually-using-transactions"></a>
 #### Использование транзакций вручную
 
 Если вы хотите вручную начать транзакцию и иметь полный контроль над откатами и фиксациями, то вы можете использовать метод `beginTransaction` фасада `DB`:
 
-    use Illuminate\Support\Facades\DB;
+```php
+use Illuminate\Support\Facades\DB;
 
-    DB::beginTransaction();
+DB::beginTransaction();
+```
 
 Вы можете откатить транзакцию с помощью метода `rollBack`:
 
-    DB::rollBack();
+```php
+DB::rollBack();
+```
 
 Наконец, вы можете зафиксировать транзакцию с помощью метода `commit`:
 
-    DB::commit();
-
+```php
+DB::commit();
+```
 > **Примечание**\
 > Методы транзакций фасада `DB` контролируют транзакции как для [построителя запросов](queries.md), так и для [Eloquent ORM](eloquent.md).
 

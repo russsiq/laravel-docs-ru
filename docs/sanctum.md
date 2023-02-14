@@ -77,11 +77,13 @@ php artisan migrate
 
 Затем, если вы планируете использовать Sanctum для аутентификации SPA, то вам следует добавить посредника Sanctum в вашу группу посредников `api` в файле `app/Http/Kernel.php`:
 
-    'api' => [
-        \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        'throttle:api',
-        \Illuminate\Routing\Middleware\SubstituteBindings::class,
-    ],
+```php
+'api' => [
+    \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+    'throttle:api',
+    \Illuminate\Routing\Middleware\SubstituteBindings::class,
+],
+```
 
 <a name="migration-customization"></a>
 #### Настройка миграции
@@ -96,27 +98,31 @@ php artisan migrate
 
 Хотя обычно это не требуется, но вы можете расширить модель `PersonalAccessToken`, используемую внутри Sanctum:
 
-    use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
+```php
+use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
 
-    class PersonalAccessToken extends SanctumPersonalAccessToken
-    {
-        // ...
-    }
+class PersonalAccessToken extends SanctumPersonalAccessToken
+{
+    // ...
+}
+```
 
 Затем, вы можете указать Sanctum использовать вашу пользовательскую модель с помощью метода `usePersonalAccessTokenModel`, предоставленного Sanctum. Как правило, вызов этого метода осуществляется в методе `boot` одного из поставщиков служб вашего приложения:
 
-    use App\Models\Sanctum\PersonalAccessToken;
-    use Laravel\Sanctum\Sanctum;
+```php
+use App\Models\Sanctum\PersonalAccessToken;
+use Laravel\Sanctum\Sanctum;
 
-    /**
-     * Загрузка любых служб приложения.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
-    }
+/**
+ * Загрузка любых служб приложения.
+ *
+ * @return void
+ */
+public function boot()
+{
+    Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
+}
+```
 
 <a name="api-token-authentication"></a>
 ## Аутентификация токена API
@@ -131,61 +137,77 @@ Sanctum позволяет выдавать токены API / персонал�
 
 Чтобы начать выдачу токенов для пользователей, ваша модель `User` должна использовать трейт `Laravel\Sanctum\HasApiTokens`:
 
-    use Laravel\Sanctum\HasApiTokens;
+```php
+use Laravel\Sanctum\HasApiTokens;
 
-    class User extends Authenticatable
-    {
-        use HasApiTokens, HasFactory, Notifiable;
-    }
+class User extends Authenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable;
+}
+```
 
 Для выдачи токена вы можете использовать метод `createToken`. Метод `createToken` возвращает экземпляр `Laravel\Sanctum\NewAccessToken`. Токены API хешируются с использованием хеширования SHA-256 перед сохранением в вашей базе данных, но вы можете получить доступ к текстовому значению токена, используя свойство `plainTextToken` экземпляра `NewAccessToken`. Вы должны отобразить это значение пользователю сразу после создания токена:
 
-    use Illuminate\Http\Request;
+```php
+use Illuminate\Http\Request;
 
-    Route::post('/tokens/create', function (Request $request) {
-        $token = $request->user()->createToken($request->token_name);
+Route::post('/tokens/create', function (Request $request) {
+    $token = $request->user()->createToken($request->token_name);
 
-        return ['token' => $token->plainTextToken];
-    });
+    return ['token' => $token->plainTextToken];
+});
+```
 
 Вы можете получить доступ ко всем токенам пользователя с помощью отношения Eloquent `tokens` трейта `HasApiTokens`:
 
-    foreach ($user->tokens as $token) {
-        //
-    }
+```php
+foreach ($user->tokens as $token) {
+    //
+}
+```
 
 <a name="token-abilities"></a>
 ### Полномочия токена
 
 Sanctum позволяет вам назначать «полномочия» токенам. Полномочия служат той же цели, что и «права доступа» OAuth Scopes. Вы можете передать массив, содержащий строковые ключи полномочий, в качестве второго аргумента методу `createToken`:
 
-    return $user->createToken('token-name', ['server:update'])->plainTextToken;
+```php
+return $user->createToken('token-name', ['server:update'])->plainTextToken;
+```
 
 При обработке входящего запроса, аутентифицированного Sanctum, вы можете определить, обладает ли токен указанными полномочиями, используя метод `tokenCan`:
 
-    if ($user->tokenCan('server:update')) {
-        //
-    }
+```php
+if ($user->tokenCan('server:update')) {
+    //
+}
+```
 
 <a name="token-ability-middleware"></a>
 #### Посредники полномочий токена
 
 Sanctum содержит два посредника, которые могут использоваться для проверки того, что входящий запрос аутентифицирован с помощью токена, которому предоставлены указанные полномочия. Для начала добавьте следующие посредники в свойство `$routeMiddleware` файла `app/Http/Kernel.php` вашего приложения:
 
-    'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
-    'ability' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
+```php
+'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
+'ability' => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
+```
 
 Посредник `abilities` может быть назначен маршруту для проверки того, что токен входящего запроса имеет все перечисленные полномочия:
 
-    Route::get('/orders', function () {
-        // У токена есть полномочия на «проверку статуса» и «размещения заказов» ...
-    })->middleware(['auth:sanctum', 'abilities:check-status,place-orders']);
+```php
+Route::get('/orders', function () {
+    // У токена есть полномочия на «проверку статуса» и «размещения заказов» ...
+})->middleware(['auth:sanctum', 'abilities:check-status,place-orders']);
+```
 
 Посредник `ability` может быть назначен маршруту для проверки того, что токен входящего запроса имеет *по крайней мере одно* из перечисленных полномочий:
 
-    Route::get('/orders', function () {
-        // У токена есть полномочия на «проверку статуса» или «размещения заказов» ...
-    })->middleware(['auth:sanctum', 'ability:check-status,place-orders']);
+```php
+Route::get('/orders', function () {
+    // У токена есть полномочия на «проверку статуса» или «размещения заказов» ...
+})->middleware(['auth:sanctum', 'ability:check-status,place-orders']);
+```
 
 <a name="first-party-ui-initiated-requests"></a>
 #### Однодоменные запросы, инициированные пользовательским интерфейсом
@@ -210,25 +232,29 @@ return $request->user()->id === $server->user_id &&
 
 Вам может быть интересно, почему мы предлагаем вам аутентифицировать маршруты в файле `routes/web.php` вашего приложения, используя охранник `sanctum`. Помните, что Sanctum сначала попытается аутентифицировать входящие запросы, используя типичный файл cookie аутентификации сессии Laravel. Если этот файл cookie отсутствует, то Sanctum попытается аутентифицировать запрос, используя токен в заголовке `Authorization` запроса. Кроме того, аутентификация всех запросов с помощью Sanctum гарантирует, что мы всегда можем вызвать метод `tokenCan` для экземпляра текущего аутентифицированного пользователя:
 
-    use Illuminate\Http\Request;
+```php
+use Illuminate\Http\Request;
 
-    Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-        return $request->user();
-    });
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+```
 
 <a name="revoking-tokens"></a>
 ### Отзыв токенов
 
 Вы можете «отозвать» токены, удалив их из своей базы данных, используя отношение `tokens` трейта `Laravel\Sanctum\HasApiTokens`:
 
-    // Отзыв всех токенов ...
-    $user->tokens()->delete();
+```php
+// Отзыв всех токенов ...
+$user->tokens()->delete();
 
-    // Отозвать токен, который использовался для аутентификации текущего запроса ...
-    $request->user()->currentAccessToken()->delete();
+// Отозвать токен, который использовался для аутентификации текущего запроса ...
+$request->user()->currentAccessToken()->delete();
 
-    // Отзыв определенного токена ...
-    $user->tokens()->where('id', $tokenId)->delete();
+// Отзыв определенного токена ...
+$user->tokens()->where('id', $tokenId)->delete();
+```
 
 <a name="token-expiration"></a>
 ### Срок действия токена
@@ -272,11 +298,13 @@ Sanctum также обеспечивает простой метод аутен
 
 Затем вы должны добавить посредник Sanctum в группу `api` в файле `app/Http/Kernel.php`. Этот посредник отвечает за возможность аутентификации входящих запросов от вашего SPA с использованием файлов cookie сессии Laravel, при этом позволяя запросам от сторонних или мобильных приложений аутентифицироваться с использованием токенов API:
 
-    'api' => [
-        \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        'throttle:api',
-        \Illuminate\Routing\Middleware\SubstituteBindings::class,
-    ],
+```php
+'api' => [
+    \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+    'throttle:api',
+    \Illuminate\Routing\Middleware\SubstituteBindings::class,
+],
+```
 
 <a name="cors-and-cookies"></a>
 #### CORS и Cookies
@@ -293,7 +321,9 @@ axios.defaults.withCredentials = true;
 
 Наконец, вы должны убедиться, что конфигурация домена cookie сессии вашего приложения поддерживает любой поддомен вашего корневого домена. Вы можете сделать это, добавив к домену префикс `.` в конфигурационном файле `config/session.php` вашего приложения:
 
-    'domain' => '.domain.com',
+```php
+'domain' => '.domain.com',
+```
 
 <a name="spa-authenticating"></a>
 ### Выполнение аутентификации SPA
@@ -328,18 +358,22 @@ axios.get('/sanctum/csrf-cookie').then(response => {
 
 Чтобы защитить маршруты так, чтобы все входящие запросы аутентифицировались, вы должны назначить охранника аутентификации `sanctum` к вашим маршрутам API в вашем файле `routes/api.php`. Этот охранник гарантирует, что входящие запросы аутентифицируются либо как запросы с «фиксацией» на основе файлов cookie сессии, либо содержат действительный заголовок токена API, если запрос поступает от третьей стороны.
 
-    use Illuminate\Http\Request;
+```php
+use Illuminate\Http\Request;
 
-    Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-        return $request->user();
-    });
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+```
 
 <a name="authorizing-private-broadcast-channels"></a>
 ### Авторизация частных каналов вещания
 
 Если вашему SPA необходимо аутентифицировать трансляцию по [частным каналам или каналам присутствия](broadcasting.md#authorizing-channels), то вы должны вызвать метод `Broadcast::routes` в файле `routes/api.php` вашего приложения:
 
-    Broadcast::routes(['middleware' => ['auth:sanctum']]);
+```php
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
+```
 
 Затем, чтобы запросы авторизации Pusher были успешными, вам нужно будет предоставить определение `authorizer` Pusher при инициализации [Laravel Echo](broadcasting.md#client-side-installation). Это позволит вашему приложению настроить Pusher для использования экземпляра `axios`, [ориентированного на междоменные запросы](#cors-and-cookies):
 
@@ -380,28 +414,30 @@ window.Echo = new Echo({
 
 Как правило, вы делаете запрос к конечной точке токена с экрана «входа в систему» вашего мобильного приложения. Конечная точка вернет токен API в виде простого текста, который затем может быть сохранен на мобильном устройстве и использован для выполнения дополнительных API-запросов:
 
-    use App\Models\User;
-    use Illuminate\Http\Request;
-    use Illuminate\Support\Facades\Hash;
-    use Illuminate\Validation\ValidationException;
+```php
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
-    Route::post('/sanctum/token', function (Request $request) {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-            'device_name' => 'required',
+Route::post('/sanctum/token', function (Request $request) {
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+        'device_name' => 'required',
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+    if (! $user || ! Hash::check($request->password, $user->password)) {
+        throw ValidationException::withMessages([
+            'email' => ['The provided credentials are incorrect.'],
         ]);
+    }
 
-        $user = User::where('email', $request->email)->first();
-
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
-        }
-
-        return $user->createToken($request->device_name)->plainTextToken;
-    });
+    return $user->createToken($request->device_name)->plainTextToken;
+});
+```
 
 Когда мобильное приложение использует токен для запроса API к вашему приложению, оно должно передать токен в заголовке `Authorization` как `Bearer`-токен.
 
@@ -413,44 +449,52 @@ window.Echo = new Echo({
 
 Как ранее было задокументировано, вы можете защитить маршруты так, чтобы все входящие запросы аутентифицировались, назначив маршрутам охранника аутентификации `sanctum`:
 
-    Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-        return $request->user();
-    });
+```php
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+```
 
 <a name="revoking-mobile-api-tokens"></a>
 ### Отзыв токенов API мобильного приложения
 
 Чтобы пользователи могли отзывать токены API, выданные для мобильных устройств, вы можете перечислить их по имени вместе с кнопкой «Отозвать» в разделе «Настройки учетной записи» пользовательского интерфейса веб-приложения, например. Когда пользователь нажимает кнопку «Отозвать», вы можете удалить токен из базы данных. Помните, что вы можете получить доступ к токенам API пользователя через отношения `tokens` трейта `Laravel\Sanctum\HasApiTokens`:
 
-    // Отзыв всех токенов ...
-    $user->tokens()->delete();
+```php
+// Отзыв всех токенов ...
+$user->tokens()->delete();
 
-    // Отзыв определенного токена ...
-    $user->tokens()->where('id', $tokenId)->delete();
+// Отзыв определенного токена ...
+$user->tokens()->where('id', $tokenId)->delete();
+```
 
 <a name="testing"></a>
 ## Тестирование
 
 Во время тестирования метод `Sanctum::actingAs` может использоваться для аутентификации пользователя и указания, какие полномочия должны быть предоставлены его токену:
 
-    use App\Models\User;
-    use Laravel\Sanctum\Sanctum;
+```php
+use App\Models\User;
+use Laravel\Sanctum\Sanctum;
 
-    public function test_task_list_can_be_retrieved()
-    {
-        Sanctum::actingAs(
-            User::factory()->create(),
-            ['view-tasks']
-        );
+public function test_task_list_can_be_retrieved()
+{
+    Sanctum::actingAs(
+        User::factory()->create(),
+        ['view-tasks']
+    );
 
-        $response = $this->get('/api/task');
+    $response = $this->get('/api/task');
 
-        $response->assertOk();
-    }
+    $response->assertOk();
+}
+```
 
 Если вы хотите предоставить токену все полномочия, то вы должны указать `*` в списке полномочий метода `actingAs`:
 
-    Sanctum::actingAs(
-        User::factory()->create(),
-        ['*']
-    );
+```php
+Sanctum::actingAs(
+    User::factory()->create(),
+    ['*']
+);
+```

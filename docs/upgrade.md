@@ -113,11 +113,15 @@ PHP начинает переходить к требованию определ
 
 Метод `storagePath` интерфейса `Illuminate\Contracts\Foundation\Application` был обновлен, чтобы принимать аргумент `$path`. Если вы реализуете этот интерфейс, то вы должны соответствующим образом обновить свою реализацию:
 
-    public function storagePath($path = '');
+```php
+public function storagePath($path = '');
+```
 
 Точно так же метод `langPath` класса `Illuminate\Foundation\Application` был обновлен, чтобы принимать аргумент `$path`:
 
-    public function langPath($path = '');
+```php
+public function langPath($path = '');
+```
 
 #### Метод `ignore` обработчика исключений
 
@@ -450,7 +454,9 @@ $collection->when(function ($collection) {
 
 Если вы хотите указать более длительное время ожидания для конкретного запроса, то вы можете сделать это с помощью метода `timeout`:
 
-    $response = Http::timeout(120)->get(/* ... */);
+```php
+$response = Http::timeout(120)->get(/* ... */);
+```
 
 #### Имитация HTTP и посредник
 
@@ -493,44 +499,48 @@ composer require symfony/postmark-mailer symfony/http-client
 
 Различные методы, связанные со SwiftMailer, некоторые из которых не были задокументированы, были переименованы в их аналоги Symfony Mailer. Например, метод `withSwiftMessage` был переименован в `withSymfonyMessage`:
 
-    // Laravel 8.x...
-    $this->withSwiftMessage(function ($message) {
-        $message->getHeaders()->addTextHeader(
-            'Custom-Header', 'Header Value'
-        );
-    });
+```php
+// Laravel 8.x...
+$this->withSwiftMessage(function ($message) {
+    $message->getHeaders()->addTextHeader(
+        'Custom-Header', 'Header Value'
+    );
+});
 
-    // Laravel 9.x...
-    use Symfony\Component\Mime\Email;
+// Laravel 9.x...
+use Symfony\Component\Mime\Email;
 
-    $this->withSymfonyMessage(function (Email $message) {
-        $message->getHeaders()->addTextHeader(
-            'Custom-Header', 'Header Value'
-        );
-    });
+$this->withSymfonyMessage(function (Email $message) {
+    $message->getHeaders()->addTextHeader(
+        'Custom-Header', 'Header Value'
+    );
+});
+```
 
 > **Предупреждение**\
 > Пожалуйста, внимательно изучите [документацию Symfony Mailer](https://symfony.com/doc/6.0/mailer.html#creating-sending-messages) для взаимодействий с объектом `Symfony\Component\Mime\Email`.
 
 Список ниже содержит более подробный обзор переименованных методов. Многие из этих методов являются низкоуровневыми методами, используемыми для прямого взаимодействия со SwiftMailer / Symfony Mailer, поэтому могут не использоваться в большинстве приложений Laravel:
 
-    Message::getSwiftMessage();
-    Message::getSymfonyMessage();
+```php
+Message::getSwiftMessage();
+Message::getSymfonyMessage();
 
-    Mailable::withSwiftMessage($callback);
-    Mailable::withSymfonyMessage($callback);
+Mailable::withSwiftMessage($callback);
+Mailable::withSymfonyMessage($callback);
 
-    MailMessage::withSwiftMessage($callback);
-    MailMessage::withSymfonyMessage($callback);
+MailMessage::withSwiftMessage($callback);
+MailMessage::withSymfonyMessage($callback);
 
-    Mailer::getSwiftMailer();
-    Mailer::getSymfonyTransport();
+Mailer::getSwiftMailer();
+Mailer::getSymfonyTransport();
 
-    Mailer::setSwiftMailer($swift);
-    Mailer::setSymfonyTransport(TransportInterface $transport);
+Mailer::setSwiftMailer($swift);
+Mailer::setSymfonyTransport(TransportInterface $transport);
 
-    MailManager::createTransport($config);
-    MailManager::createSymfonyTransport($config);
+MailManager::createTransport($config);
+MailManager::createSymfonyTransport($config);
+```
 
 #### Прокси-методы `Illuminate\Mail\Message`
 
@@ -538,21 +548,23 @@ composer require symfony/postmark-mailer symfony/http-client
 
 Опять же, многие приложения могут не взаимодействовать с этими методами, поскольку они не описаны в документации Laravel:
 
-    // Laravel 8.x...
-    $message
-        ->setFrom('taylor@laravel.com')
-        ->setTo('example@example.org')
-        ->setSubject('Order Shipped')
-        ->setBody('<h1>HTML</h1>', 'text/html')
-        ->addPart('Plain Text', 'text/plain');
+```php
+// Laravel 8.x...
+$message
+    ->setFrom('taylor@laravel.com')
+    ->setTo('example@example.org')
+    ->setSubject('Order Shipped')
+    ->setBody('<h1>HTML</h1>', 'text/html')
+    ->addPart('Plain Text', 'text/plain');
 
-    // Laravel 9.x...
-    $message
-        ->from('taylor@laravel.com')
-        ->to('example@example.org')
-        ->subject('Order Shipped')
-        ->html('<h1>HTML</h1>')
-        ->text('Plain Text');
+// Laravel 9.x...
+$message
+    ->from('taylor@laravel.com')
+    ->to('example@example.org')
+    ->subject('Order Shipped')
+    ->html('<h1>HTML</h1>')
+    ->text('Plain Text');
+```
 
 #### Генерация идентификаторов сообщений
 
@@ -572,17 +584,19 @@ SwiftMailer предлагал возможность определить со�
 
 Определение параметров потока для транспорта SMTP больше не поддерживается. Вместо этого вы должны определить соответствующие параметры непосредственно в конфигурации, если они поддерживаются. Например, чтобы отключить одноранговую проверку TLS:
 
-    'smtp' => [
-        // Laravel 8.x...
-        'stream' => [
-            'ssl' => [
-                'verify_peer' => false,
-            ],
+```php
+'smtp' => [
+    // Laravel 8.x...
+    'stream' => [
+        'ssl' => [
+            'verify_peer' => false,
         ],
-
-        // Laravel 9.x...
-        'verify_peer' => false,
     ],
+
+    // Laravel 9.x...
+    'verify_peer' => false,
+],
+```
 
 Чтобы узнать больше о доступных параметрах конфигурации, ознакомьтесь с [документацией Symfony Mailer](https://symfony.com/doc/6.0/mailer.html#transport-setup).
 

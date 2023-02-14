@@ -28,30 +28,32 @@ php artisan make:middleware EnsureTokenIsValid
 
 Эта команда поместит новый класс посредника в каталог `app/Http/Middleware` вашего приложения. В этом посреднике мы будем разрешать доступ к маршруту только в том случае, если значение входящего `token` соответствует указанному. В противном случае мы перенаправим пользователя по маршруту `home`:
 
-    <?php
+```php
+<?php
 
-    namespace App\Http\Middleware;
+namespace App\Http\Middleware;
 
-    use Closure;
+use Closure;
 
-    class EnsureTokenIsValid
+class EnsureTokenIsValid
+{
+    /**
+     * Обработка входящего запроса.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
     {
-        /**
-         * Обработка входящего запроса.
-         *
-         * @param  \Illuminate\Http\Request  $request
-         * @param  \Closure  $next
-         * @return mixed
-         */
-        public function handle($request, Closure $next)
-        {
-            if ($request->input('token') !== 'my-secret-token') {
-                return redirect('home');
-            }
-
-            return $next($request);
+        if ($request->input('token') !== 'my-secret-token') {
+            return redirect('home');
         }
+
+        return $next($request);
     }
+}
+```
 
 Как видите, если переданный `token` не совпадает с нашим секретным токеном, то посредник вернет клиенту HTTP-перенаправление; в противном случае запрос будет передан в приложение. Чтобы передать запрос дальше в приложение (позволяя «пройти» посредника), вы должны вызвать замыкание `$next` с параметром `$request`.
 
@@ -66,41 +68,45 @@ php artisan make:middleware EnsureTokenIsValid
 
 Конечно, посредник может выполнять задачи до или после передачи запроса в приложение. Например, следующий посредник будет выполнять некоторую задачу **до** того, как запрос будет обработан приложением:
 
-    <?php
+```php
+<?php
 
-    namespace App\Http\Middleware;
+namespace App\Http\Middleware;
 
-    use Closure;
+use Closure;
 
-    class BeforeMiddleware
+class BeforeMiddleware
+{
+    public function handle($request, Closure $next)
     {
-        public function handle($request, Closure $next)
-        {
-            // Выполнить действие
+        // Выполнить действие
 
-            return $next($request);
-        }
+        return $next($request);
     }
+}
+```
 
 Однако, этот посредник будет выполнять свою задачу **после** обработки входящего запроса приложением:
 
-    <?php
+```php
+<?php
 
-    namespace App\Http\Middleware;
+namespace App\Http\Middleware;
 
-    use Closure;
+use Closure;
 
-    class AfterMiddleware
+class AfterMiddleware
+{
+    public function handle($request, Closure $next)
     {
-        public function handle($request, Closure $next)
-        {
-            $response = $next($request);
+        $response = $next($request);
 
-            // Выполнить действие
+        // Выполнить действие
 
-            return $response;
-        }
+        return $response;
     }
+}
+```
 
 <a name="registering-middleware"></a>
 ## Регистрация посредника
@@ -115,66 +121,78 @@ php artisan make:middleware EnsureTokenIsValid
 
 Если вы хотите назначить посредника определенным маршрутам, то вам следует сначала зарегистрировать ключ посредника в файле `app/Http/Kernel.php` вашего приложения. По умолчанию свойство `$routeMiddleware` этого класса содержит записи для посредников, уже включенных в состав Laravel. Вы можете добавить свой собственный посредник в этот список, и назначить ему ключ по вашему выбору:
 
-    // Внутри класса App\Http\Kernel ...
+```php
+// Внутри класса App\Http\Kernel ...
 
-    protected $routeMiddleware = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
-        'can' => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-    ];
+protected $routeMiddleware = [
+    'auth' => \App\Http\Middleware\Authenticate::class,
+    'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+    'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+    'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+    'can' => \Illuminate\Auth\Middleware\Authorize::class,
+    'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+    'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
+    'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+    'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+];
+```
 
 После того, как посредник был определен в HTTP-ядре, вы можете использовать метод `middleware` для назначения посредника маршруту:
 
-    Route::get('/profile', function () {
-        //
-    })->middleware('auth');
+```php
+Route::get('/profile', function () {
+    //
+})->middleware('auth');
+```
 
 Вы можете назначить несколько посредников маршруту, передав массив имен посредников методу `middleware`:
 
-    Route::get('/', function () {
-        //
-    })->middleware(['first', 'second']);
+```php
+Route::get('/', function () {
+    //
+})->middleware(['first', 'second']);
+```
 
 Вы можете назначить посредника, передав полное имя класса:
 
-    use App\Http\Middleware\EnsureTokenIsValid;
+```php
+use App\Http\Middleware\EnsureTokenIsValid;
 
-    Route::get('/profile', function () {
-        //
-    })->middleware(EnsureTokenIsValid::class);
+Route::get('/profile', function () {
+    //
+})->middleware(EnsureTokenIsValid::class);
+```
 
 <a name="excluding-middleware"></a>
 #### Исключение посредника
 
 При назначении посредника группе маршрутов, иногда требуется запретить применение посредника к одному из маршрутов в группе. Вы можете сделать это с помощью метода `withoutMiddleware`:
 
-    use App\Http\Middleware\EnsureTokenIsValid;
+```php
+use App\Http\Middleware\EnsureTokenIsValid;
 
-    Route::middleware([EnsureTokenIsValid::class])->group(function () {
-        Route::get('/', function () {
-            //
-        });
-
-        Route::get('/profile', function () {
-            //
-        })->withoutMiddleware([EnsureTokenIsValid::class]);
+Route::middleware([EnsureTokenIsValid::class])->group(function () {
+    Route::get('/', function () {
+        //
     });
+
+    Route::get('/profile', function () {
+        //
+    })->withoutMiddleware([EnsureTokenIsValid::class]);
+});
+```
 
 Вы также можете исключить переданный набор посредников из определения [группы](routing.md#route-groups) маршрутов:
 
-    use App\Http\Middleware\EnsureTokenIsValid;
+```php
+use App\Http\Middleware\EnsureTokenIsValid;
 
-    Route::withoutMiddleware([EnsureTokenIsValid::class])->group(function () {
-        Route::get('/profile', function () {
-            //
-        });
+Route::withoutMiddleware([EnsureTokenIsValid::class])->group(function () {
+    Route::get('/profile', function () {
+        //
     });
+});
+```
 
 Метод `withoutMiddleware` удаляет только посредника маршрутизации и не применим к [глобальному посреднику](#global-middleware).
 
@@ -185,36 +203,40 @@ php artisan make:middleware EnsureTokenIsValid
 
 Laravel включает предопределенные группы посредников `web` и `api`, которые содержат основных посредников, которые вы, возможно, захотите применить к своим веб- и  API-маршрутам. Помните, что эти группы посредников автоматически применяются поставщиком служб `App\Providers\RouteServiceProvider` вашего приложения к маршрутам, определенным в файлах маршрутов `web` и `api`, соответственно:
 
-    /**
-     * Группы посредников маршрутов приложения.
-     *
-     * @var array
-     */
-    protected $middlewareGroups = [
-        'web' => [
-            \App\Http\Middleware\EncryptCookies::class,
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Session\Middleware\StartSession::class,
-            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        ],
+```php
+/**
+ * Группы посредников маршрутов приложения.
+ *
+ * @var array
+ */
+protected $middlewareGroups = [
+    'web' => [
+        \App\Http\Middleware\EncryptCookies::class,
+        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        \App\Http\Middleware\VerifyCsrfToken::class,
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+    ],
 
-        'api' => [
-            'throttle:api',
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        ],
-    ];
+    'api' => [
+        'throttle:api',
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+    ],
+];
+```
 
 Группы посредников могут быть назначены маршрутам и действиям контроллера с использованием того же синтаксиса, что и для отдельных посредников. Опять же, группы посредников делают более удобным одновременное назначение нескольких посредников для маршрута:
 
-    Route::get('/', function () {
-        //
-    })->middleware('web');
+```php
+Route::get('/', function () {
+    //
+})->middleware('web');
 
-    Route::middleware(['web'])->group(function () {
-        //
-    });
+Route::middleware(['web'])->group(function () {
+    //
+});
+```
 
 > **Примечание**\
 > Из коробки группы посредников `web` и `api` автоматически применяются к соответствующим файлам вашего приложения `routes/web.php` и `routes/api.php` с помощью `App\Providers\RouteServiceProvider`.
@@ -224,25 +246,27 @@ Laravel включает предопределенные группы поср�
 
 В редких случаях, может понадобиться, чтобы посредники выполнялись в определенном порядке, но вы не можете контролировать их порядок, когда они назначены маршруту. В этом случае вы можете указать приоритет посредников, используя свойство `$middlewarePriority` вашего класса `App\Http\Kernel`. Это свойство может отсутствовать в вашем HTTP-ядре по умолчанию. Если оно не существует, то вы можете скопировать его определение по умолчанию:
 
-    /**
-     * Список посредников, отсортированный по приоритетности.
-     *
-     * Заставит неглобальных посредников всегда быть в заданном порядке.
-     *
-     * @var string[]
-     */
-    protected $middlewarePriority = [
-        \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
-        \Illuminate\Cookie\Middleware\EncryptCookies::class,
-        \Illuminate\Session\Middleware\StartSession::class,
-        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class,
-        \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        \Illuminate\Routing\Middleware\ThrottleRequestsWithRedis::class,
-        \Illuminate\Contracts\Session\Middleware\AuthenticatesSessions::class,
-        \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        \Illuminate\Auth\Middleware\Authorize::class,
-    ];
+```php
+/**
+ * Список посредников, отсортированный по приоритетности.
+ *
+ * Заставит неглобальных посредников всегда быть в заданном порядке.
+ *
+ * @var string[]
+ */
+protected $middlewarePriority = [
+    \Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests::class,
+    \Illuminate\Cookie\Middleware\EncryptCookies::class,
+    \Illuminate\Session\Middleware\StartSession::class,
+    \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+    \Illuminate\Contracts\Auth\Middleware\AuthenticatesRequests::class,
+    \Illuminate\Routing\Middleware\ThrottleRequests::class,
+    \Illuminate\Routing\Middleware\ThrottleRequestsWithRedis::class,
+    \Illuminate\Contracts\Session\Middleware\AuthenticatesSessions::class,
+    \Illuminate\Routing\Middleware\SubstituteBindings::class,
+    \Illuminate\Auth\Middleware\Authorize::class,
+];
+```
 
 <a name="middleware-parameters"></a>
 ## Параметры посредника
@@ -251,89 +275,97 @@ Laravel включает предопределенные группы поср�
 
 Дополнительные параметры посредника будут переданы после аргумента `$next`:
 
-    <?php
+```php
+<?php
 
-    namespace App\Http\Middleware;
+namespace App\Http\Middleware;
 
-    use Closure;
+use Closure;
 
-    class EnsureUserHasRole
+class EnsureUserHasRole
+{
+    /**
+     * Обработка входящего запроса.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @param  string  $role
+     * @return mixed
+     */
+    public function handle($request, Closure $next, $role)
     {
-        /**
-         * Обработка входящего запроса.
-         *
-         * @param  \Illuminate\Http\Request  $request
-         * @param  \Closure  $next
-         * @param  string  $role
-         * @return mixed
-         */
-        public function handle($request, Closure $next, $role)
-        {
-            if (! $request->user()->hasRole($role)) {
-                // Перенаправление ...
-            }
-
-            return $next($request);
+        if (! $request->user()->hasRole($role)) {
+            // Перенаправление ...
         }
 
+        return $next($request);
     }
+
+}
+```
 
 Параметры посредника можно указать при определении маршрута, разделив имя посредника и параметры символом `:`. Несколько параметров следует разделять запятыми:
 
-    Route::put('/post/{id}', function ($id) {
-        //
-    })->middleware('role:editor');
+```php
+Route::put('/post/{id}', function ($id) {
+    //
+})->middleware('role:editor');
+```
 
 <a name="terminable-middleware"></a>
 ## Завершающий посредник
 
 Иногда посреднику требуется выполнить некоторую работу после отправки HTTP-ответа в браузер. Если вы определите метод `terminate` в своем посреднике и при условии, что ваш веб-сервер использует FastCGI, то метод `terminate` будет автоматически вызван после отправки ответа в браузер:
 
-    <?php
+```php
+<?php
 
-    namespace Illuminate\Session\Middleware;
+namespace Illuminate\Session\Middleware;
 
-    use Closure;
+use Closure;
 
-    class TerminatingMiddleware
+class TerminatingMiddleware
+{
+    /**
+     * Обработка входящего запроса.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
     {
-        /**
-         * Обработка входящего запроса.
-         *
-         * @param  \Illuminate\Http\Request  $request
-         * @param  \Closure  $next
-         * @return mixed
-         */
-        public function handle($request, Closure $next)
-        {
-            return $next($request);
-        }
-
-        /**
-         * Обработать задачи после отправки ответа в браузер.
-         *
-         * @param  \Illuminate\Http\Request  $request
-         * @param  \Illuminate\Http\Response  $response
-         * @return void
-         */
-        public function terminate($request, $response)
-        {
-            // ...
-        }
+        return $next($request);
     }
+
+    /**
+     * Обработать задачи после отправки ответа в браузер.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Response  $response
+     * @return void
+     */
+    public function terminate($request, $response)
+    {
+        // ...
+    }
+}
+```
 
 Метод `terminate` должен получать и запрос, и ответ. После того, как вы определили завершающий посредник, вы должны добавить его в список маршрутов или глобальный стек посредников в файле `app/Http/Kernel.php`.
 
 При вызове метода `terminate` посредника, Laravel извлечет новый экземпляр посредника из [контейнера служб](container.md). Если вы хотите использовать один и тот же экземпляр посредника при вызове методов `handle` и `terminate`, то зарегистрируйте посредника в контейнере, используя метод контейнера `singleton`. Обычно это должно быть сделано в методе `register` вашего `AppServiceProvider`:
 
-    use App\Http\Middleware\TerminatingMiddleware;
+```php
+use App\Http\Middleware\TerminatingMiddleware;
 
-    /**
-     * Регистрация любых служб приложения.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->app->singleton(TerminatingMiddleware::class);
-    }
+/**
+ * Регистрация любых служб приложения.
+ *
+ * @return void
+ */
+public function register()
+{
+    $this->app->singleton(TerminatingMiddleware::class);
+}
+```

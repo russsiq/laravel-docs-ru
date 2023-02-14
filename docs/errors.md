@@ -33,29 +33,33 @@
 
 Например, если вам нужно сообщать о различных типах исключений по-разному, вы можете использовать метод `reportable` для регистрации замыкания, которое должно быть выполнено, когда необходимо сообщить об исключении конкретного типа. Laravel определит о каком типе исключения сообщает замыкание с помощью типизации аргументов:
 
-    use App\Exceptions\InvalidOrderException;
+```php
+use App\Exceptions\InvalidOrderException;
 
-    /**
-     * Зарегистрировать замыкания, обрабатывающие исключения приложения.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->reportable(function (InvalidOrderException $e) {
-            //
-        });
-    }
+/**
+ * Зарегистрировать замыкания, обрабатывающие исключения приложения.
+ *
+ * @return void
+ */
+public function register()
+{
+    $this->reportable(function (InvalidOrderException $e) {
+        //
+    });
+}
+```
 
 Когда вы регистрируете собственные замыкания для создания отчетов об исключениях, используя метод `reportable`, Laravel по-прежнему регистрирует исключение, используя конфигурацию логирования по умолчанию для приложения. Если вы хотите остановить распространение исключения в стек журналов по умолчанию, вы можете использовать метод `stop` при определении замыкания отчета или вернуть `false` из замыкания:
 
-    $this->reportable(function (InvalidOrderException $e) {
-        //
-    })->stop();
+```php
+$this->reportable(function (InvalidOrderException $e) {
+    //
+})->stop();
 
-    $this->reportable(function (InvalidOrderException $e) {
-        return false;
-    });
+$this->reportable(function (InvalidOrderException $e) {
+    return false;
+});
+```
 
 > **Примечание**\
 > Чтобы настроить отчет об исключениях для переданного исключения, вы можете рассмотреть возможность использования [отчетных исключений](#renderable-exceptions).
@@ -65,59 +69,65 @@
 
 Если доступно, Laravel автоматически добавляет идентификатор текущего пользователя в каждое сообщение журнала исключения в качестве контекстных данных. Вы можете определить свои собственные глобальные контекстные данные, переопределив метод `context` класса `App\Exceptions\Handler` вашего приложения. Эта информация будет включена в каждое сообщение журнала исключения, написанное вашим приложением:
 
-    /**
-     * Получить переменные контекста по умолчанию для ведения журнала.
-     *
-     * @return array
-     */
-    protected function context()
-    {
-        return array_merge(parent::context(), [
-            'foo' => 'bar',
-        ]);
-    }
+```php
+/**
+ * Получить переменные контекста по умолчанию для ведения журнала.
+ *
+ * @return array
+ */
+protected function context()
+{
+    return array_merge(parent::context(), [
+        'foo' => 'bar',
+    ]);
+}
+```
 
 <a name="exception-log-context"></a>
 #### Контекст журнала исключений
 
 Хотя добавление контекста в каждое сообщение журнала может быть полезно, иногда конкретное исключение может иметь уникальный контекст, который вы хотели бы включить в свои журналы. Определив метод `context` для конкретного исключения вашего приложения, вы можете указать любые данные, относящиеся к этому исключению, которые должны быть добавлены в запись журнала исключения:
 
-    <?php
+```php
+<?php
 
-    namespace App\Exceptions;
+namespace App\Exceptions;
 
-    use Exception;
+use Exception;
 
-    class InvalidOrderException extends Exception
+class InvalidOrderException extends Exception
+{
+    // ...
+
+    /**
+     * Получить контекстную информацию исключения.
+     *
+     * @return array
+     */
+    public function context()
     {
-        // ...
-
-        /**
-         * Получить контекстную информацию исключения.
-         *
-         * @return array
-         */
-        public function context()
-        {
-            return ['order_id' => $this->orderId];
-        }
+        return ['order_id' => $this->orderId];
     }
+}
+```
 
 <a name="the-report-helper"></a>
 #### Помощник `report`
 
 Иногда требуется сообщить об исключении, но продолжить обработку текущего запроса. Помощник `report` позволяет вам быстро сообщить об исключении через обработчик исключений, не отображая страницу с ошибкой для пользователя:
 
-    public function isValid($value)
-    {
-        try {
-            // Проверка `$value` ...
-        } catch (Throwable $e) {
-            report($e);
+```php
+public function isValid($value)
+{
+    try {
+        // Проверка `$value` ...
+    } catch (Throwable $e) {
+        report($e);
 
-            return false;
-        }
+        return false;
     }
+}
+```
 
 <a name="exception-log-levels"></a>
 ### Уровни регистрации исключений
@@ -128,33 +138,37 @@
 
 Для этого вы можете определить массив типов исключений и связанных с ними уровней регистрации в свойстве `$levels` обработчика исключений вашего приложения:
 
-    use PDOException;
-    use Psr\Log\LogLevel;
+```php
+use PDOException;
+use Psr\Log\LogLevel;
 
-    /**
-     * Список типов исключений с соответствующими пользовательскими уровнями регистрации.
-     *
-     * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
-     */
-    protected $levels = [
-        PDOException::class => LogLevel::CRITICAL,
-    ];
+/**
+ * Список типов исключений с соответствующими пользовательскими уровнями регистрации.
+ *
+ * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
+ */
+protected $levels = [
+    PDOException::class => LogLevel::CRITICAL,
+];
+```
 
 <a name="ignoring-exceptions-by-type"></a>
 ### Игнорирование исключений по типу
 
 При создании приложения будут некоторые типы исключений, которые вы просто хотите игнорировать и никогда не сообщать о них. Обработчик исключений вашего приложения содержит свойство `$dontReport`, которое инициализируется пустым массивом. Ни о каких классах, добавленных в это свойство, никогда не будет сообщено; однако у них все еще может быть собственная логика отображения:
 
-    use App\Exceptions\InvalidOrderException;
+```php
+use App\Exceptions\InvalidOrderException;
 
-    /**
-     * Список типов исключений, о которых не следует сообщать.
-     *
-     * @var array<int, class-string<\Throwable>>
-     */
-    protected $dontReport = [
-        InvalidOrderException::class,
-    ];
+/**
+ * Список типов исключений, о которых не следует сообщать.
+ *
+ * @var array<int, class-string<\Throwable>>
+ */
+protected $dontReport = [
+    InvalidOrderException::class,
+];
+```
 
 > **Примечание**\
 > За кулисами Laravel уже игнорирует для вас некоторые типы ошибок, такие как исключения, возникающие из-за ошибок 404 HTTP «не найдено» или 419 HTTP-ответ, сгенерированный при недопустимом токене CSRF.
@@ -166,76 +180,67 @@
 
 Замыкание, переданное методу `renderable`, должно вернуть экземпляр `Illuminate\Http\Response`, который может быть сгенерирован с помощью функции `response`. Laravel определит, какой тип исключения отображает замыкание с помощью типизации аргументов:
 
-    use App\Exceptions\InvalidOrderException;
+```php
+use App\Exceptions\InvalidOrderException;
 
-    /**
-     * Зарегистрировать замыкания, обрабатывающие исключения приложения.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->renderable(function (InvalidOrderException $e, $request) {
-            return response()->view('errors.invalid-order', [], 500);
-        });
-    }
+/**
+ * Зарегистрировать замыкания, обрабатывающие исключения приложения.
+ *
+ * @return void
+ */
+public function register()
+{
+    $this->renderable(function (InvalidOrderException $e, $request) {
+        return response()->view('errors.invalid-order', [], 500);
+    });
+}
+```
 
 Вы также можете использовать метод `renderable` для переопределения поведения отображения для встроенных исключений Laravel или Symfony, таких как `NotFoundHttpException`. Если замыкание, переданное методу `renderable`, не возвращает значение, будет использовано отображение исключения Laravel по умолчанию:
 
-    use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+```php
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-    /**
-     * Зарегистрировать замыкания, обрабатывающие исключения приложения.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->renderable(function (NotFoundHttpException $e, $request) {
-            if ($request->is('api/*')) {
-                return response()->json([
-                    'message' => 'Record not found.'
-                ], 404);
-            }
-        });
-    }
+/**
+ * Зарегистрировать замыкания, обрабатывающие исключения приложения.
+ *
+ * @return void
+ */
+public function register()
+{
+    $this->renderable(function (NotFoundHttpException $e, $request) {
+        if ($request->is('api/*')) {
+            return response()->json([
+                'message' => 'Record not found.'
+            ], 404);
+        }
+    });
+}
+```
 
 <a name="renderable-exceptions"></a>
 ### Отчетные и отображаемые исключения
 
 Вместо проверки типов исключений в методе `register` обработчика исключений вы можете определить методы `report` и `render` непосредственно для ваших исключений. Если эти методы существуют, то они будут автоматически вызываться фреймворком:
 
-    <?php
+```php
+<?php
 
-    namespace App\Exceptions;
+namespace App\Exceptions;
 
-    use Exception;
+use Exception;
 
-    class InvalidOrderException extends Exception
+class InvalidOrderException extends Exception
+{
+    /**
+     * Сообщить об исключении.
+     *
+     * @return bool|null
+     */
+    public function report()
     {
-        /**
-         * Сообщить об исключении.
-         *
-         * @return bool|null
-         */
-        public function report()
-        {
-            //
-        }
-
-        /**
-         * Преобразовать исключение в HTTP-ответ.
-         *
-         * @param  \Illuminate\Http\Request  $request
-         * @return \Illuminate\Http\Response
-         */
-        public function render($request)
-        {
-            return response(/* ... */);
-        }
+        //
     }
-
-Если ваше исключение расширяет исключение, которое уже имеет методы преобразования, например, встроенное исключение Laravel или Symfony, вы можете вернуть `false` из метода `render` исключения, чтобы отобразить HTTP-ответ исключения по умолчанию:
 
     /**
      * Преобразовать исключение в HTTP-ответ.
@@ -245,24 +250,43 @@
      */
     public function render($request)
     {
-        // Определить, требуется ли для исключения пользовательское преобразование ...
-
-        return false;
+        return response(/* ... */);
     }
+}
+```
+
+Если ваше исключение расширяет исключение, которое уже имеет методы преобразования, например, встроенное исключение Laravel или Symfony, вы можете вернуть `false` из метода `render` исключения, чтобы отобразить HTTP-ответ исключения по умолчанию:
+
+```php
+/**
+ * Преобразовать исключение в HTTP-ответ.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @return \Illuminate\Http\Response
+ */
+public function render($request)
+{
+    // Определить, требуется ли для исключения пользовательское преобразование ...
+
+    return false;
+}
+```
 
 Если ваше исключение содержит пользовательскую логику отчетности, которая необходима только при выполнении определенных условий, то вам может потребоваться указать Laravel когда сообщать об исключении, используя конфигурацию обработки исключений по умолчанию. Для этого вы можете вернуть `false` из метода `report` исключения:
 
-    /**
-     * Сообщить об исключении.
-     *
-     * @return bool|null
-     */
-    public function report()
-    {
-        // Определить, требуется ли для исключения пользовательская отчетность ...
+```php
+/**
+ * Сообщить об исключении.
+ *
+ * @return bool|null
+ */
+public function report()
+{
+    // Определить, требуется ли для исключения пользовательская отчетность ...
 
-        return false;
-    }
+    return false;
+}
+```
 
 > **Примечание**\
 > Вы можете указать любые требуемые зависимости метода `report`, и они будут автоматически внедрены в метод [контейнером служб](container.md) Laravel.
@@ -279,7 +303,9 @@
 
 Laravel позволяет легко отображать пользовательские страницы ошибок для различных кодов состояния HTTP. Например, если вы хотите настроить страницу ошибок для кодов HTTP-состояния 404, создайте шаблон `resources/views/errors/404.blade.php`. Этот шаблон будет использоваться при отрисовки для всех ошибок 404, сгенерированных вашим приложением. Шаблоны в этом каталоге должны быть названы в соответствии с кодом состояния HTTP, которому они соответствуют. Экземпляр `Symfony\Component\HttpKernel\Exception\HttpException`, вызванный функцией `abort`, будет передан в шаблон как переменная `$exception`:
 
-    <h2>{{ $exception->getMessage() }}</h2>
+```blade
+<h2>{{ $exception->getMessage() }}</h2>
+```
 
 Вы можете опубликовать стандартные шаблоны страниц ошибок Laravel с помощью команды `vendor:publish` Artisan. После публикации шаблонов вы можете настроить их по своему вкусу:
 

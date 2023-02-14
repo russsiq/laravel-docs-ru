@@ -654,15 +654,17 @@ MAIL_ENCRYPTION=null
 
 Чтобы использовать Minio, вам нужно будет настроить конфигурацию диска S3 в конфигурационном файле `config/filesystems.php` вашего приложения. Вам нужно будет добавить параметр `use_path_style_endpoint` в конфигурацию диска, а также изменить параметр `url` на `endpoint`:
 
-    's3' => [
-        'driver' => 's3',
-        'key' => env('AWS_ACCESS_KEY_ID'),
-        'secret' => env('AWS_SECRET_ACCESS_KEY'),
-        'region' => env('AWS_DEFAULT_REGION'),
-        'bucket' => env('AWS_BUCKET'),
-        'endpoint' => env('AWS_URL'),
-        'use_path_style_endpoint' => true,
-    ]
+```php
+'s3' => [
+    'driver' => 's3',
+    'key' => env('AWS_ACCESS_KEY_ID'),
+    'secret' => env('AWS_SECRET_ACCESS_KEY'),
+    'region' => env('AWS_DEFAULT_REGION'),
+    'bucket' => env('AWS_BUCKET'),
+    'endpoint' => env('AWS_URL'),
+    'use_path_style_endpoint' => true,
+]
+```
 
 Наконец, убедитесь, что в вашем файле `.env` прописаны следующие параметры:
 

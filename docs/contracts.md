@@ -38,45 +38,47 @@
 
 Например, взгляните на этого слушателя события:
 
-    <?php
+```php
+<?php
 
-    namespace App\Listeners;
+namespace App\Listeners;
 
-    use App\Events\OrderWasPlaced;
-    use App\Models\User;
-    use Illuminate\Contracts\Redis\Factory;
+use App\Events\OrderWasPlaced;
+use App\Models\User;
+use Illuminate\Contracts\Redis\Factory;
 
-    class CacheOrderInformation
+class CacheOrderInformation
+{
+    /**
+     * Реализация фабрики Redis.
+     *
+     * @var \Illuminate\Contracts\Redis\Factory
+     */
+    protected $redis;
+
+    /**
+     * Создать новый экземпляр обработчика события.
+     *
+     * @param  \Illuminate\Contracts\Redis\Factory  $redis
+     * @return void
+     */
+    public function __construct(Factory $redis)
     {
-        /**
-         * Реализация фабрики Redis.
-         *
-         * @var \Illuminate\Contracts\Redis\Factory
-         */
-        protected $redis;
-
-        /**
-         * Создать новый экземпляр обработчика события.
-         *
-         * @param  \Illuminate\Contracts\Redis\Factory  $redis
-         * @return void
-         */
-        public function __construct(Factory $redis)
-        {
-            $this->redis = $redis;
-        }
-
-        /**
-         * Обработать событие.
-         *
-         * @param  \App\Events\OrderWasPlaced  $event
-         * @return void
-         */
-        public function handle(OrderWasPlaced $event)
-        {
-            //
-        }
+        $this->redis = $redis;
     }
+
+    /**
+     * Обработать событие.
+     *
+     * @param  \App\Events\OrderWasPlaced  $event
+     * @return void
+     */
+    public function handle(OrderWasPlaced $event)
+    {
+        //
+    }
+}
+```
 
 Когда слушатель события будет извлечен, контейнер служб, используя объявление типов в конструкторе класса, внедрит соответствующую зависимость. Чтобы узнать больше о регистрации в контейнере служб, ознакомьтесь с [его документацией](container.md).
 

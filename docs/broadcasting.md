@@ -273,50 +273,56 @@ npm run dev
 
 Когда пользователь просматривает один из своих заказов, мы не хотим, чтобы ему приходилось обновлять страницу для просмотра статуса обновлений. Вместо этого мы хотим транслировать обновления в приложение по мере их создания. Итак, нам нужно пометить событие `OrderShipmentStatusUpdated` интерфейсом `ShouldBroadcast`. Это укажет Laravel транслировать событие при его запуске:
 
-    <?php
+```php
+<?php
 
-    namespace App\Events;
+namespace App\Events;
 
-    use App\Models\Order;
-    use Illuminate\Broadcasting\Channel;
-    use Illuminate\Broadcasting\InteractsWithSockets;
-    use Illuminate\Broadcasting\PresenceChannel;
-    use Illuminate\Broadcasting\PrivateChannel;
-    use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-    use Illuminate\Queue\SerializesModels;
+use App\Models\Order;
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Queue\SerializesModels;
 
-    class OrderShipmentStatusUpdated implements ShouldBroadcast
-    {
-        /**
-         * Экземпляр заказа.
-         *
-         * @var \App\Order
-         */
-        public $order;
-    }
+class OrderShipmentStatusUpdated implements ShouldBroadcast
+{
+    /**
+     * Экземпляр заказа.
+     *
+     * @var \App\Order
+     */
+    public $order;
+}
+```
 
 Интерфейс `ShouldBroadcast` требует, чтобы в нашем классе события был определен метод `broadcastOn`. Этот метод отвечает за возврат каналов, по которым должно транслироваться событие. Пустая заглушка этого метода уже определена в сгенерированных классах событий, поэтому нам нужно только заполнить ее реализацию. Мы хотим, чтобы только создатель заказа мог просматривать статус обновления, поэтому мы будем транслировать событие на частном канале, привязанном к конкретному заказу:
 
-    /**
-     * Получить каналы трансляции события.
-     *
-     * @return \Illuminate\Broadcasting\PrivateChannel
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('orders.'.$this->order->id);
-    }
+```php
+/**
+ * Получить каналы трансляции события.
+ *
+ * @return \Illuminate\Broadcasting\PrivateChannel
+ */
+public function broadcastOn()
+{
+    return new PrivateChannel('orders.'.$this->order->id);
+}
+```
 
 <a name="example-application-authorizing-channels"></a>
 #### Авторизация каналов
 
 Помните, что пользователи должны иметь разрешение на прослушивание частных каналов. Мы можем определить наши правила авторизации каналов в файле `routes/channels.php` нашего приложения. В этом примере нам нужно убедиться, что любой пользователь, пытающийся прослушивать частный канал `orders.1`, на самом деле является создателем заказа:
 
-    use App\Models\Order;
+```php
+use App\Models\Order;
 
-    Broadcast::channel('orders.{orderId}', function ($user, $orderId) {
-        return $user->id === Order::findOrNew($orderId)->user_id;
-    });
+Broadcast::channel('orders.{orderId}', function ($user, $orderId) {
+    return $user->id === Order::findOrNew($orderId)->user_id;
+});
+```
 
 Метод `channel` принимает два аргумента: имя канала и замыкание, которое возвращает `true` или `false`, указывая тем самым, имеет ли пользователь право прослушивать канал.
 
@@ -341,50 +347,52 @@ Echo.private(`orders.${orderId}`)
 
 Интерфейс `ShouldBroadcast` требует, чтобы вы реализовали единственный метод: `broadcastOn`. Метод `broadcastOn` должен возвращать канал или массив каналов, по которым должно транслироваться событие. Каналы должны быть экземплярами `Channel`, `PrivateChannel` или `PresenceChannel`. Экземпляры `Channel` представляют собой публичные каналы, на которые может подписаться любой пользователь, в то время как `PrivateChannels` и `PresenceChannels` представляют собой частные каналы, для которых требуется [авторизация канала](#authorizing-channels):
 
-    <?php
+```php
+<?php
 
-    namespace App\Events;
+namespace App\Events;
 
-    use App\Models\User;
-    use Illuminate\Broadcasting\Channel;
-    use Illuminate\Broadcasting\InteractsWithSockets;
-    use Illuminate\Broadcasting\PresenceChannel;
-    use Illuminate\Broadcasting\PrivateChannel;
-    use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-    use Illuminate\Queue\SerializesModels;
+use App\Models\User;
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Queue\SerializesModels;
 
-    class ServerCreated implements ShouldBroadcast
+class ServerCreated implements ShouldBroadcast
+{
+    use SerializesModels;
+
+    /**
+     * Пользователь, создавший сервер.
+     *
+     * @var \App\Models\User
+     */
+    public $user;
+
+    /**
+     * Создать новый экземпляр события.
+     *
+     * @param  \App\Models\User  $user
+     * @return void
+     */
+    public function __construct(User $user)
     {
-        use SerializesModels;
-
-        /**
-         * Пользователь, создавший сервер.
-         *
-         * @var \App\Models\User
-         */
-        public $user;
-
-        /**
-         * Создать новый экземпляр события.
-         *
-         * @param  \App\Models\User  $user
-         * @return void
-         */
-        public function __construct(User $user)
-        {
-            $this->user = $user;
-        }
-
-        /**
-         * Получить каналы трансляции события.
-         *
-         * @return Channel|array
-         */
-        public function broadcastOn()
-        {
-            return new PrivateChannel('user.'.$this->user->id);
-        }
+        $this->user = $user;
     }
+
+    /**
+     * Получить каналы трансляции события.
+     *
+     * @return Channel|array
+     */
+    public function broadcastOn()
+    {
+        return new PrivateChannel('user.'.$this->user->id);
+    }
+}
+```
 
 После реализации интерфейса `ShouldBroadcast` вам нужно только [запустить событие](events.md), как обычно. После того, как событие будет  запущено, [задание в очереди](queues.md) автоматически транслирует событие, используя указанный вами драйвер трансляции.
 
@@ -393,21 +401,25 @@ Echo.private(`orders.${orderId}`)
 
 По умолчанию Laravel будет транслировать событие, используя имя класса события. Однако вы можете изменить имя транслируемого события, определив для события метод `broadcastAs`:
 
-    /**
-     * Получить имя транслируемого события.
-     *
-     * @return string
-     */
-    public function broadcastAs()
-    {
-        return 'server.created';
-    }
+```php
+/**
+ * Получить имя транслируемого события.
+ *
+ * @return string
+ */
+public function broadcastAs()
+{
+    return 'server.created';
+}
+```
 
 Если вы измените имя транслируемого события с помощью метода `broadcastAs`, то вы должны убедиться, что зарегистрировали ваш слушатель с ведущим символом `.`. Это укажет Echo не добавлять пространство имен приложения к событию:
 
-    .listen('.server.created', function (e) {
-        ....
-    });
+```php
+.listen('.server.created', function (e) {
+    ....
+});
+```
 
 <a name="broadcast-data"></a>
 ### Данные трансляции
@@ -426,72 +438,82 @@ Echo.private(`orders.${orderId}`)
 
 Однако, если вы хотите иметь более точный контроль над полезной нагрузкой трансляции, то вы можете определить метод `broadcastWith` вашего события. Этот метод должен возвращать массив данных, которые вы хотите использовать в качестве полезной нагрузки при трансляции события:
 
-    /**
-     * Получите данные для трансляции.
-     *
-     * @return array
-     */
-    public function broadcastWith()
-    {
-        return ['id' => $this->user->id];
-    }
+```php
+/**
+ * Получите данные для трансляции.
+ *
+ * @return array
+ */
+public function broadcastWith()
+{
+    return ['id' => $this->user->id];
+}
+```
 
 <a name="broadcast-queue"></a>
 ### Очередь трансляции
 
 По умолчанию каждое транслируемое событие помещается в очередь по умолчанию и соединение очереди по умолчанию, указанные в вашем конфигурационном файле `config/queue.php`. Вы можете изменить соединение очереди и имя, используемое вещателем, определив свойства `connection` и `queue` в вашем классе события:
 
-    /**
-     * Имя соединения очереди, которое будет использоваться при трансляции события.
-     *
-     * @var string
-     */
-    public $connection = 'redis';
+```php
+/**
+ * Имя соединения очереди, которое будет использоваться при трансляции события.
+ *
+ * @var string
+ */
+public $connection = 'redis';
 
-    /**
-     * Имя очереди, в которую нужно поместить задание трансляции.
-     *
-     * @var string
-     */
-    public $queue = 'default';
+/**
+ * Имя очереди, в которую нужно поместить задание трансляции.
+ *
+ * @var string
+ */
+public $queue = 'default';
+```
 
 Кроме того, вы можете изменить имя очереди, определив метод `broadcastQueue` для вашего события:
 
-    /**
-     * Имя очереди, в которую нужно поместить задание трансляции.
-     *
-     * @return string
-     */
-    public function broadcastQueue()
-    {
-        return 'default';
-    }
+```php
+/**
+ * Имя очереди, в которую нужно поместить задание трансляции.
+ *
+ * @return string
+ */
+public function broadcastQueue()
+{
+    return 'default';
+}
+```
 
 Если вы хотите транслировать свое событие с помощью очереди `sync` вместо драйвера очереди по умолчанию, то вы можете реализовать интерфейс `ShouldBroadcastNow` вместо `ShouldBroadcast`:
 
-    <?php
+```php
+<?php
 
-    use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-    class OrderShipmentStatusUpdated implements ShouldBroadcastNow
-    {
-        //
-    }
+class OrderShipmentStatusUpdated implements ShouldBroadcastNow
+{
+    //
+}
+```
 
 <a name="broadcast-conditions"></a>
 ### Условия трансляции
 
 Иногда необходимо транслировать событие только в том случае, если выполняется определенное условие. Вы можете определить эти условия, добавив метод `broadcastWhen` в ваш класс события:
 
-    /**
-     * Определить, условия трансляции события.
-     *
-     * @return bool
-     */
-    public function broadcastWhen()
-    {
-        return $this->order->value > 100;
-    }
+```php
+/**
+ * Определить, условия трансляции события.
+ *
+ * @return bool
+ */
+public function broadcastWhen()
+{
+    return $this->order->value > 100;
+}
+```
 
 <a name="broadcasting-and-database-transactions"></a>
 #### Трансляция и транзакции базы данных
@@ -500,19 +522,21 @@ Echo.private(`orders.${orderId}`)
 
 Если для параметра `after_commit` конфигурации вашего соединения с очередью установлено значение `false`, то вы все равно можете указать, что конкретное транслируемое событие должно быть отправлено после того, как все открытые транзакции базы данных были зафиксированы, путем определения свойства `$afterCommit` в классе события:
 
-    <?php
+```php
+<?php
 
-    namespace App\Events;
+namespace App\Events;
 
-    use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-    use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Queue\SerializesModels;
 
-    class ServerCreated implements ShouldBroadcast
-    {
-        use SerializesModels;
+class ServerCreated implements ShouldBroadcast
+{
+    use SerializesModels;
 
-        public $afterCommit = true;
-    }
+    public $afterCommit = true;
+}
+```
 
 > **Примечание**\
 > Чтобы узнать больше о том, как обойти эти проблемы, просмотрите документацию, касающуюся [заданий в очереди и транзакций базы данных](queues.md#jobs-and-database-transactions).
@@ -527,11 +551,15 @@ Echo.private(`orders.${orderId}`)
 
 Laravel упрощает определение маршрутов для ответа на запросы об авторизации канала. В поставщике `App\Providers\BroadcastServiceProvider` вы увидите вызов метода `Broadcast::routes`. Этот метод зарегистрирует маршрут `/broadcasting/auth` для обработки запросов авторизации:
 
-    Broadcast::routes();
+```php
+Broadcast::routes();
+```
 
 Метод `Broadcast::routes` автоматически применит посредника `web` для [группы своих маршрутов](routing.md#route-groups); однако вы можете передать в метод массив атрибутов маршрута, если хотите изменить присваиваемые им атрибуты:
 
-    Broadcast::routes($attributes);
+```php
+Broadcast::routes($attributes);
+```
 
 <a name="customizing-the-authorization-endpoint"></a>
 #### Изменение конечной точки авторизации
@@ -578,9 +606,11 @@ window.Echo = new Echo({
 
 Затем нам нужно определить логику, которая фактически будет определять, может ли текущий аутентифицированный пользователь прослушивать указанный канал. Это делается в файле `routes/channels.php`, находящемся в вашем приложении. В этом файле вы можете использовать метод `Broadcast::channel` для регистрации замыканий авторизации канала:
 
-    Broadcast::channel('orders.{orderId}', function ($user, $orderId) {
-        return $user->id === Order::findOrNew($orderId)->user_id;
-    });
+```php
+Broadcast::channel('orders.{orderId}', function ($user, $orderId) {
+    return $user->id === Order::findOrNew($orderId)->user_id;
+});
+```
 
 Метод `channel` принимает два аргумента: имя канала и замыкание, которое возвращает `true` или `false`, указывая тем самым, имеет ли пользователь право прослушивать канал.
 
@@ -591,11 +621,13 @@ window.Echo = new Echo({
 
 Как и HTTP-маршруты, для маршрутов каналов также могут использоваться неявные и явные [привязки модели к маршруту](routing.md#route-model-binding). Например, вместо получения строкового или числового идентификатора заказа вы можете запросить фактический экземпляр модели `Order`:
 
-    use App\Models\Order;
+```php
+use App\Models\Order;
 
-    Broadcast::channel('orders.{order}', function ($user, Order $order) {
-        return $user->id === $order->user_id;
-    });
+Broadcast::channel('orders.{order}', function ($user, Order $order) {
+    return $user->id === $order->user_id;
+});
+```
 
 > **Предупреждение**\
 > В отличие от привязки модели к HTTP-маршруту, привязка модели канала не поддерживает [ограничение неявной привязки модели](routing.md#implicit-model-binding-scoping). Однако это редко представляет собой проблему, потому что большинство каналов можно ограничить на основе уникального первичного ключа одной модели.
@@ -605,9 +637,11 @@ window.Echo = new Echo({
 
 Частные каналы и каналы присутствия аутентифицируют текущего пользователя через стандартного охранника аутентификации вашего приложения. Если пользователь не аутентифицирован, то авторизация канала автоматически отклоняется, и обратный вызов авторизации никогда не выполняется. Однако вы можете назначить несколько своих охранников, которые должны при необходимости аутентифицировать входящий запрос:
 
-    Broadcast::channel('channel', function () {
-        // ...
-    }, ['guards' => ['web', 'admin']]);
+```php
+Broadcast::channel('channel', function () {
+    // ...
+}, ['guards' => ['web', 'admin']]);
+```
 
 <a name="defining-channel-classes"></a>
 ### Определение класса канала
@@ -620,43 +654,47 @@ php artisan make:channel OrderChannel
 
 Затем зарегистрируйте свой канал в файле `routes/channels.php`:
 
-    use App\Broadcasting\OrderChannel;
+```php
+use App\Broadcasting\OrderChannel;
 
-    Broadcast::channel('orders.{order}', OrderChannel::class);
+Broadcast::channel('orders.{order}', OrderChannel::class);
+```
 
 Наконец, вы можете поместить логику авторизации для своего канала в метод `join` класса канала. Этот метод будет содержать ту же логику, которую вы обычно использовали бы в замыкании  при авторизации вашего канала. Вы также можете воспользоваться преимуществами привязки модели канала:
 
-    <?php
+```php
+<?php
 
-    namespace App\Broadcasting;
+namespace App\Broadcasting;
 
-    use App\Models\Order;
-    use App\Models\User;
+use App\Models\Order;
+use App\Models\User;
 
-    class OrderChannel
+class OrderChannel
+{
+    /**
+     * Создать новый экземпляр канала.
+     *
+     * @return void
+     */
+    public function __construct()
     {
-        /**
-         * Создать новый экземпляр канала.
-         *
-         * @return void
-         */
-        public function __construct()
-        {
-            //
-        }
-
-        /**
-         * Подтвердить доступ пользователя к каналу.
-         *
-         * @param  \App\Models\User  $user
-         * @param  \App\Models\Order  $order
-         * @return array|bool
-         */
-        public function join(User $user, Order $order)
-        {
-            return $user->id === $order->user_id;
-        }
+        //
     }
+
+    /**
+     * Подтвердить доступ пользователя к каналу.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Order  $order
+     * @return array|bool
+     */
+    public function join(User $user, Order $order)
+    {
+        return $user->id === $order->user_id;
+    }
+}
+```
 
 > **Примечание**\
 > Как и многие другие классы в Laravel, классы каналов будут автоматически разрешены [контейнером служб](container.md). Таким образом, вы можете указать любые зависимости, необходимые для вашего канала, в его конструкторе.
@@ -666,18 +704,22 @@ php artisan make:channel OrderChannel
 
 После того как вы определили событие и отметили его интерфейсом `ShouldBroadcast`, вам нужно только запустить событие, используя метод отправки события. Диспетчер событий заметит, что событие помечено интерфейсом `ShouldBroadcast`, и поставит событие в очередь для дальнейшей трансляции:
 
-    use App\Events\OrderShipmentStatusUpdated;
+```php
+use App\Events\OrderShipmentStatusUpdated;
 
-    OrderShipmentStatusUpdated::dispatch($order));
+OrderShipmentStatusUpdated::dispatch($order));
+```
 
 <a name="only-to-others"></a>
 ### Трансляция событий только остальным пользователям
 
 При создании приложения, использующего трансляцию событий, иногда требуется трансляция события всем подписчикам канала, кроме текущего пользователя. Вы можете сделать это с помощью помощника `broadcast` и метода `toOthers`:
 
-    use App\Events\OrderShipmentStatusUpdated;
+```php
+use App\Events\OrderShipmentStatusUpdated;
 
-    broadcast(new OrderShipmentStatusUpdated($update))->toOthers();
+broadcast(new OrderShipmentStatusUpdated($update))->toOthers();
+```
 
 Чтобы лучше понять необходимость использования метода `toOthers`, давайте представим приложение со списком задач, в котором пользователь может создать новую задачу, введя имя задачи. Чтобы создать задачу, ваше приложение может сделать запрос к URL-адресу `/task`, который транслирует создание задачи и возвращает JSON-представление новой задачи. Когда ваше JavaScript-приложение получает ответ от конечной точки, оно может напрямую вставить новую задачу в свой список задач следующим образом:
 
@@ -709,38 +751,42 @@ var socketId = Echo.socketId();
 
 Если ваше приложение взаимодействует с несколькими соединениями трансляции, и вы хотите транслировать событие через собственный вещатель, то, используя метод `via`, вы можете указать соединение для отправки событий:
 
-    use App\Events\OrderShipmentStatusUpdated;
+```php
+use App\Events\OrderShipmentStatusUpdated;
 
-    broadcast(new OrderShipmentStatusUpdated($update))->via('pusher');
+broadcast(new OrderShipmentStatusUpdated($update))->via('pusher');
+```
 
 В качестве альтернативы вы можете указать соединение транслируемого события, вызвав метод `broadcastVia` в конструкторе события. Однако перед этим вы должны убедиться, что класс события использует трейт `InteractsWithBroadcasting`:
 
-    <?php
+```php
+<?php
 
-    namespace App\Events;
+namespace App\Events;
 
-    use Illuminate\Broadcasting\Channel;
-    use Illuminate\Broadcasting\InteractsWithBroadcasting;
-    use Illuminate\Broadcasting\InteractsWithSockets;
-    use Illuminate\Broadcasting\PresenceChannel;
-    use Illuminate\Broadcasting\PrivateChannel;
-    use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-    use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithBroadcasting;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Queue\SerializesModels;
 
-    class OrderShipmentStatusUpdated implements ShouldBroadcast
+class OrderShipmentStatusUpdated implements ShouldBroadcast
+{
+    use InteractsWithBroadcasting;
+
+    /**
+     * Create a new event instance.
+     *
+     * @return void
+     */
+    public function __construct()
     {
-        use InteractsWithBroadcasting;
-
-        /**
-         * Create a new event instance.
-         *
-         * @return void
-         */
-        public function __construct()
-        {
-            $this->broadcastVia('pusher');
-        }
+        $this->broadcastVia('pusher');
     }
+}
+```
 
 <a name="receiving-broadcasts"></a>
 ## Прием трансляций
@@ -824,11 +870,13 @@ Echo.channel('orders')
 
 Данные, возвращаемые замыканием авторизации, будут доступны для слушателей событий канала присутствия в вашем JavaScript-приложении. Если пользователь не авторизован для присоединения к каналу присутствия, то вы должны вернуть `false` или `null`:
 
-    Broadcast::channel('chat.{roomId}', function ($user, $roomId) {
-        if ($user->canJoinRoom($roomId)) {
-            return ['id' => $user->id, 'name' => $user->name];
-        }
-    });
+```php
+Broadcast::channel('chat.{roomId}', function ($user, $roomId) {
+    if ($user->canJoinRoom($roomId)) {
+        return ['id' => $user->id, 'name' => $user->name];
+    }
+});
+```
 
 <a name="joining-presence-channels"></a>
 ### Присоединение к каналам присутствия
@@ -858,21 +906,25 @@ Echo.join(`chat.${roomId}`)
 
 Каналы присутствия могут получать события так же, как публичные или частные каналы. Используя пример чата, мы можем захотеть транслировать события `NewMessage` на канал присутствия комнаты. Для этого мы вернем экземпляр `PresenceChannel` из метода `broadcastOn` события:
 
-    /**
-     * Получить каналы трансляции события.
-     *
-     * @return Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new PresenceChannel('room.'.$this->message->room_id);
-    }
+```php
+/**
+ * Получить каналы трансляции события.
+ *
+ * @return Channel|array
+ */
+public function broadcastOn()
+{
+    return new PresenceChannel('room.'.$this->message->room_id);
+}
+```
 
 Как и в случае с другими событиями, вы можете использовать помощник `broadcast` и метод `toOthers`, чтобы исключить текущего пользователя из приема трансляции:
 
-    broadcast(new NewMessage($message));
+```php
+broadcast(new NewMessage($message));
 
-    broadcast(new NewMessage($message))->toOthers();
+broadcast(new NewMessage($message))->toOthers();
+```
 
 Как и для других типов событий, вы можете прослушивать события, отправленные в каналы присутствия, используя метод `listen` Echo:
 

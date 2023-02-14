@@ -17,12 +17,14 @@
 
 Все фасады Laravel определены в пространстве имён `Illuminate\Support\Facades`. Таким образом, мы можем легко получить доступ к такому фасаду:
 
-    use Illuminate\Support\Facades\Cache;
-    use Illuminate\Support\Facades\Route;
+```php
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
 
-    Route::get('/cache', function () {
-        return Cache::get('key');
-    });
+Route::get('/cache', function () {
+    return Cache::get('key');
+});
+```
 
 В документации Laravel во многих примерах будут использоваться фасады для демонстрации различного функционала фреймворка.
 
@@ -33,19 +35,21 @@
 
 Например, вместо использования фасада `Illuminate\Support\Facades\Response` для генерации ответа JSON, мы можем просто использовать функцию `response`. Поскольку помощники доступны глобально, то вам не нужно импортировать какие-либо классы, чтобы использовать их:
 
-    use Illuminate\Support\Facades\Response;
+```php
+use Illuminate\Support\Facades\Response;
 
-    Route::get('/users', function () {
-        return Response::json([
-            // ...
-        ]);
-    });
+Route::get('/users', function () {
+    return Response::json([
+        // ...
+    ]);
+});
 
-    Route::get('/users', function () {
-        return response()->json([
-            // ...
-        ]);
-    });
+Route::get('/users', function () {
+    return response()->json([
+        // ...
+    ]);
+});
+```
 
 <a name="when-to-use-facades"></a>
 ## Когда использовать фасады
@@ -61,66 +65,76 @@
 
 Как правило, невозможно имитировать или заглушить действительно статический метод класса. Однако, поскольку фасады используют динамические методы для проксирования вызовов методов к объектам, извлекаемым из контейнера служб, мы фактически можем тестировать фасады так же, как тестировали бы внедренный экземпляр класса. Например, учитывая следующий маршрут:
 
-    use Illuminate\Support\Facades\Cache;
+```php
+use Illuminate\Support\Facades\Cache;
 
-    Route::get('/cache', function () {
-        return Cache::get('key');
-    });
+Route::get('/cache', function () {
+    return Cache::get('key');
+});
+```
 
 Используя методы тестирования фасадов Laravel, мы можем написать следующий тест, чтобы проверить, что метод `Cache::get` был вызван с ожидаемым аргументом:
 
-    use Illuminate\Support\Facades\Cache;
+```php
+use Illuminate\Support\Facades\Cache;
 
-    /**
-     * Отвлеченный пример функционального теста.
-     *
-     * @return void
-     */
-    public function testBasicExample()
-    {
-        Cache::shouldReceive('get')
-             ->with('key')
-             ->andReturn('value');
+/**
+ * Отвлеченный пример функционального теста.
+ *
+ * @return void
+ */
+public function testBasicExample()
+{
+    Cache::shouldReceive('get')
+         ->with('key')
+         ->andReturn('value');
 
-        $response = $this->get('/cache');
+    $response = $this->get('/cache');
 
-        $response->assertSee('value');
-    }
+    $response->assertSee('value');
+}
+```
 
 <a name="facades-vs-helper-functions"></a>
 ### Фасады против глобальных помощников
 
 Помимо фасадов, Laravel включает в себя множество «вспомогательных» функций, которые могут выполнять общие задачи, такие как генерация шаблонов, запуск событий, запуск заданий или отправка HTTP-ответов. Многие из этих вспомогательных функций выполняют ту же функцию, что и соответствующий фасад. Например, этот вызов фасада и вызов помощника эквивалентны:
 
-    return Illuminate\Support\Facades\View::make('profile');
+```php
+return Illuminate\Support\Facades\View::make('profile');
 
-    return view('profile');
+return view('profile');
+```
 
 Практической разницы между фасадами и глобальными помощниками нет абсолютно никакой. При использовании глобальных помощников вы все равно можете тестировать их точно так же, как и соответствующий фасад. Например, учитывая следующий маршрут:
 
-    Route::get('/cache', function () {
-        return cache('key');
-    });
+```php
+Route::get('/cache', function () {
+    return cache('key');
+});
+```
 
 Помощник `cache` будет вызывать метод `get` класса, образующего фасад `Cache`. Итак, даже если мы используем глобальный помощник, мы можем написать следующий тест, чтобы убедиться, что метод был вызван с ожидаемым аргументом:
 
-    use Illuminate\Support\Facades\Cache;
+```php
+use Illuminate\Support\Facades\Cache;
 
-    /**
-     * Отвлеченный пример функционального теста.
-     *
-     * @return void
-     */
-    public function testBasicExample()
-    {
-        Cache::shouldReceive('get')
-             ->with('key')
-             ->andReturn('value');
+/**
+ * Отвлеченный пример функционального теста.
+ *
+ * @return void
+ */
+public function testBasicExample()
+{
+    Cache::shouldReceive('get')
+         ->with('key')
+         ->andReturn('value');
 
-        $response = $this->get('/cache');
+    $response = $this->get('/cache');
 
-        $response->assertSee('value');
-    }
+    $response->assertSee('value');
+}
+```
 
 <a name="how-facades-work"></a>
 ## Как фасады работают
@@ -129,42 +143,46 @@
 
 Базовый класс `Facade` использует магический метод `__callStatic()`, чтобы делегировать вызовы с вашего фасада объекту, извлеченному из контейнера. В приведенном ниже примере выполняется вызов кеш-системы Laravel. Взглянув на этот код, можно предположить, что статический метод `get` вызывается в классе `Cache`:
 
-    <?php
+```php
+<?php
 
-    namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
-    use App\Http\Controllers\Controller;
-    use Illuminate\Support\Facades\Cache;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 
-    class UserController extends Controller
+class UserController extends Controller
+{
+    /**
+     * Показать профиль конкретного пользователя.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function showProfile($id)
     {
-        /**
-         * Показать профиль конкретного пользователя.
-         *
-         * @param  int  $id
-         * @return Response
-         */
-        public function showProfile($id)
-        {
-            $user = Cache::get('user:'.$id);
+        $user = Cache::get('user:'.$id);
 
-            return view('profile', ['user' => $user]);
-        }
+        return view('profile', ['user' => $user]);
     }
+}
+```
 
 Обратите внимание, что в верхней части файла мы «импортируем» фасад `Cache`. Этот фасад служит прокси для доступа к базовой реализации интерфейса `Illuminate\Contracts\Cache\Factory`. Любые вызовы, которые мы делаем с использованием фасада, будут переданы в базовый экземпляр службы кеширования Laravel.
 
 Если мы посмотрим на этот класс `Illuminate\Support\Facades\Cache`, вы увидите, что статического метода `get` не существует:
 
-    class Cache extends Facade
-    {
-        /**
-         * Получить зарегистрированное имя компонента.
-         *
-         * @return string
-         */
-        protected static function getFacadeAccessor() { return 'cache'; }
-    }
+```php
+class Cache extends Facade
+{
+    /**
+     * Получить зарегистрированное имя компонента.
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor() { return 'cache'; }
+}
+```
 
 Вместо этого фасад `Cache` расширяет базовый класс `Facade` и определяет метод `getFacadeAccessor()`. Задача этого метода – вернуть имя привязки контейнера службы. Когда пользователь ссылается на любой статический метод фасада `Cache`, Laravel извлекает объект из [контейнера служб](container.md), привязанный к `cache` и запускает запрошенный метод (в данном случае `get`) этого объекта.
 
@@ -173,82 +191,88 @@
 
 Используя фасады в реальном времени, вы можете рассматривать любой класс в своем приложении, как если бы он был фасадом. Чтобы проиллюстрировать, как это можно использовать, давайте сначала рассмотрим код, который не использует фасады в реальном времени. Например, предположим, что наша модель `Podcast` имеет метод `publish`. Однако, чтобы опубликовать подкаст, нам нужно внедрить экземпляр `Publisher`:
 
-    <?php
+```php
+<?php
 
-    namespace App\Models;
+namespace App\Models;
 
-    use App\Contracts\Publisher;
-    use Illuminate\Database\Eloquent\Model;
+use App\Contracts\Publisher;
+use Illuminate\Database\Eloquent\Model;
 
-    class Podcast extends Model
+class Podcast extends Model
+{
+    /**
+     * Опубликовать подкаст.
+     *
+     * @param  Publisher  $publisher
+     * @return void
+     */
+    public function publish(Publisher $publisher)
     {
-        /**
-         * Опубликовать подкаст.
-         *
-         * @param  Publisher  $publisher
-         * @return void
-         */
-        public function publish(Publisher $publisher)
-        {
-            $this->update(['publishing' => now()]);
+        $this->update(['publishing' => now()]);
 
-            $publisher->publish($this);
-        }
+        $publisher->publish($this);
     }
+}
+```
 
 Внедрение реализации издателя (`Publisher`) в метод позволяет нам легко тестировать метод изолированно, поскольку мы можем имитировать внедренного издателя. Однако он требует от нас всегда передавать экземпляр издателя каждый раз, когда мы вызываем метод `publish`. Используя фасады в реальном времени, мы можем поддерживать такую же тестируемость, при этом не требуя явной передачи экземпляра `Publisher`. Чтобы сгенерировать фасад в реальном времени, добавьте к пространству имен импортируемого класса префикс `Facades`:
 
-    <?php
+```php
+<?php
 
-    namespace App\Models;
+namespace App\Models;
 
-    use Facades\App\Contracts\Publisher;
-    use Illuminate\Database\Eloquent\Model;
+use Facades\App\Contracts\Publisher;
+use Illuminate\Database\Eloquent\Model;
 
-    class Podcast extends Model
+class Podcast extends Model
+{
+    /**
+     * Опубликовать подкаст.
+     *
+     * @return void
+     */
+    public function publish()
     {
-        /**
-         * Опубликовать подкаст.
-         *
-         * @return void
-         */
-        public function publish()
-        {
-            $this->update(['publishing' => now()]);
+        $this->update(['publishing' => now()]);
 
-            Publisher::publish($this);
-        }
+        Publisher::publish($this);
     }
+}
+```
 
 Когда используется фасад реального времени, реализация издателя будет получена из контейнера службы с использованием той части интерфейса или имени класса, которая расположена после префикса `Facades`. При тестировании мы можем использовать встроенные в Laravel помощники для тестирования фасадов, чтобы имитировать вызов этого метода:
 
-    <?php
+```php
+<?php
 
-    namespace Tests\Feature;
+namespace Tests\Feature;
 
-    use App\Models\Podcast;
-    use Facades\App\Contracts\Publisher;
-    use Illuminate\Foundation\Testing\RefreshDatabase;
-    use Tests\TestCase;
+use App\Models\Podcast;
+use Facades\App\Contracts\Publisher;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
-    class PodcastTest extends TestCase
+class PodcastTest extends TestCase
+{
+    use RefreshDatabase;
+
+    /**
+     * Отвлеченный пример функционального теста.
+     *
+     * @return void
+     */
+    public function test_podcast_can_be_published()
     {
-        use RefreshDatabase;
+        $podcast = Podcast::factory()->create();
 
-        /**
-         * Отвлеченный пример функционального теста.
-         *
-         * @return void
-         */
-        public function test_podcast_can_be_published()
-        {
-            $podcast = Podcast::factory()->create();
+        Publisher::shouldReceive('publish')->once()->with($podcast);
 
-            Publisher::shouldReceive('publish')->once()->with($podcast);
-
-            $podcast->publish();
-        }
+        $podcast->publish();
     }
+}
+```
 
 <a name="facade-class-reference"></a>
 ## Справочник фасадов

@@ -92,21 +92,25 @@
 
 Обычно, вам нужно опубликовать конфигурационный файл вашего пакета в каталог `config` приложения. Это позволит пользователям вашего пакета легко переопределить параметры конфигурации по умолчанию. Чтобы разрешить публикацию ваших файлов конфигурации, вызовите метод `publishes` в методе `boot` вашего поставщика службы:
 
-    /**
-     * Загрузка любых служб пакета.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->publishes([
-            __DIR__.'/../config/courier.php' => config_path('courier.php'),
-        ]);
-    }
+```php
+/**
+ * Загрузка любых служб пакета.
+ *
+ * @return void
+ */
+public function boot()
+{
+    $this->publishes([
+        __DIR__.'/../config/courier.php' => config_path('courier.php'),
+    ]);
+}
+```
 
 Теперь, когда пользователи вашего пакета выполнят команду `vendor:publish` Artisan, ваш файл будет скопирован в указанное место публикации. После публикации вашей конфигурации, к ее значениям можно будет получить доступ, как к любому другому файлу конфигурации:
 
-    $value = config('courier.option');
+```php
+$value = config('courier.option');
+```
 
 > **Предупреждение**\
 > Вы не должны определять замыкания в своих конфигурационных файлах. Они не могут быть корректно сериализованы, когда пользователи выполняют команду `config:cache` Artisan.
@@ -118,17 +122,19 @@
 
 Метод `mergeConfigFrom` принимает путь к конфигурационному файлу вашего пакета в качестве первого аргумента и имя копии конфигурационного файла приложения в качестве второго аргумента:
 
-    /**
-     * Регистрация любых служб пакета.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->mergeConfigFrom(
-            __DIR__.'/../config/courier.php', 'courier'
-        );
-    }
+```php
+/**
+ * Регистрация любых служб пакета.
+ *
+ * @return void
+ */
+public function register()
+{
+    $this->mergeConfigFrom(
+        __DIR__.'/../config/courier.php', 'courier'
+    );
+}
+```
 
 > **Предупреждение**\
 > Этот метод объединяет только первый уровень массива конфигурации. Если ваши пользователи частично определяют многомерный массив конфигурации, то отсутствующие параметры не будут объединены.
@@ -138,30 +144,34 @@
 
 Если ваш пакет содержит маршруты, то вы можете загрузить их с помощью метода `loadRoutesFrom`. Этот метод автоматически определяет, закешированы ли маршруты приложения, и не загружает ваш файл маршрутов, если маршруты уже были кешированы:
 
-    /**
-     * Загрузка любых служб пакета.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
-    }
+```php
+/**
+ * Загрузка любых служб пакета.
+ *
+ * @return void
+ */
+public function boot()
+{
+    $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+}
+```
 
 <a name="migrations"></a>
 ### Миграции
 
 Если ваш пакет содержит [миграции базы данных](migrations.md), то вы можете использовать метод `loadMigrationsFrom`, чтобы сообщить Laravel, как их загрузить. Метод `loadMigrationsFrom` принимает путь к миграции вашего пакета как единственный аргумент:
 
-    /**
-     * Загрузка любых служб пакета.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-    }
+```php
+/**
+ * Загрузка любых служб пакета.
+ *
+ * @return void
+ */
+public function boot()
+{
+    $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+}
+```
 
 Как только миграции вашего пакета будут зарегистрированы, они будут автоматически запускаться при выполнении команды `php artisan migrate`. Вам не нужно экспортировать их в каталог приложения `database/migrations`.
 
@@ -170,38 +180,44 @@
 
 Если ваш пакет содержит [файлы перевода](localization.md), то вы можете использовать метод `loadTranslationsFrom`, чтобы сообщить Laravel, как их загрузить. Например, если ваш пакет называется `courier`, то вы должны добавить следующее в метод `boot` вашего поставщика:
 
-    /**
-     * Загрузка любых служб пакета.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->loadTranslationsFrom(__DIR__.'/../lang', 'courier');
-    }
+```php
+/**
+ * Загрузка любых служб пакета.
+ *
+ * @return void
+ */
+public function boot()
+{
+    $this->loadTranslationsFrom(__DIR__.'/../lang', 'courier');
+}
+```
 
 Для ссылок на переводы пакетов используется синтаксическое соглашение `package::file.line`. Итак, вы можете загрузить строку приветствия пакета `courier` из файла `messages` следующим образом:
 
-    echo trans('courier::messages.welcome');
+```php
+echo trans('courier::messages.welcome');
+```
 
 <a name="publishing-translations"></a>
 #### Публикация переводов
 
 Если вы хотите опубликовать переводы вашего пакета в каталоге `lang/vendor` приложения, то вы можете использовать метод `publishes` поставщика службы. Метод `publishes` принимает массив путей пакета и желаемых мест их публикации. Например, чтобы опубликовать файлы перевода пакета `courier`, вы можете сделать следующее:
 
-    /**
-     * Загрузка любых служб пакета.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->loadTranslationsFrom(__DIR__.'/../lang', 'courier');
+```php
+/**
+ * Загрузка любых служб пакета.
+ *
+ * @return void
+ */
+public function boot()
+{
+    $this->loadTranslationsFrom(__DIR__.'/../lang', 'courier');
 
-        $this->publishes([
-            __DIR__.'/../lang' => resource_path('lang/vendor/courier'),
-        ]);
-    }
+    $this->publishes([
+        __DIR__.'/../lang' => resource_path('lang/vendor/courier'),
+    ]);
+}
+```
 
 Теперь, когда пользователи вашего пакета выполняют команду `vendor:publish` Artisan, переводы вашего пакета будут опубликованы в указанном месте публикации.
 
@@ -210,21 +226,25 @@
 
 Чтобы зарегистрировать [шаблоны](views.md) вашего пакета, вам необходимо указать Laravel, где они расположены. Вы можете сделать это, используя метод `loadViewsFrom` поставщика службы. Метод `loadViewsFrom` принимает два аргумента: путь к вашим шаблонам и имя вашего пакета. Например, если имя вашего пакета – `courier`, то вы должны добавить следующее в метод `boot` вашего поставщика:
 
-    /**
-     * Загрузка любых служб пакета.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'courier');
-    }
+```php
+/**
+ * Загрузка любых служб пакета.
+ *
+ * @return void
+ */
+public function boot()
+{
+    $this->loadViewsFrom(__DIR__.'/../resources/views', 'courier');
+}
+```
 
 Для ссылок на шаблоны пакетов используется синтаксическое соглашение `package::view`. Итак, как только путь вашего шаблона зарегистрирован в поставщике службы, вы можете загрузить шаблон `dashboard` пакета `courier` следующим образом:
 
-    Route::get('/dashboard', function () {
-        return view('courier::dashboard');
-    });
+```php
+Route::get('/dashboard', function () {
+    return view('courier::dashboard');
+});
+```
 
 <a name="overriding-package-views"></a>
 #### Переопределение шаблонов пакета
@@ -236,19 +256,21 @@
 
 Если вы хотите сделать свои шаблоны доступными для публикации в каталоге `resources/views/vendor` приложения, то вы можете использовать метод `publishes` поставщика. Метод `publishes` принимает массив, состоящий из пути к шаблону и желаемого места публикации:
 
-    /**
-     * Загрузка любых служб пакета.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'courier');
+```php
+/**
+ * Загрузка любых служб пакета.
+ *
+ * @return void
+ */
+public function boot()
+{
+    $this->loadViewsFrom(__DIR__.'/../resources/views', 'courier');
 
-        $this->publishes([
-            __DIR__.'/../resources/views' => resource_path('views/vendor/courier'),
-        ]);
-    }
+    $this->publishes([
+        __DIR__.'/../resources/views' => resource_path('views/vendor/courier'),
+    ]);
+}
+```
 
 Теперь, когда пользователи вашего пакета выполняют команду `vendor:publish` Artisan, шаблоны пакета будут скопированы в указанное место публикации.
 
@@ -257,18 +279,20 @@
 
 Если вы создаете пакет, который использует компоненты Blade или размещаете компоненты в других каталогах, вам необходимо самостоятельно зарегистрировать класс компонента и его псевдоним HTML-тега, чтобы Laravel знал, где найти компонент. Вы должны зарегистрировать свои компоненты в методе `boot` поставщика служб вашего пакета:
 
-    use Illuminate\Support\Facades\Blade;
-    use VendorPackage\View\Components\AlertComponent;
+```php
+use Illuminate\Support\Facades\Blade;
+use VendorPackage\View\Components\AlertComponent;
 
-    /**
-     * Загрузка служб вашего пакета.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        Blade::component('package-alert', AlertComponent::class);
-    }
+/**
+ * Загрузка служб вашего пакета.
+ *
+ * @return void
+ */
+public function boot()
+{
+    Blade::component('package-alert', AlertComponent::class);
+}
+```
 
 После того, как ваш компонент был зарегистрирован, он может быть отображен с использованием псевдонима тега:
 
@@ -281,17 +305,19 @@
 
 Как вариант, вы можете использовать метод `componentNamespace` для автоматической загрузки классов компонентов по соглашению. Например, пакет `Nightshade` может иметь компоненты `Calendar` и `ColorPicker`, которые находятся в пространстве имен `Package\Views\Components`:
 
-    use Illuminate\Support\Facades\Blade;
+```php
+use Illuminate\Support\Facades\Blade;
 
-    /**
-     * Загрузка служб вашего пакета.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        Blade::componentNamespace('Nightshade\\Views\\Components', 'nightshade');
-    }
+/**
+ * Загрузка служб вашего пакета.
+ *
+ * @return void
+ */
+public function boot()
+{
+    Blade::componentNamespace('Nightshade\\Views\\Components', 'nightshade');
+}
+```
 
 Это позволит использовать компоненты пакета в пространстве имен их поставщиков, используя синтаксис `x-package-name::`:
 
@@ -316,57 +342,63 @@ Blade автоматически обнаружит класс, связанны
 
 В Laravel команда `about` Artisan предоставляет краткий обзор окружения и конфигурации приложения. Пакеты могут передавать дополнительную информацию при выводе информации этой команды через класс `AboutCommand`. Как правило, эта информация может быть добавлена в методе `boot` поставщика услуг вашего пакета:
 
-    use Illuminate\Foundation\Console\AboutCommand;
+```php
+use Illuminate\Foundation\Console\AboutCommand;
 
-    /**
-     * Загрузка любых служб пакета.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        AboutCommand::add('My Package', fn () => ['Version' => '1.0.0']);
-    }
+/**
+ * Загрузка любых служб пакета.
+ *
+ * @return void
+ */
+public function boot()
+{
+    AboutCommand::add('My Package', fn () => ['Version' => '1.0.0']);
+}
+```
 
 <a name="commands"></a>
 ## Команды
 
 Чтобы зарегистрировать команды Artisan вашего пакета в Laravel, вы можете использовать метод `commands`. Этот метод ожидает массив имен классов команд. После регистрации команд вы можете выполнять их с помощью [Artisan CLI](artisan.md):
 
-    use Courier\Console\Commands\InstallCommand;
-    use Courier\Console\Commands\NetworkCommand;
+```php
+use Courier\Console\Commands\InstallCommand;
+use Courier\Console\Commands\NetworkCommand;
 
-    /**
-     * Загрузка любых служб пакета.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                InstallCommand::class,
-                NetworkCommand::class,
-            ]);
-        }
+/**
+ * Загрузка любых служб пакета.
+ *
+ * @return void
+ */
+public function boot()
+{
+    if ($this->app->runningInConsole()) {
+        $this->commands([
+            InstallCommand::class,
+            NetworkCommand::class,
+        ]);
     }
+}
+```
 
 <a name="public-assets"></a>
 ## Публичные веб-активы
 
 В вашем пакете могут быть такие веб-активы, как изображения и скомпилированные JavaScript, CSS. Чтобы опубликовать эти веб-активы в публичном каталоге приложения, используйте метод `publishes` поставщика. В этом примере мы также добавим тег `public` группе веб-активов, который можно использовать для простоты публикации групп соответствующих веб-активов:
 
-    /**
-     * Загрузка любых служб пакета.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->publishes([
-            __DIR__.'/../public' => public_path('vendor/courier'),
-        ], 'public');
-    }
+```php
+/**
+ * Загрузка любых служб пакета.
+ *
+ * @return void
+ */
+public function boot()
+{
+    $this->publishes([
+        __DIR__.'/../public' => public_path('vendor/courier'),
+    ], 'public');
+}
+```
 
 Теперь, когда пользователи вашего пакета выполнят команду `vendor:publish`, ваши веб-активы будут скопированы в указанное место публикации. Поскольку каждый раз при обновлении пакета требуется перезаписывать веб-активы, то можно использовать флаг `--force`:
 
@@ -379,21 +411,23 @@ php artisan vendor:publish --tag=public --force
 
 Вы можете публиковать файлы пакета отдельно. Например, вы можете разрешить своим пользователям публиковать конфигурационные файлы вашего пакета без необходимости публиковать остальные ресурсы вашего пакета. Вы можете сделать это, «пометив» их при вызове метода `publishes` поставщика. Например, давайте используем теги `courier-config` и `courier-migrations` для определения двух групп публикации в методе `boot` поставщика пакета `courier`:
 
-    /**
-     * Загрузка любых служб пакета.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->publishes([
-            __DIR__.'/../config/package.php' => config_path('package.php')
-        ], 'courier-config');
+```php
+/**
+ * Загрузка любых служб пакета.
+ *
+ * @return void
+ */
+public function boot()
+{
+    $this->publishes([
+        __DIR__.'/../config/package.php' => config_path('package.php')
+    ], 'courier-config');
 
-        $this->publishes([
-            __DIR__.'/../database/migrations/' => database_path('migrations')
-        ], 'courier-migrations');
-    }
+    $this->publishes([
+        __DIR__.'/../database/migrations/' => database_path('migrations')
+    ], 'courier-migrations');
+}
+```
 
 Теперь ваши пользователи могут публиковать эти группы отдельно, ссылаясь на их теги при выполнении команды `vendor:publish`:
 

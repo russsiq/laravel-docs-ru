@@ -43,9 +43,11 @@ Laravel обеспечивает мощную абстракцию файлов�
 
 При использовании драйвера `local` все операции с файлами выполняются относительно корневого каталога, определенного в файле конфигурации `filesystems`. По умолчанию это значение задано каталогом `storage/app`. Следовательно, следующий метод запишет файл в `storage/app/example.txt`:
 
-    use Illuminate\Support\Facades\Storage;
+```php
+use Illuminate\Support\Facades\Storage;
 
-    Storage::disk('local')->put('example.txt', 'Contents');
+Storage::disk('local')->put('example.txt', 'Contents');
+```
 
 <a name="the-public-disk"></a>
 ### Публичный диск
@@ -62,14 +64,18 @@ php artisan storage:link
 
 После того, как была создана символическая ссылка, вы можете создавать URL-адреса для сохраненных файлов, используя помощник `asset`:
 
-    echo asset('storage/file.txt');
+```php
+echo asset('storage/file.txt');
+```
 
 Вы можете настроить дополнительные символические ссылки в файле конфигурации `filesystems`. Каждая из настроенных ссылок будет создана, когда вы запустите команду `storage:link`:
 
-    'links' => [
-        public_path('storage') => storage_path('app/public'),
-        public_path('images') => storage_path('app/images'),
-    ],
+```php
+'links' => [
+    public_path('storage') => storage_path('app/public'),
+    public_path('images') => storage_path('app/images'),
+],
+```
 
 <a name="driver-prerequisites"></a>
 ### Предварительная подготовка драйверов
@@ -96,19 +102,21 @@ composer require league/flysystem-ftp "^3.0"
 
 Интеграция Laravel с Flysystem отлично работает с FTP; однако, пример конфигурации по умолчанию не включен в конфигурационный файл `config/filesystems.php` фреймворка. Если вам нужно настроить файловую систему FTP, вы можете использовать пример конфигурации ниже:
 
-    'ftp' => [
-        'driver' => 'ftp',
-        'host' => env('FTP_HOST'),
-        'username' => env('FTP_USERNAME'),
-        'password' => env('FTP_PASSWORD'),
+```php
+'ftp' => [
+    'driver' => 'ftp',
+    'host' => env('FTP_HOST'),
+    'username' => env('FTP_USERNAME'),
+    'password' => env('FTP_PASSWORD'),
 
-        // Optional FTP Settings...
-        // 'port' => env('FTP_PORT', 21),
-        // 'root' => env('FTP_ROOT'),
-        // 'passive' => true,
-        // 'ssl' => true,
-        // 'timeout' => 30,
-    ],
+    // Optional FTP Settings...
+    // 'port' => env('FTP_PORT', 21),
+    // 'root' => env('FTP_ROOT'),
+    // 'passive' => true,
+    // 'ssl' => true,
+    // 'timeout' => 30,
+],
+```
 
 <a name="sftp-driver-configuration"></a>
 #### Конфигурирование драйвера SFTP
@@ -121,27 +129,29 @@ composer require league/flysystem-sftp-v3 "^3.0"
 
 Интеграция Laravel с Flysystem отлично работает с SFTP; однако, пример конфигурации по умолчанию не включен в конфигурационный файл `config/filesystems.php` фреймворка. Если вам нужно настроить файловую систему SFTP, вы можете использовать пример конфигурации ниже:
 
-    'sftp' => [
-        'driver' => 'sftp',
-        'host' => env('SFTP_HOST'),
+```php
+'sftp' => [
+    'driver' => 'sftp',
+    'host' => env('SFTP_HOST'),
 
-        // Settings for basic authentication...
-        'username' => env('SFTP_USERNAME'),
-        'password' => env('SFTP_PASSWORD'),
+    // Settings for basic authentication...
+    'username' => env('SFTP_USERNAME'),
+    'password' => env('SFTP_PASSWORD'),
 
-        // Settings for SSH key based authentication with encryption password...
-        'privateKey' => env('SFTP_PRIVATE_KEY'),
-        'passphrase' => env('SFTP_PASSPHRASE'),
+    // Settings for SSH key based authentication with encryption password...
+    'privateKey' => env('SFTP_PRIVATE_KEY'),
+    'passphrase' => env('SFTP_PASSPHRASE'),
 
-        // Optional SFTP Settings...
-        // 'hostFingerprint' => env('SFTP_HOST_FINGERPRINT'),
-        // 'maxTries' => 4,
-        // 'passphrase' => env('SFTP_PASSPHRASE'),
-        // 'port' => env('SFTP_PORT', 22),
-        // 'root' => env('SFTP_ROOT', ''),
-        // 'timeout' => 30,
-        // 'useAgent' => true,
-    ],
+    // Optional SFTP Settings...
+    // 'hostFingerprint' => env('SFTP_HOST_FINGERPRINT'),
+    // 'maxTries' => 4,
+    // 'passphrase' => env('SFTP_PASSPHRASE'),
+    // 'port' => env('SFTP_PORT', 22),
+    // 'root' => env('SFTP_ROOT', ''),
+    // 'timeout' => 30,
+    // 'useAgent' => true,
+],
+```
 
 <a name="scoped-and-read-only-filesystems"></a>
 ### Ограниченные файловые системы
@@ -185,7 +195,9 @@ composer require league/flysystem-read-only "^3.0"
 
 Обычно после обновления учетных данных диска в соответствии с учетными данными службы, которую вы планируете использовать, вам нужно обновить только значение параметра конфигурации `endpoint`. Значение этого параметра обычно определяется через переменную окружения `AWS_ENDPOINT`:
 
-    'endpoint' => env('AWS_ENDPOINT', 'https://minio:9000'),
+```php
+'endpoint' => env('AWS_ENDPOINT', 'https://minio:9000'),
+```
 
 <a name="minio"></a>
 #### MinIO
@@ -204,13 +216,17 @@ AWS_URL=http://localhost:9000/local
 
 Фасад `Storage` используется для взаимодействия с любым из ваших сконфигурированных дисков. Например, вы можете использовать метод `put` фасада, чтобы сохранить аватар на диске по умолчанию. Если вы вызываете методы фасада `Storage` без предварительного вызова метода `disk`, то метод будет проксирован на диск по умолчанию:
 
-    use Illuminate\Support\Facades\Storage;
+```php
+use Illuminate\Support\Facades\Storage;
 
-    Storage::put('avatars/1', $content);
+Storage::put('avatars/1', $content);
+```
 
 Если ваше приложение взаимодействует с несколькими дисками, то вы можете использовать метод `disk` фасада `Storage` для работы с файлами на указанном диске:
 
-    Storage::disk('s3')->put('avatars/1', $content);
+```php
+Storage::disk('s3')->put('avatars/1', $content);
+```
 
 <a name="on-demand-disks"></a>
 ### Диски по запросу
@@ -233,37 +249,47 @@ $disk->put('image.jpg', $content);
 
 Метод `get` используется для получения содержимого файла. Необработанное строковое содержимое файла будет возвращено методом. Помните, что все пути к файлам должны быть указаны относительно «корня» диска:
 
-    $contents = Storage::get('file.jpg');
+```php
+$contents = Storage::get('file.jpg');
+```
 
 Метод `exists` используется для определения, существует ли файл на диске:
 
-    if (Storage::disk('s3')->exists('file.jpg')) {
-        // ...
-    }
+```php
+if (Storage::disk('s3')->exists('file.jpg')) {
+    // ...
+}
+```
 
 Метод `missing` используется, чтобы определить, отсутствует ли файл на диске:
 
-    if (Storage::disk('s3')->missing('file.jpg')) {
-        // ...
-    }
+```php
+if (Storage::disk('s3')->missing('file.jpg')) {
+    // ...
+}
+```
 
 <a name="downloading-files"></a>
 ### Скачивание файлов
 
 Метод `download` используется для генерации ответа, который заставляет браузер пользователя загружать файл по указанному пути. Метод `download` принимает имя файла в качестве второго аргумента метода, определяющий имя файла, которое видит пользователь, скачивающий этот файл. Наконец, вы можете передать массив заголовков HTTP в качестве третьего аргумента метода:
 
-    return Storage::download('file.jpg');
+```php
+return Storage::download('file.jpg');
 
-    return Storage::download('file.jpg', $name, $headers);
+return Storage::download('file.jpg', $name, $headers);
+```
 
 <a name="file-urls"></a>
 ### URL-адреса файлов
 
 Вы можете использовать метод `url`, чтобы получить URL для указанного файла. Если вы используете драйвер `local`, он обычно просто добавляет `/storage` к указанному пути и возвращает относительный URL-адрес файла. Если вы используете драйвер `s3`, будет возвращен абсолютный внешний URL-адрес:
 
-    use Illuminate\Support\Facades\Storage;
+```php
+use Illuminate\Support\Facades\Storage;
 
-    $url = Storage::url('file.jpg');
+$url = Storage::url('file.jpg');
+```
 
 При использовании драйвера `local` все файлы, которые должны быть общедоступными, должны быть помещены в каталог `storage/app/public`. Кроме того, вы должны [создать символическую ссылку](#the-public-disk) в `public/storage`, которая указывает на каталог `storage/app/public`.
 
@@ -275,200 +301,236 @@ $disk->put('image.jpg', $content);
 
 Используя метод `temporaryUrl`, вы можете создавать временные URL-адреса для файлов, хранящихся с помощью драйвера `s3`. Этот метод принимает путь и экземпляр `DateTime`, указывающий, когда должен истечь доступ к файлу по URL:
 
-    use Illuminate\Support\Facades\Storage;
+```php
+use Illuminate\Support\Facades\Storage;
 
-    $url = Storage::temporaryUrl(
-        'file.jpg', now()->addMinutes(5)
-    );
+$url = Storage::temporaryUrl(
+    'file.jpg', now()->addMinutes(5)
+);
+```
 
 Если вам нужно указать дополнительные [параметры запроса S3](https://docs.aws.amazon.com/AmazonS3/latest/API/RESTObjectGET.html#RESTObjectGET-requests), то вы можете передать массив параметров запроса в качестве третьего аргумент методу `temporaryUrl`:
 
-    $url = Storage::temporaryUrl(
-        'file.jpg',
-        now()->addMinutes(5),
-        [
-            'ResponseContentType' => 'application/octet-stream',
-            'ResponseContentDisposition' => 'attachment; filename=file2.jpg',
-        ]
-    );
+```php
+$url = Storage::temporaryUrl(
+    'file.jpg',
+    now()->addMinutes(5),
+    [
+        'ResponseContentType' => 'application/octet-stream',
+        'ResponseContentDisposition' => 'attachment; filename=file2.jpg',
+    ]
+);
+```
 
 Если вам нужно изменить способ создания временных URL-адресов для определенного диска хранилища, то вы можете использовать метод `buildTemporaryUrlsUsing`. Например, это может быть полезно, если у вас есть контроллер, позволяющий загружать файлы, хранящиеся на диске, который обычно не поддерживает временные URL-адреса. Как правило, вызов этого метода осуществляется в методе `boot` [поставщика](providers.md):
 
-    <?php
+```php
+<?php
 
-    namespace App\Providers;
+namespace App\Providers;
 
-    use Illuminate\Support\Facades\Storage;
-    use Illuminate\Support\Facades\URL;
-    use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
 
-    class AppServiceProvider extends ServiceProvider
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Загрузка любых служб приложения.
+     *
+     * @return void
+     */
+    public function boot()
     {
-        /**
-         * Загрузка любых служб приложения.
-         *
-         * @return void
-         */
-        public function boot()
-        {
-            Storage::disk('local')->buildTemporaryUrlsUsing(function ($path, $expiration, $options) {
-                return URL::temporarySignedRoute(
-                    'files.download',
-                    $expiration,
-                    array_merge($options, ['path' => $path])
-                );
-            });
-        }
+        Storage::disk('local')->buildTemporaryUrlsUsing(function ($path, $expiration, $options) {
+            return URL::temporarySignedRoute(
+                'files.download',
+                $expiration,
+                array_merge($options, ['path' => $path])
+            );
+        });
     }
+}
+```
 
 <a name="url-host-customization"></a>
 #### Настройка хоста URL
 
 Если вы хотите заранее определить хост для URL-адресов, сгенерированных с помощью фасада `Storage`, то вы можете добавить параметр `url` в массив конфигурации диска:
 
-    'public' => [
-        'driver' => 'local',
-        'root' => storage_path('app/public'),
-        'url' => env('APP_URL').'/storage',
-        'visibility' => 'public',
-    ],
+```php
+'public' => [
+    'driver' => 'local',
+    'root' => storage_path('app/public'),
+    'url' => env('APP_URL').'/storage',
+    'visibility' => 'public',
+],
+```
 
 <a name="file-metadata"></a>
 ### Метаданные файла
 
 Помимо чтения и записи файлов, Laravel также может предоставлять информацию о самих файлах. Например, метод `size` используется для получения размера файла в байтах:
 
-    use Illuminate\Support\Facades\Storage;
+```php
+use Illuminate\Support\Facades\Storage;
 
-    $size = Storage::size('file.jpg');
+$size = Storage::size('file.jpg');
+```
 
 Метод `lastModified` возвращает временную метку UNIX последнего изменения файла:
 
-    $time = Storage::lastModified('file.jpg');
+```php
+$time = Storage::lastModified('file.jpg');
+```
 
 <a name="file-paths"></a>
 #### Пути к файлам
 
 Вы можете использовать метод `path`, чтобы получить путь к указанному файлу. Если вы используете драйвер `local`, он вернет абсолютный путь к файлу. Если вы используете драйвер `s3`, этот метод вернет относительный путь к файлу в корзине `S3`:
 
-    use Illuminate\Support\Facades\Storage;
+```php
+use Illuminate\Support\Facades\Storage;
 
-    $path = Storage::path('file.jpg');
+$path = Storage::path('file.jpg');
+```
 
 <a name="storing-files"></a>
 ## Хранение файлов
 
 Метод `put` используется для сохранения содержимого файла на диске. Вы также можете передать `resource` PHP методу `put`, который будет использовать поддержку базового потока Flysystem. Помните, что все пути к файлам должны быть указаны относительно «корневого» расположения, настроенного для диска:
 
-    use Illuminate\Support\Facades\Storage;
+```php
+use Illuminate\Support\Facades\Storage;
 
-    Storage::put('file.jpg', $contents);
+Storage::put('file.jpg', $contents);
 
-    Storage::put('file.jpg', $resource);
+Storage::put('file.jpg', $resource);
+```
 
 <a name="failed-writes"></a>
 #### Неудавшиеся операции записи
 
 Если метод `put` (или другие операции «записи») не может записать файл на диск, то будет возвращено `false`:
 
-    if (! Storage::put('file.jpg', $contents)) {
-        // Не удалось записать файл на диск...
-    }
+```php
+if (! Storage::put('file.jpg', $contents)) {
+    // Не удалось записать файл на диск...
+}
+```
 
 Если хотите, то вы можете определить параметр `throw` в конфигурационном массиве файловой системы вашего диска. Когда этот параметр определен как `true`, то методы «записи», такие как `put`, будут генерировать экземпляр `League\Flysystem\UnableToWriteFile` при неудавшихся операциях записи:
 
-    'public' => [
-        'driver' => 'local',
-        // ...
-        'throw' => true,
-    ],
+```php
+'public' => [
+    'driver' => 'local',
+    // ...
+    'throw' => true,
+],
+```
 
 <a name="prepending-appending-to-files"></a>
 ### Добавление информации к файлам
 
 Методы `prepend` и `append` позволяют записывать в начало или конец файла, соответственно:
 
-    Storage::prepend('file.log', 'Prepended Text');
+```php
+Storage::prepend('file.log', 'Prepended Text');
 
-    Storage::append('file.log', 'Appended Text');
+Storage::append('file.log', 'Appended Text');
+```
 
 <a name="copying-moving-files"></a>
 ### Копирование и перемещение файлов
 
 Метод `copy` используется для копирования существующего файла в новое место на диске, а метод `move` используется для переименования или перемещения существующего файла в новое место:
 
-    Storage::copy('old/file.jpg', 'new/file.jpg');
+```php
+Storage::copy('old/file.jpg', 'new/file.jpg');
 
-    Storage::move('old/file.jpg', 'new/file.jpg');
+Storage::move('old/file.jpg', 'new/file.jpg');
+```
 
 <a name="automatic-streaming"></a>
 ### Автоматическая потоковая передача
 
 Потоковая передача файлов в хранилище позволяет значительно сократить использование памяти. Если вы хотите, чтобы Laravel автоматически управлял потоковой передачей переданного файла в ваше хранилище, вы можете использовать методы `putFile` или `putFileAs`. Эти методы принимают экземпляр `Illuminate\Http\File` или `Illuminate\Http\UploadedFile` и автоматически передают файл в нужное место:
 
-    use Illuminate\Http\File;
-    use Illuminate\Support\Facades\Storage;
+```php
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 
-    // Автоматически генерировать уникальный идентификатор для имени файла ...
-    $path = Storage::putFile('photos', new File('/path/to/photo'));
+// Автоматически генерировать уникальный идентификатор для имени файла ...
+$path = Storage::putFile('photos', new File('/path/to/photo'));
 
-    // Явно указать имя файла ...
-    $path = Storage::putFileAs('photos', new File('/path/to/photo'), 'photo.jpg');
+// Явно указать имя файла ...
+$path = Storage::putFileAs('photos', new File('/path/to/photo'), 'photo.jpg');
+```
 
 Следует отметить несколько важных моментов, касающихся метода `putFile`. Обратите внимание, что мы указали только имя каталога, а не имя файла. По умолчанию метод `putFile` генерирует уникальный идентификатор, который будет служить именем файла. Расширение файла будет определено путем проверки MIME-типа файла. Путь к файлу будет возвращен методом `putFile`, так что вы можете сохранить путь, включая сгенерированное имя файла, в вашей базе данных.
 
 Методы `putFile` и `putFileAs` также принимают аргумент для определения «видимости» сохраненного файла. Это особенно полезно, если вы храните файл на облачном диске, таком как Amazon S3, и хотите, чтобы файл был общедоступным через сгенерированные URL:
 
-    Storage::putFile('photos', new File('/path/to/photo'), 'public');
+```php
+Storage::putFile('photos', new File('/path/to/photo'), 'public');
+```
 
 <a name="file-uploads"></a>
 ### Загрузка файлов
 
 В веб-приложениях одним из наиболее распространенных вариантов хранения файлов является хранение загруженных пользователем файлов, таких как фотографии и документы. Laravel упрощает хранение загруженных файлов с помощью метода `store` экземпляра загружаемого файла. Вызовите метод `store`, указав путь, по которому вы хотите сохранить загруженный файл:
 
-    <?php
+```php
+<?php
 
-    namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
-    use App\Http\Controllers\Controller;
-    use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
-    class UserAvatarController extends Controller
+class UserAvatarController extends Controller
+{
+    /**
+     * Обновить аватар пользователя.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request)
     {
-        /**
-         * Обновить аватар пользователя.
-         *
-         * @param  \Illuminate\Http\Request  $request
-         * @return \Illuminate\Http\Response
-         */
-        public function update(Request $request)
-        {
-            $path = $request->file('avatar')->store('avatars');
+        $path = $request->file('avatar')->store('avatars');
 
-            return $path;
-        }
+        return $path;
     }
+}
+```
 
 В этом примере следует отметить несколько важных моментов. Обратите внимание, что мы указали только имя каталога, а не имя файла. По умолчанию метод `store` генерирует уникальный идентификатор, который будет служить именем файла. Расширение файла будет определено путем проверки MIME-типа файла. Путь к файлу будет возвращен методом `store`, поэтому вы можете сохранить путь, включая сгенерированное имя файла, в своей базе данных.
 
 Вы также можете вызвать метод `putFile` фасада `Storage`, чтобы выполнить ту же операцию сохранения файлов, что и в примере выше:
 
-    $path = Storage::putFile('avatars', $request->file('avatar'));
+```php
+$path = Storage::putFile('avatars', $request->file('avatar'));
+```
 
 <a name="specifying-a-file-name"></a>
 #### Указание имени файла
 
 Если вы не хотите, чтобы имя файла автоматически присваивалось вашему сохраненному файлу, вы можете использовать метод `storeAs`, который получает путь, имя файла и (необязательный) диск в качестве аргументов:
 
-    $path = $request->file('avatar')->storeAs(
-        'avatars', $request->user()->id
-    );
+```php
+$path = $request->file('avatar')->storeAs(
+    'avatars', $request->user()->id
+);
+```
 
 Вы также можете использовать метод `putFileAs` фасада `Storage`, который будет выполнять ту же операцию сохранения файлов, что и в примере выше:
 
-    $path = Storage::putFileAs(
-        'avatars', $request->file('avatar'), $request->user()->id
-    );
+```php
+$path = Storage::putFileAs(
+    'avatars', $request->file('avatar'), $request->user()->id
+);
+```
 
 > **Предупреждение**\
 > Непечатаемые и недопустимые символы Unicode будут автоматически удалены из путей к файлам. По этой причине, вы _по желанию_ можете очистить пути к файлам перед их передачей в методы хранения файлов Laravel. Пути к файлам нормализуются с помощью метода `League\Flysystem\WhitespacePathNormalizer::normalizePath`.
@@ -478,34 +540,42 @@ $disk->put('image.jpg', $content);
 
 По умолчанию метод `store` загружаемого файла будет использовать ваш диск по умолчанию. Если вы хотите указать другой диск, передайте имя диска в качестве второго аргумента методу `store`:
 
-    $path = $request->file('avatar')->store(
-        'avatars/'.$request->user()->id, 's3'
-    );
+```php
+$path = $request->file('avatar')->store(
+    'avatars/'.$request->user()->id, 's3'
+);
+```
 
 Если вы используете метод `storeAs`, вы можете передать имя диска в качестве третьего аргумента метода:
 
-    $path = $request->file('avatar')->storeAs(
-        'avatars',
-        $request->user()->id,
-        's3'
-    );
+```php
+$path = $request->file('avatar')->storeAs(
+    'avatars',
+    $request->user()->id,
+    's3'
+);
+```
 
 <a name="other-uploaded-file-information"></a>
 #### Другая информация о загружаемом файле
 
 Если вы хотите получить оригинальное имя и расширение загружаемого файла, то вы можете сделать это с помощью методов `getClientOriginalName` и `getClientOriginalExtension`:
 
-    $file = $request->file('avatar');
+```php
+$file = $request->file('avatar');
 
-    $name = $file->getClientOriginalName();
-    $extension = $file->getClientOriginalExtension();
+$name = $file->getClientOriginalName();
+$extension = $file->getClientOriginalExtension();
+```
 
 Однако имейте в виду, что методы `getClientOriginalName` и `getClientOriginalExtension` считаются небезопасными, так как имя и расширение файла могут быть подделаны злоумышленником. По этой причине вы должны предпочесть методы `hashName` и `extension`, чтобы получить имя и расширение загружаемого файла:
 
-    $file = $request->file('avatar');
+```php
+$file = $request->file('avatar');
 
-    $name = $file->hashName(); // Создание уникального случайного имени ...
-    $extension = $file->extension(); // Определение расширения файла на основе MIME-типа файла ...
+$name = $file->hashName(); // Создание уникального случайного имени ...
+$extension = $file->extension(); // Определение расширения файла на основе MIME-типа файла ...
+```
 
 <a name="file-visibility"></a>
 ### Видимость файла
@@ -514,62 +584,74 @@ $disk->put('image.jpg', $content);
 
 Вы можете задать видимость при записи файла с помощью метода `put`:
 
-    use Illuminate\Support\Facades\Storage;
+```php
+use Illuminate\Support\Facades\Storage;
 
-    Storage::put('file.jpg', $contents, 'public');
+Storage::put('file.jpg', $contents, 'public');
+```
 
 Если файл уже был сохранен, его видимость может быть получена и задана с помощью методов `getVisibility` и `setVisibility`, соответственно:
 
-    $visibility = Storage::getVisibility('file.jpg');
+```php
+$visibility = Storage::getVisibility('file.jpg');
 
-    Storage::setVisibility('file.jpg', 'public');
+Storage::setVisibility('file.jpg', 'public');
+```
 
 При взаимодействии с загружаемыми файлами, вы можете использовать методы `storePublicly` и `storePubliclyAs` для сохранения загружаемого файла с видимостью `public`:
 
-    $path = $request->file('avatar')->storePublicly('avatars', 's3');
+```php
+$path = $request->file('avatar')->storePublicly('avatars', 's3');
 
-    $path = $request->file('avatar')->storePubliclyAs(
-        'avatars',
-        $request->user()->id,
-        's3'
-    );
+$path = $request->file('avatar')->storePubliclyAs(
+    'avatars',
+    $request->user()->id,
+    's3'
+);
+```
 
 <a name="local-files-and-visibility"></a>
 #### Локальные файлы и видимость
 
 При использовании драйвера `local`, [видимость](#file-visibility) `public` интерпретируется в право доступа `0755` для каталогов и право доступа `0644` для файлов. Вы можете изменить сопоставление прав доступа в файле конфигурации `filesystems` вашего приложения:
 
-    'local' => [
-        'driver' => 'local',
-        'root' => storage_path('app'),
-        'permissions' => [
-            'file' => [
-                'public' => 0644,
-                'private' => 0600,
-            ],
-            'dir' => [
-                'public' => 0755,
-                'private' => 0700,
-            ],
+```php
+'local' => [
+    'driver' => 'local',
+    'root' => storage_path('app'),
+    'permissions' => [
+        'file' => [
+            'public' => 0644,
+            'private' => 0600,
+        ],
+        'dir' => [
+            'public' => 0755,
+            'private' => 0700,
         ],
     ],
+],
+```
 
 <a name="deleting-files"></a>
 ## Удаление файлов
 
 Метод `delete` принимает имя одного файла или массив имен файлов для удаления:
 
-    use Illuminate\Support\Facades\Storage;
+```php
+use Illuminate\Support\Facades\Storage;
 
-    Storage::delete('file.jpg');
+Storage::delete('file.jpg');
 
-    Storage::delete(['file.jpg', 'file2.jpg']);
+Storage::delete(['file.jpg', 'file2.jpg']);
+```
 
 При необходимости вы можете указать диск, с которого следует удалить файл:
 
-    use Illuminate\Support\Facades\Storage;
+```php
+use Illuminate\Support\Facades\Storage;
 
-    Storage::disk('s3')->delete('path/file.jpg');
+Storage::disk('s3')->delete('path/file.jpg');
+```
 
 <a name="directories"></a>
 ## Каталоги
@@ -579,34 +661,42 @@ $disk->put('image.jpg', $content);
 
 Метод `files` возвращает массив всех файлов указанного каталога. Если вы хотите получить список всех файлов каталога, включая все подкаталоги, вы можете использовать метод `allFiles`:
 
-    use Illuminate\Support\Facades\Storage;
+```php
+use Illuminate\Support\Facades\Storage;
 
-    $files = Storage::files($directory);
+$files = Storage::files($directory);
 
-    $files = Storage::allFiles($directory);
+$files = Storage::allFiles($directory);
+```
 
 <a name="get-all-directories-within-a-directory"></a>
 #### Получение всех каталогов из каталога
 
 Метод `directories` возвращает массив всех каталогов указанного каталога. Кроме того, вы можете использовать метод `allDirectories`, чтобы получить список всех каталогов внутри указанного каталога и всех его подкаталогов:
 
-    $directories = Storage::directories($directory);
+```php
+$directories = Storage::directories($directory);
 
-    $directories = Storage::allDirectories($directory);
+$directories = Storage::allDirectories($directory);
+```
 
 <a name="create-a-directory"></a>
 #### Создание каталога
 
 Метод `makeDirectory` создаст указанный каталог, включая все необходимые подкаталоги:
 
-    Storage::makeDirectory($directory);
+```php
+Storage::makeDirectory($directory);
+```
 
 <a name="delete-a-directory"></a>
 #### Удаление каталога
 
 Наконец, для удаления каталога и всех его файлов можно использовать метод `deleteDirectory`:
 
-    Storage::deleteDirectory($directory);
+```php
+Storage::deleteDirectory($directory);
+```
 
 <a name="custom-filesystems"></a>
 ## Пользовательские файловые системы
@@ -621,49 +711,51 @@ composer require spatie/flysystem-dropbox
 
 Затем вы можете зарегистрировать драйвер в методе `boot` одного из [поставщиков служб](providers.md) вашего приложения. Для этого вы должны использовать метод `extend` фасада `Storage`:
 
-    <?php
+```php
+<?php
 
-    namespace App\Providers;
+namespace App\Providers;
 
-    use Illuminate\Filesystem\FilesystemAdapter;
-    use Illuminate\Support\Facades\Storage;
-    use Illuminate\Support\ServiceProvider;
-    use League\Flysystem\Filesystem;
-    use Spatie\Dropbox\Client as DropboxClient;
-    use Spatie\FlysystemDropbox\DropboxAdapter;
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\ServiceProvider;
+use League\Flysystem\Filesystem;
+use Spatie\Dropbox\Client as DropboxClient;
+use Spatie\FlysystemDropbox\DropboxAdapter;
 
-    class AppServiceProvider extends ServiceProvider
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Регистрация любых служб приложения.
+     *
+     * @return void
+     */
+    public function register()
     {
-        /**
-         * Регистрация любых служб приложения.
-         *
-         * @return void
-         */
-        public function register()
-        {
-            //
-        }
-
-        /**
-         * Загрузка любых служб приложения.
-         *
-         * @return void
-         */
-        public function boot()
-        {
-            Storage::extend('dropbox', function ($app, $config) {
-                $adapter = new DropboxAdapter(new DropboxClient(
-                    $config['authorization_token']
-                ));
-
-                return new FilesystemAdapter(
-                    new Filesystem($adapter, $config),
-                    $adapter,
-                    $config
-                );
-            });
-        }
+        //
     }
+
+    /**
+     * Загрузка любых служб приложения.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Storage::extend('dropbox', function ($app, $config) {
+            $adapter = new DropboxAdapter(new DropboxClient(
+                $config['authorization_token']
+            ));
+
+            return new FilesystemAdapter(
+                new Filesystem($adapter, $config),
+                $adapter,
+                $config
+            );
+        });
+    }
+}
+```
 
 Первый аргумент метода `extend` – это имя драйвера, а второй – замыкание, которое получает переменные `$app` и `$config`. Замыкание должно возвращать экземпляр `Illuminate\Filesystem\FilesystemAdapter`. Переменная `$config` содержит значения, определенные в `config/filesystems.php` для указанного диска.
 

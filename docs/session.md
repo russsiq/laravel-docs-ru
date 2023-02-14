@@ -50,14 +50,16 @@ Laravel предлагает множество различных типов х
 
 При использовании драйвера `database` сессии, вам нужно будет создать таблицу, содержащую записи сессии. Пример объявления `Schema` для таблицы ниже:
 
-    Schema::create('sessions', function ($table) {
-        $table->string('id')->primary();
-        $table->foreignId('user_id')->nullable()->index();
-        $table->string('ip_address', 45)->nullable();
-        $table->text('user_agent')->nullable();
-        $table->text('payload');
-        $table->integer('last_activity')->index();
-    });
+```php
+Schema::create('sessions', function ($table) {
+    $table->string('id')->primary();
+    $table->foreignId('user_id')->nullable()->index();
+    $table->string('ip_address', 45)->nullable();
+    $table->text('user_agent')->nullable();
+    $table->text('payload');
+    $table->integer('last_activity')->index();
+});
+```
 
 Вы можете использовать команду `session:table` Artisan для генерации этой миграции. Чтобы узнать больше о миграции баз данных, вы можете ознакомиться с полной [документацией по миграции](migrations.md):
 
@@ -83,53 +85,59 @@ php artisan migrate
 
 В Laravel есть два основных способа работы с данными сессии: через глобальный помощник `session` или через экземпляр `Request`. Во-первых, давайте посмотрим на доступ к сессии через экземпляр `Request`, тип которого может быть объявлен в замыкании маршрута или методе контроллера. Помните, что зависимости методов контроллера автоматически внедряются через [контейнер служб](container.md) Laravel:
 
-    <?php
+```php
+<?php
 
-    namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
-    use App\Http\Controllers\Controller;
-    use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
-    class UserController extends Controller
+class UserController extends Controller
+{
+    /**
+     * Показать профиль конкретного пользователя.
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function show(Request $request, $id)
     {
-        /**
-         * Показать профиль конкретного пользователя.
-         *
-         * @param  Request  $request
-         * @param  int  $id
-         * @return Response
-         */
-        public function show(Request $request, $id)
-        {
-            $value = $request->session()->get('key');
+        $value = $request->session()->get('key');
 
-            //
-        }
+        //
     }
+}
+```
 
 Когда вы извлекаете элемент из сессии, вы также можете передать значение по умолчанию в качестве второго аргумента метода `get`. Это значение по умолчанию будет возвращено, если указанный ключ не существует в сессии. Если вы передаете замыкание в качестве значения по умолчанию методу `get`, а запрошенный ключ не существует, то будет выполнено замыкание с последующим возвратом его результата:
 
-    $value = $request->session()->get('key', 'default');
+```php
+$value = $request->session()->get('key', 'default');
 
-    $value = $request->session()->get('key', function () {
-        return 'default';
-    });
+$value = $request->session()->get('key', function () {
+    return 'default';
+});
+```
 
 <a name="the-global-session-helper"></a>
 #### Глобальный помощник `session`
 
 Вы также можете использовать глобальную помощник `session` для получения / сохранения данных сессии. Когда помощник `session` вызывается с одним строковым аргументом, тогда он возвращает значение этого ключа сессии. Когда помощник вызывается с массивом пар ключ / значение, эти значения сохраняются в сессию:
 
-    Route::get('/home', function () {
-        // Получить часть данных из сессии ...
-        $value = session('key');
+```php
+Route::get('/home', function () {
+    // Получить часть данных из сессии ...
+    $value = session('key');
 
-        // Получить часть данных из сессии с указанием значения по умолчанию ...
-        $value = session('key', 'default');
+    // Получить часть данных из сессии с указанием значения по умолчанию ...
+    $value = session('key', 'default');
 
-        // Сохранить часть данных в сессию ...
-        session(['key' => 'value']);
-    });
+    // Сохранить часть данных в сессию ...
+    session(['key' => 'value']);
+});
+```
 
 > **Примечание**\
 > Существует небольшая практическая разница между использованием сессии через экземпляр HTTP-запроса и использованием глобального помощника `session`. Оба метода [тестируемые](testing.md) с помощью метода `assertSessionHas`, который доступен во всех ваших тестах.
@@ -139,96 +147,120 @@ php artisan migrate
 
 Если вы хотите получить все данные сессии, то вы можете использовать метод `all`:
 
-    $data = $request->session()->all();
+```php
+$data = $request->session()->all();
+```
 
 <a name="determining-if-an-item-exists-in-the-session"></a>
 #### Определение наличия элемента в сессии
 
 Чтобы определить, присутствует ли элемент в сессии, вы можете использовать метод `has`. Метод `has` возвращает `true`, если элемент присутствует, и не равен `null`:
 
-    if ($request->session()->has('users')) {
-        //
-    }
+```php
+if ($request->session()->has('users')) {
+    //
+}
+```
 
 Чтобы определить, присутствует ли элемент в сессии, даже если его значение равно `null`, то вы можете использовать метод `exists`:
 
-    if ($request->session()->exists('users')) {
-        //
-    }
+```php
+if ($request->session()->exists('users')) {
+    //
+}
+```
 
 Чтобы определить отсутствие элемента в сессии, вы можете использовать метод `missing`. Метод `missing` возвращает `true`, если элемент отсутствует или если он равен `null`:
 
-    if ($request->session()->missing('users')) {
-        //
-    }
+```php
+if ($request->session()->missing('users')) {
+    //
+}
+```
 
 <a name="storing-data"></a>
 ### Сохранение данных
 
 Для сохранения данных в сессии вы обычно будете использовать метод `put` экземпляра запроса или глобального помощника `session`:
 
-    // Через экземпляр запроса ...
-    $request->session()->put('key', 'value');
+```php
+// Через экземпляр запроса ...
+$request->session()->put('key', 'value');
 
-    // Через глобальный помощник «session» ...
-    session(['key' => 'value']);
+// Через глобальный помощник «session» ...
+session(['key' => 'value']);
+```
 
 <a name="pushing-to-array-session-values"></a>
 #### Добавление в массив значений сессии
 
 Метод `push` используется для вставки нового значения в значение сессии, которое является массивом. Например, если ключ `user.teams` содержит массив названий команд, то вы можете поместить новое значение в массив следующим образом:
 
-    $request->session()->push('user.teams', 'developers');
+```php
+$request->session()->push('user.teams', 'developers');
+```
 
 <a name="retrieving-deleting-an-item"></a>
 #### Получение с последующим удалением элемента
 
 Метод `pull` извлекает и удаляет элемент из сессии единым выражением:
 
-    $value = $request->session()->pull('key', 'default');
+```php
+$value = $request->session()->pull('key', 'default');
+```
 
 <a name="#incrementing-and-decrementing-session-values"></a>
 #### Увеличение и уменьшение отдельных значений в сессии
 
 Если данные вашей сессии содержат целое число, которое вы хотите увеличить или уменьшить, то вы можете использовать методы `increment` и `decrement`:
 
-    $request->session()->increment('count');
+```php
+$request->session()->increment('count');
 
-    $request->session()->increment('count', $incrementBy = 2);
+$request->session()->increment('count', $incrementBy = 2);
 
-    $request->session()->decrement('count');
+$request->session()->decrement('count');
 
-    $request->session()->decrement('count', $decrementBy = 2);
+$request->session()->decrement('count', $decrementBy = 2);
+```
 
 <a name="flash-data"></a>
 ### Кратковременные данные
 
 По желанию можно сохранить элементы в сессии только для следующего запроса. Вы можете сделать это с помощью метода `flash`. Данные, хранящиеся в сессии с использованием этого метода, будут доступны немедленно и во время следующего HTTP-запроса. После следующего HTTP-запроса данные будут удалены. Кратковременные данные в первую очередь полезны для краткосрочных статусных сообщений:
 
-    $request->session()->flash('status', 'Task was successful!');
+```php
+$request->session()->flash('status', 'Task was successful!');
+```
 
 Если вам нужно сохранить кратковременные данные для нескольких запросов, то вы можете использовать метод `reflash`, который сохранит все данные для дополнительного запроса. Если вам нужно сохранить конкретные кратковременные данные, то вы можете использовать метод `keep`:
 
-    $request->session()->reflash();
+```php
+$request->session()->reflash();
 
-    $request->session()->keep(['username', 'email']);
+$request->session()->keep(['username', 'email']);
+```
 
 Чтобы сохранить ваши кратковременные данные только для текущего запроса, вы можете использовать метод `now`:
 
-    $request->session()->now('status', 'Task was successful!');
+```php
+$request->session()->now('status', 'Task was successful!');
+```
 
 <a name="deleting-data"></a>
 ### Удаление данных
 
 Метод `forget` удалит часть данных из сессии. Если вы хотите удалить все данные из сессии, то вы можете использовать метод `flush`:
 
-    // Удалить единственный ключ ...
-    $request->session()->forget('name');
+```php
+// Удалить единственный ключ ...
+$request->session()->forget('name');
 
-    // Удалить несколько ключей ...
-    $request->session()->forget(['name', 'status']);
+// Удалить несколько ключей ...
+$request->session()->forget(['name', 'status']);
 
-    $request->session()->flush();
+$request->session()->flush();
+```
 
 <a name="regenerating-the-session-id"></a>
 ### Пересоздание идентификатора сессии
@@ -237,11 +269,15 @@ php artisan migrate
 
 Laravel автоматически пересоздает идентификатор сессии во время аутентификации, если вы используете один из [стартовых комплектов приложений](starter-kits.md) Laravel или [Laravel Fortify](fortify.md); однако, если вам необходимо вручную повторно сгенерировать идентификатор сессии, то вы можете использовать метод `regenerate`:
 
-    $request->session()->regenerate();
+```php
+$request->session()->regenerate();
+```
 
 Если вам нужно повторно сгенерировать идентификатор сессии и удалить все данные из нее одним выражением, то вы можете использовать метод `invalidate`:
 
-    $request->session()->invalidate();
+```php
+$request->session()->invalidate();
+```
 
 <a name="session-blocking"></a>
 ## Блокировка сессии
@@ -253,13 +289,15 @@ Laravel автоматически пересоздает идентификат
 
 Чтобы смягчить это, Laravel предлагает функциональность, которая позволяет ограничивать количество одновременных запросов для текущей сессии. Для начала вы можете просто привязать метод `block` к определению вашего маршрута. В этом примере входящий запрос к конечной точке `/profile` получит блокировку сессии. Пока эта блокировка удерживается, любые входящие запросы к конечным точкам `/profile` или `/order` с одним и тем же идентификатором сессии будут ждать завершения выполнения первого запроса, прежде чем они будут выполнены:
 
-    Route::post('/profile', function () {
-        //
-    })->block($lockSeconds = 10, $waitSeconds = 10)
+```php
+Route::post('/profile', function () {
+    //
+})->block($lockSeconds = 10, $waitSeconds = 10)
 
-    Route::post('/order', function () {
-        //
-    })->block($lockSeconds = 10, $waitSeconds = 10)
+Route::post('/order', function () {
+    //
+})->block($lockSeconds = 10, $waitSeconds = 10)
+```
 
 Метод `block` принимает два необязательных аргумента. Первый аргумент, принимаемый методом `block` – это максимальное количество секунд, в течение которых блокировка сессии должна удерживаться, прежде чем она будет снята. Конечно, если выполнение запроса завершится до этого времени, блокировка будет снята раньше.
 
@@ -267,9 +305,11 @@ Laravel автоматически пересоздает идентификат
 
 Если ни один из этих аргументов не передан, то блокировка будет получена максимум на `10` секунд, а запросы будут ждать максимум `10` секунд при попытке получить блокировку:
 
-    Route::post('/profile', function () {
-        //
-    })->block()
+```php
+Route::post('/profile', function () {
+    //
+})->block()
+```
 
 <a name="adding-custom-session-drivers"></a>
 ## Добавление собственных драйверов сессии
@@ -279,19 +319,21 @@ Laravel автоматически пересоздает идентификат
 
 Если ни один из существующих драйверов сессии не соответствует потребностям вашего приложения, то Laravel позволяет написать собственный обработчик сессии. Ваш собственный драйвер сессии должен реализовывать `SessionHandlerInterface`, встроенный в PHP. Этот интерфейс содержит всего несколько простых методов. Заготовка реализация MongoDB выглядит следующим образом:
 
-    <?php
+```php
+<?php
 
-    namespace App\Extensions;
+namespace App\Extensions;
 
-    class MongoSessionHandler implements \SessionHandlerInterface
-    {
-        public function open($savePath, $sessionName) {}
-        public function close() {}
-        public function read($sessionId) {}
-        public function write($sessionId, $data) {}
-        public function destroy($sessionId) {}
-        public function gc($lifetime) {}
-    }
+class MongoSessionHandler implements \SessionHandlerInterface
+{
+    public function open($savePath, $sessionName) {}
+    public function close() {}
+    public function read($sessionId) {}
+    public function write($sessionId, $data) {}
+    public function destroy($sessionId) {}
+    public function gc($lifetime) {}
+}
+```
 
 > **Примечание**\
 > Laravel не содержит каталога для хранения ваших расширений. Вы можете разместить их где угодно. В этом примере мы создали каталог `Extensions` для размещения `MongoSessionHandler`.
@@ -314,38 +356,40 @@ Laravel автоматически пересоздает идентификат
 
 Как только ваш драйвер будет реализован, вы готовы зарегистрировать его в Laravel. Чтобы добавить дополнительные драйверы в серверную часть сессии Laravel, вы можете использовать метод `extend` [фасада](facades.md) `Session`. Вы должны вызвать метод `extend` в методе `boot` [поставщика службы](providers.md). Вы можете сделать это в уже существующем `App\Providers\AppServiceProvider` или создать совершенно новый поставщик:
 
-    <?php
+```php
+<?php
 
-    namespace App\Providers;
+namespace App\Providers;
 
-    use App\Extensions\MongoSessionHandler;
-    use Illuminate\Support\Facades\Session;
-    use Illuminate\Support\ServiceProvider;
+use App\Extensions\MongoSessionHandler;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\ServiceProvider;
 
-    class SessionServiceProvider extends ServiceProvider
+class SessionServiceProvider extends ServiceProvider
+{
+    /**
+     * Регистрация любых служб приложения.
+     *
+     * @return void
+     */
+    public function register()
     {
-        /**
-         * Регистрация любых служб приложения.
-         *
-         * @return void
-         */
-        public function register()
-        {
-            //
-        }
-
-        /**
-         * Загрузка любых служб приложения.
-         *
-         * @return void
-         */
-        public function boot()
-        {
-            Session::extend('mongo', function ($app) {
-                // Return an implementation of SessionHandlerInterface...
-                return new MongoSessionHandler;
-            });
-        }
+        //
     }
+
+    /**
+     * Загрузка любых служб приложения.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Session::extend('mongo', function ($app) {
+            // Return an implementation of SessionHandlerInterface...
+            return new MongoSessionHandler;
+        });
+    }
+}
+```
 
 После регистрации драйвера сессии вы можете использовать драйвер `mongo` в конфигурационном файле `config/session.php`.

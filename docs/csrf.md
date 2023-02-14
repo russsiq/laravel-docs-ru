@@ -39,15 +39,17 @@ Laravel автоматически генерирует «токен» CSRF дл
 
 К CSRF-токену текущей сессии можно получить доступ через сессию запроса или с помощью глобального помощника `csrf_token`:
 
-    use Illuminate\Http\Request;
+```php
+use Illuminate\Http\Request;
 
-    Route::get('/token', function (Request $request) {
-        $token = $request->session()->token();
+Route::get('/token', function (Request $request) {
+    $token = $request->session()->token();
 
-        $token = csrf_token();
+    $token = csrf_token();
 
-        // ...
-    });
+    // ...
+});
+```
 
 Каждый раз, когда вы создаете HTML-форму запросов «POST» «PUT», «PATCH» или «DELETE» в своем приложении, вы должны включать в форму скрытое поле `_token`, чтобы посредник защиты от CSRF смог выполнить проверку запроса. Для удобства вы можете использовать директиву `@csrf` Blade для создания скрытого поля ввода, содержащего этот токен:
 
@@ -74,25 +76,27 @@ Laravel автоматически генерирует «токен» CSRF дл
 
 Как правило, вы должны размещать эти виды маршрутов вне группы посредников `web`, которую `App\Providers\RouteServiceProvider` применяет ко всем маршрутам в файле `routes/web.php`. Однако, вы также можете исключить маршруты, добавив их URI в свойство `$except` посредника `VerifyCsrfToken`:
 
-    <?php
+```php
+<?php
 
-    namespace App\Http\Middleware;
+namespace App\Http\Middleware;
 
-    use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
 
-    class VerifyCsrfToken extends Middleware
-    {
-        /**
-         * URI, которые следует исключить из проверки CSRF.
-         *
-         * @var array
-         */
-        protected $except = [
-            'stripe/*',
-            'http://example.com/foo/bar',
-            'http://example.com/foo/*',
-        ];
-    }
+class VerifyCsrfToken extends Middleware
+{
+    /**
+     * URI, которые следует исключить из проверки CSRF.
+     *
+     * @var array
+     */
+    protected $except = [
+        'stripe/*',
+        'http://example.com/foo/bar',
+        'http://example.com/foo/*',
+    ];
+}
+```
 
 > **Примечание**\
 > Для удобства посредник CSRF автоматически отключается для всех маршрутов при [выполнение тестов](testing.md).
