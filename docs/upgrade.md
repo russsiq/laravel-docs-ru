@@ -60,7 +60,7 @@ Laravel теперь требует PHP 8.0.2 или выше.
 
 <!-- </div> -->
 
-Кроме того, замените `facade/ignition` на `"spatie/laravel-ignition": "^1.0"` в файле `composer.json` вашего приложения.
+Кроме того, замените `facade/ignition` на `"spatie/laravel-ignition": "^1.0"` и `pusher/pusher-php-server` (если это применимо) с `"pusher/pusher-php-server": "^5.0"` в файле `composer.json` вашего приложения.
 
 Кроме того, следующие пакеты получили новые релизы для поддержки Laravel 9.x. Если применимо, то вы должны прочитать их отдельные руководства перед обновлением:
 
@@ -128,6 +128,14 @@ PHP начинает переходить к требованию определ
 ```php
 public function ignore(string $class);
 ```
+
+#### Привязка контракта обработчика исключений
+
+**Вероятность воздействия: очень низкая**
+
+Ранее, чтобы переопределить обработчик исключений Laravel по умолчанию, пользовательские реализации были привязаны к контейнеру службы с использованием типа `\App\Exceptions\Handler::class`. Однако теперь вы должны привязывать пользовательские реализации, используя тип `\Illuminate\Contracts\Debug\ExceptionHandler::class`.
+
+Previously, in order to override the default Laravel exception handler, custom implementations were bound into the service container using the `\App\Exceptions\Handler::class` type. However, you should now bind custom implementations using the `\Illuminate\Contracts\Debug\ExceptionHandler::class` type.
 
 ### Шаблонизатор Blade
 
