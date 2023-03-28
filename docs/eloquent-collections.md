@@ -75,6 +75,8 @@
 - [makeVisible](#method-makeVisible)
 - [makeHidden](#method-makeHidden)
 - [only](#method-only)
+- [setVisible](#method-setVisible)
+- [setHidden](#method-setHidden)
 - [toQuery](#method-toquery)
 - [unique](#method-unique)
 
@@ -150,6 +152,8 @@
 
     $users->load('comments.author');
 
+    $users->load(['comments', 'posts' => fn ($query) => $query->where('active', 1)]);
+
 <a name="method-loadMissing"></a>
 #### `loadMissing($relations)`
 
@@ -158,6 +162,8 @@
     $users->loadMissing(['comments', 'posts']);
 
     $users->loadMissing('comments.author');
+
+    $users->loadMissing(['comments', 'posts' => fn ($query) => $query->where('active', 1)]);
 
 <a name="method-modelKeys"></a>
 #### `modelKeys()`
@@ -188,6 +194,20 @@
 Метод `only` возвращает все модели с указанными первичными ключами:
 
     $users = $users->only([1, 2, 3]);
+
+<a name="method-setVisible"></a>
+#### `setVisible($attributes)`
+
+Метод `setVisible` [временно переопределяет](eloquent-serialization.md#temporarily-modifying-attribute-visibility) все видимые атрибуты каждой модели в коллекции:
+
+    $users = $users->setVisible(['id', 'name']);
+
+<a name="method-setHidden"></a>
+#### `setHidden($attributes)`
+
+Метод `setHidden` [временно переопределяет](eloquent-serialization.md#temporarily-modifying-attribute-visibility) все скрытые атрибуты каждой модели в коллекции:
+
+    $users = $users->setHidden(['email', 'password', 'remember_token']);
 
 <a name="method-toquery"></a>
 #### `toQuery()`

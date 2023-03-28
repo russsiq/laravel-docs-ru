@@ -29,6 +29,7 @@
 - [Валидация массивов](#validating-arrays)
     - [Валидация вложенных массивов](#validating-nested-array-input)
     - [Индексы и позиции сообщений об ошибках](#error-message-indexes-and-positions)
+- [Валидация файлов](#validating-files)
 - [Валидация паролей](#validating-passwords)
 - [Пользовательские правила валидации](#custom-validation-rules)
     - [Использование класса Rule](#using-rule-objects)
@@ -805,6 +806,7 @@ The credit card number field is required when payment type is credit card.
 - [Alpha Dash](#rule-alpha-dash)
 - [Alpha Numeric](#rule-alpha-num)
 - [Array](#rule-array)
+- [Ascii](#rule-ascii)
 - [Bail](#rule-bail)
 - [Before (Date)](#rule-before)
 - [Before Or Equal (Date)](#rule-before-or-equal)
@@ -815,6 +817,7 @@ The credit card number field is required when payment type is credit card.
 - [Date](#rule-date)
 - [Date Equals](#rule-date-equals)
 - [Date Format](#rule-date-format)
+- [Decimal](#rule-decimal)
 - [Declined](#rule-declined)
 - [Declined If](#rule-declined-if)
 - [Different](#rule-different)
@@ -822,6 +825,8 @@ The credit card number field is required when payment type is credit card.
 - [Digits Between](#rule-digits-between)
 - [Dimensions (Image Files)](#rule-dimensions)
 - [Distinct](#rule-distinct)
+- [Doesnt Start With](#rule-doesnt-start-with)
+- [Doesnt End With](#rule-doesnt-end-with)
 - [Email](#rule-email)
 - [Ends With](#rule-ends-with)
 - [Enum](#rule-enum)
@@ -843,12 +848,15 @@ The credit card number field is required when payment type is credit card.
 - [JSON](#rule-json)
 - [Less Than](#rule-lt)
 - [Less Than Or Equal](#rule-lte)
+- [Lowercase](#rule-lowercase)
 - [MAC Address](#rule-mac)
 - [Max](#rule-max)
+- [Max Digits](#rule-max-digits)
 - [MIME Types](#rule-mimetypes)
 - [MIME Type By File Extension](#rule-mimes)
 - [Min](#rule-min)
-- [Multiple Of](#multiple-of)
+- [Min Digits](#rule-min-digits)
+- [Multiple Of](#rule-multiple-of)
 - [Not In](#rule-not-in)
 - [Not Regex](#rule-not-regex)
 - [Nullable](#rule-nullable)
@@ -875,7 +883,9 @@ The credit card number field is required when payment type is credit card.
 - [String](#rule-string)
 - [Timezone](#rule-timezone)
 - [Unique (Database)](#rule-unique)
+- [Uppercase](#rule-uppercase)
 - [URL](#rule-url)
+- [ULID](#rule-ulid)
 - [UUID](#rule-uuid)
 
 <!-- </div> -->
@@ -944,10 +954,15 @@ The credit card number field is required when payment type is credit card.
     ];
 
     Validator::make($input, [
-        'user' => 'array:username,locale',
+        'user' => 'array:name,username',
     ]);
 
 В общем, вы всегда должны указывать ключи массива, которые могут присутствовать в вашем массиве.
+
+<a name="rule-ascii"></a>
+#### ascii
+
+Проверяемое поле должно состоять полностью из 7-битных символов ASCII.
 
 <a name="rule-bail"></a>
 #### bail
@@ -973,7 +988,7 @@ The credit card number field is required when payment type is credit card.
 <a name="rule-between"></a>
 #### between:_min_,_max_
 
-Проверяемое поле должно иметь размер между указанными _min_ и _max_. Строки, числа, массивы и файлы оцениваются так же, как и в правиле [`size`](#rule-size).
+Проверяемое поле должно иметь размер между указанными _min_ и _max_ (включительно). Строки, числа, массивы и файлы оцениваются так же, как и в правиле [`size`](#rule-size).
 
 <a name="rule-boolean"></a>
 #### boolean
@@ -1003,9 +1018,20 @@ The credit card number field is required when payment type is credit card.
 Проверяемое поле должно быть равно указанной дате. Даты будут переданы в функцию `strtotime` PHP для преобразования в действительный экземпляр `DateTime`.
 
 <a name="rule-date-format"></a>
-#### date_format:_format_
+#### date_format:_format_,...
 
-Проверяемое поле должно соответствовать переданному _format_. При валидации поля следует использовать **либо** `date`, **либо** `date_format`, а не то и другое вместе. Это правило валидации поддерживает все форматы, поддерживаемые классом [`DateTime`](https://www.php.net/manual/ru/class.datetime.php) PHP.
+Проверяемое поле должно соответствовать одному из заданных _format_. При валидации поля следует использовать **либо** `date`, **либо** `date_format`, а не то и другое вместе. Это правило валидации поддерживает все форматы, поддерживаемые классом [`DateTime`](https://www.php.net/manual/ru/class.datetime.php) PHP.
+
+<a name="rule-decimal"></a>
+#### decimal:_min_,_max_
+
+Проверяемое поле должно быть числовым и содержать указанное количество знаков после запятой:
+
+    // Должно быть ровно два десятичных знака (9,99) ...
+    'price' => 'decimal:2'
+
+    // Должно быть от 2 до 4 знаков после запятой ...
+    'price' => 'decimal:2,4'
 
 <a name="rule-declined"></a>
 #### declined
@@ -1072,6 +1098,16 @@ The credit card number field is required when payment type is credit card.
 
     'foo.*.id' => 'distinct:ignore_case'
 
+<a name="rule-doesnt-start-with"></a>
+#### doesnt_start_with:_foo_,_bar_,...
+
+Проверяемое поле не должно начинаться с одного из указанных значений.
+
+<a name="rule-doesnt-end-with"></a>
+#### doesnt_end_with:_foo_,_bar_,...
+
+Проверяемое поле не должно заканчиваться одним из указанных значений.
+
 <a name="rule-email"></a>
 #### email
 
@@ -1088,6 +1124,7 @@ The credit card number field is required when payment type is credit card.
 - `dns`: `DNSCheckValidation`
 - `spoof`: `SpoofCheckValidation`
 - `filter`: `FilterEmailValidation`
+- `filter_unicode`: `FilterEmailValidation::unicode()`
 
 <!-- </div> -->
 
@@ -1299,6 +1336,11 @@ The credit card number field is required when payment type is credit card.
 
 Проверяемое поле должно быть меньше или равно переданному _field_. Два поля должны быть одного типа. Строки, числа, массивы и файлы оцениваются с использованием тех же соглашений, что и в правиле [`size`](#rule-size).
 
+<a name="rule-lowercase"></a>
+#### lowercase
+
+Проверяемое поле должно быть в нижнем регистре.
+
 <a name="rule-mac"></a>
 #### mac_address
 
@@ -1308,6 +1350,11 @@ The credit card number field is required when payment type is credit card.
 #### max:_value_
 
 Проверяемое поле должно быть меньше или равно максимальному _value_. Строки, числа, массивы и файлы оцениваются с использованием тех же соглашений, что и в правиле [`size`](#rule-size).
+
+<a name="rule-max-digits"></a>
+#### max_digits:_value_
+
+Проверяемое целое число должно иметь максимальную длину _value_.
 
 <a name="rule-mimetypes"></a>
 #### mimetypes:_text/plain_,...
@@ -1337,7 +1384,12 @@ The credit card number field is required when payment type is credit card.
 
 Проверяемое поле должно иметь минимальное значение _value_. Строки, числа, массивы и файлы оцениваются с использованием тех же соглашений, что и в правиле [`size`](#rule-size).
 
-<a name="multiple-of"></a>
+<a name="rule-min-digits"></a>
+#### min_digits:_value_
+
+Проверяемое целое число должно иметь минимальную длину _value_.
+
+<a name="rule-multiple-of"></a>
 #### multiple_of:_value_
 
 Проверяемое поле должно быть кратным _value_.
@@ -1395,12 +1447,12 @@ The credit card number field is required when payment type is credit card.
 <a name="rule-prohibited"></a>
 #### prohibited
 
-Проверяемое поле должно быть пустым или отсутствовать.
+Проверяемое поле может отсутствовать.
 
 <a name="rule-prohibited-if"></a>
 #### prohibited_if:_anotherfield_,_value_,...
 
-Проверяемое поле должно быть пустым или отсутствовать, если поле _anotherfield_ равно любому _value_.
+Проверяемое поле должно быть пустой строкой или отсутствовать, если поле _anotherfield_ равно любому _value_.
 
 Если требуется сложная логика условного запрета присутствия, то вы можете использовать метод `Rule::prohibitedIf`. Этот метод принимает логическое значение или замыкание. При задании замыкания оно должно возвращать `true` или `false` для указания, следует ли запретить присутствие проверяемого поля:
 
@@ -1418,7 +1470,7 @@ The credit card number field is required when payment type is credit card.
 <a name="rule-prohibited-unless"></a>
 #### prohibited_unless:_anotherfield_,_value_,...
 
-Проверяемое поле должно быть пустым или отсутствовать, если поле _anotherfield_ не равно какому-либо _value_.
+Проверяемое поле должно быть пустой строкой или отсутствовать, если только поле _anotherfield_ не равно какому-либо _value_.
 
 <a name="rule-prohibits"></a>
 #### prohibits:_anotherfield_,...
@@ -1592,10 +1644,20 @@ The credit card number field is required when payment type is credit card.
 
     'email' => Rule::unique('users')->where(fn ($query) => $query->where('account_id', 1))
 
+<a name="rule-uppercase"></a>
+#### uppercase
+
+Проверяемое поле должно быть в верхнем регистре.
+
 <a name="rule-url"></a>
 #### url
 
 Проверяемое поле должно быть действительным URL.
+
+<a name="rule-ulid"></a>
+#### ulid
+
+Проверяемое поле должно быть допустимым [универсально-уникальным лексикографически сортируемым идентификатором](https://github.com/ulid/spec) (ULID).
 
 <a name="rule-uuid"></a>
 #### uuid
@@ -1763,7 +1825,7 @@ The credit card number field is required when payment type is credit card.
 <a name="error-message-indexes-and-positions"></a>
 ### Индексы и позиции сообщений об ошибках
 
-При валидации массивов вы можете указать индекс или положение определенного элемента, который не прошел проверку, в сообщении об ошибке, отображаемом вашим приложением. Для этого вы можете включить заполнители `:index` и `:position` в свое [собственное сообщение об ошибке](#manual-customizing-the-error-messages):
+При валидации массивов вы можете указать индекс или положение определенного элемента, который не прошел проверку, в сообщении об ошибке, отображаемом вашим приложением. Для этого вы можете включить заполнители `:index` (начинается с `0`) и `:position` (начинается с `1`) в свое [собственное сообщение об ошибке](#manual-customizing-the-error-messages):
 
     use Illuminate\Support\Facades\Validator;
 
@@ -1787,6 +1849,48 @@ The credit card number field is required when payment type is credit card.
     ]);
 
 В приведенном выше примере валидация завершится ошибкой, и пользователю будет представлена ​​следующая ошибка: _"Please describe photo #2."_
+
+<a name="validating-files"></a>
+## Валидация файлов
+
+Laravel предлагает множество правил валидации, которые можно использовать для валидации загруженных файлов, таких как `mimes`, `image`, `min` и `max`. Хотя вы можете указать эти правила по отдельности при валидации файлов, Laravel также предлагает гибкий конструктор правил валидации файлов, который может показаться вам удобным:
+
+    use Illuminate\Support\Facades\Validator;
+    use Illuminate\Validation\Rules\File;
+
+    Validator::validate($input, [
+        'attachment' => [
+            'required',
+            File::types(['mp3', 'wav'])
+                ->min(1024)
+                ->max(12 * 1024),
+        ],
+    ]);
+
+Если ваше приложение принимает изображения, загруженные вашими пользователями, вы можете использовать метод конструктора `image` правила `File`, чтобы указать, что загруженный файл должен быть изображением. Кроме того, правило `dimensions` может использоваться для ограничения разрешения изображения:
+
+    use Illuminate\Support\Facades\Validator;
+    use Illuminate\Validation\Rules\File;
+
+    Validator::validate($input, [
+        'photo' => [
+            'required',
+            File::image()
+                ->min(1024)
+                ->max(12 * 1024)
+                ->dimensions(Rule::dimensions()->maxWidth(1000)->maxHeight(500)),
+        ],
+    ]);
+
+> **Примечание**\
+> Дополнительную информацию о проверке разрешения изображения можно найти в [правилах размера](#rule-dimensions).
+
+<a name="validating-files-file-types"></a>
+#### Типы файлов
+
+Указав только расширение файла при вызове метода `types`, он считывает содержимое и угадывает MIME-тип файла. Полный список типов MIME и соответствующих им расширений можно найти по следующему адресу:
+
+[https://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types](https://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types).
 
 <a name="validating-passwords"></a>
 ## Валидация паролей
@@ -1885,52 +1989,33 @@ public function boot()
 Laravel предлагает множество полезных правил валидации; однако вы можете указать свои собственные. Один из методов регистрации собственных правил валидации – использование объектов правил. Чтобы сгенерировать новый объект правила, вы можете использовать команду `make:rule` [Artisan](artisan.md). Давайте воспользуемся этой командой, чтобы сгенерировать правило, которое проверяет, что строка состоит из прописных букв. Laravel поместит новый класс правила в каталог `app/Rules` вашего приложения. Если этот каталог не существует в вашем приложении, то Laravel предварительно создаст его, когда вы выполните команду Artisan для создания своего правила:
 
 ```shell
-php artisan make:rule Uppercase
+php artisan make:rule Uppercase --invokable
 ```
 
-Как только правило создано, мы готовы определить его поведение. Объект правила содержит два метода: `passes` и `message`. Метод `passes` получает значение и имя атрибута и должен возвращать `true` или `false` в зависимости от того, является ли значение атрибута допустимым или нет. Метод `message` должен возвращать сообщение об ошибке валидации, которое следует использовать, если проверка оказалась не успешной:
+Как только правило создано, мы готовы определить его поведение. Объект правила содержит единственный метод: `__invoke`. Этот метод получает имя атрибута, его значение и замыкание, которое должно быть вызвано, если проверка оказалась не успешной:
 
     <?php
 
     namespace App\Rules;
 
-    use Illuminate\Contracts\Validation\Rule;
+    use Illuminate\Contracts\Validation\InvokableRule;
 
-    class Uppercase implements Rule
+    class Uppercase implements InvokableRule
     {
         /**
-         * Определить, пройдено ли правило валидации.
+         * Запустить правило валидации.
          *
          * @param  string  $attribute
          * @param  mixed  $value
-         * @return bool
+         * @param  \Closure  $fail
+         * @return void
          */
-        public function passes($attribute, $value)
+        public function __invoke($attribute, $value, $fail)
         {
-            return strtoupper($value) === $value;
+            if (strtoupper($value) !== $value) {
+                $fail('The :attribute must be uppercase.');
+            }
         }
-
-        /**
-         * Получить сообщение об ошибке валидации.
-         *
-         * @return string
-         */
-        public function message()
-        {
-            return 'The :attribute must be uppercase.';
-        }
-    }
-
-Вы можете вызвать помощник `trans` в методе `message`, если хотите вернуть сообщение об ошибке из ваших файлов перевода:
-
-    /**
-     * Получить сообщение об ошибке валидации.
-     *
-     * @return string
-     */
-    public function message()
-    {
-        return trans('validation.uppercase');
     }
 
 После определения правила вы можете отправить его валидатору, передав экземпляр объекта правила с другими вашими правилами валидации:
@@ -1941,6 +2026,20 @@ php artisan make:rule Uppercase
         'name' => ['required', 'string', new Uppercase],
     ]);
 
+#### Перевод сообщений валидации
+
+Вместо того, чтобы передавать конкретное сообщение об ошибке для замыкания `$fail`, вы также можете указать [ключ строки перевода](localization.md), указав тем самым Laravel перевести сообщение об ошибке:
+
+    if (strtoupper($value) !== $value) {
+        $fail('validation.uppercase')->translate();
+    }
+
+При необходимости вы можете указать заполнители и предпочитаемый язык в качестве первого и второго аргументов метода `translate`:
+
+    $fail('validation.location')->translate([
+        'value' => $this->value,
+    ], 'fr')
+
 #### Доступ к дополнительным данным
 
 Если вашему пользовательскому классу правил валидации требуется доступ к другим валидируемым данным, то ваш класс правил может реализовать интерфейс `Illuminate\Contracts\Validation\DataAwareRule`. Этот интерфейс требует, чтобы ваш класс определял метод `setData`. Этот метод будет автоматически вызван Laravel (до того, как начнется валидация) со всеми проверяемыми данными:
@@ -1949,10 +2048,10 @@ php artisan make:rule Uppercase
 
     namespace App\Rules;
 
-    use Illuminate\Contracts\Validation\Rule;
     use Illuminate\Contracts\Validation\DataAwareRule;
+    use Illuminate\Contracts\Validation\InvokableRule;
 
-    class Uppercase implements Rule, DataAwareRule
+    class Uppercase implements DataAwareRule, InvokableRule
     {
         /**
          * Все валидируемые данные.
@@ -1983,10 +2082,10 @@ php artisan make:rule Uppercase
 
     namespace App\Rules;
 
-    use Illuminate\Contracts\Validation\Rule;
+    use Illuminate\Contracts\Validation\InvokableRule;
     use Illuminate\Contracts\Validation\ValidatorAwareRule;
 
-    class Uppercase implements Rule, ValidatorAwareRule
+    class Uppercase implements InvokableRule, ValidatorAwareRule
     {
         /**
          * Экземпляр валидатора.
@@ -2043,12 +2142,10 @@ php artisan make:rule Uppercase
 
     Validator::make($input, $rules)->passes(); // true
 
-Чтобы ваше правило было применено, даже если атрибут пуст, то правило должно подразумевать, что атрибут является обязательным. Чтобы создать «неявное» правило, реализуйте интерфейс `Illuminate\Contracts\Validation\ImplicitRule`. Это «маркерный интерфейс» для валидатора; следовательно, он не содержит никаких дополнительных методов, которые вам нужно реализовать, помимо методов, требуемых типичным интерфейсом `Rule`.
-
-Чтобы сгенерировать новый объект неявного правила, вы можете использовать команду `make:rule` Artisan с флагом `--implicit`:
+Чтобы ваше правило было применено, даже если атрибут пуст, то правило должно подразумевать, что атрибут является обязательным. Чтобы быстро сгенерировать новый объект неявного правила, вы можете использовать команду `make:rule` Artisan с флагом `--implicit`:
 
 ```shell
-php artisan make:rule Uppercase --implicit
+php artisan make:rule Uppercase --invokable --implicit
 ```
 
 > **Предупреждение**\
